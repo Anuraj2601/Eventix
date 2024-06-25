@@ -1,11 +1,16 @@
 // src/components/Sidebar.jsx
 import React from 'react';
 
+
+
+
 const Sidebar = () => {
+
+  
   return (
     <aside className="bg-stone-950 shadow-2xl text-white w-64 h-full p-4 flex flex-col justify-center items-center">
-      <div className="p-3 flex items-center justify-center">
-        <img src="/src/assets/logo.png" alt="logo" className="w-18 h-18 ml-3 mb-5 mr-auto" />
+      <div className="p-2 flex items-center justify-center">
+        <img src="/src/assets/logo.png" alt="logo" className="w-18 h-18 ml-3 mb-5 mr-auto p-4" />
       </div>
       <div className="flex flex-col items-center space-y-4 flex-grow">
       <div className="bg-black rounded-lg p-3 shadow-md flex items-center justify-center w-16 h-16"  style={{ boxShadow: '0 0 10px #a3e635' }}>
@@ -39,7 +44,7 @@ const Sidebar = () => {
 </svg>
         </div>
       </div>
-      <div className="p-3 flex items-center justify-center">
+      <div className="p-3 flex items-center justify-center " style={{ color: '#a3e635' }}>
         Logout 
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeWidth={2.5} stroke="#a3e635" className="size-7">
   <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
