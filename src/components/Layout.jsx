@@ -10,7 +10,7 @@ const Layout = () => {
       <Sidebar />
       <div className="flex flex-col flex-1">
         <Navbar />
-        <Mainframe />
+        
       </div>
     </div>
   );
