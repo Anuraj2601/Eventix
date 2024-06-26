@@ -9,7 +9,7 @@ import { BsBell } from "react-icons/bs";
 
 const Navbar = () => {
   return (
-    <nav className="bg-neutral-800 p-6 shadow-2xl flex items-center justify-between py-2 text-white px-4">
+    <nav className="bg-neutral-900 p-6 shadow-2xl flex items-center justify-between py-2 text-white px-4">
       {/* Left Section: Logo and Search Box */}
       <div className="flex items-center">
         {/* Logo */}

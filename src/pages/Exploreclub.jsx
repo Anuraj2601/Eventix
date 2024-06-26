@@ -75,7 +75,7 @@ const Exploreclub = () => {
       <Sidebar className="flex-shrink-0" />
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="bg-neutral-800 border-amber-50 flex-1 p-4 text-white flex flex-col overflow-hidden">
+        <div className="bg-neutral-900 border-amber-50 flex-1 p-4 text-white flex flex-col overflow-hidden">
           <Tabs
             value={selectedTab}
             onChange={setSelectedTab}
