@@ -18,7 +18,7 @@ import {
 
 const CardDefault = () => {
   return (
-<Card className="mt-1 bg-neutral-900 shadow-lg rounded-t-lg backdrop-filter backdrop-blur-lg" style={{ width: '23rem' }}>
+<Card className="mt-1 bg-neutral-900  rounded-t-lg backdrop-filter backdrop-blur-lg" style={{ width: '23rem' }}>
       <CardHeader color="blue-gray" className="relative h-56">
         <img
           src="src/assets/rotaract.png"
@@ -74,7 +74,7 @@ const Exploreclub = () => {
     <div className="fixed inset-0 flex">
       <Sidebar className="flex-shrink-0" />
       <div className="flex flex-col flex-1">
-        <Navbar className="sticky top-0 z-10" />
+        <Navbar className="sticky top-0 z-10 p-4" />
         <div className="bg-neutral-800 border-amber-50 flex-1 p-4 text-white flex flex-col overflow-hidden">
           <Tabs
             value={selectedTab}
@@ -104,7 +104,7 @@ const Exploreclub = () => {
                 <TabPanel
                   key={value}
                   value={value}
-                  className={`p-6 overflow-y-auto rounded-lg backdrop-filter backdrop-blur-lg bg-opacity-10 bg-white/10 shadow-lg ${
+                  className={`p-6 overflow-y-auto rounded-lg backdrop-filter backdrop-blur-lg bg-opacity-10 bg-white/10  ${
                     value === selectedTab ? 'block' : 'hidden'
                   }`}
                 >
