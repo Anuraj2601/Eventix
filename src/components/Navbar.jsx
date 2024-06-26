@@ -9,7 +9,7 @@ import { BsBell } from "react-icons/bs";
 
 const Navbar = () => {
   return (
-    <nav className="bg-neutral-900 shadow-2xl flex items-center justify-between py-2 text-white px-4">
+    <nav className="bg-neutral-900 p-6 shadow-2xl flex items-center justify-between py-2 text-white px-4">
       {/* Left Section: Logo and Search Box */}
       <div className="flex items-center">
         {/* Logo */}
@@ -77,19 +77,19 @@ const Navbar = () => {
   <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clipRule="evenodd" />
 </svg> */}
           <a href="" className="px-3">
-          <MdInfoOutline className="text-lime-400 hover:text-white inline-block w-auto h-6 mt-1 -ml-6"></MdInfoOutline>
+          <MdInfoOutline className="text-lime-400 hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></MdInfoOutline>
             {/* Meeting */}
           </a>
           <a href="" className="px-3">
-            <MdOutlineEmail className="text-lime-400 hover:text-white inline-block w-auto h-6 mt-1 -ml-6"></MdOutlineEmail>
+            <MdOutlineEmail className="text-lime-400 hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></MdOutlineEmail>
             {/* Meeting */}
           </a>
           <a href="" className="px-3">
-            <BsBell className="text-lime-400 hover:text-white inline-block w-auto h-6 mt-1 -ml-6"></BsBell>
+            <BsBell className="text-lime-400 hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></BsBell>
             {/* Meeting */}
           </a>
           <a href="" className="px-3">
-            <IoPersonCircleOutline className="text-lime-400 hover:text-white inline-block w-auto h-6 mt-1 -ml-6"></IoPersonCircleOutline>
+            <IoPersonCircleOutline className="text-lime-400 hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></IoPersonCircleOutline>
             {/* Meeting */}
           </a>
         </div>
