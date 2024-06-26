@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar'; // Adjust the path based on your file structure
 import Navbar from '../components/Navbar';   // Adjust the path based on your file structure
+import { HiArrowRightCircle } from "react-icons/hi2";
+
 import {
   Tabs,
   TabsHeader,
@@ -27,18 +29,27 @@ const CardDefault = () => {
         />
       </CardHeader>
       <CardBody>
-        <Typography variant="h5" color="blue-gray" className="mb-2">
-          UI/UX Review Check
-        </Typography>
-        <Typography>
-          The place is close to Barceloneta Beach and bus stop just 2 min by
-          walk and near to &quot;Naviglio&quot; where you can enjoy the main
-          night life in Barcelona.
-        </Typography>
-      </CardBody>
-      <CardFooter className="pt-0">
-        <Button>Read More</Button>
-      </CardFooter>
+  <Typography variant="h2" className="mb-2 text-lime-400 flex items-center">
+    Registrations are open
+    <a href="#register-link" className="ml-4 h-auto w-9">
+  <HiArrowRightCircle className="text-3xl" /> {/* Adjust the text size class as needed */}
+</a>
+
+  </Typography>
+  <Typography>
+    Get the opportunity to learn from industry professionals, prepare
+    for certifications like CISA and CRISC and network with
+    professionals in the field.
+  </Typography>
+</CardBody>
+<CardFooter className="pt-0 flex justify-end">
+  <a href="#explore-link">
+    <Button variant="gradient" className="bg-lime-400 text-black p-1">
+      Explore
+    </Button>
+  </a>
+</CardFooter>
+
     </Card>
   );
 };

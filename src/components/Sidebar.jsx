@@ -6,6 +6,7 @@ import { FaPeopleGroup } from 'react-icons/fa6'
 import { IoCalendarNumberOutline, IoExitOutline, IoVideocamOutline } from 'react-icons/io5'
 import Logo from '../assets/logo.png'
 
+
 const Sidebar = () => {
   return (
     <aside className="bg-stone-950 shadow-2xl text-white w-52 h-full p-4 flex flex-col justify-center items-center">
