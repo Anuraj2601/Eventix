@@ -8,7 +8,50 @@ import {
   TabsBody,
   Tab,
   TabPanel,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Typography,
+  Button,
 } from "@material-tailwind/react";
+
+const CardDefault = () => {
+  return (
+<Card className="mt-1 bg-neutral-900 shadow-lg rounded-t-lg backdrop-filter backdrop-blur-lg" style={{ width: '23rem' }}>
+      <CardHeader color="blue-gray" className="relative h-56">
+        <img
+          src="src/assets/rotaract.png"
+          alt="your-image-description"
+          className="h-full w-full object-cover"
+        />
+      </CardHeader>
+      <CardBody>
+        <Typography variant="h5" color="blue-gray" className="mb-2">
+          UI/UX Review Check
+        </Typography>
+        <Typography>
+          The place is close to Barceloneta Beach and bus stop just 2 min by
+          walk and near to &quot;Naviglio&quot; where you can enjoy the main
+          night life in Barcelona.
+        </Typography>
+      </CardBody>
+      <CardFooter className="pt-0">
+        <Button>Read More</Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
+const MultipleCards = () => {
+  return (
+    <div className="flex flex-wrap gap-8">
+      {Array.from({ length: 8 }).map((_, index) => (
+        <CardDefault key={index} />
+      ))}
+    </div>
+  );
+};
 
 const Exploreclub = () => {
   const [selectedTab, setSelectedTab] = useState("All Clubs"); // State to track the selected tab
@@ -17,57 +60,7 @@ const Exploreclub = () => {
     {
       label: "All Clubs",
       value: "All Clubs",
-      desc: `It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter. It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter.`,
+      desc: <MultipleCards />, // Use the multiple cards component directly
     },
     {
       label: "Your Clubs",
@@ -99,14 +92,14 @@ const Exploreclub = () => {
                 <Tab
                   key={value}
                   value={value}
-                  className={`text-white hover:text-gray-300 ${selectedTab === value ? 'text-black' : ''}`}
-                  activeClassName="bg-lime-400 text-black font-bold p-2 rounded-t-lg"
+                  className={`text-lime-400 hover:text-lime-400 ${selectedTab === value ? 'text-lime-400' : ''}`}
+                  activeClassName="text-lime-400 font-bold  rounded-t-lg backdrop-filter backdrop-blur-lg bg-opacity-10 bg-white/10 "
                 >
                   {label}
                 </Tab>
               ))}
             </TabsHeader>
-            <TabsBody className="flex-1 overflow-hidden">
+            <TabsBody className="flex-1 overflow-y-auto">
               {data.map(({ value, desc }) => (
                 <TabPanel
                   key={value}
