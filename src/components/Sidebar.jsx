@@ -1,14 +1,19 @@
 // src/components/Sidebar.jsx
 import React from 'react';
+import { BsMegaphone } from 'react-icons/bs'
+import { FaCalendar, FaHome } from 'react-icons/fa'
+import { FaPeopleGroup } from 'react-icons/fa6'
+import { IoCalendarNumberOutline, IoExitOutline, IoVideocamOutline } from 'react-icons/io5'
+import Logo from '../assets/eventix Logo1.png'
 
 const Sidebar = () => {
   return (
-    <aside className="bg-stone-950 shadow-2xl text-white w-64 h-full p-4 flex flex-col justify-center items-center">
+    <aside className="bg-stone-950 shadow-2xl text-white w-52 h-full p-4 flex flex-col justify-center items-center">
       <div className="p-3 flex items-center justify-center">
-        <img src="/src/assets/logo.png" alt="logo" className="w-18 h-18 ml-3 mb-5 mr-auto" />
+        <img src={Logo} alt="logo" className="w-32 h-24 ml-3 mb-5 mr-auto" />
       </div>
       <div className="flex flex-col items-center space-y-4 flex-grow">
-      <div className="bg-black rounded-lg p-3 shadow-md flex items-center justify-center w-16 h-16"  style={{ boxShadow: '0 0 10px #a3e635' }}>
+      {/* <div className="bg-black rounded-lg p-3 shadow-md flex items-center justify-center w-16 h-16"  style={{ boxShadow: '0 0 10px #a3e635' }}>
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="#a3e635" className="size-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
 </svg>
@@ -37,14 +42,55 @@ const Sidebar = () => {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeWidth={2.5} stroke="#a3e635" className="size-6">
   <path d="M4.5 4.5a3 3 0 0 0-3 3v9a3 3 0 0 0 3 3h8.25a3 3 0 0 0 3-3v-9a3 3 0 0 0-3-3H4.5ZM19.94 18.75l-2.69-2.69V7.94l2.69-2.69c.944-.945 2.56-.276 2.56 1.06v11.38c0 1.336-1.616 2.005-2.56 1.06Z" />
 </svg>
-        </div>
+        </div> */}
+        <ul className='mt-4 ml-0 text-black font-bold'>
+            <li className='w-12 h-12 mb-6 border-2 text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2'>
+                <a href="" className='px-3'>
+                    <FaHome className='inline-block w-6 h-6 mt-1 -ml-0.5'></FaHome>
+                    {/* Home */}
+                </a>
+            </li>
+            <li className='w-12 h-12 mb-6 border-2 text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2'>
+                <a href="" className='px-3'>
+                    <IoCalendarNumberOutline className='inline-block w-6 h-6 -ml-0.5 mt-1'></IoCalendarNumberOutline>
+                    {/* Calendar */}
+                </a>
+            </li>
+            <li className='w-12 h-12 mb-6 border-2 text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2'>
+                <a href="" className='px-3'>
+                    <BsMegaphone className='inline-block w-6 h-6 mt-1 -ml-0.5'></BsMegaphone>
+                    {/* Announcement */}
+                </a>
+            </li>
+            <li className='w-12 h-12 mb-6 border-2 text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2'>
+                <a href="" className='px-3'>
+                    <FaPeopleGroup className='inline-block w-6 h-6 mt-1 -ml-0.5'></FaPeopleGroup>
+                    {/* Clubs */}
+                </a>
+            </li>
+            <li className='w-12 h-12 mb-6 border-2 text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2'>
+                <a href="" className='px-3'>
+                    <IoVideocamOutline className='inline-block w-6 h-6 mt-1 -ml-0.5'></IoVideocamOutline>
+                    {/* Meeting */}
+                </a>
+            </li>
+            
+        </ul>
       </div>
-      <div className="p-3 flex items-center justify-center">
+     {/*  <div className="p-3 flex items-center justify-center">
         Logout 
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeWidth={2.5} stroke="#a3e635" className="size-7">
   <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
 </svg>
-      </div>
+      </div> */}
+      <ul className='mt-10 ml-0 text-black font-bold'>
+        <li className='w-28 text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2'>
+                <a href="" className='px-3'>
+                    <IoExitOutline className='inline-block w-6 h-6 mt-0 '></IoExitOutline>
+                    {/* Meeting */}<span className='text-end ml-1 mt-6'>LogOut</span>
+                </a>
+            </li>
+        </ul>
     </aside>
     
   );
