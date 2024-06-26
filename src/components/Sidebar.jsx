@@ -83,11 +83,12 @@ const Sidebar = () => {
   <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
 </svg>
       </div> */}
-      <ul className='mt-10 ml-0 text-black font-bold'>
+      <ul className='mt-10 ml-0 text-black'>
         <li className='w-28 text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2'>
                 <a href="" className='px-3'>
+                    <span className='text-end mr-2 mt-6'>Logout</span>
                     <IoExitOutline className='inline-block w-6 h-6 mt-0 '></IoExitOutline>
-                    {/* Meeting */}<span className='text-end ml-1 mt-6'>LogOut</span>
+                    {/* Meeting */}
                 </a>
             </li>
         </ul>
