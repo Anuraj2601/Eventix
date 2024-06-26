@@ -34,7 +34,7 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="w-96 h-10 bg-neutral-950 text-white rounded-full py-1 px-3  focus:ring focus:border-lime-400"
+            className="w-96 h-10 bg-neutral-950 text-white rounded-full py-1 px-3  focus:ring focus:border-lime-400 border-2 border-lime-400"
           />
           <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-lime-400">
             {/* Search Icon (adjust as needed) */}
