@@ -34,7 +34,7 @@ const StudentAllClubs = () => {
             <Sidebar className="flex-shrink-0"/>
             <div className="flex flex-col flex-1">
                 <Navbar className="sticky top-0 z-10 p-4"/>
-                <div className="bg-neutral-900 text-white flex flex-col flex-1 ">
+                <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-hidden">
                     <Tabs value={activeTab} className="m-6 cursor-pointer">
                         <TabsHeader
                             className="rounded-none bg-transparent p-0 w-1/4"
