@@ -9,6 +9,18 @@ import {
     TabPanel,
   } from "@material-tailwind/react";
 import Club from '../../components/Club';
+import ClubCard from '../../components/ClubCard';
+
+
+const MultipleCards = () => {
+    return (
+      <div className="flex flex-wrap gap-8">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <ClubCard key={index} />
+        ))}
+      </div>
+    );
+  };
 
 const StudentAllClubs = () => {
 
@@ -17,13 +29,12 @@ const StudentAllClubs = () => {
         {
         label: "All Clubs",
         value: "allClubs",
-        desc: <Club/>,
+        desc: <MultipleCards/>,
         },
         {
         label: "Your Clubs",
         value: "yourClubs",
-        desc: `Because it's about motivating the doers. Because I'm here
-        to follow my dreams and inspire other people to follow their dreams, too.`,
+        desc: <Club/>,
         }
        
     ];
@@ -35,7 +46,7 @@ const StudentAllClubs = () => {
             <div className="flex flex-col flex-1">
                 <Navbar className="sticky top-0 z-10 p-4"/>
                 <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-hidden">
-                    <Tabs value={activeTab} className="m-6 cursor-pointer">
+                    <Tabs value={activeTab} className="max-w-full h-full flex flex-col m-6 cursor-pointer">
                         <TabsHeader
                             className="rounded-none bg-transparent p-0 w-1/4"
                             indicatorProps={{
@@ -54,9 +65,13 @@ const StudentAllClubs = () => {
                             </Tab>
                             ))}
                         </TabsHeader>
-                        <TabsBody>
+                        <TabsBody className="flex-1 overflow-y-auto">
                             {data.map(({ value, desc }) => (
-                            <TabPanel key={value} value={value}>
+                            <TabPanel 
+                                key={value} 
+                                value={value}
+                                className={`p-6 overflow-y-auto ${value === activeTab ? 'block' : 'hidden'}`}
+                                >
                                 {desc}
                             </TabPanel>
                             ))}
