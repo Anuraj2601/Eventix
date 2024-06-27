@@ -29,7 +29,7 @@ const CardDefault = () => {
         />
       </CardHeader>
       <CardBody>
-  <Typography variant="h2" className="mb-2 text-lime-400 flex items-center">
+  <Typography variant="h2" className="mb-2 text-[#AEC90A] flex items-center">
     Registrations are open
     <a href="#register-link" className="ml-4 h-auto w-9">
   <HiArrowRightCircle className="text-3xl" /> {/* Adjust the text size class as needed */}
@@ -44,7 +44,7 @@ const CardDefault = () => {
 </CardBody>
 <CardFooter className="pt-0 flex justify-end">
   <a href="#explore-link">
-    <Button variant="gradient" className="bg-lime-400 text-black p-1">
+    <Button variant="gradient" className="bg-[#AEC90A] text-black p-1">
       Explore
     </Button>
   </a>
@@ -103,8 +103,8 @@ const Exploreclub = () => {
                 <Tab
                   key={value}
                   value={value}
-                  className={`text-lime-400 hover:text-lime-400 ${selectedTab === value ? 'text-lime-400' : ''}`}
-                  activeClassName="text-lime-400 font-bold  rounded-t-lg backdrop-filter backdrop-blur-lg bg-opacity-10 bg-white/10 "
+                  className={`text-[#AEC90A] hover:text-[#AEC90A] ${selectedTab === value ? 'text-[#AEC90A]' : ''}`}
+                  activeClassName="text-[#AEC90A] font-bold  rounded-t-lg backdrop-filter backdrop-blur-lg bg-opacity-10 bg-white/10 "
                 >
                   {label}
                 </Tab>

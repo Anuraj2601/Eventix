@@ -19,7 +19,7 @@ const Navbar = () => {
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
-            stroke="#a3e635"
+            stroke="#AEC90A"
             className="size-10"
           >
             <path
@@ -34,9 +34,9 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="w-96 h-10 bg-neutral-950 text-white rounded-full py-1 px-3  focus:ring focus:border-lime-400 border-2 border-lime-400"
+            className="w-96 h-10 bg-neutral-950 text-white rounded-full py-1 px-3  focus:ring focus:border-[#AEC90A] border-2 border-[#AEC90A]"
           />
-          <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-lime-400">
+          <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#AEC90A]">
             {/* Search Icon (adjust as needed) */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -77,19 +77,19 @@ const Navbar = () => {
   <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clipRule="evenodd" />
 </svg> */}
           <a href="" className="px-3">
-          <MdInfoOutline className="text-lime-400 hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></MdInfoOutline>
+          <MdInfoOutline className="text-[#AEC90A] hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></MdInfoOutline>
             {/* Meeting */}
           </a>
           <a href="" className="px-3">
-            <MdOutlineEmail className="text-lime-400 hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></MdOutlineEmail>
+            <MdOutlineEmail className="text-[#AEC90A] hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></MdOutlineEmail>
             {/* Meeting */}
           </a>
           <a href="" className="px-3">
-            <BsBell className="text-lime-400 hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></BsBell>
+            <BsBell className="text-[#AEC90A] hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></BsBell>
             {/* Meeting */}
           </a>
           <a href="" className="px-3">
-            <IoPersonCircleOutline className="text-lime-400 hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></IoPersonCircleOutline>
+            <IoPersonCircleOutline className="text-[#AEC90A] hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></IoPersonCircleOutline>
             {/* Meeting */}
           </a>
         </div>
