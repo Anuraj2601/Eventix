@@ -19,8 +19,10 @@ const Navbar = () => {
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
+
             stroke="#AEC90A"
-            className="size-10"
+            className="size-7"
+
           >
             <path
               strokeLinecap="round"
@@ -34,7 +36,9 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="w-96 h-10 bg-neutral-950 text-white rounded-full py-1 px-3  focus:ring focus:border-[#AEC90A] border-2 border-[#AEC90A]"
+
+            className="w-96 h-9 bg-neutral-950 text-white rounded-full py-1 px-3  focus:ring focus:border-[#AEC90A] border-2 border-[#AEC90A] text-center"
+
           />
           <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#AEC90A]">
             {/* Search Icon (adjust as needed) */}
@@ -44,7 +48,7 @@ const Navbar = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="#a3e635"
-              className="size-6"
+              className="size-5"
             >
               <path
                 fillRule="evenodd"
@@ -59,7 +63,7 @@ const Navbar = () => {
       {/* Right Section: Image Icons */}
       <div className="flex items-center">
         {/* Example Image Icons (replace with your actual images) */}
-        <div className="flex ml-4 space-x-7">
+        <div className="flex ">
           {/*  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#a3e635" className="size-10">
   <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-.988-1.129c1.454-1.272 3.776-1.272 5.23 0 1.513 1.324 1.513 3.518 0 4.842a3.75 3.75 0 0 1-.837.552c-.676.328-1.028.774-1.028 1.152v.75a.75.75 0 0 1-1.5 0v-.75c0-1.279 1.06-2.107 1.875-2.502.182-.088.351-.199.503-.331.83-.727.83-1.857 0-2.584ZM12 18a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
 </svg> */}
@@ -77,19 +81,21 @@ const Navbar = () => {
   <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clipRule="evenodd" />
 </svg> */}
           <a href="" className="px-3">
-          <MdInfoOutline className="text-[#AEC90A] hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></MdInfoOutline>
+
+          <MdInfoOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></MdInfoOutline>
             {/* Meeting */}
           </a>
           <a href="" className="px-3">
-            <MdOutlineEmail className="text-[#AEC90A] hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></MdOutlineEmail>
+            <MdOutlineEmail className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></MdOutlineEmail>
             {/* Meeting */}
           </a>
           <a href="" className="px-3">
-            <BsBell className="text-[#AEC90A] hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></BsBell>
+            <BsBell className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></BsBell>
             {/* Meeting */}
           </a>
           <a href="" className="px-3">
-            <IoPersonCircleOutline className="text-[#AEC90A] hover:text-white inline-block w-auto h-9 mt-1 -ml-6"></IoPersonCircleOutline>
+            <IoPersonCircleOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></IoPersonCircleOutline>
+
             {/* Meeting */}
           </a>
         </div>
