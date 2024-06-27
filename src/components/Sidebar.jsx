@@ -4,7 +4,7 @@ import { BsMegaphone } from 'react-icons/bs'
 import { FaCalendar, FaHome } from 'react-icons/fa'
 import { FaPeopleGroup } from 'react-icons/fa6'
 import { IoCalendarNumberOutline, IoExitOutline, IoVideocamOutline } from 'react-icons/io5'
-import Logo from '../assets/logo.png'
+import Logo from '../assets/eventix Logo1.png'
 
 
 const Sidebar = () => {
@@ -45,31 +45,31 @@ const Sidebar = () => {
 </svg>
         </div> */}
         <ul className='mt-4 ml-0 text-black font-bold'>
-            <li className='w-15 h-15 mb-6  text-lime-400  rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2' style={{ boxShadow: '0 0 10px #a3e635' }}>
+            <li className='w-15 h-15 mb-6  text-[#AEC90A]  rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2' style={{ boxShadow: '0 0 10px #a3e635' }}>
                 <a href="" className='px-3'>
                     <FaHome className='inline-block w-9 h-9 mt-1 -ml-0.5'></FaHome>
                     {/* Home */}
                 </a>
             </li>
-            <li className='w-15 h-15 mb-6  text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2' style={{ boxShadow: '0 0 10px #a3e635' }}>
+            <li className='w-15 h-15 mb-6  text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2' style={{ boxShadow: '0 0 10px #a3e635' }}>
                 <a href="" className='px-3'>
                     <IoCalendarNumberOutline className='inline-block w-9 h-9 -ml-0.5 mt-1'></IoCalendarNumberOutline>
                     {/* Calendar */}
                 </a>
             </li>
-            <li className='w-15 h-15 mb-6  text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2' style={{ boxShadow: '0 0 10px #a3e635' }}>
+            <li className='w-15 h-15 mb-6  text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2' style={{ boxShadow: '0 0 10px #a3e635' }}>
                 <a href="" className='px-3'>
                     <BsMegaphone className='inline-block w-9 h-9 mt-1 -ml-0.5'></BsMegaphone>
                     {/* Announcement */}
                 </a>
             </li>
-            <li className='w-15 h-15 mb-6  text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2' style={{ boxShadow: '0 0 10px #a3e635' }}>
+            <li className='w-15 h-15 mb-6  text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2' style={{ boxShadow: '0 0 10px #a3e635' }}>
                 <a href="" className='px-3'>
                     <FaPeopleGroup className='inline-block w-9 h-9 mt-1 -ml-0.5'></FaPeopleGroup>
                     {/* Clubs */}
                 </a>
             </li>
-            <li className='w-15 h-15 mb-6  text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2'style={{ boxShadow: '0 0 10px #a3e635' }}>
+            <li className='w-15 h-15 mb-6  text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2'style={{ boxShadow: '0 0 10px #a3e635' }}>
                 <a href="" className='px-3'>
                     <IoVideocamOutline className='inline-block w-9 h-9 mt-1 -ml-0.5'></IoVideocamOutline>
                     {/* Meeting */}
@@ -85,7 +85,7 @@ const Sidebar = () => {
 </svg>
       </div> */}
       <ul className='mt-10 ml-0 text-black'>
-        <li className='w-28 text-lime-400 border-lime-400 rounded-lg hover:shadow hover:bg-lime-400 hover:text-black py-2'>
+        <li className='w-28 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2'>
                 <a href="" className='px-3'>
                     <span className='text-end mr-2 mt-6'>Logout</span>
                     <IoExitOutline className='inline-block w-6 h-6 mt-0 '></IoExitOutline>
