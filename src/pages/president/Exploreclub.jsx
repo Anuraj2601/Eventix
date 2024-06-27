@@ -1,7 +1,7 @@
 // src/pages/Exploreclub.jsx
 import React, { useState } from 'react';
-import Sidebar from '../components/Sidebar'; // Adjust the path based on your file structure
-import Navbar from '../components/Navbar';   // Adjust the path based on your file structure
+import Sidebar from '../../components/Sidebar'; // Adjust the path based on your file structure
+import Navbar from '../../components/Navbar';   // Adjust the path based on your file structure
 import { HiArrowRightCircle } from "react-icons/hi2";
 
 import {
@@ -17,11 +17,12 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+import Club from '../../components/Club';
 
 const CardDefault = () => {
   return (
     <Card className="bg-black" style={{ width: '23rem' }}>
-      <CardHeader color="blue-gray" className="relative h-56">
+      <CardHeader color="blue-gray" className="relative h-40"> {/* Reduced height */}
         <img
           src="src/assets/rotaract.png"
           alt="your-image-description"
@@ -29,13 +30,13 @@ const CardDefault = () => {
         />
       </CardHeader>
       <CardBody>
-        <Typography variant="h2" className="mb-2 text-[#AEC90A] flex items-center">
+        <Typography variant="h5" className="mb-2 text-[#AEC90A] flex items-center"> {/* Adjusted variant */}
           Registrations are open
           <a href="#register-link" className="ml-4 h-auto w-9">
-            <HiArrowRightCircle className="text-3xl" /> {/* Adjust the text size class as needed */}
+            <HiArrowRightCircle className="text-2xl" /> {/* Adjusted text size */}
           </a>
         </Typography>
-        <Typography>
+        <Typography className="text-sm"> {/* Adjusted font size */}
           Get the opportunity to learn from industry professionals, prepare
           for certifications like CISA and CRISC and network with
           professionals in the field.
@@ -74,8 +75,7 @@ const Exploreclub = () => {
     {
       label: "Your Clubs",
       value: "Your Clubs",
-      desc: `Because it's about motivating the doers. Because I'm here
-      to follow my dreams and inspire other people to follow their dreams, too.`,
+      desc: <Club />,
     },
   ];
 
