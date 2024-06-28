@@ -1,7 +1,7 @@
 // src/pages/Exploreclub.jsx
 import React, { useState } from 'react';
-import Sidebar from '../components/Sidebar'; // Adjust the path based on your file structure
-import Navbar from '../components/Navbar';   // Adjust the path based on your file structure
+import Sidebar from '../../components/Sidebar'; // Adjust the path based on your file structure
+import Navbar from '../../components/Navbar';   // Adjust the path based on your file structure
 import { HiArrowRightCircle } from "react-icons/hi2";
 
 import {
@@ -17,11 +17,12 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+import Club from '../../components/Club';
 
 const CardDefault = () => {
   return (
-<Card className="mt-1 bg-neutral-900  rounded-t-lg backdrop-filter backdrop-blur-lg" style={{ width: '23rem' }}>
-      <CardHeader color="blue-gray" className="relative h-56">
+    <Card className="bg-black" style={{ width: '23rem' }}>
+      <CardHeader color="blue-gray" className="relative h-40"> {/* Reduced height */}
         <img
           src="src/assets/rotaract.png"
           alt="your-image-description"
@@ -29,27 +30,25 @@ const CardDefault = () => {
         />
       </CardHeader>
       <CardBody>
-  <Typography variant="h2" className="mb-2 text-lime-400 flex items-center">
-    Registrations are open
-    <a href="#register-link" className="ml-4 h-auto w-9">
-  <HiArrowRightCircle className="text-3xl" /> {/* Adjust the text size class as needed */}
-</a>
-
-  </Typography>
-  <Typography>
-    Get the opportunity to learn from industry professionals, prepare
-    for certifications like CISA and CRISC and network with
-    professionals in the field.
-  </Typography>
-</CardBody>
-<CardFooter className="pt-0 flex justify-end">
-  <a href="#explore-link">
-    <Button variant="gradient" className="bg-lime-400 text-black p-1">
-      Explore
-    </Button>
-  </a>
-</CardFooter>
-
+        <Typography variant="h5" className="mb-2 text-[#AEC90A] flex items-center"> {/* Adjusted variant */}
+          Registrations are open
+          <a href="#register-link" className="ml-4 h-auto w-9">
+            <HiArrowRightCircle className="text-2xl" /> {/* Adjusted text size */}
+          </a>
+        </Typography>
+        <Typography className="text-sm"> {/* Adjusted font size */}
+          Get the opportunity to learn from industry professionals, prepare
+          for certifications like CISA and CRISC and network with
+          professionals in the field.
+        </Typography>
+      </CardBody>
+      <CardFooter className="pt-0 flex justify-end">
+        <a href="#explore-link">
+          <Button variant="gradient" className="bg-[#AEC90A] text-black p-1">
+            Explore
+          </Button>
+        </a>
+      </CardFooter>
     </Card>
   );
 };
@@ -76,8 +75,7 @@ const Exploreclub = () => {
     {
       label: "Your Clubs",
       value: "Your Clubs",
-      desc: `Because it's about motivating the doers. Because I'm here
-      to follow my dreams and inspire other people to follow their dreams, too.`,
+      desc: <Club />,
     },
   ];
 
@@ -86,25 +84,24 @@ const Exploreclub = () => {
       <Sidebar className="flex-shrink-0" />
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="bg-neutral-900 border-amber-50 flex-1 p-4 text-white flex flex-col overflow-hidden">
+        <div className="bg-neutral-900 flex-1 text-white flex flex-col overflow-hidden">
           <Tabs
             value={selectedTab}
             onChange={setSelectedTab}
-            className="max-w-full font-bold h-full flex flex-col"
+            className="max-w-full h-full flex flex-col m-6 cursor-pointer"
           >
             <TabsHeader
-              className="bg-transparent space-x-7 flex items-center"
+              className="rounded-none bg-transparent p-0 w-1/4"
               indicatorProps={{
-                className: "bg-gray-900/10 shadow-none !text-gray-900",
-                style: { paddingBottom: '12px' } // Increase padding between tab headers
+                className: "bg-transparent border-b-2 border-[#AEC90A] shadow-none rounded-none",
               }}
             >
               {data.map(({ label, value }) => (
                 <Tab
                   key={value}
                   value={value}
-                  className={`text-lime-400 hover:text-lime-400 ${selectedTab === value ? 'text-lime-400' : ''}`}
-                  activeClassName="text-lime-400 font-bold  rounded-t-lg backdrop-filter backdrop-blur-lg bg-opacity-10 bg-white/10 "
+                  onClick={() => setSelectedTab(value)}
+                  className={`text-white hover:text-[#AEC90A] ${selectedTab === value ? 'text-[#AEC90A]' : ''}`}
                 >
                   {label}
                 </Tab>
@@ -115,9 +112,7 @@ const Exploreclub = () => {
                 <TabPanel
                   key={value}
                   value={value}
-                  className={`p-6 overflow-y-auto rounded-lg backdrop-filter backdrop-blur-lg bg-opacity-10 bg-white/10  ${
-                    value === selectedTab ? 'block' : 'hidden'
-                  }`}
+                  className={`p-6 overflow-y-auto ${value === selectedTab ? 'block' : 'hidden'}`}
                 >
                   {desc}
                 </TabPanel>
