@@ -1,14 +1,19 @@
 // src/App.jsx
 import React from 'react';
-import Layout from './components/Layout';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Exploreclub from './pages/president/Exploreclub';
+import StudentAllClubs from './pages/student/StudentAllClubs';
+// Import other pages if necessary
 
-import './index.css';
-
-function App() {
+const App = () => {
   return (
-    <Layout />
-    
+    <Router>
+      <Routes>
+        <Route path="/" element={<Exploreclub />} />
+        <Route path='/student' element={<StudentAllClubs/>}></Route>
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
