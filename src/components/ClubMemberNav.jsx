@@ -7,7 +7,7 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
-import { ClubEvent } from "./ClubEvent";
+import { ClubMemberEvent } from "./ClubMemberEvent";
  
 export function ClubMemberNav() {
   const [activeTab, setActiveTab] = React.useState("Event");
@@ -58,7 +58,7 @@ export function ClubMemberNav() {
     {
       label: "Event",
       value: "Event",
-      desc: <ClubEvent />,
+      desc: <ClubMemberEvent />,
     },
     {
       label: "Members",

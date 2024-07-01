@@ -17,9 +17,9 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
-import Club from '../../components/Club';
+//import Club from '../../components/Club';
 import { ClubMemberNav } from '../../components/ClubMemberNav';
-import Exploreclub from './Exploreclub';
+//import Exploreclub from './Exploreclub';
 
 const CardDefault = () => {
   return (
