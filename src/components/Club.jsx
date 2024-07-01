@@ -29,7 +29,7 @@ const Club = () => {
             image:
                 "src/assets/clubs/pahasara.png",
         },
-        {
+       {
             id: "5",
             name: "Rotaract Club of UCSC",
             image:
@@ -72,3 +72,4 @@ const Club = () => {
 }
 
 export default Club
+

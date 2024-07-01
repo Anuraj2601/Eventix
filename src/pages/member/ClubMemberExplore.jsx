@@ -8,6 +8,7 @@ const ClubMemberExplore = () => {
       <h1>Welcome to the Club Member Explore Page</h1>
       {/* Add your content here */}
     </div>
+    
   );
 };
 

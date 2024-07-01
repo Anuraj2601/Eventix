@@ -9,7 +9,7 @@ import {
     TabPanel,
   } from "@material-tailwind/react";
 //import Club from '../../components/Club';
-import Club from '../../components/ClubMember';
+import ClubMember from '../../components/ClubMember';
 import ClubCard from '../../components/ClubCard';
 
 
@@ -35,7 +35,7 @@ const ClubMemberAllClubs = () => {
         {
         label: "Your Clubs",
         value: "yourClubs",
-        desc: <Club/>,
+        desc: <ClubMember/>,
         }
        
     ];
