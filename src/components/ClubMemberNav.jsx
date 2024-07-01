@@ -9,7 +9,7 @@ import {
 import { useParams } from "react-router-dom";
 import { ClubEvent } from "./ClubEvent";
  
-export function ClubNav() {
+export function ClubMemberNav() {
   const [activeTab, setActiveTab] = React.useState("Event");
 
   const clubs = [
