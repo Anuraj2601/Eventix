@@ -1,8 +1,10 @@
 import React from 'react';
 import { Card, CardBody, Typography, Avatar } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
+import { useNavigate } from 'react-router-dom';
 
 const ClubMember= () => {
+    const navigate = useNavigate();
 
     const clubs = [
         {
@@ -37,6 +39,10 @@ const ClubMember= () => {
         },
       ];
 
+      const handleExplore = () => {
+        navigate('/explore');
+      };
+
   return (
 
     <>
@@ -58,8 +64,8 @@ const ClubMember= () => {
                         </div>
                         <div className="flex flex-row gap-4"> 
                             <Button className='bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm'>Leave</Button>
-                            <Button className='bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm'>Explore</Button>
                             
+                            <Button onClick={handleExplore} className='bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm'>Explore</Button>
                         </div>
                     </div>
                 ))}
