@@ -8,7 +8,8 @@ import {
     Tab,
     TabPanel,
   } from "@material-tailwind/react";
-import Club from '../../components/Club';
+//import Club from '../../components/Club';
+import Club from '../../components/ClubMember';
 import ClubCard from '../../components/ClubCard';
 
 
