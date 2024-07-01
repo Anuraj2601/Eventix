@@ -18,7 +18,7 @@ import {
   Button,
 } from "@material-tailwind/react";
 import Club from '../../components/Club';
-import { ClubNav } from '../../components/ClubNav';
+import { ClubMemberNav } from '../../components/ClubMemberNav';
 import Exploreclub from './Exploreclub';
 
 const CardDefault = () => {
@@ -77,7 +77,7 @@ const ClubMemberAllClubs = () => {
     {
       label: "Your Clubs",
       value: "Your Clubs",
-      desc: <ClubNav />,
+      desc: <ClubMemberNav />,
     },
   ];
 
