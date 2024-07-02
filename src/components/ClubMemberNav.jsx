@@ -65,8 +65,8 @@ export function ClubMemberNav() {
       desc: <CurrentBoard />,
     },
     {
-      label: "Event",
-      value: "Event",
+      label: "Events",
+      value: "Events",
       desc: <Event />,
     },
     
