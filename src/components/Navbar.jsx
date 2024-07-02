@@ -6,6 +6,7 @@ import { IoPersonCircleOutline, IoPersonSharp } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { AiOutlineBell } from "react-icons/ai";
 import { BsBell } from "react-icons/bs";
+import { NotificationsMenu } from "./NotificationMenu";
 
 const Navbar = () => {
   return (
@@ -89,10 +90,12 @@ const Navbar = () => {
             <MdOutlineEmail className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></MdOutlineEmail>
             {/* Meeting */}
           </a>
-          <a href="" className="px-3">
-            <BsBell className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></BsBell>
+           <a href="" className="px-3">
+            <BsBell className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></BsBell> 
+            {/* <NotificationsMenu /> */}
             {/* Meeting */}
-          </a>
+           </a> 
+         
           <a href="" className="px-3">
             <IoPersonCircleOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></IoPersonCircleOutline>
 
