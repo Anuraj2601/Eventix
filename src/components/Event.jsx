@@ -4,8 +4,8 @@ import { IoMdClose } from "react-icons/io";
 import { FaCalendar } from "react-icons/fa6";
 import { IoTimeOutline } from "react-icons/io5";
 import { FaLocationDot } from "react-icons/fa6";
-import { BsFillTelephoneFill } from "react-icons/bs";
 import { MdEmail } from "react-icons/md";
+import { MdPhone } from "react-icons/md";
 import { Button } from "@material-tailwind/react";
 
 const Event = ({event}) => {
@@ -45,10 +45,10 @@ const Event = ({event}) => {
                 </div>
 
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mt-11">
                 <div className="flex gap-6">
                     <div className="flex items-center justify-center gap-2">
-                        <BsFillTelephoneFill className='text-[#AEC90A]' size={20}/>
+                        <MdPhone  className='text-[#AEC90A]' size={20}/>
                         <span>{event.contact}</span>
                     </div>
                     <div className="flex items-center justify-center gap-2">
