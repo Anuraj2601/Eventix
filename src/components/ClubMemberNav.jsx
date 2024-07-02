@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 import { Event } from "./tabs/Event";
 import { CurrentBoard } from "./tabs/CurrentBoard";
 import { Meetings } from "./tabs/Meetings";
-
+import { Elections } from "./tabs/Elections";
  
 export function ClubMemberNav() {
   const [activeTab, setActiveTab] = React.useState("Event");
@@ -81,8 +81,9 @@ export function ClubMemberNav() {
     {
       label: "Elections",
       value: "Elections",
-      desc: `Because it's about motivating the doers. Because I'm here
-      to follow my dreams and inspire other people to follow their dreams, too.`,
+      desc: <Elections />,
+      /*desc: `Because it's about motivating the doers. Because I'm here
+      to follow my dreams and inspire other people to follow their dreams, too.`,*/
     },
     
     {
