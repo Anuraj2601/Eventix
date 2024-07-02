@@ -8,6 +8,8 @@ import {
 } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
 import { ClubMemberEvent } from "./ClubMemberEvent";
+import { CurrentBoard } from "./tabs/CurrentBoard";
+
  
 export function ClubMemberNav() {
   const [activeTab, setActiveTab] = React.useState("Event");
@@ -49,12 +51,15 @@ export function ClubMemberNav() {
 
   const data = [
     {
-      label: "Current Board",
+      /*label: "Current Board",
       value: "Current Board",
      /* desc: `It really matters and then like it really doesn't matter.
       What matters is the people who are sparked by it. And the people 
       who are like offended by it, it doesn't matter.`,*/
-      desc:`Board Of Term 23/24`
+      //desc:`Board Of Term 23/24`
+      label: "Current Board",
+      value: "Current Board",
+      desc: <CurrentBoard />,
     },
     {
       label: "Event",
