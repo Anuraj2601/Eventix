@@ -10,72 +10,78 @@ import { Button } from "@material-tailwind/react";
 
 const Event = () => {
   return (
-    <div className='event-container bg-[#0b0b0b] p-5' >
-        <div className="event-header">
-            <img src="src/assets/dp.png" alt="" />
-            <span>Executive Vice Chancellor ; <b>Lori Kletzer</b> </span>
-            <div className="header-icons">
-                <HiOutlineDotsVertical className='text-[#AEC90A]'/>
-                <IoMdClose className='text-[#AEC90A]'/>
+    <div className="flex items-center justify-center mt-8 mb-4">
+        <div className='bg-[#0b0b0b] p-5 w-3/4 rounded-md' >
+            <div className="flex flex-row items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                    <img src="src/assets/dp.png" alt="" width={40} height={40} className='rounded-full border-2 border-[#AEC90A]' />
+                    <span>Executive Vice Chancellor ; <b>Lori Kletzer</b> </span>
+                </div>
+                <div className="flex items-center gap-4">
+                    <HiOutlineDotsVertical className='text-[#AEC90A]' size={30}/>
+                    <IoMdClose className='text-[#AEC90A]' size={30}/>
+                </div>
             </div>
-        </div>
-        <div className="event-content">
-            <span className='text-[#AEC90A]'>Join Us at the 2025 Career Fair !</span>
-            <span className='text-[#AEC90A]'>Dead Line for Registration : 30th of March . 2025  </span>
-            <p>Are you ready to take the next step in your career journey? The 2025 Career Fair is the perfect  opportunity for 
-            students to explore potential career paths, network with industry professionals, and discover exciting job and 
-            internship opportunities ...</p>
-            <img src="src/assets/events/madhack.jpg" alt="" />
-        </div>
-        <div className="event-details">
-            <div className="event-date">
-                <FaCalendar />
-                <span>June 20 of 2025 | Friday</span>
+            <div className="flex flex-col gap-5 mb-8">
+                <span className='text-[#AEC90A]'>Join Us at the 2025 Career Fair !</span>
+                <span className='text-[#AEC90A]'>Dead Line for Registration : 30th of March 2025  </span>
+                <p>Are you ready to take the next step in your career journey? The 2025 Career Fair is the perfect  opportunity for 
+                students to explore potential career paths, network with industry professionals, and discover exciting job and 
+                internship opportunities ...</p>
+                <img src="src/assets/events/madhack.jpg" alt="" className='border-2 border-[#AEC90A] w-full h-80 mt-3' />
             </div>
-            <div className="event-time">
-                <IoTimeOutline />
-                <span>from 9 am to 4 pm</span>
-            </div>
-            <div className="event-venue">
-                <FaLocationDot />
-                <span>UCSC Main entrance</span>
-            </div>
+            <div className="flex gap-10 mb-8">
+                <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
+                    <FaCalendar className='text-[#AEC90A]' size={30}/>
+                    <span>June 20 of 2025 | Friday</span>
+                </div>
+                <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
+                    <IoTimeOutline className='text-[#AEC90A]' size={30}/>
+                    <span>from 9 am to 4 pm</span>
+                </div>
+                <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
+                    <FaLocationDot className='text-[#AEC90A]' size={30}/>
+                    <span>UCSC Main entrance</span>
+                </div>
 
-        </div>
-        <div className="event-footer">
-            <div className="footer-contact">
-                <div className="footer-telephone">
-                    <BsFillTelephoneFill />
-                    <span>0217988234</span>
+            </div>
+            <div className="flex items-center justify-between">
+                <div className="flex gap-6">
+                    <div className="flex items-center justify-center gap-2">
+                        <BsFillTelephoneFill className='text-[#AEC90A]' size={20}/>
+                        <span>0217988234</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2">
+                        <MdEmail className='text-[#AEC90A]' size={20}/>
+                        <span>career25@gmail.com</span>
+                    </div>
                 </div>
-                <div className="footer-email">
-                    <MdEmail />
-                    <span>career25@gmail.com</span>
+                <div className="flex items-center justify-center gap-8">
+                    <p className='text-[#AEC90A]'><u className='text-[#AEC90A]'>Why important ?</u></p>
+                    <Button className="flex items-center gap-2 bg-[#AEC90A] py-2 px-4 rounded-3xl font-medium text-[#0b0b0b]">
+                        Register{" "}
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="currentColor"
+                        className="h-5 w-5"
+                        >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+                        />
+                        </svg>
+                    </Button>
                 </div>
             </div>
-            <div className="footer-register">
-                <p><u>Why important ?</u></p>
-                <Button className="flex items-center gap-2 bg-[#AEC90A]">
-                    Read More{" "}
-                    <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="h-5 w-5"
-                    >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-                    />
-                    </svg>
-                </Button>
-            </div>
+            
         </div>
-        
+
     </div>
+  
   )
 }
 
