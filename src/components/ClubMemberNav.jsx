@@ -11,6 +11,7 @@ import { Event } from "./tabs/Event";
 import { CurrentBoard } from "./tabs/CurrentBoard";
 import { Meetings } from "./tabs/Meetings";
 import { Elections } from "./tabs/Elections";
+import { Announcements} from "./tabs/Announcements";
  
 export function ClubMemberNav() {
   const [activeTab, setActiveTab] = React.useState("Event");
@@ -89,9 +90,10 @@ export function ClubMemberNav() {
     {
       label: "Announcements",
       value: "Announcements",
-      desc: `We're not always in the position that we want to be at.
+      /*desc: `We're not always in the position that we want to be at.
       We're constantly growing. We're constantly making mistakes. We're
-      constantly trying to express ourselves and actualize our dreams.`,
+      constantly trying to express ourselves and actualize our dreams.`,*/
+      desc: <Announcements/>,
     },
     {
       label: "Members",
