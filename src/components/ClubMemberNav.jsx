@@ -9,6 +9,7 @@ import {
 import { useParams } from "react-router-dom";
 import { Event } from "./tabs/Event";
 import { CurrentBoard } from "./tabs/CurrentBoard";
+import { Meetings } from "./tabs/Meetings";
 
  
 export function ClubMemberNav() {
@@ -68,11 +69,14 @@ export function ClubMemberNav() {
     },
     
     {
-      label: "Meetings",
+      /*label: "Meetings",
       value: "Meetings",
       desc: `We're not always in the position that we want to be at.
       We're constantly growing. We're constantly making mistakes. We're
-      constantly trying to express ourselves and actualize our dreams.`,
+      constantly trying to express ourselves and actualize our dreams.`,*/
+      label: "Meetings",
+      value: "Meetings",
+      desc: <Meetings />,
     },
     {
       label: "Elections",
