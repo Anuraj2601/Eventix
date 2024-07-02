@@ -7,7 +7,7 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
-import { ClubMemberEvent } from "./ClubMemberEvent";
+import { Event } from "./tabs/Event";
 import { CurrentBoard } from "./tabs/CurrentBoard";
 
  
@@ -64,7 +64,7 @@ export function ClubMemberNav() {
     {
       label: "Event",
       value: "Event",
-      desc: <ClubMemberEvent />,
+      desc: <Event />,
     },
     
     {

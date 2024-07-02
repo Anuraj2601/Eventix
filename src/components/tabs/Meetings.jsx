@@ -23,14 +23,14 @@ import {
 
 import { IconButton } from "@material-tailwind/react";
 
-export function Event() {
+export function Meetings() {
   return (
     
     <div>
      {
      <div>
-      <h2>Events</h2>
-      <p>Events of Club Member...</p>
+      <h2>Meetings</h2>
+      <p>Meetings of Club Member...</p>
      </div>
      /* <Carousel className="rounded-xl">
       <Card className="mt-6 w-96 bg-stone-950">
