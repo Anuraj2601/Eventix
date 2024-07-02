@@ -8,14 +8,14 @@ import { BsFillTelephoneFill } from "react-icons/bs";
 import { MdEmail } from "react-icons/md";
 import { Button } from "@material-tailwind/react";
 
-const Event = () => {
+const Event = ({event}) => {
   return (
     <div className="flex items-center justify-center mt-8 mb-4">
         <div className='bg-[#0b0b0b] p-5 w-3/4 rounded-md' >
             <div className="flex flex-row items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                    <img src="src/assets/dp.png" alt="" width={40} height={40} className='rounded-full border-2 border-[#AEC90A]' />
-                    <span>Executive Vice Chancellor ; <b>Lori Kletzer</b> </span>
+                    <img src={event.publisher_img} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
+                    <span>{event.publisher_position} ; <b>{event.publisher_name}</b> </span>
                 </div>
                 <div className="flex items-center gap-4">
                     <HiOutlineDotsVertical className='text-[#AEC90A]' size={30}/>
@@ -23,25 +23,25 @@ const Event = () => {
                 </div>
             </div>
             <div className="flex flex-col gap-5 mb-8">
-                <span className='text-[#AEC90A]'>Join Us at the 2025 Career Fair !</span>
-                <span className='text-[#AEC90A]'>Dead Line for Registration : 30th of March 2025  </span>
+                <span className='text-[#AEC90A]'>Join Us at the {event.event}</span>
+                <span className='text-[#AEC90A]'>Dead Line for Registration : {event.deadline}  </span>
                 <p>Are you ready to take the next step in your career journey? The 2025 Career Fair is the perfect  opportunity for 
                 students to explore potential career paths, network with industry professionals, and discover exciting job and 
                 internship opportunities ...</p>
-                <img src="src/assets/events/madhack.jpg" alt="" className='border-2 border-[#AEC90A] w-full h-80 mt-3' />
+                <img src={event.image} alt="" className='border-2 border-[#AEC90A] w-full h-80 mt-3' />
             </div>
             <div className="flex gap-10 mb-8">
                 <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
                     <FaCalendar className='text-[#AEC90A]' size={30}/>
-                    <span>June 20 of 2025 | Friday</span>
+                    <span>{event.date}</span>
                 </div>
                 <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
                     <IoTimeOutline className='text-[#AEC90A]' size={30}/>
-                    <span>from 9 am to 4 pm</span>
+                    <span>{event.time}</span>
                 </div>
                 <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
                     <FaLocationDot className='text-[#AEC90A]' size={30}/>
-                    <span>UCSC Main entrance</span>
+                    <span>{event.venue}</span>
                 </div>
 
             </div>
@@ -49,11 +49,11 @@ const Event = () => {
                 <div className="flex gap-6">
                     <div className="flex items-center justify-center gap-2">
                         <BsFillTelephoneFill className='text-[#AEC90A]' size={20}/>
-                        <span>0217988234</span>
+                        <span>{event.contact}</span>
                     </div>
                     <div className="flex items-center justify-center gap-2">
                         <MdEmail className='text-[#AEC90A]' size={20}/>
-                        <span>career25@gmail.com</span>
+                        <span>{event.email}</span>
                     </div>
                 </div>
                 <div className="flex items-center justify-center gap-8">
