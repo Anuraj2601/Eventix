@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardBody, Typography, Avatar} from "@material-tailwind/react";
+import { Card, CardBody, Typography, Avatar, Textarea} from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
@@ -13,7 +13,6 @@ import {
 
 const Club = () => {
 
- 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen((cur) => !cur);
 
@@ -96,7 +95,7 @@ const Club = () => {
         size="xs"
         open={open}
         handler={handleOpen}
-        className="bg-transparent w-screen h-screen bg-opacity-30 backdrop-blur-sm flex items-center"
+        className="bg-transparent w-screen h-screen bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-200 flex items-center"
       >
         <Card className="mx-auto w-full max-w-[24rem] p-3">
             <IoIosCloseCircle className='absolute text-xl top-1 right-1 cursor-pointer' onClick={handleOpen}/>
@@ -110,7 +109,7 @@ const Club = () => {
               </Typography>
               
               <div className="relative">
-                  <Input type="text" size='lg' className='h-16 border-2 bg-slate-100' placeholder='Type your reason' variant="label-hidden" required/>
+                  <Textarea size='lg' className='h-16 border-2 bg-slate-100' placeholder='Type your reason' /* variant="label-hidden" */ required/>
                   <MdSend className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"/>
               </div>
              
