@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar'; // Adjust the path based on your file structure
 import Navbar from '../../components/Navbar';   // Adjust the path based on your file structure
 import { HiArrowRightCircle } from "react-icons/hi2";
+import { useParams } from 'react-router-dom';
 
 import {
   Tabs,
@@ -20,6 +21,9 @@ import {
 import Club from '../../components/Club';
 import { ClubMemberNav } from '../../components/ClubMemberNav';
 //import Exploreclub from './Exploreclub';
+
+
+
 
 const CardDefault = () => {
   return (
@@ -66,6 +70,7 @@ const MultipleCards = () => {
 };
 
 const ClubMemberAllClubs = () => {
+  const { name } = useParams();
   const [selectedTab, setSelectedTab] = useState("Your Clubs"); // State to track the selected tab
 
   const data = [
@@ -77,7 +82,8 @@ const ClubMemberAllClubs = () => {
     {
       label: "Your Clubs",
       value: "Your Clubs",
-      desc: <ClubMemberNav />,
+      //desc: <ClubMemberNav />,
+      desc: <ClubMemberNav clubName={name} />, // Pass clubName as prop
     },
   ];
 
