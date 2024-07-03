@@ -6,17 +6,22 @@ import StudentAllClubs from './pages/student/StudentAllClubs';
 import StudentDashboard from './pages/student/StudentDashboard';
 import ClubDetails from './pages/president/ClubDetails';
 import ClubRegistration from './pages/student/ClubRegistration';
+import  Carousel1  from './components/Carousel1';
 // Import other pages if necessary
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Exploreclub />} />
-        <Route path='/club/:name' element={<ClubDetails />} ></Route>
+        <Route exact path="/club" element={<Exploreclub />} />
+        <Route path='/club/:name' element={<ClubDetails /* sname = 'sname' cname ='cname' image = 'image' */ />} ></Route>
         <Route path='/student' element={<StudentAllClubs/>}></Route>
+
+        <Route path='/Carousel' element={<Carousel1 />}></Route>
+
         <Route path='/studentdashboard' element={<StudentDashboard/>}></Route>
         <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
+
       </Routes>
     </Router>
   );
