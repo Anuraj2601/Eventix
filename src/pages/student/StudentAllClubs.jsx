@@ -10,13 +10,14 @@ import {
   } from "@material-tailwind/react";
 import Club from '../../components/Club';
 import ClubCard from '../../components/ClubCard';
+import StudentClubCard from '../../components/StudentClubCard';
 
 
 const MultipleCards = () => {
     return (
-      <div className="flex flex-wrap gap-8">
+      <div className="flex flex-wrap gap-10">
         {Array.from({ length: 8 }).map((_, index) => (
-          <ClubCard key={index} />
+          <StudentClubCard key={index} />
         ))}
       </div>
     );
