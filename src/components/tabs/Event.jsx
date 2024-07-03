@@ -29,8 +29,10 @@ export function Event() {
     <div>
      {
      <div>
+      <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
       <h2>Events</h2>
       <p>Events of Club Member...</p>
+      </div>
      </div>
      }
 </div>
