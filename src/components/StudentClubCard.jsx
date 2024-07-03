@@ -2,8 +2,16 @@ import React from 'react'
 import { Button } from "@material-tailwind/react";
 import { RiOpenArmLine } from "react-icons/ri";
 import { IoMdBookmark } from "react-icons/io";
+import { useNavigate } from 'react-router-dom';
 
 const StudentClubCard = ({club}) => {
+
+    const navigate = useNavigate();
+
+    const handleRegisterClick = () => {
+        navigate(`/clubregister/${club.club_name}`)
+    }
+
   return (
     <div className='bg-[#0B0B0B] p-6 w-2/5 rounded-2xl'>
         <div className="flex items-center justify-between mb-4">
@@ -41,7 +49,8 @@ const StudentClubCard = ({club}) => {
         </div>
         <div className="flex items-center justify-end gap-4">
             <Button className="bg-white text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium">Ignore</Button>
-            <Button className= {`text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium ${club.reg_status === "yes" ? 'bg-[#AEC90A]' : 'bg-[#AEC90A80]'}`} >Register</Button>
+            <Button className= {`text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium ${club.reg_status === "yes" ? 'bg-[#AEC90A]' : 'bg-[#AEC90A80] cursor-not-allowed'}`} 
+            onClick={handleRegisterClick}>Register</Button>
         </div>
         
     </div>

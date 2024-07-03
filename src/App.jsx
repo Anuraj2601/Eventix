@@ -5,6 +5,7 @@ import Exploreclub from './pages/president/Exploreclub';
 import StudentAllClubs from './pages/student/StudentAllClubs';
 import StudentDashboard from './pages/student/StudentDashboard';
 import ClubDetails from './pages/president/ClubDetails';
+import ClubRegistration from './pages/student/ClubRegistration';
 // Import other pages if necessary
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
         <Route path='/club/:name' element={<ClubDetails />} ></Route>
         <Route path='/student' element={<StudentAllClubs/>}></Route>
         <Route path='/studentdashboard' element={<StudentDashboard/>}></Route>
+        <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
       </Routes>
     </Router>
   );
