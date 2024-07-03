@@ -20,13 +20,14 @@ import {
 import Club from '../../components/Club';
 import { ClubNav } from '../../components/ClubNav';
 import Exploreclub from './Exploreclub';
+import { useLocation, useParams } from 'react-router-dom';
 
 const CardDefault = () => {
   return (
     <Card className="bg-black" style={{ width: '23rem' }}>
       <CardHeader color="blue-gray" className="relative h-40"> {/* Reduced height */}
         <img
-          src="src/assets/rotaract.png"
+          src="../../src/assets/rotaract.png"
           alt="your-image-description"
           className="h-full w-full object-cover"
         />
@@ -65,8 +66,14 @@ const MultipleCards = () => {
   );
 };
 
-const ClubDetails = () => {
+const ClubDetails = ({props}) => {
   const [selectedTab, setSelectedTab] = useState("Your Clubs"); // State to track the selected tab
+
+  /* const {sname} = useParams();
+
+  const location = useLocation();
+
+  const {name,image} = location.state; */
 
   const data = [
     {
@@ -86,6 +93,8 @@ const ClubDetails = () => {
       <Sidebar className="flex-shrink-0" />
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
+       {/*  <h3>{props.name}</h3> */}
+       <h3>{name}</h3>
         <div className="bg-neutral-900 flex-1 text-white flex flex-col overflow-hidden">
           <Tabs
             value={selectedTab}
