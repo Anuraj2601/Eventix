@@ -8,6 +8,8 @@ import {
 } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
 import { ClubEvent } from "./ClubEvent";
+import Meeting from "./Meeting";
+import Announcement from "./Announcement";
  
 export function ClubNav() {
   const [activeTab, setActiveTab] = React.useState("Event");
@@ -58,7 +60,7 @@ export function ClubNav() {
     {
       label: "Event",
       value: "Event",
-      desc: <ClubEvent />,
+      desc: /* <ClubEvent />  */ `Events`,
     },
     {
       label: "Members",
@@ -76,9 +78,12 @@ export function ClubNav() {
     {
       label: "Meetings",
       value: "Meetings",
-      desc: `We're not always in the position that we want to be at.
-      We're constantly growing. We're constantly making mistakes. We're
-      constantly trying to express ourselves and actualize our dreams.`,
+      desc: <Meeting />,
+    },
+    {
+      label: "Announcement",
+      value: "Announcement",
+      desc: <Announcement />,
     },
   ];
   return (
@@ -87,7 +92,7 @@ export function ClubNav() {
         className="rounded-none bg-transparent p-0 "
         indicatorProps={{
           className:
-            "bg-transparent border-b-2 border-[#AEC90A] shadow-none rounded-none",
+            "bg-transparent border-b-2 border-[#AEC90A] shadow-none rounded-none ",
         }}
       >
         {data.map(({ label, value }) => (
