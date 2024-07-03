@@ -23,105 +23,325 @@ import {
 
 import { IconButton } from "@material-tailwind/react";
 
-export function Meetings() {
+/*export function Meetings() {
   return (
     
     <div>
      {
-     <div>
-      <h2>Meetings</h2>
-      <p>Meetings of Club Member...</p>
+     <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
      </div>
-     /* <Carousel className="rounded-xl">
-      <Card className="mt-6 w-96 bg-stone-950">
-      <CardHeader color="blue-gray" className="relative h-48">
-        <img
-          src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-          alt="card-image"
-        />
-      </CardHeader>
-      <CardBody>
-        <Typography variant="h5" color="blue-gray" className="mb-2">
-          UI/UX Review Check
-        </Typography>
-        <Typography>
-          The place is close to Barceloneta Beach and bus stop just 2 min by
-          walk and near to &quot;Naviglio&quot; where you can enjoy the main
-          night life in Barcelona.
-        </Typography>
-      </CardBody>
-      <CardFooter className="pt-0">
-        <Button className="bg-white text-stone-950">Read More</Button>
-      </CardFooter>
-    </Card>
-
-    <Card className="mt-6 w-96 bg-stone-950">
-      <CardHeader color="blue-gray" className="relative h-48">
-        <img
-          src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-          alt="card-image"
-        />
-      </CardHeader>
-      <CardBody>
-        <Typography variant="h5" color="blue-gray" className="mb-2">
-          UI/UX Review Check
-        </Typography>
-        <Typography>
-          The place is close to Barceloneta Beach and bus stop just 2 min by
-          walk and near to &quot;Naviglio&quot; where you can enjoy the main
-          night life in Barcelona.
-        </Typography>
-      </CardBody>
-      <CardFooter className="pt-0">
-        <Button className="bg-white text-stone-950">Read More</Button>
-      </CardFooter>
-    </Card>
-
-    <Card className="mt-6 w-96 bg-stone-950">
-      <CardHeader color="blue-gray" className="relative h-48">
-        <img
-          src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-          alt="card-image"
-        />
-      </CardHeader>
-      <CardBody>
-        <Typography variant="h5" color="blue-gray" className="mb-2">
-          UI/UX Review Check
-        </Typography>
-        <Typography>
-          The place is close to Barceloneta Beach and bus stop just 2 min by
-          walk and near to &quot;Naviglio&quot; where you can enjoy the main
-          night life in Barcelona.
-        </Typography>
-      </CardBody>
-      <CardFooter className="pt-0">
-        <Button className="bg-white text-stone-950">Read More</Button>
-      </CardFooter>
-    </Card>
-
-    <Card className="mt-6 w-96 bg-stone-950">
-      <CardHeader color="blue-gray" className="relative h-48">
-        <img
-          src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-          alt="card-image"
-        />
-      </CardHeader>
-      <CardBody>
-        <Typography variant="h5" color="blue-gray" className="mb-2">
-          UI/UX Review Check
-        </Typography>
-        <Typography>
-          The place is close to Barceloneta Beach and bus stop just 2 min by
-          walk and near to &quot;Naviglio&quot; where you can enjoy the main
-          night life in Barcelona.
-        </Typography>
-      </CardBody>
-      <CardFooter className="pt-0">
-        <Button className="bg-white text-stone-950">Read More</Button>
-      </CardFooter>
-    </Card>
-    </Carousel>  */}
+     }
 </div>
 
   );
-};
+};*/
+
+/*import React from 'react';
+
+export function Meetings() {
+  const events = [
+    {
+      name: "Regarding next club board elections",
+      date: "05.06.2024",
+      online: true,
+    },
+    {
+      name: "Regarding next club board elections",
+      date: "05.06.2024",
+      online: true,
+    },
+  ];
+
+  return (
+    <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
+      {events.map((event, index) => (
+        <div key={index} className="w-full h-30 bg-gray-800 rounded-lg p-4 flex items-center mb-4">
+          <div className="ml-4">
+            <h3 className="flex text-xl text-white">{event.name}</h3>
+            <div className="flex justify-between items-center mt-2">
+              <span className="text-gray-400">{event.date}</span>
+              <div className="flex items-center">
+                {event.online && (
+                  <>
+                    <div style={{ backgroundColor: 'green', width: '10px', height: '10px', marginRight: '5px' }}></div>
+                    <p style={{ color: 'white', fontSize: '0.875rem' }}>Online</p>
+                  </>
+                )}
+                {!event.online && (
+                  <p style={{ color: 'white', fontSize: '0.875rem' }}>Offline</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}*/
+/*import React from 'react';
+
+export function Meetings() {
+  const events = [
+    {
+      name: "Regarding next club board elections",
+      date: "05.06.2024",
+      online: true,
+      joinLink: "https://example.com/join-event1", // Example join link
+    },
+    {
+      name: "Regarding next club board elections",
+      date: "05.06.2024",
+      online: true,
+      joinLink: "https://example.com/join-event2", // Example join link
+    },
+  ];
+
+  return (
+    <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
+      {events.map((event, index) => (
+        <div key={index} className="w-full bg-gray-800 rounded-lg p-4 flex items-center mb-4">
+          <div className="ml-4">
+            <h3 className="text-xl font-semibold text-white">{event.name}</h3>
+            <div className="flex justify-between items-center mt-2">
+              <span className="text-gray-400">{event.date}</span>
+              <div className="flex items-center">
+                {event.online && (
+                  <>
+                    <div style={{ backgroundColor: 'green', width: '10px', height: '10px', marginRight: '5px' }}></div>
+                    <p style={{ color: 'white', fontSize: '0.875rem' }}>Online</p>
+                    {event.joinLink && (
+                      <a href={event.joinLink} className="ml-2 text-white text-sm border border-white px-2 py-1 rounded hover:bg-white hover:text-gray-800">Join</a>
+                    )}
+                  </>
+                )}
+                {!event.online && (
+                  <p style={{ color: 'white', fontSize: '0.875rem' }}>Offline</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}*/
+
+/*import React from 'react';
+
+export function Meetings() {
+  const events = [
+    {
+      name: "Regarding next club board elections",
+      date: "05.06.2024",
+      online: true,
+      joinLink: "https://example.com/join-event1",
+    },
+    {
+      name: "Regarding next club board elections",
+      date: "05.06.2024",
+      online: true,
+      joinLink: "https://example.com/join-event2",
+    },
+  ];
+
+  return (
+    <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
+      {events.map((event, index) => (
+        <div key={index} className="w-full bg-gray-800 rounded-lg p-4 flex items-center mb-4">
+          <div className="ml-4">
+            <h3 className="text-xl font-semibold text-white">{event.name}</h3>
+            <div className="flex justify-between items-center mt-2">
+              <span className="text-gray-400">{event.date}</span>
+              <div className="flex items-center">
+                {event.online && (
+                  <>
+                    <div style={{ backgroundColor: 'green', width: '10px', height: '10px', marginRight: '5px' }}></div>
+                    <p style={{ color: 'white', fontSize: '0.875rem', marginRight: '5px' }}>Online</p>
+                    {event.joinLink && (
+                      <a href={event.joinLink} className="text-white text-sm border border-white px-2 py-1 rounded hover:bg-white hover:text-gray-800">Join</a>
+                    )}
+                  </>
+                )}
+                {!event.online && (
+                  <p style={{ color: 'white', fontSize: '0.875rem' }}>Offline</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}*/
+
+/*import React from 'react';
+
+export function Meetings() {
+  const events = [
+    {
+      name: "Regarding next club board elections",
+      date: "05.06.2024",
+      online: true,
+      joinLink: "https://example.com/join-event1",
+    },
+    {
+      name: "Regarding next club board elections",
+      date: "05.06.2024",
+      online: true,
+      joinLink: "https://example.com/join-event2",
+    },
+  ];
+
+  return (
+    <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
+      {events.map((event, index) => (
+        <div key={index} className="w-full bg-gray-800 rounded-lg p-4 flex items-center mb-4">
+          <div className="ml-4 flex-grow">
+            <h3 className="text-xl font-semibold text-white">{event.name}</h3>
+            <div className="flex justify-between items-center mt-2">
+              <span className="text-gray-400">{event.date}</span>
+              <div className="flex items-center">
+                {event.online && (
+                  <>
+                    <div style={{ backgroundColor: 'green', width: '10px', height: '10px', marginRight: '5px' }}></div>
+                    <p style={{ color: 'white', fontSize: '0.875rem', marginRight: '5px' }}>Online</p>
+                    {event.joinLink && (
+                      <a 
+                        href={event.joinLink} 
+                        className="text-white text-sm border px-2 py-1 rounded" 
+                        style={{ backgroundColor: '#5C690A', borderColor: '#5C690A', marginLeft: 'auto' }}
+                      >
+                        Join
+                      </a>
+                    )}
+                  </>
+                )}
+                {!event.online && (
+                  <p style={{ color: 'white', fontSize: '0.875rem' }}>Offline</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}*/
+
+/*import React from 'react';
+
+export function Meetings() {
+  const events = [
+    {
+      name: "Regarding next club board elections",
+      date: "05.06.2024",
+      online: true,
+      joinLink: "https://example.com/join-event1",
+    },
+    {
+      name: "Regarding next club board elections",
+      date: "05.06.2024",
+      online: true,
+      joinLink: "https://example.com/join-event2",
+    },
+  ];
+
+  return (
+    <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
+      {events.map((event, index) => (
+        <div key={index} className="w-full bg-gray-800 rounded-lg p-4 flex flex-col mb-4">
+          <div className="ml-4">
+            <h3 className="text-xl font-semibold text-white mb-2">{event.name}</h3>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-400">{event.date}</span>
+              <div className="flex items-center">
+                {event.online && (
+                  <div className="flex items-center">
+                    <div style={{ backgroundColor: 'green', width: '10px', height: '10px', marginRight: '5px' }}></div>
+                    <p style={{ color: 'white', fontSize: '0.875rem', marginRight: '20px' }}>Online</p>
+                  </div>
+                )}
+                {!event.online && (
+                  <p style={{ color: 'white', fontSize: '0.875rem', marginRight: '20px' }}>Offline</p>
+                )}
+                {event.joinLink && (
+                  <a 
+                    href={event.joinLink} 
+                    className="text-white text-sm border px-2 py-1 rounded" 
+                    style={{ backgroundColor: '#5C690A', borderColor: '#5C690A' }}
+                  >
+                    Join
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}*/
+
+import React from 'react';
+
+export function Meetings() {
+  const events = [
+    {
+      name: "Regarding next club board elections",
+      date: "05.06.2024",
+      online: true,
+      joinLink: "https://example.com/join-event1",
+    },
+    {
+      name: "Planning for Future Club Leadership",
+      date: "10.06.2024",
+      online: true,
+      joinLink: "https://example.com/join-event2",
+    },
+  ];
+
+  return (
+    <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
+      {events.map((event, index) => (
+        <div key={index} className="w-full rounded-full p-4 flex flex-col mb-4" style={{ backgroundColor: '#171717' }}>
+          <div className="ml-4">
+            <h3 className="text-md text-white mb-2 ">{event.name}</h3>
+            <div className="flex justify-between items-center mt-2">
+            <span className="text-gray-400" style={{ color: '#AEC90A' }}>{event.date}</span>
+              <div className="flex items-center space-x-4">
+                {event.online && (
+                  <div className="flex items-center">
+                    <div style={{ backgroundColor: '#00DE3E', width: '10px', height: '10px', marginRight: '5px',  borderRadius: '50%' }}></div>
+                    
+
+                    <p style={{ color: 'white', fontSize: '0.875rem',marginRight: '350px'}}>online</p>
+                  </div>
+                )}
+                {!event.online && (
+                  <div className="flex items-center">
+                  <div style={{ backgroundColor: 'red', width: '10px', height: '10px', marginRight: '5px' , borderRadius: '50%' }}></div>
+                  <p style={{ color: 'white', fontSize: '0.875rem', marginRight: '335px'  }}>physical</p>
+                  </div>
+                )}
+                {event.joinLink && (
+                  <a 
+                    href={event.joinLink} 
+                    className="text-white text-sm border px-2 py-1 rounded-full" 
+                    style={{ backgroundColor: '#5C690A', borderColor: '#5C690A', marginRight: '25px'  }}
+                  >
+                    JOIN
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+
+
+
+
