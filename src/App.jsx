@@ -10,7 +10,11 @@ import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
 import StudentDashboard from './pages/student/StudentDashboard';
 import ClubDetails from './pages/president/ClubDetails';
 
+
 import EventRequests from './pages/admin/EventRequests';
+
+import ClubRegistration from './pages/student/ClubRegistration';
+
 import  Carousel1  from './components/Carousel1';
 
 
@@ -42,6 +46,7 @@ const App = () => {
 
 
         <Route path='/studentdashboard' element={<StudentDashboard/>}></Route>
+        <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
 
 
       </Routes>
