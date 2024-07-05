@@ -10,6 +10,7 @@ import {
   } from "@material-tailwind/react";
 import Club from '../../components/Club';
 import ClubCard from '../../components/ClubCard';
+
 import StudentClubCard from '../../components/StudentClubCard';
 
 const clubs = [
@@ -90,6 +91,7 @@ const MultipleCards = () => {
       <div className="flex flex-wrap items-center justify-center gap-10">
         {clubs.map(( club , index) => (
           <StudentClubCard key={index} club= {club}/>
+
         ))}
       </div>
     );

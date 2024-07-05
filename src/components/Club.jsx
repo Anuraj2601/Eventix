@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Card,
@@ -13,16 +14,20 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { Dialog, Input } from "@material-tailwind/react";
 
 import { useNavigate } from "react-router-dom";
+import ClubDetails from "../pages/president/ClubDetails";
+
 
 const Club = () => {
   const navigator = useNavigate();
 
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
 
-  const getClubDetails = (sname) => {
-    navigator(`/club/${sname}`);
-
+  const getClubDetails = (name) => {
+    /* const sname = club.sname */
+    navigator(`/club/${name}`);
+    {/* <ClubDetails clubs={clubs} key={id}/> */}
     /* history.push(`/club/${sname}`, { name, image }); */
 
     //console.log(name);
@@ -33,41 +38,53 @@ const Club = () => {
       id: "1",
       name: "IEEE Student Group",
       sname: "ieee",
+
       image: "../src/assets/clubs/ieee.png",
+
     },
     {
       id: "2",
       name: "ISACA Student Group",
       sname: "isaca",
+
       image: "../src/assets/clubs/isaca.png",
+
     },
     {
       id: "3",
       name: "Gavel Club (Public Speaking and Leadership)",
       sname: "gavel",
+
       image: "../src/assets/clubs/gavel.png",
+
     },
     {
       id: "4",
       name: "Pahasara Club (Innovation and Creativity)",
       sname: "pahasara",
+
       image: "../src/assets/clubs/pahasara.png",
+
     },
     {
       id: "5",
       name: "Rotaract Club of UCSC",
       sname: "rotract",
+
       image: "../src/assets/clubs/rotaract.png",
+
     },
   ];
 
   return (
     <>
+
       
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div className="">
-            {clubs.map(({ name, image, sname }, index) => (
+            {clubs.map(({ id, name, image, sname }, index) => (
+
               <div
                 key={index}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
@@ -86,24 +103,29 @@ const Club = () => {
                   </div>
                 </div>
                 <div className="flex flex-row gap-4">
+
                   <Button
                     className="bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
                     onClick={handleOpen}
                   >
+
                     Leave
                   </Button>
                   <Button
                     className="bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
-                    onClick={() => getClubDetails(sname)}
+
+                    onClick={() =>  getClubDetails(sname) }
                   >
                     Explore
                   </Button>
 
                   {/* {console.log(isModalOpen)} */}
+
                 </div>
               </div>
             ))}
           </div>
+
           {/* {open && <LeaveModal open={open} handleOpen={handleOpen}/>} */}
           {/* <LeaveModal open={open} handleOpen={handleOpen}>
                   fancy modal
@@ -146,6 +168,7 @@ const Club = () => {
           </CardBody>
         </Card>
       </Dialog>
+
     </>
   );
 };
