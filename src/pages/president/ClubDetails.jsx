@@ -18,7 +18,7 @@ import {
   Button,
 } from "@material-tailwind/react";
 import Club from '../../components/Club';
-import { ClubNav } from '../../components/ClubNav';
+import  ClubNav  from '../../components/ClubNav';
 import Exploreclub from './Exploreclub';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -66,7 +66,7 @@ const MultipleCards = () => {
   );
 };
 
-const ClubDetails = ({props}) => {
+const ClubDetails = () => {
   const [selectedTab, setSelectedTab] = useState("Your Clubs"); // State to track the selected tab
 
   /* const {sname} = useParams();
@@ -84,7 +84,7 @@ const ClubDetails = ({props}) => {
     {
       label: "Your Clubs",
       value: "Your Clubs",
-      desc: <ClubNav />,
+      desc: <ClubNav /> ,
     },
   ];
 
@@ -94,7 +94,7 @@ const ClubDetails = ({props}) => {
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
        {/*  <h3>{props.name}</h3> */}
-       <h3>{name}</h3>
+       {/* <h3>{clubs.name}</h3> */}
         <div className="bg-neutral-900 flex-1 text-white flex flex-col overflow-hidden">
           <Tabs
             value={selectedTab}

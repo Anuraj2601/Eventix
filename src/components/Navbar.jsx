@@ -5,8 +5,10 @@ import { MdInfoOutline } from "react-icons/md";
 import { IoPersonCircleOutline, IoPersonSharp } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { AiOutlineBell } from "react-icons/ai";
-import { BsBell } from "react-icons/bs";
+
+import { BsArrowLeftCircle, BsBell } from "react-icons/bs";
 import { NotificationsMenu } from "./NotificationMenu";
+
 
 const Navbar = () => {
   return (
@@ -15,7 +17,9 @@ const Navbar = () => {
       <div className="flex items-center">
         {/* Logo */}
         <div className="mr-4">
-          <svg
+
+          {/* <svg
+
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -30,10 +34,17 @@ const Navbar = () => {
               strokeLinejoin="round"
               d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
             />
+
           </svg>
         </div>
         {/* Centered Search Box */}
-        <div className=" ml-72  flex items-center justify-items-center relative">
+     
+          </svg> */}
+          <BsArrowLeftCircle className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></BsArrowLeftCircle>
+        </div>
+        {/* Centered Search Box */}
+        <div className=" ml-80  flex items-center justify-items-center relative">
+
           <input
             type="text"
             placeholder="Search..."
@@ -90,12 +101,14 @@ const Navbar = () => {
             <MdOutlineEmail className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></MdOutlineEmail>
             {/* Meeting */}
           </a>
+
            <a href="" className="px-3">
             <BsBell className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></BsBell> 
             {/* <NotificationsMenu /> */}
             {/* Meeting */}
            </a> 
          
+
           <a href="" className="px-3">
             <IoPersonCircleOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></IoPersonCircleOutline>
 

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar'; // Adjust the path based on your file structure
 import Navbar from '../../components/Navbar';   // Adjust the path based on your file structure
 import { HiArrowRightCircle } from "react-icons/hi2";
+import { useParams } from 'react-router-dom';
 
 import {
   Tabs,
@@ -18,15 +19,18 @@ import {
   Button,
 } from "@material-tailwind/react";
 import Club from '../../components/Club';
+import { ClubMemberNav } from '../../components/ClubMemberNav';
+//import Exploreclub from './Exploreclub';
+
+
+
 
 const CardDefault = () => {
   return (
     <Card className="bg-black" style={{ width: '23rem' }}>
       <CardHeader color="blue-gray" className="relative h-40"> {/* Reduced height */}
         <img
-
-          src="../src/assets/rotaract.png"
-
+          src="src/assets/rotaract.png"
           alt="your-image-description"
           className="h-full w-full object-cover"
         />
@@ -65,9 +69,9 @@ const MultipleCards = () => {
   );
 };
 
-
-const Exploreclub = () => {
-  const [selectedTab, setSelectedTab] = useState("All Clubs"); // State to track the selected tab
+const ClubMemberAllClubs = () => {
+  const { name } = useParams();
+  const [selectedTab, setSelectedTab] = useState("Your Clubs"); // State to track the selected tab
 
   const data = [
     {
@@ -78,7 +82,8 @@ const Exploreclub = () => {
     {
       label: "Your Clubs",
       value: "Your Clubs",
-      desc: <Club />,
+      //desc: <ClubMemberNav />,
+      desc: <ClubMemberNav clubName={name} />, // Pass clubName as prop
     },
   ];
 
@@ -96,7 +101,7 @@ const Exploreclub = () => {
             <TabsHeader
               className="rounded-none bg-transparent p-0 w-1/4"
               indicatorProps={{
-                className: "bg-transparent border-b-2 border-[#AEC90A] shadow-none rounded-none",
+                className: "bg-transparent border-b-0 border-[#AEC90A] shadow-none rounded-none",
               }}
             >
               {data.map(({ label, value }) => (
@@ -123,9 +128,10 @@ const Exploreclub = () => {
             </TabsBody>
           </Tabs>
         </div>
+        
       </div>
     </div>
   );
 };
 
-export default Exploreclub;
+export default ClubMemberAllClubs;
