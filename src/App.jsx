@@ -5,7 +5,7 @@ import Exploreclub from './pages/president/Exploreclub';
 import StudentAllClubs from './pages/student/StudentAllClubs';
 import StudentDashboard from './pages/student/StudentDashboard';
 import ClubDetails from './pages/president/ClubDetails';
-import  Carousel1  from './components/Carousel1';
+import Board from './components/Board';
 // Import other pages if necessary
 
 const App = () => {
@@ -16,7 +16,7 @@ const App = () => {
         <Route path='/club/:name' element={<ClubDetails /* sname = 'sname' cname ='cname' image = 'image' */ />} ></Route>
         <Route path='/student' element={<StudentAllClubs/>}></Route>
 
-        <Route path='/Carousel' element={<Carousel1 />}></Route>
+        <Route path='/Board' element={<Board />}></Route>
 
         <Route path='/studentdashboard' element={<StudentDashboard/>}></Route>
 

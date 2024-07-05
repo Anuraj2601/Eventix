@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { ClubEvent } from "./ClubEvent";
 import Meeting from "./Meeting";
 import Announcement from "./Announcement";
+import Board from "./Board";
  
 export function ClubNav() {
   const [activeTab, setActiveTab] = React.useState("Event");
@@ -53,9 +54,7 @@ export function ClubNav() {
     {
       label: "Current Board",
       value: "Current Board",
-      desc: `It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter.`,
+      desc:<Board />,
     },
     {
       label: "Event",
