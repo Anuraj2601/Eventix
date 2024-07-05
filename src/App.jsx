@@ -10,9 +10,14 @@ import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
 import StudentDashboard from './pages/student/StudentDashboard';
 import ClubDetails from './pages/president/ClubDetails';
 
+import EventRequests from './pages/admin/EventRequests';
+import  Carousel1  from './components/Carousel1';
+
+
 import  Carousel  from './components/Carousel';
 
 import Board from './components/Board';
+
 
 // Import other pages if necessary
 
@@ -28,6 +33,7 @@ const App = () => {
         <Route exact path="/club" element={<Exploreclub />} />
         <Route path='/club/:name' element={<ClubDetails  />} ></Route>
         <Route path='/student' element={<StudentAllClubs/>}></Route>
+        <Route path='/admin' element={<EventRequests/>}></Route>
 
 
         <Route path='/Carousel' element={<Carousel />}></Route>
