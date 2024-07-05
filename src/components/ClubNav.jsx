@@ -10,9 +10,13 @@ import { useParams } from "react-router-dom";
 
 import Meeting from "./Meeting";
 import Announcement from "./Announcement";
+
 import Member from "./Member";
 import ElectionNav from "./election/ElectionNav";
 
+
+
+import Board from "./Board";
 
  
 const ClubNav = () => {
@@ -57,9 +61,7 @@ const ClubNav = () => {
     {
       label: "Current Board",
       value: "Current Board",
-      desc: `It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter.`,
+      desc:<Board />,
     },
     {
       label: "Event",
