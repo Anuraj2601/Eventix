@@ -22,6 +22,39 @@ const Sidebar = () => {
       </div>
       <div className="flex flex-col items-center space-y-4 flex-grow">
         <ul className='mt-4 ml-0 text-black font-bold'>
+
+           {/*  <li className='w-15 h-15 mb-6 border-2 border-[#AEC90A] text-[#AEC90A]  rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2' >
+                <a href="" className='px-3'>
+                    <FaHome className='inline-block w-9 h-9 mt-1 -ml-0.5'></FaHome>
+                    
+                </a>
+            </li>
+            <li className='w-15 h-15 mb-6 border-2  text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2' >
+                <a href="" className='px-3'>
+                    <IoCalendarNumberOutline className='inline-block w-9 h-9 -ml-0.5 mt-1'></IoCalendarNumberOutline>
+                   
+                </a>
+            </li>
+            <li className='w-15 h-15 mb-6 border-2  text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2' >
+                <a href="" className='px-3'>
+                    <BsMegaphone className='inline-block w-9 h-9 mt-1 -ml-0.5'></BsMegaphone>
+                    
+                </a>
+            </li>
+            <li className='w-15 h-15 mb-6 border-2  text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2' >
+                <a href="" className='px-3'>
+                    <FaPeopleGroup className='inline-block w-9 h-9 mt-1 -ml-0.5'></FaPeopleGroup>
+                   
+                </a>
+            </li>
+            <li className='w-15 h-15 mb-6 border-2 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2'>
+                <a href="" className='px-3'>
+                    <IoVideocamOutline className='inline-block w-9 h-9 mt-1 -ml-0.5'></IoVideocamOutline>
+                   
+                </a>
+            </li> */}
+            
+
           <li className={linkClass('/')} style={{ boxShadow: '0 0 10px #a3e635' }}>
             <a href="//dash" className='px-3'>
               <FaHome className='inline-block w-9 h-9 mt-1 -ml-0.5' />
@@ -47,6 +80,7 @@ const Sidebar = () => {
               <IoVideocamOutline className='inline-block w-9 h-9 mt-1 -ml-0.5' />
             </a>
           </li>
+
         </ul>
       </div>
       <ul className='mt-10 ml-0 text-black'>

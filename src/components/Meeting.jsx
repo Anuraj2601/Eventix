@@ -68,25 +68,26 @@ const Meeting = () => {
                 key={index}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
               >
-                <div className="flex items-center gap-x-40">
+                <div className="flex items-center  text-[16px] gap-x-72">
                   {/* <Avatar size="sm" src={image} alt={name} className='border-2 border-white rounded-md w-10 h-10'/> */}
                   <div>
-                    <Typography color="blue-gray" variant="h6">
+                    <Typography className="text-white font-normal " variant="h6">
                       {desc}
                     </Typography>
                   </div>
                   <div>
-                    <Typography className="text-[#AEC90A]" variant="h6">
+                    <Typography className="text-white font-normal" variant="h6">
                       {date}
                     </Typography>
                   </div>
                   <div>
-                    <Typography color="blue-gray" variant="h6">
+                    <Typography className="text-white" variant="h6">
                       {status == "Online" ? (
                         <Chip
                           variant="ghost"
                           color="green"
                           size="sm"
+                          className="font-normal"
                           value="Online"
                           icon={
                             <span className="mx-auto mt-2 block h-2 w-2 rounded-full bg-[#00DE3E] content-['']" />
@@ -95,6 +96,7 @@ const Meeting = () => {
                       ) : (
                         <Chip
                           variant="ghost"
+                          className="font-normal"
                           color="red"
                           size="sm"
                           value="Physical"
