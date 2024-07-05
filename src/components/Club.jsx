@@ -13,6 +13,7 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { Dialog, Input } from "@material-tailwind/react";
 
 import { useNavigate } from "react-router-dom";
+import ClubDetails from "../pages/president/ClubDetails";
 
 const Club = () => {
   const navigator = useNavigate();
@@ -20,9 +21,10 @@ const Club = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
 
-  const getClubDetails = (sname) => {
-    navigator(`/club/${sname}`);
-
+  const getClubDetails = (name) => {
+    /* const sname = club.sname */
+    navigator(`/club/${name}`);
+    {/* <ClubDetails clubs={clubs} key={id}/> */}
     /* history.push(`/club/${sname}`, { name, image }); */
 
     //console.log(name);
@@ -67,7 +69,7 @@ const Club = () => {
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div className="">
-            {clubs.map(({ name, image, sname }, index) => (
+            {clubs.map(({ id, name, image, sname }, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
@@ -94,7 +96,7 @@ const Club = () => {
                   </Button>
                   <Button
                     className="bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
-                    onClick={() => getClubDetails(sname)}
+                    onClick={() =>  getClubDetails(sname) }
                   >
                     Explore
                   </Button>

@@ -7,11 +7,15 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
-import { ClubEvent } from "./ClubEvent";
+
 import Meeting from "./Meeting";
 import Announcement from "./Announcement";
+import Member from "./Member";
+import ElectionNav from "./election/ElectionNav";
+
+
  
-export function ClubNav() {
+const ClubNav = () => {
   const [activeTab, setActiveTab] = React.useState("Event");
 
   const clubs = [
@@ -60,20 +64,17 @@ export function ClubNav() {
     {
       label: "Event",
       value: "Event",
-      desc: /* <ClubEvent />  */ `Events`,
+      desc:  `Events`,
     },
     {
       label: "Members",
       value: "Members",
-      desc: `We're not always in the position that we want to be at.
-      We're constantly growing. We're constantly making mistakes. We're
-      constantly trying to express ourselves and actualize our dreams.`,
+      desc: <Member />,
     },
     {
       label: "Elections",
       value: "Elections",
-      desc: `Because it's about motivating the doers. Because I'm here
-      to follow my dreams and inspire other people to follow their dreams, too.`,
+      desc: <ElectionNav /> ,
     },
     {
       label: "Meetings",
@@ -89,10 +90,10 @@ export function ClubNav() {
   return (
     <Tabs value={activeTab}>
       <TabsHeader
-        className="rounded-none bg-transparent p-0 "
+        className="rounded-none bg-transparent p-0 grid grid-cols-9"
         indicatorProps={{
           className:
-            "bg-transparent border-b-2 border-[#AEC90A] shadow-none rounded-none ",
+            "mt-8 absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 rounded-full transition-opacity bg-transparent border-b-[8px] border-[#AEC90A] shadow-none",
         }}
       >
         {data.map(({ label, value }) => (
@@ -100,7 +101,7 @@ export function ClubNav() {
             key={value}
             value={value}
             onClick={() => setActiveTab(value)}
-            className={`text-white hover:text-[#AEC90A] ${activeTab === value ? 'text-[#AEC90A]' : ''}`}
+            className={`text-white hover:text-[#AEC90A] ${activeTab === value ? ' text-[#AEC90A]' : ''}`}
           >
             {label}
           </Tab>
@@ -116,3 +117,5 @@ export function ClubNav() {
     </Tabs>
   );
 }
+
+export default ClubNav;
