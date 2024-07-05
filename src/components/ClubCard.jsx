@@ -1,4 +1,6 @@
+
 import React, { useState } from 'react'
+
 import {
     Card,
     CardHeader,
@@ -10,7 +12,9 @@ import {
 import { HiArrowRightCircle } from "react-icons/hi2";
 
 
+
 const ClubCard = () => {
+
 
   return (
     <>
@@ -43,7 +47,7 @@ const ClubCard = () => {
                 </a>
             </CardFooter>
         </Card>
-  
+
     </>
   )
 }

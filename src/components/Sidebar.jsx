@@ -1,11 +1,13 @@
 // src/components/Sidebar.jsx
 import React from 'react';
+
 import { useLocation } from 'react-router-dom';
 import { BsMegaphone } from 'react-icons/bs';
 import { FaCalendar, FaHome } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { IoCalendarNumberOutline, IoExitOutline, IoVideocamOutline } from 'react-icons/io5';
 import Logo from '../assets/eventix Logo1.png';
+
 
 const Sidebar = () => {
   const location = useLocation();
@@ -21,7 +23,14 @@ const Sidebar = () => {
         <img src={Logo} alt="logo" className="w-32 h-24 ml-3 mb-5 mr-auto" />
       </div>
       <div className="flex flex-col items-center space-y-4 flex-grow">
+
+      {/* <div className="bg-black rounded-lg p-3 shadow-md flex items-center justify-center w-16 h-16"  style={{ boxShadow: '0 0 10px #a3e635' }}>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="#a3e635" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+</svg>
+
         <ul className='mt-4 ml-0 text-black font-bold'>
+
 
            {/*  <li className='w-15 h-15 mb-6 border-2 border-[#AEC90A] text-[#AEC90A]  rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2' >
                 <a href="" className='px-3'>
@@ -54,6 +63,7 @@ const Sidebar = () => {
                 </a>
             </li> */}
             
+
 
           <li className={linkClass('/')} style={{ boxShadow: '0 0 10px #a3e635' }}>
             <a href="//dash" className='px-3'>
@@ -91,6 +101,7 @@ const Sidebar = () => {
           </a>
         </li>
       </ul>
+
     </aside>
   );
 };
