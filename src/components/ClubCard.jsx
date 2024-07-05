@@ -1,4 +1,6 @@
-import React from 'react'
+
+import React, { useState } from 'react'
+
 import {
     Card,
     CardHeader,
@@ -9,7 +11,11 @@ import {
   } from "@material-tailwind/react";
 import { HiArrowRightCircle } from "react-icons/hi2";
 
+
+
 const ClubCard = () => {
+
+
   return (
     <>
         <Card className="bg-black" style={{ width: '23rem' }}>

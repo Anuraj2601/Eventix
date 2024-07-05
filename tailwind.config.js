@@ -5,7 +5,9 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      olivegreen: '#AEC90A'
+    },
   },
   plugins: [],
 }

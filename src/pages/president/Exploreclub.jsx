@@ -24,7 +24,9 @@ const CardDefault = () => {
     <Card className="bg-black" style={{ width: '23rem' }}>
       <CardHeader color="blue-gray" className="relative h-40"> {/* Reduced height */}
         <img
-          src="src/assets/rotaract.png"
+
+          src="../src/assets/rotaract.png"
+
           alt="your-image-description"
           className="h-full w-full object-cover"
         />
@@ -62,6 +64,7 @@ const MultipleCards = () => {
     </div>
   );
 };
+
 
 const Exploreclub = () => {
   const [selectedTab, setSelectedTab] = useState("All Clubs"); // State to track the selected tab
