@@ -6,18 +6,18 @@ import {
   Avatar,
   Textarea,
   Badge,
+  Switch,
 } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
 import { FaRegEdit } from "react-icons/fa";
+import Toggle from "./Toggle";
 
 const ElectionDetails = () => {
-    
- 
   const navigator = useNavigate();
-
+  const [value, setValue] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
 
@@ -55,13 +55,12 @@ const ElectionDetails = () => {
       </Button>
       <Card className="w-full bg-neutral-900">
         <CardBody>
-        <div className="flex items-center justify-between p-1 mb-2">
+          <div className="flex items-center justify-between p-1 mb-2">
             <div className="flex items-center gap-[310px]">
               <div></div>
               <div>Applications</div>
               <div>Voting</div>
               <div></div>
-             
             </div>
           </div>
           <div className="">
@@ -81,10 +80,22 @@ const ElectionDetails = () => {
                     <Typography className="text-[#AEC90A]" variant="h6">
                       {applicationDate}
                     </Typography>
+                    <Typography className="flex gap-4 text-white" variant="h6">
+                      <div>Candidate</div>
+                      <div>
+                        <Switch
+                          isOn={value}
+                          handleToggle={() => setValue(!value)}
+                        />
+                      </div>
+                    </Typography>
                   </div>
                   <div>
                     <Typography className="text-[#AEC90A]" variant="h6">
                       {votingDate}
+                    </Typography>
+                    <Typography className="text-white" variant="h6">
+                      Voting
                     </Typography>
                   </div>
                   <div>
@@ -96,7 +107,6 @@ const ElectionDetails = () => {
                     </Typography>
                   </div>
                 </div>
-                
               </div>
             ))}
           </div>
@@ -111,5 +121,3 @@ const ElectionDetails = () => {
 };
 
 export default ElectionDetails;
-
-

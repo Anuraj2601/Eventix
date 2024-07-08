@@ -39,7 +39,7 @@ const Navbar = () => {
         </div>
         {/* Centered Search Box */}
      
-          </svg> */}
+          {/* </svg>  */}
           <BsArrowLeftCircle className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></BsArrowLeftCircle>
         </div>
         {/* Centered Search Box */}
