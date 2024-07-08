@@ -6,21 +6,18 @@ import StudentAllClubs from './pages/student/StudentAllClubs';
 
 import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
 
-
 import StudentDashboard from './pages/student/StudentDashboard';
 import ClubDetails from './pages/president/ClubDetails';
-
 
 import EventRequests from './pages/admin/EventRequests';
 
 import ClubRegistration from './pages/student/ClubRegistration';
 
-import  Carousel1  from './components/Carousel1';
-
 
 import  Carousel  from './components/Carousel';
 
 import Board from './components/Board';
+import Toggle from './components/election/Toggle';
 
 
 // Import other pages if necessary
@@ -30,7 +27,7 @@ const App = () => {
     <Router>
       <Routes>
 
-        <Route path="/" element={<Exploreclub />} />
+        <Route exact path="/" element={<Exploreclub />} />
         <Route path='/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
           
 
@@ -48,7 +45,7 @@ const App = () => {
         <Route path='/studentdashboard' element={<StudentDashboard/>}></Route>
         <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
 
-
+        <Route path='/Toggle' element={<Toggle />} />
       </Routes>
     </Router>
   );
