@@ -66,8 +66,8 @@ const Sidebar = () => {
             
 
 
-          <li className={linkClass('/')} style={{ boxShadow: '0 0 10px #a3e635' }}>
-            <a href="/" className='px-3'>
+          <li className={linkClass('/dashboard')} style={{ boxShadow: '0 0 10px #a3e635' }}>
+            <a href="/dashboard" className='px-3'>
               <FaHome className='inline-block w-9 h-9 mt-1 -ml-0.5' />
             </a>
           </li>
