@@ -18,6 +18,7 @@ import  Carousel  from './components/Carousel';
 
 import Board from './components/Board';
 import Toggle from './components/election/Toggle';
+import AddEvent from './components/AddEvent';
 
 
 // Import other pages if necessary
@@ -29,10 +30,12 @@ const App = () => {
 
         <Route exact path="/" element={<Exploreclub />} />
         <Route path='/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
-          
+        
 
         <Route exact path="/club" element={<Exploreclub />} />
         <Route path='/club/:name' element={<ClubDetails  />} ></Route>
+        <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
+
         <Route path='/student' element={<StudentAllClubs/>}></Route>
         <Route path='/admin' element={<EventRequests/>}></Route>
 
@@ -45,6 +48,7 @@ const App = () => {
         <Route path='/studentdashboard' element={<StudentDashboard/>}></Route>
         <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
 
+
         <Route path='/Toggle' element={<Toggle />} />
       </Routes>
     </Router>
@@ -52,3 +56,4 @@ const App = () => {
 };
 
 export default App;
+

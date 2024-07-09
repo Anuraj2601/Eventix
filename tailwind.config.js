@@ -9,6 +9,8 @@ export default {
       olivegreen: '#AEC90A'
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
 
