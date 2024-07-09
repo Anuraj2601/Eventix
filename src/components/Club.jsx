@@ -24,9 +24,9 @@ const Club = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
 
-  const getClubDetails = (name) => {
+  const getClubDetails = (sname) => {
     /* const sname = club.sname */
-    navigator(`/club/${name}`);
+    navigator(`/club/${sname}`);
     {/* <ClubDetails clubs={clubs} key={id}/> */}
     /* history.push(`/club/${sname}`, { name, image }); */
 
@@ -83,11 +83,13 @@ const Club = () => {
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div className="">
-            {clubs.map(({ id, name, image, sname }, index) => (
+            {clubs.map(({ club, name, image, sname }, index) => (
 
               <div
                 key={index}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
+
+                
               >
                 <div className="flex items-center gap-x-3">
                   <Avatar
@@ -114,7 +116,7 @@ const Club = () => {
                   <Button
                     className="bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
 
-                    onClick={() =>  getClubDetails(sname) }
+                    onClick={() =>  getClubDetails({sname}) }
                   >
                     Explore
                   </Button>
