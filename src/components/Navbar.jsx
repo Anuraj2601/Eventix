@@ -1,104 +1,80 @@
-// src/components/Navbar.jsx
-import React from "react";
-import { FaBell } from "react-icons/fa";
-import { MdInfoOutline } from "react-icons/md";
-import { IoPersonCircleOutline, IoPersonSharp } from "react-icons/io5";
-import { MdOutlineEmail } from "react-icons/md";
-import { AiOutlineBell } from "react-icons/ai";
-import { BsBell } from "react-icons/bs";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
+import Logo from "../assets/Logo.png";
+import { navItems } from "../constants";
+import Login from "./login";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState("Home");
+
+  const toggleNavbar = () => {
+    setMobileDrawerOpen(!mobileDrawerOpen);
+  };
+
   return (
-    <nav className="bg-neutral-900 p-6 shadow-2xl flex items-center justify-between py-2 text-white px-4">
-      {/* Left Section: Logo and Search Box */}
-      <div className="flex items-center">
-        {/* Logo */}
-        <div className="mr-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-
-            stroke="#AEC90A"
-            className="size-7"
-
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-            />
-          </svg>
-        </div>
-        {/* Centered Search Box */}
-        <div className=" ml-72  flex items-center justify-items-center relative">
-          <input
-            type="text"
-            placeholder="Search..."
-
-            className="w-96 h-9 bg-neutral-950 text-white rounded-full py-1 px-3  focus:ring focus:border-[#AEC90A] border-2 border-[#AEC90A] text-center"
-
-          />
-          <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#AEC90A]">
-            {/* Search Icon (adjust as needed) */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="#a3e635"
-              className="size-5"
+    <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80 font-medium">
+      <div className="container px-4 mx-auto relative lg:text-sm">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center flex-shrink-0">
+            <img className="h-auto w-[130px] mr-2" src={Logo} alt="Logo" />
+          </div>
+          <ul className="hidden lg:flex ml-14 space-x-12 font-normal tracking-wider">
+            {navItems.map((item, index) => (
+              <li key={index} className="relative group">
+                <a href={item.href} className={`hover:text-secondary ${activeItem === item.label ? "text-secondary" : ""}`}
+                  onClick={() => setActiveItem(item.label)}>
+                  {item.label}
+                </a>
+                <span className={`absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 bg-secondary rounded-full transition-opacity ${activeItem === item.label ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                  }`}
+                ></span>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden lg:flex justify-center space-x-5 items-center font-light">
+            <a
+              href={Login}
+              className="relative overflow-hidden w-28 h-10 flex items-center justify-center text-secondary border border-primary rounded-md font-medium transition duration-500 ease-in-out group"
             >
-              <path
-                fillRule="evenodd"
-                d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
+              <span className="absolute inset-0 bg-gradient-to-r from-primary to-secondary w-full h-full transform -translate-x-full transition-transform duration-300 ease-in-out group-hover:translate-x-0"></span>
+              <span className="relative z-10 group-hover:text-gray-900 text-[16px] "><Link to="/login">Login</Link></span>
+            </a>
+            <a
+              href="#"
+              className="bg-gradient-to-r from-primary to-secondary w-28 h-10 rounded-md flex items-center justify-center text-gray-900 text-[16px] font-semibold"
+            >
+              Sign Up
+            </a>
+          </div>
+
+          <div className="lg:hidden md:flex flex-col justify-end">
+            <button onClick={toggleNavbar}>
+              {mobileDrawerOpen ? <X /> : <Menu />}
+            </button>
+          </div>
         </div>
-      </div>
-
-      {/* Right Section: Image Icons */}
-      <div className="flex items-center">
-        {/* Example Image Icons (replace with your actual images) */}
-        <div className="flex ">
-          {/*  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#a3e635" className="size-10">
-  <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-.988-1.129c1.454-1.272 3.776-1.272 5.23 0 1.513 1.324 1.513 3.518 0 4.842a3.75 3.75 0 0 1-.837.552c-.676.328-1.028.774-1.028 1.152v.75a.75.75 0 0 1-1.5 0v-.75c0-1.279 1.06-2.107 1.875-2.502.182-.088.351-.199.503-.331.83-.727.83-1.857 0-2.584ZM12 18a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
-</svg> */}
-
-          {/*  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#a3e635" className="size-10">
-  <path fillRule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-3.476.383.39.39 0 0 0-.297.17l-2.755 4.133a.75.75 0 0 1-1.248 0l-2.755-4.133a.39.39 0 0 0-.297-.17 48.9 48.9 0 0 1-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97ZM6.75 8.25a.75.75 0 0 1 .75-.75h9a.75.75 0 0 1 0 1.5h-9a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H7.5Z" clipRule="evenodd" />
-</svg>
-
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#a3e635"className="size-10">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-</svg>
-
-
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#a3e635"className="size-10">
-  <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clipRule="evenodd" />
-</svg> */}
-          <a href="" className="px-3">
-
-          <MdInfoOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></MdInfoOutline>
-            {/* Meeting */}
-          </a>
-          <a href="" className="px-3">
-            <MdOutlineEmail className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></MdOutlineEmail>
-            {/* Meeting */}
-          </a>
-          <a href="" className="px-3">
-            <BsBell className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></BsBell>
-            {/* Meeting */}
-          </a>
-          <a href="" className="px-3">
-            <IoPersonCircleOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></IoPersonCircleOutline>
-
-            {/* Meeting */}
-          </a>
-        </div>
+        {mobileDrawerOpen && (
+          <div className="fixed right-0 z-20 bg-neutral-900 w-full p-12 flex flex-col justify-center items-center lg:hidden text-base font-normal">
+            <ul>
+              {navItems.map((item, index) => (
+                <li key={index} className="py-4">
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))}
+            </ul>
+            <div className="flex space-x-6 py-5">
+              <a href="#" className="py-2 px-3 border rounded-md w-26 h-10">
+                Login
+              </a>
+              <a
+                href="#" className="py-2 px-3 rounded-md bg-gradient-to-r from-primary to-secondary w-22 h-10">
+                SignUp
+              </a>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

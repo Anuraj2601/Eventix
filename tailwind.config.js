@@ -6,9 +6,20 @@ export default {
   ],
   theme: {
     extend: {
-      olivegreen: '#AEC90A'
+      colors: {
+        primary: '#AEC90A',
+        secondary: '#DBFF00',
+        dark: {
+          background: '#171717',
+          400: '#1E1E1E',
+          500: '#0F0F0F',
+        },
+      },
+      boxShadow: {
+        'custom': '0 4px 6px rgba(219, 255, 0, 0.5)', 
+      },
     },
   },
+  darkMode: 'class',
   plugins: [],
 }
-

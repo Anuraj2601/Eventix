@@ -1,19 +1,20 @@
-// src/App.jsx
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Exploreclub from './pages/president/Exploreclub';
-import StudentAllClubs from './pages/student/StudentAllClubs';
-// Import other pages if necessary
+
+import {BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import Landing from "./pages/Landing"
+import Login from "./Components/login"
+
 
 const App = () => {
   return (
-    <Router>
+    <div>
+     <Router>
       <Routes>
-        <Route path="/" element={<Exploreclub />} />
-        <Route path='/student' element={<StudentAllClubs/>}></Route>
+        <Route exact path="/" element={<Landing />}></Route>
+        <Route path="/login" element={<Login />}></Route>
       </Routes>
-    </Router>
-  );
-};
+     </Router>
+    </div>
+  )
+}
 
-export default App;
+export default App
