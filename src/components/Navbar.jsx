@@ -3,7 +3,9 @@ import { useState } from "react";
 import Logo from "../assets/Logo.png";
 import { navItems } from "../constants";
 import Login from "./login";
+import SignUp from "./Signup";
 import { Link } from "react-router-dom";
+
 
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -36,16 +38,15 @@ const Navbar = () => {
           <div className="hidden lg:flex justify-center space-x-5 items-center font-light">
             <a
               href={Login}
-              className="relative overflow-hidden w-28 h-10 flex items-center justify-center text-secondary border border-primary rounded-md font-medium transition duration-500 ease-in-out group"
+              className="relative overflow-hidden w-24 h-10 flex items-center justify-center text-secondary border border-primary rounded-md font-medium transition duration-500 ease-in-out group"
             >
               <span className="absolute inset-0 bg-gradient-to-r from-primary to-secondary w-full h-full transform -translate-x-full transition-transform duration-300 ease-in-out group-hover:translate-x-0"></span>
-              <span className="relative z-10 group-hover:text-gray-900 text-[16px] "><Link to="/login">Login</Link></span>
+              <span className="relative z-10 group-hover:text-gray-900 text-[14px] font-semibold"><Link to="/login">Login</Link></span>
             </a>
             <a
-              href="#"
-              className="bg-gradient-to-r from-primary to-secondary w-28 h-10 rounded-md flex items-center justify-center text-gray-900 text-[16px] font-semibold"
-            >
-              Sign Up
+              href={SignUp}
+              className="bg-gradient-to-r from-primary to-secondary w-24 h-10 rounded-md flex items-center justify-center text-gray-900 text-[14px] font-semibold"
+            ><Link to="/Signup">SignUp</Link>
             </a>
           </div>
 

@@ -101,18 +101,18 @@ const UpcomingEvent = () => {
                 <span className="text-lg font-normal pl-3 text-white uppercase">Upcoming events</span>
             </div>
 
-            <div className="bg-dark-400 w-[82vw] h-[70vh] mt-2 rounded-lg flex items-center relative p-10 mb-20">
+            <div className="bg-dark-400 w-[82vw] h-[76vh] mt-2 rounded-lg flex items-center relative p-10 mb-20">
                 <div className={`w-full h-full rounded-md p-0 flex items-start ${animationClass}`}>
-                    <div className="w-[400px] h-[400px]">
+                    <div className="w-[300px] h-[300px] mt-10">
                         <img src={activeEvent.image} alt={activeEvent.name} className="h-full rounded-xl border-4 border-white object-cover" />
                     </div>
                     <div className="ml-10">
-                        <div className="flex items-center space-x-6 mt-0 ml-2">
-                            <div className="grid grid-cols-5 gap-8 mr-10">
+                        <div className="flex items-left space-x-6 mt-0 ml-0">
+                            <div className="grid grid-cols-5 gap-1 ml-10">
                                 {Object.keys(contentData).map((buttonName) => (
                                     <button
                                         key={buttonName}
-                                        className={`relative text-[16px] font-normal w-24 h-12 p-1 rounded-md ${activeButton === buttonName ? 'text-primary after:content-[""] after:absolute after:bottom-[-5px] after:left-1/2 after:transform after:-translate-x-1/2 after:w-2 after:h-2 after:bg-secondary after:rounded-full' : 'text-white'}`}
+                                        className={`relative text-[14px] font-normal w-24 h-12 p-1 rounded-md ${activeButton === buttonName ? 'text-primary after:content-[""] after:absolute after:bottom-[-5px] after:left-1/2 after:transform after:-translate-x-1/2 after:w-2 after:h-2 after:bg-secondary after:rounded-full' : 'text-white'}`}
                                         onClick={() => handleButtonClick(buttonName)}
                                     >
                                         {buttonName}
@@ -120,40 +120,40 @@ const UpcomingEvent = () => {
                                 ))}
                                 <a
                                     href="#"
-                                    className="text-secondary text-lg mt-[10px] font-normal opacity-50 hover:opacity-100"
+                                    className="text-secondary text-[15px] mt-[8px] ml-6 font-normal opacity-50 hover:opacity-100"
                                 >
                                     See all
                                 </a>
                             </div>
                         </div>
                         <div className="mt-10 ml-0 flex justify-center items-center gap-4">
-                            <div className="text-lg font-normal bg-dark-background w-1/2 h-14 p-2 rounded-md flex items-center justify-center hover:border border-secondary">
-                                Deadline : <span className="ml-2 text-lg font-normal text-primary">{activeEvent.deadline}</span>
+                            <div className="text-[15px] font-normal bg-dark-background w-1/2 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary">
+                                Deadline : <span className="ml-2 text-[15px] font-normal text-primary">{activeEvent.deadline}</span>
                             </div>
 
-                            <div className="text-lg font-normal bg-dark-background w-1/2 ml-0 h-14 p-2 rounded-md flex items-center justify-center hover:border border-secondary">
-                                Event Date : <span className="ml-2 text-lg font-normal text-primary">{activeEvent.eventDate}</span>
+                            <div className="text-[15px] font-normal bg-dark-background w-1/2 ml-0 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary">
+                                Event Date : <span className="ml-2 text-[15px] font-normal text-primary">{activeEvent.eventDate}</span>
                             </div>
                         </div>
 
-                        <div className="relative mt-10 bg-dark-500 rounded-md w-full mx-auto h-36 flex items-center p-5">
+                        <div className="relative mt-10 bg-dark-500 rounded-md w-[700px] mx-auto h-26 flex items-center p-5">
                             <div className="flex items-center h-full">
-                                <div className="rounded-full w-12 h-12 bg-primary flex items-center justify-center ml-4 mb-12">
-                                    <span className="text-white font-normal text-[22px] mb-0">10</span>
+                                <div className="rounded-full w-12 h-12 bg-primary flex items-center justify-center ml-4 mb-16">
+                                    <span className="text-dark-400 font-bold text-[16px] mb-0">10</span>
                                 </div>
                                 <div className="ml-3 flex flex-col justify-center">
                                     <div className="flex items-center">
-                                        <p className="text-lg font-normal flex items-center mr-5 mt-3">
+                                        <p className="text-[15px] font-normal flex items-center mr-5 mt-0">
                                             {activeEvent.name}
-                                            <RiTeamFill className="ml-3 w-6 h-6 text-primary" />
+                                            <RiTeamFill className="ml-3 w-6 h-6 mb-1 text-primary" />
                                         </p>
                                     </div>
-                                    <div className="flex items-center text-lg text-white mt-5 ml-5">
+                                    <div className="flex items-center text-[14px] text-white mt-5 ml-5">
                                         <FaClock className="mr-3 w-6 h-7 text-primary" />
-                                        <span className="mr-8 text-[16px] font-normal">{activeEvent.time}</span>
+                                        <span className="mr-8 text-[14px] font-normal">{activeEvent.time}</span>
                                         <MdLocationOn className="mr-2 w-6 h-7 text-primary" />
-                                        <span className="mr-8 text-[16px] font-normal">{activeEvent.location}</span>
-                                        <button className="bg-dark-400 text-white text-[16px] font-normal hover:font-semibold hover:bg-primary hover:text-dark-400 tracking-wide px-4 py-2 ml-3 rounded-full">
+                                        <span className="mr-8 text-[14px] font-normal">{activeEvent.location}</span>
+                                        <button className="bg-dark-400 text-white text-[14px] font-normal hover:font-semibold hover:bg-primary hover:text-dark-400 tracking-wide px-5 py-1 ml-10 rounded-full">
                                             Go with post
                                         </button>
                                     </div>
@@ -161,12 +161,12 @@ const UpcomingEvent = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="absolute bottom-10 right-2 mr-10 flex space-x-4">
-                        <button className="bg-primary text-dark-400 text-[16px] font-base w-28 h-10 rounded-md">
+                    <div className="absolute bottom-4 right-[2px] mr-10 flex space-x-4">
+                        <button className="bg-primary text-dark-400 text-[14px] font-base w-28 h-10 rounded-md">
                             Register
                         </button>
                         <button
-                            className="bg-dark-500 text-white text-[16px] font-normal w-28 h-10 rounded-md flex items-center justify-center pl-4"
+                            className="bg-dark-500 text-white text-[14px] font-normal w-28 h-10 rounded-md flex items-center justify-center pl-4"
                             onClick={handleNextClick}
                         >
                             Next <GrFormNext className="ml-1 mt-[2px] text-secondary" size={20}></GrFormNext>

@@ -11,25 +11,25 @@ import { RiDiscountPercentFill } from 'react-icons/ri';
 
 const Clubsforu = () => {
     return (
-        <div className="flex flex-col items-center mt-60">
+        <div className="flex flex-col items-center mt-80">
             <div className="flex items-center bg-dark-background p-4 rounded-lg">
                 <HiMiniUserGroup className="text-secondary bg-dark-background rounded-full w-10 h-10 shadow-lg" />
                 <span className="text-lg font-normal pl-3 text-white uppercase">Clubs for you</span>
             </div>
 
-            <div className="bg-dark-400 w-[82vw] h-[66vh] mt-2 rounded-lg flex items-center relative p-10">
-                <img src={ieee} alt="IEEE" className="w-1/2 h-auto rounded-xl border-4 border-white" />
+            <div className="bg-dark-400 w-[82vw] h-[76vh] mt-2 rounded-lg flex items-center relative p-10">
+                <img src={ieee} alt="IEEE" className="w-[300px] h-[300px] rounded-xl border-4 border-white" />
 
-                <div className="ml-5 flex flex-col w-full mt-2">
+                <div className="ml-5 flex flex-col w-full mt-0">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center justify-between w-full">
 
                             <h2 className="font-base text-lg tracking-wider text-white my-2">IEEE Student Chapter 25</h2>
                             <div className="flex space-x-4">
-                                <button className="bg-gradient-to-r from-primary to-secondary hover:bg-secondary text-dark-background font-base text-[16px] w-28 h-10 py-1 px-5 rounded">
+                                <button className="bg-gradient-to-r from-primary to-secondary hover:bg-secondary text-dark-background font-base text-[14px] w-28 h-10 py-1 px-5 rounded">
                                     Join
                                 </button>
-                                <button className="bg-dark-400 text-secondary font-medium tracking-wide text-[16px] w-28 h-10 rounded border border-primary hover:bg-dark-500">
+                                <button className="bg-dark-400 text-secondary font-medium tracking-wide text-[14px] w-28 h-10 rounded border border-primary hover:bg-dark-500">
                                     Ignore
                                 </button>
                             </div>
@@ -44,8 +44,8 @@ const Clubsforu = () => {
                                 <BsCalendar2EventFill className="text-2xl text-dark-background" />
                             </div>
                             <div>
-                                <span className="font-base tracking-wider text-[18px] ml-4 leading-[30px] text-primary uppercase">Career Development:</span>
-                                <p className="text-sm leading-[30px] tracking-wider ml-4 font-normal hover:shadow-xl">You will get opportunities for career advancement through workshops, certifications.</p>
+                                <span className="font-base tracking-wider text-[16px] ml-4 leading-[30px] text-primary uppercase">Career Development:</span>
+                                <p className="text-[14px] leading-[30px] tracking-wider ml-4 font-normal hover:shadow-xl">You will get opportunities for career advancement through workshops.</p>
                             </div>
                         </div>
 
@@ -55,7 +55,7 @@ const Clubsforu = () => {
                             </div>
                             <div>
                                 <span className="font-base tracking-wider text-lg ml-4 leading-[30px] text-primary uppercase">Innovation and Research:</span>
-                                <p className="text-sm leading-[30px] tracking-wider ml-4 font-normal">Stay updated with the latest advancements in technology and engineering.</p>
+                                <p className="text-[14px] leading-[30px] tracking-wider ml-4 font-normal">Stay updated with the latest advancements in technology and engineering.</p>
                             </div>
                         </div>
 
@@ -65,13 +65,14 @@ const Clubsforu = () => {
                             </div>
                             <div>
                                 <span className="font-base tracking-wider text-lg ml-4 leading-[30px] text-primary uppercase">Discounts:</span>
-                                <p className="text-sm leading-[30px] tracking-wider ml-4 font-normal">Reduced fees for IEEE events, publications, and continuing education courses.</p>
+                                <p className="text-[14px] leading-[30px] tracking-wider ml-4 font-normal">Reduced fees for IEEE events, publications, and continuing education courses.</p>
                             </div>
                         </div>
 
+
                     </div>
 
-                    <div className="absolute bottom-0 right-[825px] shadow-lg mb-12 flex items-center">
+                    <div className="absolute bottom-0 right-[785px] shadow-lg mb-[81px] flex items-center">
                         <div className="bg-dark-background w-[190px] h-8 flex items-center px-6 py-6 rounded-md">
                             <img src={dp} alt="Small Image 1" className="w-10 h-10 rounded-full border-2 border-white -ml-2" />
                             <img src={dp} alt="Small Image 2" className="w-10 h-10 rounded-full border-2 border-white -ml-2" />
@@ -84,7 +85,7 @@ const Clubsforu = () => {
                 </div>
             </div>
 
-            <div className="bg-dark-400 mt-20 w-[82vw] h-72 rounded-lg grid grid-cols-4 gap-20 p-5 text-[16px] font-normal mb-40">
+            <div className="bg-dark-400 mt-20 w-[82vw] h-72 rounded-lg grid grid-cols-4 gap-20 p-5 text-[14px] font-normal mb-40">
                 {[
                     { img: gavel, title: "Gavel AGM 24", border: "border-red-800" },
                     { img: rotract, title: "Rotract of UCSC", border: "border-purple-800" },

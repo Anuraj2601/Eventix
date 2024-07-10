@@ -10,8 +10,8 @@ const HeroSection = () => {
             <img src={landingCover} alt="Landing Cover" className="w-full h-full object-cover z-0" />
             <div className="relative z-10 text-center">
                 <h2 className="mt-5 px-3 py-2 font-medium text-4xl text-primary uppercase">WE GIVE,</h2>
-                <span className="font-normal text-base tracking-wide subpixel-antialiased">
-                    Effortlessly organizing UCSC club events, meetings, elections, and announcements in one place
+                <span className="font-normal text-[15px] tracking-wide subpixel-antialiased leading-4">
+                    Effortlessly organizing UCSC club events, meetings, elections, and announcements<br></br> in one place
                 </span>
             </div>
             <div className="relative z-10 flex items-center justify-center w-full mt-20">
