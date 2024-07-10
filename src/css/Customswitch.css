@@ -1,0 +1,38 @@
+/* C:\wamp64\www\Eventix\src\css\Customswitch.css */
+
+.custom-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    border-radius: 13px;
+    background-color: #090101;
+    cursor: pointer;
+  }
+  
+  .custom-switch-on {
+    background-color: #AEC90A; /* Yellow color when switch is on */
+  }
+  
+  .custom-switch-off {
+    background-color: #ccc; /* Default color when switch is off */
+  }
+  
+  .toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: transform 0.3s ease; /* Removed background-color transition */
+  }
+  
+  .custom-switch-on .toggle-slider {
+    transform: translateX(24px);
+  }
+  
+  .custom-switch-off .toggle-slider {
+    transform: translateX(0);
+  }
+  
