@@ -38,7 +38,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
       </Button>
       <Card className="w-full bg-neutral-900 mt-4">
         <CardBody>
-          <div className="flex items-center justify-between p-1 mb-2">
+          <div className="flex items-center justify-between p-1 mb-2 text-white">
             <div className="flex items-center gap-[310px]">
               <div></div>
               <div>Applications</div>
@@ -54,7 +54,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
               >
                 <div className="flex items-center gap-x-40">
                   <div>
-                    <Typography color="blue-gray" variant="h6">
+                    <Typography color="white" variant="h6">
                       {desc}
                     </Typography>
                   </div>

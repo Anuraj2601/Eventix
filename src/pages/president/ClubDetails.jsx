@@ -30,7 +30,7 @@ const CardDefault = ({ club }) => {
             <HiArrowRightCircle className="text-2xl" />
           </a>
         </Typography>
-        <Typography className="text-sm">
+        <Typography className="text-white">
           Get the opportunity to learn from industry professionals, prepare
           for certifications like CISA and CRISC and network with
           professionals in the field.
