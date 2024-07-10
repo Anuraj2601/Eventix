@@ -12,7 +12,7 @@
   }
   ```
 */
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+
 import React from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
