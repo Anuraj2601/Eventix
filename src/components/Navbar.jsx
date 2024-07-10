@@ -1,3 +1,4 @@
+
 // src/components/Navbar.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -59,7 +60,9 @@ const Navbar = () => {
           <a href="" className="px-3">
             <IoPersonCircleOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
           </a>
+
         </div>
+       
       </div>
     </nav>
   );
