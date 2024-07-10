@@ -6,7 +6,7 @@ import { BsMegaphone } from 'react-icons/bs';
 import { FaHome } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { IoCalendarNumberOutline, IoExitOutline, IoVideocamOutline } from 'react-icons/io5';
-import Logo from '../assets/Logo.png';
+import Logo from '../assets/logo.png';
 
 
 const Sidebar = () => {
@@ -20,9 +20,12 @@ const Sidebar = () => {
   return (
     <>
     <aside className="bg-stone-950 shadow-2xl text-white w-52 h-full p-4 flex flex-col justify-center items-center">
-      <div className="p-3 flex items-center justify-center">
-        <img src={Logo} alt="logo" className="w-32 h-24 ml-3 mb-5 mr-auto" />
-      </div>
+    <div className="p-3 flex justify-center">
+  <img src={Logo} alt="logo" className="w-96 h-24 mb-5 ml-10" />
+</div>
+
+
+
       <div className="flex flex-col items-center space-y-4 flex-grow">
       <ul className='mt-4 ml-0 text-black font-bold'>
       {/* <div className="bg-black rounded-lg p-3 shadow-md flex items-center justify-center w-16 h-16"  style={{ boxShadow: '0 0 10px #a3e635' }}>
