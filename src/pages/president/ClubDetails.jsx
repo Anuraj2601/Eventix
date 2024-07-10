@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 import { HiArrowRightCircle } from "react-icons/hi2";
@@ -13,13 +13,13 @@ import {
 } from "@material-tailwind/react";
 import ClubNav from '../../components/ClubNav';
 
-const CardDefault = () => {
+const CardDefault = ({ club }) => {
   return (
     <Card className="bg-black" style={{ width: '23rem' }}>
       <CardHeader color="blue-gray" className="relative h-40">
         <img
-          src="../../src/assets/rotaract.png"
-          alt="your-image-description"
+          src={club.image}
+          alt={club.name}
           className="h-full w-full object-cover"
         />
       </CardHeader>
@@ -36,22 +36,37 @@ const CardDefault = () => {
           professionals in the field.
         </Typography>
       </CardBody>
-      <CardFooter className="pt-0 flex justify-end">
+      <CardFooter className="pt-0 flex justify-between">
         <a href="#explore-link">
           <Button variant="gradient" className="bg-[#AEC90A] text-black p-1">
             Explore
           </Button>
         </a>
+        <Link 
+          to={{
+            pathname: `/club/election`,
+            state: { club }
+          }}
+        >
+          <Button variant="gradient" className="bg-[#AEC90A] text-black p-1">
+            View Details
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
 };
 
 const MultipleCards = () => {
+  const clubs = Array.from({ length: 8 }).map((_, index) => ({
+    name: `Club ${index + 1}`,
+    image: `../../src/assets/club${index + 1}.png`
+  }));
+
   return (
     <div className="flex flex-wrap gap-8">
-      {Array.from({ length: 8 }).map((_, index) => (
-        <CardDefault key={index} />
+      {clubs.map((club, index) => (
+        <CardDefault key={index} club={club} />
       ))}
     </div>
   );
@@ -73,12 +88,12 @@ const ClubDetails = () => {
         <Navbar className="sticky top-0 z-10 p-4" />
         <div className="bg-neutral-900 flex-1 text-white flex flex-col overflow-hidden p-6">
           <div className="flex items-center mb-6">
-          <img
-  src={club.image}
-  alt={club.name}
-  className="object-cover rounded-lg mr-4"
-  style={{ width: '68px', height: '68px' }}
-/>
+            <img
+              src={club.image}
+              alt={club.name}
+              className="object-cover rounded-lg mr-4"
+              style={{ width: '68px', height: '68px' }}
+            />
             <Typography variant="h5" className="text-[#AEC90A]">
               {club.name}
             </Typography>
