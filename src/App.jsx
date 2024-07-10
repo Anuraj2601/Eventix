@@ -9,8 +9,8 @@ import './css/globals.css'
 import Exploreclub from './pages/president/Exploreclub';
 import StudentAllClubs from './pages/student/StudentAllClubs';
 import Landing from "./pages/Landing"
-import Login from "./Components/login"
-import Signup from "./Components/Signup"
+import Login from "./components/login"
+import Signup from "./components/Signup"
 
 
 import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
