@@ -12,11 +12,12 @@ import {
   Button,
 } from "@material-tailwind/react";
 import ClubNav from '../../components/ClubNav';
+import StudentMiniNav from '../../components/StudentMiniNav';
 
 const StudentClubDetails = () => {
     const { clubName } = useParams();
     const location = useLocation();
-    console.log(location);
+    //console.log(location);
     const { club } = location.state || {};
 
     if (!club) {
@@ -40,7 +41,7 @@ const StudentClubDetails = () => {
                 {club.name}
                 </Typography>
             </div>
-            {/* <ClubNav /> */}
+            <StudentMiniNav/>
             </div>
         </div>
     </div>
