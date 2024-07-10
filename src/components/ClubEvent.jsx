@@ -1,13 +1,13 @@
-import {Swiper, SwiperSlide} from 'swiper/react'
+/* import {Swiper, SwiperSlide} from 'swiper/react' */
 
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/free-mode'
 
-import { FreeMode, Pagination } from 'swiper/modules'
+/* import { FreeMode, Pagination } from 'swiper/modules' */
 import MadhackImg from "../assets/events/madhack.png"
-import { RxArrowTopRight } from 'react-icons/rx'
-import { Carousel } from './constants'
+/* import { RxArrowTopRight } from 'react-icons/rx'
+import { Carousel } from './constants' */
 import { IconButton } from '@material-tailwind/react'
 import { Button } from "@material-tailwind/react";
 import { FaPlus } from 'react-icons/fa6'

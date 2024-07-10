@@ -1,29 +1,29 @@
-import React, { useState } from "react";
+/* import React, { useState } from "react"; */
 import {
   Card,
   CardBody,
   Typography,
   Avatar,
-  Textarea,
+  /* Textarea, */
 } from "@material-tailwind/react";
 
 import Chart from "react-apexcharts";
 
-import { useNavigate } from "react-router-dom";
+/* import { useNavigate } from "react-router-dom"; */
 
 const Member = () => {
-  const navigator = useNavigate();
+ /*  const navigator = useNavigate(); */
 
-  const [open, setOpen] = useState(false);
+ /*  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
 
   const getClubDetails = (sname) => {
     navigator(`/club/${sname}`);
-
+ */
     /* history.push(`/club/${sname}`, { name, image }); */
 
     //console.log(name);
-  };
+ /*  }; */
 
   const chartConfig = {
     type: "pie",

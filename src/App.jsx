@@ -3,13 +3,13 @@
 
 
 // src/App.jsx
-import React from 'react';
+/* import React from 'react'; */
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Exploreclub from './pages/president/Exploreclub';
 import StudentAllClubs from './pages/student/StudentAllClubs';
 import Landing from "./pages/Landing"
-import Login from "./Components/login"
-import Signup from "./Components/Signup"
+import Login from "./components/login"
+import Signup from "./components/Signup"
 
 
 import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
@@ -22,10 +22,10 @@ import EventRequests from './pages/admin/EventRequests';
 import ClubRegistration from './pages/student/ClubRegistration';
 
 
-import  Carousel  from './components/Carousel';
 
-import Board from './components/Board';
-import Toggle from './components/election/Toggle';
+
+/* import Board from './components/Board'; */
+/* import Toggle from './components/election/Toggle'; */
 import AddEvent from './components/AddEvent';
 
 
@@ -44,7 +44,7 @@ const App = () => {
 
       
 
-      
+      <Route path='/clubs' element={<Exploreclub />}></Route>
         <Route path='/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
         
 
@@ -56,16 +56,16 @@ const App = () => {
         <Route path='/admin' element={<EventRequests/>}></Route>
 
 
-        <Route path='/Carousel' element={<Carousel />}></Route>
+        {/* <Route path='/Carousel' element={<Carousel />}></Route> */}
 
-        <Route path='/Board' element={<Board />}></Route>
+       {/*  <Route path='/Board' element={<Board />}></Route> */}
 
 
         <Route path='/studentdashboard' element={<StudentDashboard/>}></Route>
         <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
 
 
-        <Route path='/Toggle' element={<Toggle />} />
+       {/*  <Route path='/Toggle' element={<Toggle />} /> */}
       </Routes>
     </Router>
     </div>
