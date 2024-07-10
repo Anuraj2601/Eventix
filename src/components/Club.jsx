@@ -77,7 +77,7 @@ const Club = () => {
                     className="border-2 border-white rounded-md w-10 h-10"
                   />
                   <div>
-                    <Typography color="blue-gray" variant="h6">
+                    <Typography color="white" className="font-medium">
                       {club.name}
                     </Typography>
                   </div>

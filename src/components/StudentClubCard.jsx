@@ -18,7 +18,7 @@ const StudentClubCard = ({club}) => {
             <div className='flex gap-4'>
                 <img src={club.image} alt="" className='w-16 h-16 rounded-md'/>
                 <div className="reg">
-                    <p className='mb-2 tracking-wide'>{club.club_name}</p>
+                    <p className='mb-2 tracking-wide text-white'>{club.club_name}</p>
                     <div className='flex gap-3'>
                         {
                             club.reg_status === 'yes' && (

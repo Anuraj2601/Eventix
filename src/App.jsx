@@ -52,7 +52,7 @@ const App = () => {
 
       
 
-      <Route path='/clubs' element={<Exploreclub />}></Route>
+        <Route path='/clubs' element={<Exploreclub />}></Route>
         <Route path='/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
         
 
