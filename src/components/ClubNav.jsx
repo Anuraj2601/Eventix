@@ -12,7 +12,7 @@ import Meeting from "./Meeting";
 import Announcement from "./Announcement";
 
 import Member from "./Member";
-import ElectionNav from "./election/ElectionNav";
+import ElectionDetails from "./election/ElectionDetails";
 
 import ClubEvent from "./ClubEvent";
 
@@ -20,7 +20,7 @@ import Board from "./Board";
 
  
 const ClubNav = () => {
-  const [activeTab, setActiveTab] = React.useState("Members");
+  const [activeTab, setActiveTab] = React.useState("Event");
 
   const clubs = [
     {
@@ -76,7 +76,7 @@ const ClubNav = () => {
     {
       label: "Elections",
       value: "Elections",
-      desc: <ElectionNav /> ,
+      desc: <ElectionDetails /> ,
     },
     {
       label: "Meetings",
