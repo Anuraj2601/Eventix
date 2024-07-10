@@ -5,6 +5,7 @@
 // src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './css/globals.css'
 import Exploreclub from './pages/president/Exploreclub';
 import StudentAllClubs from './pages/student/StudentAllClubs';
 import Landing from "./pages/Landing"
@@ -32,6 +33,7 @@ import  Carousel  from './components/Carousel';
 import Board from './components/Board';
 import Toggle from './components/election/Toggle';
 import AddEvent from './components/AddEvent';
+import Calendar from './components/Calendar';
 
 
 // Import other pages if necessary
@@ -58,6 +60,7 @@ const App = () => {
         <Route path='/Dashboard' element={<Dashboard  />} ></Route>
 
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
+        <Route path='/calendar' element={<Calendar />}></Route>
 
         <Route path='/student' element={<StudentAllClubs/>}></Route>
         <Route path='/admin' element={<EventRequests/>}></Route>
