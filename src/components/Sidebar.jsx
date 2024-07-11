@@ -6,7 +6,7 @@ import { BsMegaphone } from 'react-icons/bs';
 import { FaHome } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { IoCalendarNumberOutline, IoExitOutline, IoVideocamOutline } from 'react-icons/io5';
-import Logo from '../assets/Logo.png';
+import Logo from '../assets/eventix Logo1.png.jpg';
 
 
 const Sidebar = () => {
