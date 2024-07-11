@@ -1,5 +1,4 @@
-import { Title } from "@mui/icons-material";
-import Madhack from "../../assets/madhack.jpg";
+
 import Madhack2 from "../../assets/madhack2.png"
 
 export const Carousel = [

@@ -12,9 +12,9 @@ import Meeting from "./Meeting";
 import Announcement from "./Announcement";
 
 import Member from "./Member";
-import ElectionNav from "./election/ElectionNav";
+import ElectionDetails from "./election/ElectionDetails";
 
-
+import ClubEvent from "./ClubEvent";
 
 import Board from "./Board";
 
@@ -66,7 +66,7 @@ const ClubNav = () => {
     {
       label: "Event",
       value: "Event",
-      desc:  `Events`,
+      desc:  <ClubEvent />  /* `Events` */,
     },
     {
       label: "Members",
@@ -76,7 +76,7 @@ const ClubNav = () => {
     {
       label: "Elections",
       value: "Elections",
-      desc: <ElectionNav /> ,
+      desc: <ElectionDetails /> ,
     },
     {
       label: "Meetings",

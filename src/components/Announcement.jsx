@@ -66,7 +66,7 @@ const Announcement = () => {
                 <div className="flex items-center gap-x-40">
                   {/* <Avatar size="sm" src={image} alt={name} className='border-2 border-white rounded-md w-10 h-10'/> */}
                   <div>
-                    <Typography color="blue-gray" variant="h6">
+                    <Typography color="white" variant="h6">
                       {desc}
                     </Typography>
                   </div>
