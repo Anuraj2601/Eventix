@@ -53,13 +53,13 @@ const Member = () => {
     {
       id: "1",
       name: "Kokulrajh",
-      joinedDate: "05.06.2023",
+      team: "Design",
       image: "../src/assets/dp.png",
     },
     {
       id: "2",
       name: "Kokulrajh",
-      joinedDate: "05.06.2023",
+      team: "Marketing",
       image: "../src/assets/dp.png",
     },
   ];
@@ -68,17 +68,17 @@ const Member = () => {
     <>
       <Card className="w-full bg-neutral-900">
         <CardBody>
-          <div className="flex items-center justify-between p-4 mb-4">
+          <div className="flex items-center justify-between p-4 mb-4 text-white">
             <div className="flex items-center gap-x-[178px]">
               <div></div>
               <div>Name</div>
-              <div>Joined Date</div>
+              <div>Team</div>
               <div>OC Participation</div>
               <div>Attendance</div>
             </div>
           </div>
           <div className="">
-            {members.map(({ name, image, joinedDate }, index) => (
+            {members.map(({ name, image, team }, index) => (
             
               <div
                 key={index}
@@ -93,22 +93,22 @@ const Member = () => {
                     className="border-2 border-white rounded-full w-10 h-10"
                   />
                   <div>
-                    <Typography color="blue-gray" variant="h6">
+                    <Typography color="white" variant="h6">
                       {name}
                     </Typography>
                   </div>
                   <div>
-                    <Typography color="blue-gray" variant="h6" className="mt-5">
-                      {joinedDate}
+                    <Typography color="white" variant="h6" className="mt-5">
+                      {team}
                     </Typography>
                   </div>
                   <div>
-                    <Typography color="blue-gray" variant="h6" className="flex">
+                    <Typography color="white" variant="h6" className="flex">
                       <Chart {...chartConfig} /> <span className="mt-4">80%</span> 
                     </Typography>
                   </div>
                   <div>
-                    <Typography color="blue-gray" variant="h6" className="flex">
+                    <Typography color="white" variant="h6" className="flex">
                       <Chart {...chartConfig} /> <span className="mt-4">80%</span>
                     </Typography>
                   </div>
