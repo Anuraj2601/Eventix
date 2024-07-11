@@ -91,11 +91,11 @@ const Calendar = () => {
 
   return (
     <div className="pt-16">
-      <div className="max-w-md px-4 mx-auto sm:px-7 md:max-w-4xl md:px-6">
+      <div className="max-w-md px-4 mx-auto sm:px-7 md:max-w-4xl md:px-6 bg-[#050505]">
         <div className="md:grid md:grid-cols-2 md:divide-x md:divide-gray-200">
           <div className="md:pr-14">
             <div className="flex items-center">
-              <h2 className="flex-auto font-semibold text-gray-900">
+              <h2 className="flex-auto font-semibold text-white">
                 {format(firstDayCurrentMonth, 'MMMM yyyy')}
               </h2>
               <button
@@ -104,7 +104,7 @@ const Calendar = () => {
                 className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
               >
                 <span className="sr-only">Previous month</span>
-                <ChevronLeftIcon className="w-5 h-5 text-[#171717]" aria-hidden="true" />
+                <ChevronLeftIcon className="w-5 h-5 text-white" aria-hidden="true" />
               </button>
               <button
                 onClick={nextMonth}
@@ -112,17 +112,17 @@ const Calendar = () => {
                 className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
               >
                 <span className="sr-only">Next month</span>
-                <ChevronRightIcon className="w-5 h-5 text-[#171717]" aria-hidden="true" />
+                <ChevronRightIcon className="w-5 h-5 text-white" aria-hidden="true" />
               </button>
             </div>
-            <div className="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-gray-500">
-              <div>S</div>
-              <div>M</div>
-              <div>T</div>
-              <div>W</div>
-              <div>T</div>
-              <div>F</div>
-              <div>S</div>
+            <div className="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-white">
+              <div>Sun</div>
+              <div>Mon</div>
+              <div>Tue</div>
+              <div>Wed</div>
+              <div>Thu</div>
+              <div>Fri</div>
+              <div>Sat</div>
             </div>
             <div className="grid grid-cols-7 mt-2 text-sm">
               {days.map((day, dayIdx) => (
@@ -140,27 +140,27 @@ const Calendar = () => {
                     type="button"
                     onClick={() => setSelectedDay(day)}
                     className={classNames(
-                      isEqual(day, selectedDay) && 'text-white',
+                      isEqual(day, selectedDay) && 'text-[#050505]',
                       meetings.some((meeting) =>
                         isSameDay(parseISO(meeting.startDatetime), day)
-                      )  &&
-                      'text-white bg-[#AEC90A] hover:bg-[#171717]',
+                      )  && !isToday(day) &&
+                      ' bg-[#AEC90A] hover:bg-[#171717] hover:text-black',
                       !isEqual(day, selectedDay) &&
                         isToday(day) &&
-                        'text-white bg-[#171717] hover:text-[#AEC90A]',
+                        'text-[#050505] bg-white hover:text-[#AEC90A]',
                       !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         isSameMonth(day, firstDayCurrentMonth) &&
-                        'text-gray-900',
+                        'text-white',
                       !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         !isSameMonth(day, firstDayCurrentMonth) &&
-                        'text-gray-400',
-                      isEqual(day, selectedDay) && isToday(day) && 'bg-[#171717]',
+                        'text-white',
+                      isEqual(day, selectedDay) && isToday(day) && 'bg-white text-[#050505]',
                       isEqual(day, selectedDay) &&
                         !isToday(day) &&
-                        'bg-[#AEC90A] text-white',
-                      !isEqual(day, selectedDay) && 'hover:bg-gray-200',
+                        'bg-[#AEC90A] text-black',
+                      !isEqual(day, selectedDay) && 'hover:bg-gray-200 hover:text-black',
                       (isEqual(day, selectedDay) || isToday(day)) &&
                         'font-semibold',
                        'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
