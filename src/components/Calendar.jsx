@@ -177,7 +177,7 @@ const Calendar = () => {
             
                  
 
-                  <div className="w-1 h-1 mx-auto mt-1 flex-col">
+                  <div className="w-1 h-1 mx-auto mt-1 flex flex-col">
                     {meetings.some((meeting) =>
                       isSameDay(parseISO(meeting.startDatetime), day)
                     ) && (
