@@ -10,10 +10,11 @@ import { Button } from "@material-tailwind/react";
 import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
 import { Dialog } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Club = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
 
@@ -51,8 +52,16 @@ const Club = () => {
     },
   ];
 
+
   const getClubDetails = (club) => {
-    navigate(`/club/${club.sname}`, { state: { club } });
+
+    if(location.pathname === "/student"){
+      navigate(`/student/club/${club.sname}`, { state: { club } });
+    }else{
+      navigate(`/club/${club.sname}`, { state: { club } });
+    }
+    
+    
   };
 
   return (
@@ -77,7 +86,7 @@ const Club = () => {
                     className="border-2 border-white rounded-md w-10 h-10"
                   />
                   <div>
-                    <Typography color="blue-gray" variant="h6">
+                    <Typography color="white" className="font-medium">
                       {club.name}
                     </Typography>
                   </div>
