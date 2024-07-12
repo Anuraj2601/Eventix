@@ -15,6 +15,8 @@ import { Dialog, Input } from "@material-tailwind/react";
 import {Chip} from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
+import EditDeleteButton from './EditDeleteButton';
+
 
 const Meeting = () => {
   const navigator = useNavigate();
@@ -33,7 +35,7 @@ const Meeting = () => {
   const meetings = [
     {
       id: "1",
-      desc: "Regarding next club board meeting",
+      desc: "Regarding next club board election",
       date: "05.06.2024",
       status: "Online",
     },
@@ -109,20 +111,10 @@ const Meeting = () => {
                   </div>
                 </div>
                 <div className="flex flex-row gap-4">
-                 {/*  <Button
-                    className="bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
-                    onClick={handleOpen}
-                  >
-                    Leave
-                  </Button> */}
-                 {/*  <Button
-                    className="bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
-                    onClick={() => getClubDetails(sname)}
-                  >
-                    {status == 'Online' ? 'Join' : 'GetQR' }
-                  </Button> */}
-
-                  {/* {console.log(isModalOpen)} */}
+                  <EditDeleteButton
+                    onEdit={() => handleEdit(id)}
+                    onDelete={() => handleDelete(id)}
+                  />
                 </div>
               </div>
             ))}

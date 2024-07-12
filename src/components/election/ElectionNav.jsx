@@ -10,6 +10,9 @@ import {
 } from "@material-tailwind/react";
 import ElectionviewDetails from "./ElectionviewDetails";
 import Votestab from "./Votestab";
+import Candidates from "../Candidates";
+
+
 
 const ElectionNav = ({ clubName, electionId }) => {
   const [activeTab, setActiveTab] = React.useState("Details");
@@ -23,7 +26,7 @@ const ElectionNav = ({ clubName, electionId }) => {
     {
       label: "Candidates",
       value: "Candidates",
-      desc: `Candidates`,
+      desc: <Candidates />,
     },
     {
       label: "Votes",
