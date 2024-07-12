@@ -8,6 +8,8 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { FaPlus, FaRegEdit } from "react-icons/fa";
+import EditDeleteButton from '../EditDeleteButton';
+
 
 const ElectionDetails = ({ clubName, electionId }) => {
   const [value, setValue] = useState(false);
@@ -82,7 +84,6 @@ const ElectionDetails = ({ clubName, electionId }) => {
                   </div>
                   <div className="flex items-center gap-2">
                     <Typography className="text-[#AEC90A]" variant="h6">
-                      <FaRegEdit className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
                     </Typography>
                     <Link
                       to={`/club/election`} // Navigate dynamically based on URL
@@ -95,6 +96,12 @@ const ElectionDetails = ({ clubName, electionId }) => {
                       </Button>
                     </Link>
                   </div>
+                </div>
+                <div className="flex flex-row gap-4">
+                  <EditDeleteButton
+                    onEdit={() => handleEdit(id)}
+                    onDelete={() => handleDelete(id)}
+                  />
                 </div>
               </div>
             ))}

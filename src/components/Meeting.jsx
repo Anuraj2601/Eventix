@@ -11,10 +11,10 @@ import { Button } from "@material-tailwind/react";
 import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
 // import LeaveModal from './LeaveModal';
-import { Dialog, Input } from "@material-tailwind/react";
-import {Chip} from "@material-tailwind/react";
+import { Dialog, Input, Chip } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
+import EditDeleteButton from './EditDeleteButton';
 
 const Meeting = () => {
   const navigator = useNavigate();
@@ -51,11 +51,21 @@ const Meeting = () => {
     },
   ];
 
+  const handleEdit = (id) => {
+    console.log(`Edit meeting with id: ${id}`);
+    // Your edit logic here
+  };
+
+  const handleDelete = (id) => {
+    console.log(`Delete meeting with id: ${id}`);
+    // Your delete logic here
+  };
+
   return (
     <>
-    <Button
-        className="flex items-center gap-2 bg-[#AEC90A] h-10 mr-0 mt-2 ml-[950px] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm" variant="gradient"
-        
+      <Button
+        className="flex items-center gap-2 bg-[#AEC90A] h-10 mr-0 mt-2 ml-[950px] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
+        variant="gradient"
       >
         <FaPlus />
         New Meeting
@@ -63,13 +73,12 @@ const Meeting = () => {
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div className="">
-            {meetings.map(({ desc, date, status }, index) => (
+            {meetings.map(({ id, desc, date, status }, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
               >
-                <div className="flex items-center  text-[16px] gap-x-72">
-                  {/* <Avatar size="sm" src={image} alt={name} className='border-2 border-white rounded-md w-10 h-10'/> */}
+                <div className="flex items-center text-[16px] gap-x-72">
                   <div>
                     <Typography className="text-white font-normal " variant="h6">
                       {desc}
@@ -82,7 +91,7 @@ const Meeting = () => {
                   </div>
                   <div>
                     <Typography className="text-white" variant="h6">
-                      {status == "Online" ? (
+                      {status === "Online" ? (
                         <Chip
                           variant="ghost"
                           color="green"
@@ -109,28 +118,14 @@ const Meeting = () => {
                   </div>
                 </div>
                 <div className="flex flex-row gap-4">
-                 {/*  <Button
-                    className="bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
-                    onClick={handleOpen}
-                  >
-                    Leave
-                  </Button> */}
-                 {/*  <Button
-                    className="bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
-                    onClick={() => getClubDetails(sname)}
-                  >
-                    {status == 'Online' ? 'Join' : 'GetQR' }
-                  </Button> */}
-
-                  {/* {console.log(isModalOpen)} */}
+                  <EditDeleteButton
+                    onEdit={() => handleEdit(id)}
+                    onDelete={() => handleDelete(id)}
+                  />
                 </div>
               </div>
             ))}
           </div>
-          {/* {open && <LeaveModal open={open} handleOpen={handleOpen}/>} */}
-          {/* <LeaveModal open={open} handleOpen={handleOpen}>
-                  fancy modal
-                </LeaveModal> */}
         </CardBody>
       </Card>
 
@@ -163,9 +158,6 @@ const Meeting = () => {
               />
               <MdSend className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer" />
             </div>
-
-            {/* <Input label="Type your reason" size="lg" className='relative'/>
-              <MdSend className='absolute '/> */}
           </CardBody>
         </Card>
       </Dialog>
