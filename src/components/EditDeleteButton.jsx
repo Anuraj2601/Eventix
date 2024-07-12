@@ -14,7 +14,7 @@ const EditDeleteButton = ({ onEdit, onDelete }) => {
       </button>
       <button
         onClick={onDelete}
-        className="flex items-center px-6 py-3 text-white text-lg rounded hover:text-red-700"
+        className="flex items-center px-6 py-3 text-[#dc2626] text-lg rounded hover:text-red-700"
       >
         <FaTrash className="mr-2 text-xl" />
         Delete

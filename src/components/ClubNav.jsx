@@ -10,15 +10,11 @@ import { useParams } from "react-router-dom";
 
 import Meeting from "./Meeting";
 import Announcement from "./Announcement";
-
 import Member from "./Member";
 import ElectionDetails from "./election/ElectionDetails";
-
 import ClubEvent from "./ClubEvent";
-
 import Board from "./Board";
 
- 
 const ClubNav = () => {
   const [activeTab, setActiveTab] = React.useState("Event");
 
@@ -61,12 +57,12 @@ const ClubNav = () => {
     {
       label: "Current Board",
       value: "Current Board",
-      desc:<Board />,
+      desc: <Board />,
     },
     {
       label: "Event",
       value: "Event",
-      desc:  <ClubEvent />  /* `Events` */,
+      desc: <ClubEvent />,
     },
     {
       label: "Members",
@@ -76,7 +72,7 @@ const ClubNav = () => {
     {
       label: "Elections",
       value: "Elections",
-      desc: <ElectionDetails /> ,
+      desc: <ElectionDetails />,
     },
     {
       label: "Meetings",
@@ -89,6 +85,7 @@ const ClubNav = () => {
       desc: <Announcement />,
     },
   ];
+
   return (
     <Tabs value={activeTab}>
       <TabsHeader
@@ -103,13 +100,15 @@ const ClubNav = () => {
             key={value}
             value={value}
             onClick={() => setActiveTab(value)}
-            className={`text-white hover:text-[#AEC90A] ${activeTab === value ? ' text-[#AEC90A]' : ''}`}
+            className={`text-white hover:text-[#AEC90A] ${
+              activeTab === value ? " text-[#AEC90A]" : ""
+            }`}
           >
             {label}
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody>
+      <TabsBody className="h-[500px] overflow-y-auto"> {/* Adjust height as needed */}
         {data.map(({ value, desc }) => (
           <TabPanel key={value} value={value}>
             {desc}
@@ -118,6 +117,6 @@ const ClubNav = () => {
       </TabsBody>
     </Tabs>
   );
-}
+};
 
 export default ClubNav;
