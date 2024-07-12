@@ -1,9 +1,8 @@
-// C:\wamp64\www\Eventix\src\components\election\ElectionviewDetails.jsx
-
 import React, { useState } from "react";
-import { Card, CardBody, Typography, Button } from "@material-tailwind/react";
+import { Card, CardBody, Typography } from "@material-tailwind/react";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import Customswitch from "../Customswitch";
+import EditDeleteButton from "../EditDeleteButton";
 
 const ElectionviewDetails = ({ clubName, electionId }) => {
   const [value, setValue] = useState(false);
@@ -16,6 +15,14 @@ const ElectionviewDetails = ({ clubName, electionId }) => {
       votingDate: "10.06.2024-15.06.2024",
     },
   ];
+
+  const handleEdit = (id) => {
+    // Handle edit logic here
+  };
+
+  const handleDelete = (id) => {
+    // Handle delete logic here
+  };
 
   return (
     <>
@@ -33,7 +40,10 @@ const ElectionviewDetails = ({ clubName, electionId }) => {
                 <Typography className="text-white" variant="h6">
                   {applicationDate}
                 </Typography>
-                <Customswitch isOn={value} handleToggle={() => setValue(!value)} />
+                <Customswitch
+                  isOn={value}
+                  handleToggle={() => setValue(!value)}
+                />
               </div>
               <div className="flex items-center justify-between mt-4">
                 <Typography className="text-[#AEC90A]" variant="h6">
@@ -42,15 +52,16 @@ const ElectionviewDetails = ({ clubName, electionId }) => {
                 <Typography className="text-white" variant="h6">
                   {votingDate}
                 </Typography>
-                <Customswitch isOn={value} handleToggle={() => setValue(!value)} />
+                <Customswitch
+                  isOn={value}
+                  handleToggle={() => setValue(!value)}
+                />
               </div>
               <div className="flex items-center justify-end mt-4 gap-4">
-                <Button variant="gradient" className="bg-[#AEC90A] text-black p-1">
-                  <FaRegEdit className="w-6 h-6" />
-                </Button>
-                <Button variant="gradient" className="bg-[#FF4B4B] text-black p-1">
-                  <FaTrashAlt className="w-6 h-6" />
-                </Button>
+                <EditDeleteButton
+                  onEdit={() => handleEdit(id)}
+                  onDelete={() => handleDelete(id)}
+                />
               </div>
             </div>
           ))}

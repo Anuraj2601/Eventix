@@ -1,5 +1,3 @@
-// C:\wamp64\www\Eventix\src\components\election\Votestab.jsx
-
 import React from "react";
 
 const Votestab = () => {
@@ -28,7 +26,7 @@ const Votestab = () => {
       id: 4,
       votes: 70,
       name: "Emily Johnson",
-      image: "https://randomuser.me/api/portraits/women/4.jpg", // New image URL for Emily Johnson
+      image: "https://randomuser.me/api/portraits/women/10.jpg", // New image URL for Emily Johnson
     },
     {
       id: 5,
@@ -40,7 +38,7 @@ const Votestab = () => {
       id: 6,
       votes: 40,
       name: "Sarah Williams",
-      image: "https://randomuser.me/api/portraits/women/6.jpg", // New image URL for Sarah Williams
+      image: "https://randomuser.me/api/portraits/women/11.jpg", // New image URL for Sarah Williams
     },
     // Treasurer candidates
     {
@@ -63,84 +61,119 @@ const Votestab = () => {
     },
   ];
 
-  // Update images for Sarah Williams and Emily Johnson
-  candidates.find(candidate => candidate.name === "Emily Johnson").image = "https://randomuser.me/api/portraits/women/10.jpg"; // New image URL for Emily Johnson
-  candidates.find(candidate => candidate.name === "Sarah Williams").image = "https://randomuser.me/api/portraits/women/11.jpg"; // New image URL for Sarah Williams
-
   // Filter candidates for each position
   const presidentCandidates = candidates.slice(0, 3);
   const vicePresidentCandidates = candidates.slice(3, 6);
   const treasurerCandidates = candidates.slice(6, 9);
 
   return (
-    <div className="flex flex-col items-center p-5">
+    <div className="w-full flex flex-col items-center p-5">
       {/* President Position */}
-      <h2 className="text-3xl text-white mb-4 p-5">President Position</h2>
-      <div className="flex items-center space-x-20">
-        {presidentCandidates.map((candidate, index) => (
-          <div key={candidate.id} className="relative">
-            <div className="relative">
-              <span className="text-[#AEC90A] text-4xl font-bold absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2">
-                {index + 1}
-              </span>
-              <img
-                src={candidate.image} // Use candidate's image URL
-                alt={`Candidate ${candidate.id}`}
-                className="w-48 h-48 rounded-full object-cover border-[#AEC90A] border-4 p-5"
-              />
-            </div>
-            <div className="text-center mt-2">
-              <div className="text-white">{candidate.name}</div>
-              <span className="text-[#AEC90A] font-bold">{candidate.votes} votes</span>
-            </div>
+      <div className="relative mb-12 w-full">
+        <div className="absolute top-0 left-0 w-full z-10">
+          <div className="bg-black py-2 px-4 rounded-lg">
+            <h2 className="text-3xl text-[#AEC90A] text-center">
+              President Position
+            </h2>
           </div>
-        ))}
+        </div>
+        <div className="relative w-full border border-[#AEC90A] rounded-xl p-5 mt-8">
+          <div className="flex items-center justify-around space-x-16">
+            {presidentCandidates.map((candidate, index) => (
+              <div
+                key={candidate.id}
+                className="relative flex flex-col items-center space-y-4"
+              >
+                <span className="text-[#AEC90A] text-2xl font-bold absolute -top-4 left-4 bg-black px-3 py-1 rounded-full">
+                  {index + 1}
+                </span>
+                <img
+                  src={candidate.image} // Use candidate's image URL
+                  alt={`Candidate ${candidate.id}`}
+                  className="w-48 h-48 rounded-full object-cover border-[#AEC90A] border-4 p-1"
+                />
+                <div className="text-center mt-2">
+                  <div className="text-white">{candidate.name}</div>
+                  <span className="text-[#AEC90A] font-bold">
+                    {candidate.votes} votes
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Vice President Position */}
-      <h2 className="text-3xl text-white my-8 p-5">Secretary Position</h2>
-      <div className="flex items-center space-x-20">
-        {vicePresidentCandidates.map((candidate, index) => (
-          <div key={candidate.id} className="relative">
-            <div className="relative">
-              <span className="text-[#AEC90A] text-4xl font-bold absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2">
-                {index + 1}
-              </span>
-              <img
-                src={candidate.image} // Use candidate's image URL
-                alt={`Candidate ${candidate.id}`}
-                className="w-48 h-48 rounded-full object-cover border-[#AEC90A] border-4 p-5"
-              />
-            </div>
-            <div className="text-center mt-2">
-              <div className="text-white">{candidate.name}</div>
-              <span className="text-[#AEC90A] font-bold">{candidate.votes} votes</span>
-            </div>
+      <div className="relative mb-12 w-full">
+        <div className="absolute top-0 left-0 w-full z-10">
+          <div className="bg-black py-2 px-4 rounded-lg">
+            <h2 className="text-3xl text-[#AEC90A] text-center">
+              Vice President Position
+            </h2>
           </div>
-        ))}
+        </div>
+        <div className="relative w-full border border-[#AEC90A] rounded-xl p-5 mt-8">
+          <div className="flex items-center justify-around space-x-16">
+            {vicePresidentCandidates.map((candidate, index) => (
+              <div
+                key={candidate.id}
+                className="relative flex flex-col items-center space-y-4"
+              >
+                <span className="text-[#AEC90A] text-2xl font-bold absolute -top-4 left-4 bg-black px-3 py-1 rounded-full">
+                  {index + 1}
+                </span>
+                <img
+                  src={candidate.image} // Use candidate's image URL
+                  alt={`Candidate ${candidate.id}`}
+                  className="w-48 h-48 rounded-full object-cover border-[#AEC90A] border-4 p-1"
+                />
+                <div className="text-center mt-2">
+                  <div className="text-white">{candidate.name}</div>
+                  <span className="text-[#AEC90A] font-bold">
+                    {candidate.votes} votes
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Treasurer Position */}
-      <h2 className="text-3xl text-white my-8 p-5">Treasurer Position</h2>
-      <div className="flex items-center space-x-20">
-        {treasurerCandidates.map((candidate, index) => (
-          <div key={candidate.id} className="relative">
-            <div className="relative">
-              <span className="text-[#AEC90A] text-4xl font-bold absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2">
-                {index + 1}
-              </span>
-              <img
-                src={candidate.image} // Use candidate's image URL
-                alt={`Candidate ${candidate.id}`}
-                className="w-48 h-48 rounded-full object-cover border-[#AEC90A] border-4 p-5"
-              />
-            </div>
-            <div className="text-center mt-2">
-              <div className="text-white">{candidate.name}</div>
-              <span className="text-[#AEC90A] font-bold">{candidate.votes} votes</span>
-            </div>
+      <div className="relative mb-12 w-full">
+        <div className="absolute top-0 left-0 w-full z-10">
+          <div className="bg-black py-2 px-4 rounded-lg">
+            <h2 className="text-3xl text-[#AEC90A] text-center">
+              Treasurer Position
+            </h2>
           </div>
-        ))}
+        </div>
+        <div className="relative w-full border border-[#AEC90A] rounded-xl p-5 mt-8">
+          <div className="flex items-center justify-around space-x-16">
+            {treasurerCandidates.map((candidate, index) => (
+              <div
+                key={candidate.id}
+                className="relative flex flex-col items-center space-y-4"
+              >
+                <span className="text-[#AEC90A] text-2xl font-bold absolute -top-4 left-4 bg-black px-3 py-1 rounded-full">
+                  {index + 1}
+                </span>
+                <img
+                  src={candidate.image} // Use candidate's image URL
+                  alt={`Candidate ${candidate.id}`}
+                  className="w-48 h-48 rounded-full object-cover border-[#AEC90A] border-4 p-1"
+                />
+                <div className="text-center mt-2">
+                  <div className="text-white">{candidate.name}</div>
+                  <span className="text-[#AEC90A] font-bold">
+                    {candidate.votes} votes
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
