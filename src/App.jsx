@@ -34,7 +34,7 @@ import ClubRegistration from './pages/student/ClubRegistration';
 /* import Toggle from './components/election/Toggle'; */
 
 import AddEvent from './components/AddEvent';
-import Calendar from './components/Calendar';
+import Calendar from './pages/president/Calendar';
 import StudentClubDetails from './pages/student/StudentClubDetails';
 import StudentNotifications from './pages/student/StudentNotifications';
 
