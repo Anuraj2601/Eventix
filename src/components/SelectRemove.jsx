@@ -13,7 +13,7 @@ const SelectRemove = ({ onEdit, onDelete }) => {
       onClick={onDelete}
       className="flex items-center px-6 py-3 text-white text-lg rounded border border-white hover:text-red-700 hover:border-red-700"
     >
-      Remove
+      Reject
     </button>
   </div>
   

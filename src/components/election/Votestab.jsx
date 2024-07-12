@@ -70,14 +70,13 @@ const Votestab = () => {
     <div className="w-full flex flex-col items-center p-5">
       {/* President Position */}
       <div className="relative mb-12 w-full">
-        <div className="absolute top-0 left-0 w-full z-10">
-          <div className="bg-black py-2 px-4 rounded-lg">
-            <h2 className="text-3xl text-[#AEC90A] text-center">
-              President Position
-            </h2>
-          </div>
-        </div>
-        <div className="relative w-full border border-[#AEC90A] rounded-xl p-5 mt-8">
+       <div className="absolute top-0 left-0 z-10 w-full flex justify-center">
+  <div className="bg-black py-2 px-4 rounded-lg">
+    <h2 className="text-3xl text-[#AEC90A] text-center">President Position</h2>
+  </div>
+</div>
+
+        <div className="relative w-full border border-[#AEC90A] rounded-xl p-10 mt-8">
           <div className="flex items-center justify-around space-x-16">
             {presidentCandidates.map((candidate, index) => (
               <div
@@ -105,15 +104,14 @@ const Votestab = () => {
       </div>
 
       {/* Vice President Position */}
-      <div className="relative mb-12 w-full">
-        <div className="absolute top-0 left-0 w-full z-10">
-          <div className="bg-black py-2 px-4 rounded-lg">
-            <h2 className="text-3xl text-[#AEC90A] text-center">
-              Vice President Position
-            </h2>
-          </div>
-        </div>
-        <div className="relative w-full border border-[#AEC90A] rounded-xl p-5 mt-8">
+      <div className="relative mb-12 w-full ">
+      <div className="absolute top-0 left-0 z-10 w-full flex justify-center">
+  <div className="bg-black py-2 px-4 rounded-lg">
+    <h2 className="text-3xl text-[#AEC90A] text-center">Vice President Position</h2>
+  </div>
+</div>
+
+        <div className="relative w-full border border-[#AEC90A] rounded-xl p-10 mt-8">
           <div className="flex items-center justify-around space-x-16">
             {vicePresidentCandidates.map((candidate, index) => (
               <div
@@ -142,14 +140,13 @@ const Votestab = () => {
 
       {/* Treasurer Position */}
       <div className="relative mb-12 w-full">
-        <div className="absolute top-0 left-0 w-full z-10">
-          <div className="bg-black py-2 px-4 rounded-lg">
-            <h2 className="text-3xl text-[#AEC90A] text-center">
-              Treasurer Position
-            </h2>
-          </div>
-        </div>
-        <div className="relative w-full border border-[#AEC90A] rounded-xl p-5 mt-8">
+      <div className="absolute top-0 left-0 z-10 w-full flex justify-center">
+  <div className="bg-black py-2 px-4 rounded-lg">
+    <h2 className="text-3xl text-[#AEC90A] text-center">Treasurer Position</h2>
+  </div>
+</div>
+
+        <div className="relative w-full border border-[#AEC90A] rounded-xl p-10 mt-8">
           <div className="flex items-center justify-around space-x-16">
             {treasurerCandidates.map((candidate, index) => (
               <div
@@ -162,7 +159,7 @@ const Votestab = () => {
                 <img
                   src={candidate.image} // Use candidate's image URL
                   alt={`Candidate ${candidate.id}`}
-                  className="w-48 h-48 rounded-full object-cover border-[#AEC90A] border-4 p-1"
+                  className="w-48 h-48 rounded-full object-cover border-[#AEC90A] border-4 p-5"
                 />
                 <div className="text-center mt-2">
                   <div className="text-white">{candidate.name}</div>
