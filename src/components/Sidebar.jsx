@@ -6,7 +6,9 @@ import { BsMegaphone } from 'react-icons/bs';
 import { FaHome } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { IoCalendarNumberOutline, IoExitOutline, IoVideocamOutline } from 'react-icons/io5';
-import Logo from '../assets/logo.png';
+
+import Logo from '../assets/eventix Logo1.png';
+
 
 
 const Sidebar = () => {
@@ -21,7 +23,7 @@ const Sidebar = () => {
     <>
     <aside className="bg-stone-950 shadow-2xl text-white w-52 h-full p-4 flex flex-col justify-center items-center">
     <div className="p-3 flex justify-center">
-  <img src={Logo} alt="logo" className="w-96 h-24 mb-5 ml-10" />
+  <img src={Logo} alt="logo" className="w-72 h-24 mb-5 ml-2" />
 </div>
 
 

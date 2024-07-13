@@ -6,6 +6,8 @@ import 'swiper/css/free-mode'
 
 /* import { FreeMode, Pagination } from 'swiper/modules' */
 import MadhackImg from "../assets/events/madhack.png"
+import ReidImg from "../assets/events/reid.jpg"
+
 /* import { RxArrowTopRight } from 'react-icons/rx'
 import { Carousel } from './constants' */
 import { IconButton } from '@material-tailwind/react'
@@ -30,26 +32,13 @@ const ClubEvent = () => {
       
     },
     {
-      name: "MadHack 3.0",
-      image: MadhackImg,
+      name: "ReidExtreme 3.0",
+      image: ReidImg,
       date: "05.06.2024",
       link: "https://example.com/join-oc",
       
     },
-    {
-      name: "MadHack 3.0",
-      image: MadhackImg,
-      date: "05.06.2024",
-      link: "https://example.com/join-oc",
-      
-    },
-    {
-      name: "MadHack 3.0",
-      image: MadhackImg,
-      date: "05.06.2024",
-      link: "https://example.com/join-oc",
-      
-    },
+    
   ];
 
   return (
@@ -67,7 +56,7 @@ const ClubEvent = () => {
       {events.map((event, index) => (
         <div key={index} className=" rounded-lg p-4">
           <div className="relative">
-          <img src={event.image} alt={event.name} className="w-full h-56 object-cover rounded-lg" />
+          <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
             <div className="w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center" style={{ backgroundColor: '#AEC90A', color: '#000' }}>
             <IconButton className="font-extrabold text-lg text-black">➔</IconButton>
             </div>

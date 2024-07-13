@@ -15,6 +15,8 @@ import { Dialog, Input } from "@material-tailwind/react";
 import {Chip} from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
+import EditDeleteButton from './EditDeleteButton';
+
 
 const Announcement = () => {
   const navigator = useNavigate();
@@ -92,6 +94,12 @@ const Announcement = () => {
                   </Button> */}
 
                   {/* {console.log(isModalOpen)} */}
+                </div>
+                <div className="flex flex-row gap-4">
+                  <EditDeleteButton
+                    onEdit={() => handleEdit(id)}
+                    onDelete={() => handleDelete(id)}
+                  />
                 </div>
               </div>
             ))}
