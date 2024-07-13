@@ -24,7 +24,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
       id: "2",
       desc: "Club Board of 23/24",
       applicationDate: "05.06.2024-09.06.2024",
-      votingDate: "10.06.2024-15.06.2024",
+      votingDate: "10.06.2023-15.06.2023",
     },
   ];
 
@@ -47,57 +47,60 @@ const ElectionDetails = ({ clubName, electionId }) => {
       </Button>
       <Card className="w-full bg-neutral-900 mt-4">
         <CardBody>
-          <div className="grid grid-cols-6 gap-4 p-1 mb-2 text-white">
+          <div className="grid grid-cols-6 gap-2 p-1 mb-2 text-white">
             <div className="col-span-2 flex justify-center items-center">
               Election for
             </div>
             <div className="col-span-2 flex justify-center items-center">
-              Candidate Applications
+              Candidate Applications open
             </div>
-            <div className="col-span-2 flex justify-center items-center">
-              Voting
+            <div className="col-span-1 flex justify-center items-center">
+              Votings open
             </div>
+            
           </div>
           <div>
-            {elections.map(({ id, desc, applicationDate, votingDate }) => (
+            {elections.map(({ id, desc, applicationDate, votingDate }, index) => (
               <div
                 key={id}
-                className="grid grid-cols-6 gap-4 items-center p-4 bg-[#1E1E1E] rounded-xl mb-2"
+                className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl mb-2 ${index === 1 ? 'opacity-50' : ''}`}
               >
                 <div className="col-span-2 flex justify-center items-center">
-                  <Typography color="white" variant="h6">
+                  <Typography color={index === 1 ? "gray" : "white"} variant="h6">
                     {desc}
                   </Typography>
                 </div>
                 <div className="col-span-2 flex justify-center items-center">
-                  <Typography className="text-[#AEC90A] inline-block" variant="h6">
+                  <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
                     {applicationDate}
-                    <div className="flex gap-4 text-white mt-1">
-                      <div>Applications</div>
+                    <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
+                      <div className="whitespace-nowrap">Applications</div>
                       <div>
-                        <Customswitch isOn={value} handleToggle={() => setValue(!value)} />
+                        <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
                       </div>
                     </div>
                   </Typography>
                 </div>
-                <div className="col-span-2 flex justify-center items-center">
-                  <Typography className="text-[#AEC90A] inline-block" variant="h6">
+                <div className="col-span-1 flex justify-center items-center">
+                  <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
                     {votingDate}
-                    <div className="flex gap-4 text-white mt-1">
-                      <div>Votings</div>
+                    <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
+                      <div className="whitespace-nowrap">Votings</div>
                       <div>
-                        <Customswitch isOn={value} handleToggle={() => setValue(!value)} />
+                        <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
                       </div>
                     </div>
                   </Typography>
                 </div>
-                <div className="col-span-6 flex justify-center items-center gap-2">
+               
+                <div className="col-span-6 flex justify-end items-center gap-2 p-5">
                   <EditDeleteButton
                     onEdit={() => handleEdit(id)}
                     onDelete={() => handleDelete(id)}
+                    disabled={index === 1}
                   />
                   <Link to={`/club/election`}>
-                    <Button variant="gradient" className="bg-[#AEC90A] text-black p-1 inline-block">
+                    <Button variant="gradient" className={`bg-[#AEC90A] text-black p-2 inline-block ${index === 1 ? 'opacity-50 pointer-events-none' : ''}`}>
                       View Details
                     </Button>
                   </Link>

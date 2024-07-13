@@ -10,7 +10,7 @@ import {
 } from "@material-tailwind/react";
 import ElectionviewDetails from "./ElectionviewDetails";
 import Votestab from "./Votestab";
-import Candidates from "../Candidates";
+import CandidatesNav from "../CandidatesNav";
 
 
 
@@ -26,7 +26,7 @@ const ElectionNav = ({ clubName, electionId }) => {
     {
       label: "Candidates",
       value: "Candidates",
-      desc: <Candidates />,
+      desc: <CandidatesNav />,
     },
     {
       label: "Votes",
@@ -56,7 +56,7 @@ const ElectionNav = ({ clubName, electionId }) => {
             </Tab>
           ))}
         </TabsHeader>
-        <div className="overflow-y-auto h-full max-h-[500px]"> {/* Make the tab body scrollable */}
+        <div className="overflow-y-auto h-full max-h-[700px]"> {/* Make the tab body scrollable */}
           <TabsBody>
             {data.map(({ value, desc }) => (
               <TabPanel key={value} value={value}>

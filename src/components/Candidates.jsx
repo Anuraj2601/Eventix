@@ -23,7 +23,27 @@ const getRandomEvents = () => {
   return shuffledEvents.slice(0, Math.floor(Math.random() * shuffledEvents.length) + 1);
 };
 
-const Candidates = () => {
+const generateRandomMember = (status) => {
+  return {
+    id: Math.random().toString(36).substr(2, 9),
+    name: status === "Selected" ? generateRandomName("male") : generateRandomName("female"),
+    team: teams[Math.floor(Math.random() * teams.length)],
+    image: `https://randomuser.me/api/portraits/${status === "Selected" ? "men" : "women"}/${Math.floor(Math.random() * 99)}.jpg`,
+    events: getRandomEvents(),
+    ocPercentage: Math.floor(Math.random() * (90 - 60 + 1)) + 60,
+    attendancePercentage: Math.floor(Math.random() * (80 - 50 + 1)) + 50,
+    status: status,
+  };
+};
+
+const generateRandomName = (gender) => {
+  const names = gender === "male" ?
+    ["John", "Michael", "James", "David", "William", "Joseph", "Daniel", "George", "Anthony", "Charles"] :
+    ["Mary", "Jennifer", "Linda", "Susan", "Karen", "Lisa", "Nancy", "Betty", "Helen", "Sandra"];
+  return names[Math.floor(Math.random() * names.length)];
+};
+
+const Candidates = ({ activeTab }) => {
   const chartConfig = {
     type: "pie",
     width: 80,
@@ -48,104 +68,26 @@ const Candidates = () => {
     },
   };
 
-  const members = [
-    {
-      id: "1",
-      name: "Sarah",
-      team: teams[Math.floor(Math.random() * teams.length)],
-      image: "https://randomuser.me/api/portraits/women/11.jpg",
-      events: getRandomEvents(),
-      ocPercentage: 80,
-      attendancePercentage: 70,
-    },
-    {
-      id: "2",
-      name: "John",
-      team: teams[Math.floor(Math.random() * teams.length)],
-      image: "https://randomuser.me/api/portraits/men/1.jpg",
-      events: getRandomEvents(),
-      ocPercentage: 70,
-      attendancePercentage: 65,
-    },
-    {
-      id: "3",
-      name: "Jane",
-      team: teams[Math.floor(Math.random() * teams.length)],
-      image: "https://randomuser.me/api/portraits/women/2.jpg",
-      events: getRandomEvents(),
-      ocPercentage: 75,
-      attendancePercentage: 68,
-    },
-    {
-      id: "4",
-      name: "Alice",
-      team: teams[Math.floor(Math.random() * teams.length)],
-      image: "https://randomuser.me/api/portraits/women/3.jpg",
-      events: getRandomEvents(),
-      ocPercentage: 78,
-      attendancePercentage: 72,
-    },
-    {
-      id: "5",
-      name: "Bob",
-      team: teams[Math.floor(Math.random() * teams.length)],
-      image: "https://randomuser.me/api/portraits/men/9.jpg",
-      events: getRandomEvents(),
-      ocPercentage: 72,
-      attendancePercentage: 67,
-    },
-    {
-      id: "6",
-      name: "Eve",
-      team: teams[Math.floor(Math.random() * teams.length)],
-      image: "https://randomuser.me/api/portraits/women/8.jpg",
-      events: getRandomEvents(),
-      ocPercentage: 76,
-      attendancePercentage: 71,
-    },
-    {
-      id: "7",
-      name: "Mark",
-      team: teams[Math.floor(Math.random() * teams.length)],
-      image: "https://randomuser.me/api/portraits/men/3.jpg",
-      events: getRandomEvents(),
-      ocPercentage: 74,
-      attendancePercentage: 69,
-    },
-    {
-      id: "8",
-      name: "Emily",
-      team: teams[Math.floor(Math.random() * teams.length)],
-      image: "https://randomuser.me/api/portraits/women/5.jpg",
-      events: getRandomEvents(),
-      ocPercentage: 77,
-      attendancePercentage: 70,
-    },
-    {
-      id: "9",
-      name: "Alex",
-      team: teams[Math.floor(Math.random() * teams.length)],
-      image: "https://randomuser.me/api/portraits/men/4.jpg",
-      events: getRandomEvents(),
-      ocPercentage: 73,
-      attendancePercentage: 68,
-    },
-    {
-      id: "10",
-      name: "Grace",
-      team: teams[Math.floor(Math.random() * teams.length)],
-      image: "https://randomuser.me/api/portraits/women/9.jpg",
-      events: getRandomEvents(),
-      ocPercentage: 75,
-      attendancePercentage: 69,
-    },
-  ];
+  // Generate random members for each tab
+  const selectedMembers = Array.from({ length: 3 }, () => generateRandomMember("Selected"));
+  const rejectedMembers = Array.from({ length: 5 }, () => generateRandomMember("Rejected"));
+  const applicantsMembers = Array.from({ length: 5 }, () => generateRandomMember("Applicants"));
+
+  // Determine which members to display based on activeTab
+  let displayMembers = [];
+  if (activeTab === "Selected") {
+    displayMembers = selectedMembers;
+  } else if (activeTab === "Rejected") {
+    displayMembers = rejectedMembers;
+  } else {
+    displayMembers = applicantsMembers;
+  }
 
   return (
-    <>
+    <div className="w-full bg-neutral-900">
       <Card className="w-full bg-neutral-900">
         <CardBody>
-          {members.map((member, index) => (
+          {displayMembers.map((member) => (
             <div
               key={member.id}
               className="relative flex items-start justify-between p-4 mb-4 bg-[#1E1E1E] rounded-xl"
@@ -164,9 +106,7 @@ const Candidates = () => {
                   <Typography color="white" variant="subtitle1" className="mb-1">
                     From Team: {member.team}
                   </Typography>
-                 
                 </div>
-                
               </div>
               <div className="flex flex-col gap-2">
                 <Typography color="white" variant="subtitle1" className="mb-1">
@@ -186,27 +126,40 @@ const Candidates = () => {
                     OC Participation
                   </Typography>
                   <Chart {...chartConfig} />
-                  <Typography color="white" variant="subtitle1">{member.ocPercentage}%</Typography>
+                  <Typography color="white" variant="subtitle1">
+                    {member.ocPercentage}%
+                  </Typography>
                 </div>
                 <div className="flex items-center gap-2">
                   <Typography color="white" variant="subtitle1" className="mb-1">
                     Attendance
                   </Typography>
                   <Chart {...chartConfig} />
-                  <Typography color="white" variant="subtitle1">{member.attendancePercentage}%</Typography>
+                  <Typography color="white" variant="subtitle1">
+                    {member.attendancePercentage}%
+                  </Typography>
                 </div>
-                
-              </div> <div >
-                  <SelectRemove
-                    onEdit={() => {}}
-                    onDelete={() => {}}
-                  />
-                </div>
+              </div>
+              <div>
+                {member.status === "Applicants" && (
+                  <SelectRemove onEdit={() => {}} onDelete={() => {}} />
+                )}
+                {member.status === "Selected" && (
+                  <button className="px-4 py-2 border-[#AEC90A] border-2 text-[#AEC90A] rounded">
+                    Selected
+                  </button>
+                )}
+                {member.status === "Rejected" && (
+                  <button className="px-4 py-2 border-red-700 border-2 text-red-700 rounded">
+                    Rejected
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </CardBody>
       </Card>
-    </>
+    </div>
   );
 };
 

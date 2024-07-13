@@ -3,61 +3,45 @@ import {
   Card,
   CardBody,
   Typography,
-  Avatar,
-  Textarea,
-  Badge,
+  Chip,
 } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
-import { MdSend } from "react-icons/md";
-import { IoIosCloseCircle } from "react-icons/io";
-// import LeaveModal from './LeaveModal';
-import { Dialog, Input } from "@material-tailwind/react";
-import {Chip} from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa";
 import EditDeleteButton from './EditDeleteButton';
 
-
 const Meeting = () => {
-  const navigator = useNavigate();
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
-
-  const getClubDetails = (sname) => {
-    navigator(`/club/${sname}`);
-
-    /* history.push(`/club/${sname}`, { name, image }); */
-
-    //console.log(name);
-  };
 
   const meetings = [
     {
       id: "1",
       desc: "Regarding next club board election",
       date: "05.06.2024",
+      time: "14:00",
       status: "Online",
     },
     {
       id: "2",
-      desc: "Regarding next club board meeting",
-      date: "05.06.2024",
+      desc: "Regarding club membership update",
+      date: "08.06.2024",
+      time: "15:30",
       status: "Physical",
     },
     {
       id: "3",
-      desc: "Regarding next club board meeting",
-      date: "05.06.2024",
+      desc: "Discussion on upcoming events",
+      date: "10.06.2024",
+      time: "12:00",
       status: "Online",
     },
   ];
 
   return (
     <>
-    <Button
-        className="flex items-center gap-2 bg-[#AEC90A] h-10 mr-0 mt-2 ml-[950px] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm" variant="gradient"
-        
+      <Button
+        className="flex items-center gap-2 bg-[#AEC90A] h-10 mr-0 mt-2 ml-[950px] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
+        variant="gradient"
       >
         <FaPlus />
         New Meeting
@@ -65,52 +49,57 @@ const Meeting = () => {
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div className="">
-            {meetings.map(({ desc, date, status }, index) => (
+            {meetings.map(({ id, desc, date, time, status }) => (
               <div
-                key={index}
+                key={id}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
               >
-                <div className="flex items-center  text-[16px] gap-x-72">
-                  {/* <Avatar size="sm" src={image} alt={name} className='border-2 border-white rounded-md w-10 h-10'/> */}
-                  <div>
-                    <Typography className="text-white font-normal " variant="h6">
-                      {desc}
+                <div className="flex flex-col">
+                  <Typography className="text-white font-normal" variant="h6">
+                    {desc}
+                  </Typography>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Typography className="text-[#AEC90A] font-normal" variant="h6">
+                      Date: {date}
                     </Typography>
-                  </div>
-                  <div>
-                    <Typography className="text-white font-normal" variant="h6">
-                      {date}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography className="text-white" variant="h6">
-                      {status == "Online" ? (
-                        <Chip
-                          variant="ghost"
-                          color="green"
-                          size="sm"
-                          className="font-normal"
-                          value="Online"
-                          icon={
-                            <span className="mx-auto mt-2 block h-2 w-2 rounded-full bg-[#00DE3E] content-['']" />
-                          }
-                        />
-                      ) : (
-                        <Chip
-                          variant="ghost"
-                          className="font-normal"
-                          color="red"
-                          size="sm"
-                          value="Physical"
-                          icon={
-                            <span className="mx-auto mt-2 block h-2 w-2 rounded-full bg-[#FF0000] content-['']" />
-                          }
-                        />
-                      )}
+                    <Typography className="text-[#AEC90A] font-normal" variant="h6">
+                      Time: {time}
                     </Typography>
                   </div>
                 </div>
-                <div className="flex flex-row gap-4">
+                <div className="flex items-center gap-4 text-white">
+                  <div>
+                    {status === "Online" ? (
+                      <Chip
+                        variant="ghost"
+                        color="green"
+                        size="sm"
+                        className="font-normal"
+                        value="Online"
+                        icon={
+                          <span className="mx-auto mt-2 block h-2 w-2 rounded-full bg-[#00DE3E] content-['']" />
+                        }
+                      />
+                    ) : (
+                      <Chip
+                        variant="ghost"
+                        color="red"
+                        size="sm"
+                        className="font-normal"
+                        value="Physical"
+                        icon={
+                          <span className="mx-auto mt-2 block h-2 w-2 rounded-full bg-[#FF0000] content-['']" />
+                        }
+                      />
+                    )}
+                  </div>
+                  <Button
+                    disabled
+                    color="gray"
+                    className="text-gray-400 shadow-black shadow-md" // Adding shadow-white class for white shadow effect
+                  >
+                    Join
+                  </Button>
                   <EditDeleteButton
                     onEdit={() => handleEdit(id)}
                     onDelete={() => handleDelete(id)}
@@ -119,48 +108,8 @@ const Meeting = () => {
               </div>
             ))}
           </div>
-          {/* {open && <LeaveModal open={open} handleOpen={handleOpen}/>} */}
-          {/* <LeaveModal open={open} handleOpen={handleOpen}>
-                  fancy modal
-                </LeaveModal> */}
         </CardBody>
       </Card>
-
-      <Dialog
-        size="xs"
-        open={open}
-        handler={handleOpen}
-        className="bg-transparent w-screen h-screen bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-200 flex items-center"
-      >
-        <Card className="mx-auto w-full max-w-[24rem] p-3">
-          <IoIosCloseCircle
-            className="absolute text-xl top-1 right-1 cursor-pointer"
-            onClick={handleOpen}
-          />
-          <CardBody className="flex flex-col">
-            <Typography
-              className="mb-3 font-normal font-[poppins]"
-              variant="paragraph"
-              color="gray"
-            >
-              Why are you Leaving, Let us know your problem ?
-            </Typography>
-
-            <div className="relative">
-              <Textarea
-                size="lg"
-                className="h-16 border-2 bg-slate-100"
-                placeholder="Type your reason"
-                /* variant="label-hidden" */ required
-              />
-              <MdSend className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer" />
-            </div>
-
-            {/* <Input label="Type your reason" size="lg" className='relative'/>
-              <MdSend className='absolute '/> */}
-          </CardBody>
-        </Card>
-      </Dialog>
     </>
   );
 };
