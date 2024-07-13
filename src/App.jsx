@@ -54,8 +54,8 @@ const App = () => {
 
       
 
-        <Route path='/clubs' element={<Exploreclub />}></Route>
-        <Route path='/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
+        <Route path='/member' element={<Exploreclub />}></Route>
+        <Route path='/member/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
         
 
         <Route exact path="/club" element={<Exploreclub />} />

@@ -21,9 +21,9 @@ const Navbar = () => {
       </div>
 
       {/* Right Section: Image Icons and Search Box */}
-      <div className="flex items-center">
+      <div className="flex items-center ">
         {/* Centered Search Box */}
-        <div className="relative mr-4">
+        <div className="relative mr-4 ">
           <input
             type="text"
             placeholder="Search..."
