@@ -27,6 +27,9 @@ import Dashboard from './pages/president/Dashboard';
 
 
 import EventRequests from './pages/admin/EventRequests';
+import NewUsers from './pages/admin/NewUsers';
+
+import EventRequestsNew from './pages/treasurer/EventRequestsNew';
 
 import ClubRegistration from './pages/student/ClubRegistration';
 
@@ -76,6 +79,10 @@ const App = () => {
         <Route path='/student/notifications' element={<StudentNotifications/>}></Route>
 
         <Route path='/admin' element={<EventRequests/>}></Route>
+        <Route path='/admin/newusers' element={<NewUsers/>}></Route>
+
+        <Route path='/treasurer' element={<EventRequestsNew/>}></Route>
+
         <Route path='/club/election' element={<Election/>}></Route>
 
         <Route exact path="/sectrataryclub" element={<SecretaryExploreclub />} />

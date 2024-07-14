@@ -33,7 +33,7 @@ const EventRequestsTable = () => {
 
 
   return (
-    <div className="bg-[#1E1E1E] rounded-[50px] p-6 h-screen">
+    <div className="bg-[#1E1E1E] rounded-xl p-6 h-screen">
       <table className="w-full">
         <thead className="text-[#AEC90A] text-center tracking-wide p-3">
           <tr>
