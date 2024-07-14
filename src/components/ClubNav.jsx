@@ -10,63 +10,24 @@ import { useParams } from "react-router-dom";
 
 import Meeting from "./Meeting";
 import Announcement from "./Announcement";
-
 import Member from "./Member";
-import ElectionNav from "./election/ElectionNav";
-
-
-
+import ElectionDetails from "./election/ElectionDetails";
+import ClubEvent from "./ClubEvent";
 import Board from "./Board";
 
- 
-const ClubNav = () => {
+const ClubNav = ({ club }) => {
   const [activeTab, setActiveTab] = React.useState("Event");
-
-  const clubs = [
-    {
-      id: "1",
-      name: "IEEE Student Group",
-      sname: "ieee",
-      image: "src/assets/clubs/ieee.png",
-    },
-    {
-      id: "2",
-      name: "ISACA Student Group",
-      sname: "isaca",
-      image: "src/assets/clubs/isaca.png",
-    },
-    {
-      id: "3",
-      name: "Gavel Club (Public Speaking and Leadership)",
-      sname: "gavel",
-      image: "src/assets/clubs/gavel.png",
-    },
-    {
-      id: "4",
-      name: "Pahasara Club (Innovation and Creativity)",
-      sname: "pahasara",
-      image: "src/assets/clubs/pahasara.png",
-    },
-    {
-      id: "5",
-      name: "Rotaract Club of UCSC",
-      sname: "rotract",
-      image: "src/assets/clubs/rotaract.png",
-    },
-  ];
-
-  const sname = useParams();
 
   const data = [
     {
       label: "Current Board",
       value: "Current Board",
-      desc:<Board />,
+      desc: <Board />,
     },
     {
       label: "Event",
       value: "Event",
-      desc:  `Events`,
+      desc: <ClubEvent club={club} />,
     },
     {
       label: "Members",
@@ -76,7 +37,7 @@ const ClubNav = () => {
     {
       label: "Elections",
       value: "Elections",
-      desc: <ElectionNav /> ,
+      desc: <ElectionDetails />,
     },
     {
       label: "Meetings",
@@ -89,6 +50,7 @@ const ClubNav = () => {
       desc: <Announcement />,
     },
   ];
+
   return (
     <Tabs value={activeTab}>
       <TabsHeader
@@ -103,13 +65,15 @@ const ClubNav = () => {
             key={value}
             value={value}
             onClick={() => setActiveTab(value)}
-            className={`text-white hover:text-[#AEC90A] ${activeTab === value ? ' text-[#AEC90A]' : ''}`}
+            className={`text-white hover:text-[#AEC90A] ${
+              activeTab === value ? " text-[#AEC90A]" : ""
+            }`}
           >
             {label}
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody>
+      <TabsBody className="h-[500px] overflow-y-auto"> {/* Adjust height as needed */}
         {data.map(({ value, desc }) => (
           <TabPanel key={value} value={value}>
             {desc}
@@ -118,6 +82,6 @@ const ClubNav = () => {
       </TabsBody>
     </Tabs>
   );
-}
+};
 
 export default ClubNav;
