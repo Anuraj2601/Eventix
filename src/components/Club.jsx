@@ -50,6 +50,7 @@ const Club = () => {
       sname: "rotaract",
       image: "../src/assets/clubs/rotaract.png",
     },
+   
   ];
 
 
@@ -59,10 +60,11 @@ const Club = () => {
       navigate(`/student/club/${club.sname}`, { state: { club } });
     }else{
       navigate(`/club/${club.sname}`, { state: { club } });
-    }
-    
+    }  
     
   };
+ 
+  
 
   return (
     <>

@@ -6,6 +6,7 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
+import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Event } from "./tabs/Event";
 import { CurrentBoard } from "./tabs/CurrentBoard";
@@ -16,6 +17,8 @@ import { Members} from "./tabs/Members";
  
 export function ClubMemberNav() {
   const [activeTab, setActiveTab] = React.useState("Event");
+  const location = useLocation();
+  const club = location.state?.club;
 
   const clubs = [
     {
@@ -23,6 +26,7 @@ export function ClubMemberNav() {
       name: "IEEE Student Group",
       sname: "ieee",
       image: "src/assets/clubs/ieee.png",
+      
     },
     {
       id: "2",
@@ -48,18 +52,13 @@ export function ClubMemberNav() {
       sname: "rotract",
       image: "src/assets/clubs/rotaract.png",
     },
+   
   ];
 
   const sname = useParams();
 
   const data = [
     {
-      /*label: "Current Board",
-      value: "Current Board",
-     /* desc: `It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people 
-      who are like offended by it, it doesn't matter.`,*/
-      //desc:`Board Of Term 23/24`
       label: "Current Board",
       value: "Current Board",
       desc: <CurrentBoard />,
@@ -71,11 +70,7 @@ export function ClubMemberNav() {
     },
     
     {
-      /*label: "Meetings",
-      value: "Meetings",
-      desc: `We're not always in the position that we want to be at.
-      We're constantly growing. We're constantly making mistakes. We're
-      constantly trying to express ourselves and actualize our dreams.`,*/
+     
       label: "Meetings",
       value: "Meetings",
       desc: <Meetings />,
@@ -84,29 +79,22 @@ export function ClubMemberNav() {
       label: "Elections",
       value: "Elections",
       desc: <Elections />,
-      /*desc: `Because it's about motivating the doers. Because I'm here
-      to follow my dreams and inspire other people to follow their dreams, too.`,*/
+      
     },
     
     {
       label: "Announcements",
       value: "Announcements",
-      /*desc: `We're not always in the position that we want to be at.
-      We're constantly growing. We're constantly making mistakes. We're
-      constantly trying to express ourselves and actualize our dreams.`,*/
       desc: <Announcements/>,
     },
     {
       label: "Members",
       value: "Members",
       desc: <Members/>,
-      /*desc: `We're not always in the position that we want to be at.
-      We're constantly growing. We're constantly making mistakes. We're
-      constantly trying to express ourselves and actualize our dreams.`,*/
     },
   ];
   return (
-    <Tabs value={activeTab}>
+    /*<Tabs value={activeTab}>
       <TabsHeader
         className="rounded-none bg-transparent p-0 "
         indicatorProps={{
@@ -133,5 +121,43 @@ export function ClubMemberNav() {
         ))}
       </TabsBody>
     </Tabs>
+  );*/
+  <div>
+      {club && (
+        <div className="flex items-center mb-4">
+          <img src={club.image} alt={club.name} className="w-16 h-16 mr-4" />
+          <h1 className="text-white text-2xl">{club.name}</h1>
+        </div>
+      )}
+      <Tabs value={activeTab}>
+        <TabsHeader
+          className="rounded-none bg-transparent p-0"
+          indicatorProps={{
+            className:
+              "bg-transparent border-b-2 border-[#AEC90A] shadow-none rounded-none",
+          }}
+        >
+          {data.map(({ label, value }) => (
+            <Tab
+              key={value}
+              value={value}
+              onClick={() => setActiveTab(value)}
+              className={`text-white hover:text-[#AEC90A] ${
+                activeTab === value ? "text-[#AEC90A]" : ""
+              }`}
+            >
+              {label}
+            </Tab>
+          ))}
+        </TabsHeader>
+        <TabsBody>
+          {data.map(({ value, desc }) => (
+            <TabPanel key={value} value={value}>
+              {desc}
+            </TabPanel>
+          ))}
+        </TabsBody>
+      </Tabs>
+    </div>
   );
 }

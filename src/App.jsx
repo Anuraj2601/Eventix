@@ -26,7 +26,7 @@ import EventRequests from './pages/admin/EventRequests';
 
 import ClubRegistration from './pages/student/ClubRegistration';
 
-
+import Explorememberclub from './pages/member/ExploreMemberClub';
 
 
 
@@ -37,6 +37,7 @@ import AddEvent from './components/AddEvent';
 import Calendar from './pages/president/Calendar';
 import StudentClubDetails from './pages/student/StudentClubDetails';
 import StudentNotifications from './pages/student/StudentNotifications';
+import { ClubMemberNav } from './components/ClubMemberNav';
 
 
 // Import other pages if necessary
@@ -54,8 +55,9 @@ const App = () => {
 
       
 
-        <Route path='/member' element={<Exploreclub />}></Route>
+        <Route path='/member' element={<Explorememberclub />}></Route>
         <Route path='/member/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
+       
         
 
         <Route exact path="/club" element={<Exploreclub />} />

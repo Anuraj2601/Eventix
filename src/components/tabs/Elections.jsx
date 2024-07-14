@@ -65,7 +65,7 @@ export function Elections() {
               {event.joinLink1 && (
                   <a 
                     href={event.joinLink1} 
-                    className="text-white text-sm border px-7 py-1 rounded-full" 
+                    className="text-black text-sm border px-7 py-1 rounded-full" 
                     style={{ backgroundColor: '#5C690A', borderColor: '#5C690A', marginRight: '80px' , marginBottom: '10px'  }}
                   >
                     Apply
@@ -76,8 +76,8 @@ export function Elections() {
                 {event.joinLink2 && (
                   <a 
                     href={event.joinLink2} 
-                    className="text-white text-sm border px-4 py-1 rounded-full" 
-                    style={{ backgroundColor: 'rgba(92, 105, 10, 0.23)', borderColor: 'rgba(92, 105, 10, 0.23)', marginRight: '70px', marginBottom: '10px'  }}
+                    className="text-black text-sm border px-4 py-1 rounded-full" 
+                    style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(92, 105, 10, 0.23)', marginRight: '70px', marginBottom: '10px'  }}
 
                   >
                     VOTE
