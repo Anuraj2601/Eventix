@@ -84,9 +84,9 @@ const PresidentClubCard = () => {
     }
 
     return (
-        <div className="flex flex-wrap items-center justify-center gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {clubs.map((club) => (
-                <div key={club.id} className='bg-[#0B0B0B] w-96 h-[28rem] rounded-2xl overflow-hidden flex flex-col shadow-lg'>
+                <div key={club.id} className='bg-[#0B0B0B] w-full h-[28rem] rounded-2xl overflow-hidden flex flex-col shadow-lg'>
                     <div className="h-2/5 overflow-hidden">
                         <img src={club.image} alt={club.name} className='w-full h-full object-cover' />
                     </div>
