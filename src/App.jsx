@@ -7,10 +7,14 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './css/globals.css'
 import Exploreclub from './pages/president/Exploreclub';
+import Exploreevent from './pages/president/Exploreevent';
+
 import StudentAllClubs from './pages/student/StudentAllClubs';
 import Landing from "./pages/Landing"
 import Login from "./components/login"
 import Signup from "./components/Signup"
+import SecretaryExploreclub from './pages/secretary/Exploreclub';
+
 
 
 import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
@@ -23,6 +27,9 @@ import Dashboard from './pages/president/Dashboard';
 
 
 import EventRequests from './pages/admin/EventRequests';
+import NewUsers from './pages/admin/NewUsers';
+
+import EventRequestsNew from './pages/treasurer/EventRequestsNew';
 
 import ClubRegistration from './pages/student/ClubRegistration';
 
@@ -30,7 +37,7 @@ import ClubRegistration from './pages/student/ClubRegistration';
 
 
 
-/* import Board from './components/Board'; */
+import EventNav from './components/EventNav'; 
 /* import Toggle from './components/election/Toggle'; */
 
 import AddEvent from './components/AddEvent';
@@ -59,6 +66,8 @@ const App = () => {
         
 
         <Route exact path="/club" element={<Exploreclub />} />
+        <Route exact path="/event" element={<Exploreevent />} />
+
         <Route path='/club/:name' element={<ClubDetails  />} ></Route>
         <Route path='/Dashboard' element={<Dashboard  />} ></Route>
 
@@ -70,14 +79,21 @@ const App = () => {
         <Route path='/student/notifications' element={<StudentNotifications/>}></Route>
 
         <Route path='/admin' element={<EventRequests/>}></Route>
+        <Route path='/admin/newusers' element={<NewUsers/>}></Route>
+
+        <Route path='/treasurer' element={<EventRequestsNew/>}></Route>
+
         <Route path='/club/election' element={<Election/>}></Route>
+
+        <Route exact path="/sectrataryclub" element={<SecretaryExploreclub />} />
+
 
 
 
         {/* <Route path='/Carousel' element={<Carousel />}></Route> */}
 
 
-       {/*  <Route path='/Board' element={<Board />}></Route> */}
+         <Route path='/eventnav' element={<EventNav />}></Route> 
 
        {/*  <Route path='/Board' element={<Board />}></Route> */}
 
