@@ -79,26 +79,26 @@ const NewUsersTable = () => {
         <ModalDialog
           isOpen={isRejectModalOpen}
           onClose={handleCloseRejectModal}
-          title="Reject Event"
+          title="Reject User"
           primaryAction={{ label: "Confirm Reject", onClick: handleCloseRejectModal }}
           secondaryAction={{ label: "Cancel", onClick: handleCloseRejectModal }}
   
         >
           <p className="text-black">
-            Are you sure you want to reject this event?
+            Are you sure you want to reject this User?
           </p>
         </ModalDialog>
         <ModalDialog
           isOpen={isAcceptModalOpen}
           onClose={handleCloseAcceptModal}
-          title="Accept Event"
+          title="Accept User"
           primaryAction={{ label: "Confirm Accept", onClick: handleCloseAcceptModal }}
           primaryActionClass = "bg-[#AEC90A] text-white"
           secondaryAction={{ label: "Cancel", onClick: handleCloseAcceptModal }}
           icon= "accept"
         >
           <p className="text-black">
-            Are you sure you want to accept this event?
+            Are you sure you want to accept this User?
           </p>
         </ModalDialog>
       </div>
