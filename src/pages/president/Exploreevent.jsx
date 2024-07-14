@@ -8,6 +8,7 @@ import {
 } from "@material-tailwind/react";
 import { useLocation } from 'react-router-dom';
 import ElectionNav from '../../components/EventNav'; // Import your ElectionNav component
+import AnnouncementNav from '../../components/AnnouncementNav'; // Import your AnnouncementNav component
 import gold from "../../assets/gold.png"; // Importing gold image
 import platinum from "../../assets/platinum.png"; // Importing platinum image
 import silver from "../../assets/silver.png"; // Importing silver image
@@ -41,10 +42,10 @@ const ExploreEvent = () => {
                 <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full p-4">
                         {/* Event Card */}
-                        <div className="order-2 md:order-2 flex justify-center items-center">
+                        <div className="order-1 md:order-1 flex justify-center items-center">
                             <Card className="w-full bg-neutral-900 h-128 relative ">
                                 <CardBody className="h-full">
-                                    <div className="relative h-full flex flex-col justify-center -mt-6">
+                                    <div className="relative h-full flex flex-col justify-center">
                                         <img src={image} alt={name} className="w-full h-72 object-cover rounded-lg mb-4 " />
                                         <Typography color="white" variant="h3" className="mb-2">
                                             {name}
@@ -52,22 +53,25 @@ const ExploreEvent = () => {
                                         <Typography color="white" variant="subtitle1" className="mb-2">
                                             On {date}
                                         </Typography>
+                                        <Typography color="white" variant="body1" className="mb-4">
+                                            {description}
+                                        </Typography>
+                                        <div className="order-3 md:order-4 flex justify-center items-center bg-[#1E1E1E]">
+                            <AnnouncementNav />
+                        </div>
                                         <div className="absolute top-2 right-2 flex items-center">
                                             <Typography color="white" variant="subtitle1" className="mr-2">
                                                 Organised by {clubName}
                                             </Typography>
                                             <img src={clubImage} alt={clubName} className="w-8 h-8 rounded-full" />
                                         </div>
-                                        <Typography color="white" variant="body1" className="mb-4">
-                                            {description}
-                                        </Typography>
                                     </div>
                                 </CardBody>
                             </Card>
                         </div>
                         
                         {/* Sponsors Card */}
-                        <div className="order-3 md:order-3 flex justify-center items-center">
+                        <div className="order-2 md:order-3 flex justify-center items-center">
                             <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]">
                                 <CardBody className="h-full">
                                     <div className="relative h-full flex flex-col justify-center">
@@ -98,10 +102,14 @@ const ExploreEvent = () => {
                                 </CardBody>
                             </Card>
                         </div>
+                        
                         {/* ElectionNav */}
-                        <div className="order-1 md:order-2 flex justify-center items-center">
+                        <div className="order-4 md:order-2 flex justify-center items-center">
                             <ElectionNav className="w-full h-full" />
                         </div>
+                        
+                        {/* AnnouncementNav */}
+                        
                     </div>
                 </div>
             </div>
