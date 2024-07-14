@@ -15,43 +15,8 @@ import ElectionDetails from "./election/ElectionDetails";
 import ClubEvent from "./ClubEvent";
 import Board from "./Board";
 
-const ClubNav = () => {
+const ClubNav = ({ club }) => {
   const [activeTab, setActiveTab] = React.useState("Event");
-
-  const clubs = [
-    {
-      id: "1",
-      name: "IEEE Student Group",
-      sname: "ieee",
-      image: "src/assets/clubs/ieee.png",
-    },
-    {
-      id: "2",
-      name: "ISACA Student Group",
-      sname: "isaca",
-      image: "src/assets/clubs/isaca.png",
-    },
-    {
-      id: "3",
-      name: "Gavel Club (Public Speaking and Leadership)",
-      sname: "gavel",
-      image: "src/assets/clubs/gavel.png",
-    },
-    {
-      id: "4",
-      name: "Pahasara Club (Innovation and Creativity)",
-      sname: "pahasara",
-      image: "src/assets/clubs/pahasara.png",
-    },
-    {
-      id: "5",
-      name: "Rotaract Club of UCSC",
-      sname: "rotract",
-      image: "src/assets/clubs/rotaract.png",
-    },
-  ];
-
-  const sname = useParams();
 
   const data = [
     {
@@ -62,7 +27,7 @@ const ClubNav = () => {
     {
       label: "Event",
       value: "Event",
-      desc: <ClubEvent />,
+      desc: <ClubEvent club={club} />,
     },
     {
       label: "Members",
