@@ -3,7 +3,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 import { Typography } from "@material-tailwind/react";
-import ClubNav from '../../components/ClubNav';
+import PresidentClubNav from '../../components/PresidentClubNav';
 
 const clubs = [
     {
@@ -96,8 +96,8 @@ const ClubDetails = () => {
       <div className="flex flex-col flex-1 h-full overflow-y-auto">
         <Navbar className="sticky top-0 z-10 p-4" />
         <div className="bg-neutral-900 text-white flex flex-col flex-1 p-6 relative"> {/* Added relative positioning for overlay */}
-          <div className="flex items-start mb-6 bg-[#1E1E1E] p-5 shadow-lg p-4 rounded-md">
-            <div className="rounded-full overflow-hidden w-36 h-36 flex-shrink-0"> {/* Circle container for image */}
+          <div className="flex items-start mb-6 bg-[#1E1E1E] p-5 shadow-lg rounded-md">
+            <div className="rounded-full overflow-hidden w-24 h-24 flex-shrink-0"> {/* Circle container for image with reduced size */}
               <img
                 src={club.image}
                 alt={club.name}
@@ -109,15 +109,16 @@ const ClubDetails = () => {
                 {club.name}
               </Typography>
               <div className=""> {/* Transparent box with shadow */}
-                <Typography variant="subtitle1" className="text-white p-5">
-                  
-                  {clubDetails.description}
-                </Typography>
-                {/* Add more details as needed */}
-              </div>
+    {clubDetails.description.split('\n').map((line, index) => (
+        <Typography key={index} variant="body1" className="text-white">
+            {line}
+        </Typography>
+    ))}
+    {/* Add more details as needed */}
+</div>
             </div>
           </div>
-          <ClubNav club={club} />
+          <PresidentClubNav club={club} />
         </div>
       </div>
     </div>
