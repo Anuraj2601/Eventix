@@ -8,35 +8,58 @@ import {
 } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
 
+import Meeting from "./Meeting";
+import Announcement from "./Announcement";
+import Member from "./Member";
+import ElectionDetails from "./election/ElectionDetails";
+import ClubEvent from "./ClubEvent";
 import Board from "./Board";
 
-
-const EventNav = () => {
-  const [activeTab, setActiveTab] = React.useState("OC");
+const PresidentClubNav = ({ club }) => {
+  const [activeTab, setActiveTab] = React.useState("Event");
 
   const data = [
     {
-      label: "OC",
-      value: "OC",
-      desc: <Board />,
-    },
-    
-    {
-      label: "Posts",
-      value: "Posts",
+      label: "Current Board",
+      value: "Current Board",
       desc: <Board />,
     },
     {
-      label: "Proposal",
-      value: "Proposal",
-      desc: <Board />,
+      label: "Event",
+      value: "Event",
+      desc: <ClubEvent club={club} />,
+    },
+    {
+      label: "Members",
+      value: "Members",
+      desc: <Member />,
+    },
+    {
+      label: "Elections",
+      value: "Elections",
+      desc: <ElectionDetails />,
+    },
+    {
+      label: "Meetings",
+      value: "Meetings",
+      desc: <Meeting />,
+    },
+    {
+      label: "Announcement",
+      value: "Announcement",
+      desc: <Announcement />,
+    },
+    {
+      label: "Recruitment",
+      value: "Recruitment",
+      desc: "Recruitment",
     },
   ];
 
   return (
     <Tabs value={activeTab}>
       <TabsHeader
-        className="rounded-none bg-transparent p-0 grid grid-cols-3"
+        className="rounded-none bg-transparent p-0 grid grid-cols-9"
         indicatorProps={{
           className:
             "mt-8 absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 rounded-full transition-opacity bg-transparent border-b-[8px] border-[#AEC90A] shadow-none",
@@ -66,4 +89,4 @@ const EventNav = () => {
   );
 };
 
-export default EventNav;
+export default PresidentClubNav;

@@ -11,26 +11,22 @@ import { useParams } from "react-router-dom";
 import Board from "./Board";
 
 
-const EventNav = () => {
+const AnnouncementNav = () => {
   const [activeTab, setActiveTab] = React.useState("OC");
 
   const data = [
     {
-      label: "OC",
-      value: "OC",
-      desc: <Board />,
+      label: "Announcements",
+      value: "Announcements",
+      desc: "List of Announcements goes here.."
+      ,
+    },
+    {
+      label: "Meetings",
+      value: "Meeting",
+      desc: "List of Announcements goes here..",
     },
     
-    {
-      label: "Posts",
-      value: "Posts",
-      desc: <Board />,
-    },
-    {
-      label: "Proposal",
-      value: "Proposal",
-      desc: <Board />,
-    },
   ];
 
   return (
@@ -55,7 +51,7 @@ const EventNav = () => {
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody className="h-[500px] overflow-y-auto"> {/* Adjust height as needed */}
+      <TabsBody className="overflow-y-auto"> {/* Adjust height as needed */}
         {data.map(({ value, desc }) => (
           <TabPanel key={value} value={value}>
             {desc}
@@ -66,4 +62,4 @@ const EventNav = () => {
   );
 };
 
-export default EventNav;
+export default AnnouncementNav;

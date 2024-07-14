@@ -1,7 +1,7 @@
 
 // src/components/Navbar.jsx
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState} from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import { MdInfoOutline } from "react-icons/md";
 import { IoPersonCircleOutline } from "react-icons/io5";
@@ -10,6 +10,12 @@ import { BsArrowLeftCircle, BsBell } from "react-icons/bs";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
+  const [isClicked, setIsClicked] = useState(false);
+
+  const handleClick = () => {
+    setIsClicked(true);
+  }
 
   return (
     <nav className="bg-neutral-900 p-6 shadow-2xl flex items-center justify-between py-2 text-white px-4">
@@ -55,9 +61,9 @@ const Navbar = () => {
           <a href="" className="px-3">
             <MdOutlineEmail className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
           </a>
-          <a href="" className="px-3">
-            <BsBell className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
-          </a>
+          <Link to='/student/notifications' className="px-3" onClick={handleClick}>
+            <BsBell className={`inline-block w-6 h-6 ${isClicked ? 'text-white' : 'text-[#AEC90A] hover:text-white'}`} />
+          </Link>
           <a href="" className="px-3">
             <IoPersonCircleOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
           </a>

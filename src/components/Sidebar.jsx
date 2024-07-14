@@ -71,27 +71,27 @@ const Sidebar = () => {
             
 
 
-          <li className={linkClass('/Dashboard')} style={{ boxShadow: '0 0 10px #a3e635' }}>
+          <li className={linkClass('/Dashboard')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
             <a href="/Dashboard" className='px-3'>
               <FaHome className='inline-block w-9 h-9 mt-1 -ml-0.5' />
             </a>
           </li>
-          <li className={linkClass('/calendar')} style={{ boxShadow: '0 0 10px #a3e635' }}>
+          <li className={linkClass('/calendar')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
             <a href="/calendar" className='px-3'>
               <IoCalendarNumberOutline className='inline-block w-9 h-9 -ml-0.5 mt-1' />
             </a>
           </li>
-          <li className={linkClass('/announcement')} style={{ boxShadow: '0 0 10px #a3e635' }}>
+          <li className={linkClass('/announcement')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
             <a href="/announcement" className='px-3'>
               <BsMegaphone className='inline-block w-9 h-9 mt-1 -ml-0.5' />
             </a>
           </li>
-          <li className={linkClass('/club')} style={{ boxShadow: '0 0 10px #a3e635' }}>
+          <li className={linkClass('/club')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
             <a href="/club" className='px-3'>
               <FaPeopleGroup className='inline-block w-9 h-9 mt-1 -ml-0.5' />
             </a>
           </li>
-          <li className={linkClass('/meeting')} style={{ boxShadow: '0 0 10px #a3e635' }}>
+          <li className={linkClass('/meeting')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
             <a href="/meeting" className='px-3'>
               <IoVideocamOutline className='inline-block w-9 h-9 mt-1 -ml-0.5' />
             </a>
