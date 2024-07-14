@@ -20,14 +20,15 @@ const EventNav = () => {
       value: "OC",
       desc: <Board />,
     },
-    {
-      label: "Proposal",
-      value: "Proposal",
-      desc: <Board />,
-    },
+    
     {
       label: "Posts",
       value: "Posts",
+      desc: <Board />,
+    },
+    {
+      label: "Proposal",
+      value: "Proposal",
       desc: <Board />,
     },
   ];
