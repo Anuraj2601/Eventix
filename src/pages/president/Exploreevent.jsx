@@ -7,7 +7,7 @@ import {
     Typography,
 } from "@material-tailwind/react";
 import { useLocation } from 'react-router-dom';
-import ElectionNav from '../../components/EventNav'; // Import your ElectionNav component
+import EventNav from '../../components/EventNav'; // Import your ElectionNav component
 import AnnouncementNav from '../../components/AnnouncementNav'; // Import your AnnouncementNav component
 import gold from "../../assets/gold.png"; // Importing gold image
 import platinum from "../../assets/platinum.png"; // Importing platinum image
@@ -40,7 +40,7 @@ const ExploreEvent = () => {
             <div className="flex flex-col flex-1">
                 <Navbar className="sticky top-0 z-10 p-4" />
                 <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2  w-full h-full "> {/* Reduced gap from 4 to 2 */}
                         {/* Event Card */}
                         <div className="order-1 md:order-1 flex justify-center items-center">
                             <Card className="w-full bg-neutral-900 h-128 relative ">
@@ -54,11 +54,11 @@ const ExploreEvent = () => {
                                             On {date}
                                         </Typography>
                                         <Typography color="white" variant="body1" className="mb-4">
-                                            {description}
+                                            {description}  <a href="" className='text-[#AEC90A] ' target="_blank" rel="noopener noreferrer">Click here to Register</a>
                                         </Typography>
                                         <div className="order-3 md:order-4 flex justify-center items-center bg-[#1E1E1E]">
-                            <AnnouncementNav />
-                        </div>
+                                            <AnnouncementNav />
+                                        </div>
                                         <div className="absolute top-2 right-2 flex items-center">
                                             <Typography color="white" variant="subtitle1" className="mr-2">
                                                 Organised by {clubName}
@@ -103,13 +103,12 @@ const ExploreEvent = () => {
                             </Card>
                         </div>
                         
-                        {/* ElectionNav */}
-                        <div className="order-4 md:order-2 flex justify-center items-center">
-                            <ElectionNav className="w-full h-full" />
+                        {/* EventNav */}
+                        <div className="order-3 md:order-2 flex h-full w-full ">
+                            <EventNav className="w-full h-full" />
                         </div>
                         
                         {/* AnnouncementNav */}
-                        
                     </div>
                 </div>
             </div>
