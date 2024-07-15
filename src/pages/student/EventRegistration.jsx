@@ -3,6 +3,7 @@ import Sidebar from '../../components/Sidebar'
 import Navbar from '../../components/Navbar'
 import { useParams } from 'react-router-dom'
 import { Badge, Button } from "@material-tailwind/react";
+import EventRegistrationForm from '../../components/EventRegistrationForm';
 
 const EventRegistration = () => {
 
@@ -22,7 +23,7 @@ const EventRegistration = () => {
                   
                 </div>
                 <div>
-
+                    <EventRegistrationForm/>
                 </div>
 
             </div>
