@@ -49,6 +49,7 @@ const ClubNav = ({ club }) => {
       value: "Announcement",
       desc: <Announcement />,
     },
+    
   ];
 
   return (

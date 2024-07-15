@@ -7,36 +7,26 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 
-import Board from "./Board";
-import Posts from "./Posts";
-import Oc from "./Oc";
-
-const EventNav = () => {
-  const [activeTab, setActiveTab] = React.useState("Posts");
+const AnnouncementNav = () => {
+  const [activeTab, setActiveTab] = React.useState("Announcements");
 
   const data = [
     {
-      label: "Posts",
-      value: "Posts",
-      desc: <Posts />,
+      label: "Announcements",
+      value: "Announcements",
+      desc: "List of Announcements goes here..",
     },
     {
-      label: "Organizing Committee",
-      value: "OC",
-      desc: <Oc />,
-    },
-    {
-      label: "Proposal",
-      value: "Proposal",
-      desc: <Board />,
+      label: "Meetings",
+      value: "Meeting",
+      desc: "List of Announcements goes here..",
     },
   ];
 
   return (
-    <Tabs         className="w-full"
-     value={activeTab}>
+    <Tabs value={activeTab}>
       <TabsHeader
-        className="rounded-none bg-transparent p-0 grid grid-cols-3 "
+        className="rounded-none bg-transparent p-0 grid grid-cols-3"
         indicatorProps={{
           className:
             "mt-8 absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 rounded-full transition-opacity bg-transparent border-b-[8px] border-[#AEC90A] shadow-none",
@@ -48,14 +38,14 @@ const EventNav = () => {
             value={value}
             onClick={() => setActiveTab(value)}
             className={`text-white hover:text-[#AEC90A] ${
-              activeTab === value ? " text-[#AEC90A]" : ""
+              activeTab === value ? "text-[#AEC90A]" : ""
             }`}
           >
             {label}
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody className="h-[600px] overflow-auto "> {/* Adjust height as needed */}
+      <TabsBody className="overflow-y-auto"> {/* Adjust height as needed */}
         {data.map(({ value, desc }) => (
           <TabPanel key={value} value={value}>
             {desc}
@@ -66,4 +56,4 @@ const EventNav = () => {
   );
 };
 
-export default EventNav;
+export default AnnouncementNav;

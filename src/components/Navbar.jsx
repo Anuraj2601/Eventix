@@ -1,7 +1,7 @@
 
 // src/components/Navbar.jsx
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState} from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import { MdInfoOutline } from "react-icons/md";
 import { IoPersonCircleOutline } from "react-icons/io5";
@@ -10,6 +10,12 @@ import { BsArrowLeftCircle, BsBell } from "react-icons/bs";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
+  const [isClicked, setIsClicked] = useState(false);
+
+  const handleClick = () => {
+    setIsClicked(true);
+  }
 
   return (
     <nav className="bg-neutral-900 p-6 shadow-2xl flex items-center justify-between py-2 text-white px-4">
@@ -21,22 +27,23 @@ const Navbar = () => {
       </div>
 
       {/* Right Section: Image Icons and Search Box */}
-      <div className="flex items-center">
+      <div className="flex items-center ">
         {/* Centered Search Box */}
-        <div className="relative mr-4">
+        <div className="relative mr-4 ">
           <input
             type="text"
             placeholder="Search..."
-            className="w-64 h-9 bg-neutral-950 text-white rounded-full py-1 px-3 focus:ring focus:border-[#AEC90A] border-1 border-[#AEC90A] text-center"
+            className="w-64 h-9 bg-neutral-950 text-white rounded-full py-1 px-3 focus:ring focus:border-[#AEC90A]  border-[#AEC90A] text-center"
           />
           <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#AEC90A]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="#a3e635"
+              strokeWidth={1.3}
+              stroke="#AEC90A"
               className="size-5"
+              style={{ opacity: 0.7}}
             >
               <path
                 fillRule="evenodd"
@@ -54,9 +61,9 @@ const Navbar = () => {
           <a href="" className="px-3">
             <MdOutlineEmail className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
           </a>
-          <a href="" className="px-3">
-            <BsBell className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
-          </a>
+          <Link to='/student/notifications' className="px-3" onClick={handleClick}>
+            <BsBell className={`inline-block w-6 h-6 ${isClicked ? 'text-white' : 'text-[#AEC90A] hover:text-white'}`} />
+          </Link>
           <a href="" className="px-3">
             <IoPersonCircleOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
           </a>
