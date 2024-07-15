@@ -40,7 +40,7 @@ const ExploreEvent = () => {
             <div className="flex flex-col flex-1">
                 <Navbar className="sticky top-0 z-10 p-4" />
                 <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2  w-full h-full "> {/* Reduced gap from 4 to 2 */}
                         {/* Event Card */}
                         <div className="order-1 md:order-1 flex justify-center items-center">
                             <Card className="w-full bg-neutral-900 h-128 relative ">
@@ -57,8 +57,8 @@ const ExploreEvent = () => {
                                             {description}
                                         </Typography>
                                         <div className="order-3 md:order-4 flex justify-center items-center bg-[#1E1E1E]">
-                            <AnnouncementNav />
-                        </div>
+                                            <AnnouncementNav />
+                                        </div>
                                         <div className="absolute top-2 right-2 flex items-center">
                                             <Typography color="white" variant="subtitle1" className="mr-2">
                                                 Organised by {clubName}
@@ -103,13 +103,12 @@ const ExploreEvent = () => {
                             </Card>
                         </div>
                         
-                        {/* ElectionNav */}
-                        <div className="order-3 md:order-2 flex justify-center items-center h-full">
+                        {/* EventNav */}
+                        <div className="order-3 md:order-2 flex h-full w-full ">
                             <EventNav className="w-full h-full" />
                         </div>
                         
                         {/* AnnouncementNav */}
-                        
                     </div>
                 </div>
             </div>
