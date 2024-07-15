@@ -1,4 +1,6 @@
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Tabs,
   TabsHeader,
@@ -6,18 +8,17 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import { Event } from "./tabs/Event";
 import { CurrentBoard } from "./tabs/CurrentBoard";
 import { Meetings } from "./tabs/Meetings";
 import { Elections } from "./tabs/Elections";
-import { Announcements} from "./tabs/Announcements";
-import { Members} from "./tabs/Members";
- 
+import { Announcements } from "./tabs/Announcements";
+import { Members } from "./tabs/Members";
+
 export function ClubMemberNav() {
-  const [activeTab, setActiveTab] = React.useState("Event");
+  const [activeTab, setActiveTab] = React.useState("Events");
   const location = useLocation();
+  const navigate = useNavigate();
   const club = location.state?.club;
 
   const clubs = [
@@ -26,7 +27,6 @@ export function ClubMemberNav() {
       name: "IEEE Student Group",
       sname: "ieee",
       image: "src/assets/clubs/ieee.png",
-      
     },
     {
       id: "2",
@@ -52,7 +52,6 @@ export function ClubMemberNav() {
       sname: "rotract",
       image: "src/assets/clubs/rotaract.png",
     },
-   
   ];
 
   const sname = useParams();
@@ -68,9 +67,7 @@ export function ClubMemberNav() {
       value: "Events",
       desc: <Event />,
     },
-    
     {
-     
       label: "Meetings",
       value: "Meetings",
       desc: <Meetings />,
@@ -79,56 +76,33 @@ export function ClubMemberNav() {
       label: "Elections",
       value: "Elections",
       desc: <Elections />,
-      
     },
-    
     {
       label: "Announcements",
       value: "Announcements",
-      desc: <Announcements/>,
+      desc: <Announcements />,
     },
     {
       label: "Members",
       value: "Members",
-      desc: <Members/>,
+      desc: <Members />,
     },
   ];
+
+  const handleExploreClick = () => {
+    setActiveTab("Events");
+    navigate("./components/ClubMemberNav");
+  };
+
   return (
-    /*<Tabs value={activeTab}>
-      <TabsHeader
-        className="rounded-none bg-transparent p-0 "
-        indicatorProps={{
-          className:
-            "bg-transparent border-b-2 border-[#AEC90A] shadow-none rounded-none",
-        }}
-      >
-        {data.map(({ label, value }) => (
-          <Tab
-            key={value}
-            value={value}
-            onClick={() => setActiveTab(value)}
-            className={`text-white hover:text-[#AEC90A] ${activeTab === value ? 'text-[#AEC90A]' : ''}`}
-          >
-            {label}
-          </Tab>
-        ))}
-      </TabsHeader>
-      <TabsBody>
-        {data.map(({ value, desc }) => (
-          <TabPanel key={value} value={value}>
-            {desc}
-          </TabPanel>
-        ))}
-      </TabsBody>
-    </Tabs>
-  );*/
-  <div>
+    <div>
       {club && (
         <div className="flex items-center mb-4">
           <img src={club.image} alt={club.name} className="w-16 h-16 mr-4" />
           <h1 className="text-white text-2xl">{club.name}</h1>
         </div>
       )}
+      
       <Tabs value={activeTab}>
         <TabsHeader
           className="rounded-none bg-transparent p-0"
