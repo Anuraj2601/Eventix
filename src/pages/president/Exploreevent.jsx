@@ -7,7 +7,7 @@ import {
     Typography,
 } from "@material-tailwind/react";
 import { useLocation } from 'react-router-dom';
-import ElectionNav from '../../components/EventNav'; // Import your ElectionNav component
+import EventNav from '../../components/EventNav'; // Import your ElectionNav component
 import AnnouncementNav from '../../components/AnnouncementNav'; // Import your AnnouncementNav component
 import gold from "../../assets/gold.png"; // Importing gold image
 import platinum from "../../assets/platinum.png"; // Importing platinum image
@@ -104,8 +104,8 @@ const ExploreEvent = () => {
                         </div>
                         
                         {/* ElectionNav */}
-                        <div className="order-4 md:order-2 flex justify-center items-center">
-                            <ElectionNav className="w-full h-full" />
+                        <div className="order-3 md:order-2 flex justify-center items-center h-full">
+                            <EventNav className="w-full h-full" />
                         </div>
                         
                         {/* AnnouncementNav */}
