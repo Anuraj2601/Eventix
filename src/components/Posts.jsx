@@ -37,7 +37,7 @@ const Posts = ({ post }) => {
 
 const NewsFeed = ({ posts }) => {
     return (
-        <div className="bg-neutral-900 text-white p-8 min-h-screen">
+        <div className="bg-neutral-900 text-white p-2 min-h-screen">
             {posts.map((post, index) => (
                 <Posts key={index} post={post} />
             ))}

@@ -54,7 +54,7 @@ const ExploreEvent = () => {
                                             On {date}
                                         </Typography>
                                         <Typography color="white" variant="body1" className="mb-4">
-                                            {description}
+                                            {description}  <a href="" className='text-[#AEC90A] ' target="_blank" rel="noopener noreferrer">Click here to Register</a>
                                         </Typography>
                                         <div className="order-3 md:order-4 flex justify-center items-center bg-[#1E1E1E]">
                                             <AnnouncementNav />

@@ -33,7 +33,7 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="w-64 h-9 bg-neutral-950 text-white rounded-full py-1 px-3 focus:ring focus:border-[#AEC90A] border-1 border-[#AEC90A] text-center"
+            className="w-64 h-9 bg-neutral-950 text-white rounded-full py-1 px-3 focus:ring focus:border-[#AEC90A]  border-[#AEC90A] text-center"
           />
           <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#AEC90A]">
             <svg

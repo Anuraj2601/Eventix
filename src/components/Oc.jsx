@@ -5,13 +5,13 @@ import { Button } from "@material-tailwind/react";
 
 const TeamSection = ({ title, teamMembers }) => {
     return (
-        <div className="w-full  bg-[#0b0b0b] p-5  rounded-md ">
+        <div className="w-full bg-[#0b0b0b] p-5 rounded-md overflow-hidden  ">
             <h2 className="text-xl text-white mb-4 text-center">{title}</h2>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-4 overflow-auto ">
                 {teamMembers.map((member, index) => (
                     <div key={index} className="flex flex-col items-center">
                         <img src={member.userImage} alt={member.userName} className='w-30 h-30 rounded-full p-2' />
-                        <p>{member.userName}</p>
+                        <p className="text-white">{member.userName}</p>
                     </div>
                 ))}
             </div>
@@ -49,7 +49,7 @@ const App = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-neutral-900 text-white p-8 w-full">
+        <div className="bg-neutral-900 text-white p-2 w-full">
             <TeamSection title="Design Team" teamMembers={designTeam} />
             <TeamSection title="Finance Team" teamMembers={financeTeam} />
             <TeamSection title="Content Team" teamMembers={contentTeam} />
