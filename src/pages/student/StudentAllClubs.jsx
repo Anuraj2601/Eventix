@@ -81,16 +81,7 @@ const clubs = [
  
   ];
 
-const MultipleCards = () => {
-    return (
-      <div className="flex flex-wrap items-center justify-center gap-10">
-        {clubs.map(( club , index) => (
-          <StudentClubCard key={index} club= {club}/>
 
-        ))}
-      </div>
-    );
-  };
 
 const StudentAllClubs = () => {
 
@@ -99,7 +90,7 @@ const StudentAllClubs = () => {
         {
         label: "All Clubs",
         value: "allClubs",
-        desc: <MultipleCards/>,
+        desc: <StudentClubCard />,
         },
         {
         label: "Your Clubs",

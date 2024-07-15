@@ -91,7 +91,7 @@ const clubs = [
                     size="sm"
                     src={club.image}
                     alt={club.name}
-                    className="border-2 border-white rounded-md w-10 h-10"
+                    className="border-2 border-white rounded-md w-20 h-10"
                   />
                   <Typography color="white" className="font-medium">
                     {club.name}
