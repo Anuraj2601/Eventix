@@ -6,25 +6,24 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import { useParams } from "react-router-dom";
 
 import Board from "./Board";
-
+import Posts from "./Posts";
+import Oc from "./Oc";
 
 const EventNav = () => {
-  const [activeTab, setActiveTab] = React.useState("OC");
+  const [activeTab, setActiveTab] = React.useState("Posts");
 
   const data = [
     {
-      label: "OC",
-      value: "OC",
-      desc: <Board />,
-    },
-    
-    {
       label: "Posts",
       value: "Posts",
-      desc: <Board />,
+      desc: <Posts />,
+    },
+    {
+      label: "Organizing Committee",
+      value: "OC",
+      desc: <Oc />,
     },
     {
       label: "Proposal",
@@ -55,7 +54,7 @@ const EventNav = () => {
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody className="h-[500px] overflow-y-auto"> {/* Adjust height as needed */}
+      <TabsBody className="h-[500px] overflow-auto"> {/* Adjust height as needed */}
         {data.map(({ value, desc }) => (
           <TabPanel key={value} value={value}>
             {desc}
