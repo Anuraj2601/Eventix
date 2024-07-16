@@ -18,6 +18,11 @@ import SecretaryExploreclub from './pages/secretary/Exploreclub';
 
 
 import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
+import ExploreMemberEvent from './pages/member/ExploreMemberEvent';
+import { Elections } from './components/tabs/Elections';
+import MemberElectionForm from './components/MemberElectionForm';
+import Layout from './components/Layout';
+
 
 import StudentDashboard from './pages/student/StudentDashboard';
 import ClubDetails from './pages/president/ClubDetails';
@@ -44,6 +49,7 @@ import AddEvent from './components/AddEvent';
 import Calendar from './pages/president/Calendar';
 import StudentClubDetails from './pages/student/StudentClubDetails';
 import StudentNotifications from './pages/student/StudentNotifications';
+
 import { ClubMemberNav } from './components/ClubMemberNav';
 
 
@@ -64,6 +70,14 @@ const App = () => {
 
         <Route path='/member' element={<Explorememberclub />}></Route>
         <Route path='/member/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
+        <Route exact path="/member/event" element={<ExploreMemberEvent />} />
+        <Route path="/" element={<Layout />}>
+        <Route path="/member-election-form" element={<MemberElectionForm />} />
+        <Route path="/" element={<Elections />} />
+        </Route>
+        
+        
+        
        
         
 

@@ -108,7 +108,8 @@ export function ClubMemberNav() {
           className="rounded-none bg-transparent p-0"
           indicatorProps={{
             className:
-              "bg-transparent border-b-2 border-[#AEC90A] shadow-none rounded-none",
+             // "bg-transparent border-b-2 border-[#AEC90A] shadow-none rounded-none",
+             "mt-8 absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 rounded-full transition-opacity bg-transparent border-b-[8px] border-[#AEC90A] shadow-none",
           }}
         >
           {data.map(({ label, value }) => (
