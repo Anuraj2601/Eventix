@@ -38,7 +38,7 @@ import { IconButton } from "@material-tailwind/react";
   );
 };*/
 
-import React from 'react';
+/*import React from 'react';
 
 export function Elections() {
   const events = [
@@ -91,6 +91,71 @@ export function Elections() {
       ))}
     </div>
   );
+}*/
+
+
+
+
+
+// src/components/Elections.jsx
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+export function Elections() {
+  const navigate = useNavigate();
+
+  const events = [
+    {
+      name: "Club Board of term 24/26",
+      date: "05.06.2024",
+      joinLink1: "/member-election-form",
+      joinLink2: "https://example.com/join-event2",
+    },
+  ];
+
+  const navigateToForm = (link) => {
+    navigate(link);
+  };
+
+  return (
+    <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
+      {events.map((event, index) => (
+        <div key={index} className="w-full rounded-full p-2 flex flex-col mb-4" style={{ backgroundColor: '#171717' }}>
+          <div className="ml-4">
+            <h3 className="text-md text-white mb-2 ">{event.name}</h3>
+            <div className="flex justify-between items-center mt-2">
+              <span className="text-gray-400" style={{ color: '#FFFFFF' }}>Deadline : <span style={{ color: '#AEC90A' }}>{event.date}</span></span>
+              <div className="flex items-center space-x-4">
+                {event.joinLink1 && (
+                  <button 
+                    onClick={() => navigateToForm(event.joinLink1)}
+                    className="text-black text-sm border px-7 py-1 rounded-full" 
+                    style={{ backgroundColor: '#5C690A', borderColor: '#5C690A', marginRight: '80px' , marginBottom: '10px'  }}
+                  >
+                    Apply
+                  </button>
+                )}
+                {event.joinLink2 && (
+                  <a 
+                    href={event.joinLink2} 
+                    className="text-black text-sm border px-4 py-1 rounded-full" 
+                    style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(92, 105, 10, 0.23)', marginRight: '70px', marginBottom: '10px'  }}
+                  >
+                    VOTE
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
+
+
+
+
+
 
 
