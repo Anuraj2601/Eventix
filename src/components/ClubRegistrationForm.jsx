@@ -34,8 +34,10 @@ const ClubRegistrationForm = () => {
         
         <form action="">
           <div className="grid gap-x-10 gap-y-6 mb-6 md:grid-cols-2">
+            
             <div className="flex flex-col gap-3 w-80">
-              <label htmlFor="">Full Name</label>
+             
+              <label htmlFor="" className="text-white">Full Name</label>
               <input type="text" placeholder='Kokulrajh Sivarasa' className='block p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'/>
             </div>
             <div className="flex flex-col gap-3 w-80">
@@ -116,6 +118,7 @@ const ClubRegistrationForm = () => {
             
 
           </div>
+          
           <div className="flex mt-9">
             <input type="text" placeholder='Why You looking forward this Club ?...' className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] w-full h-full' />
           </div>

@@ -18,7 +18,7 @@ import Navbar from '/src/components/Navbar';    // Your Navbar component
 
 const Layout = () => {
     return (
-      <div className="layout flex">
+      <div className="layout flex ">
         <Sidebar />
         <div className="main-content flex flex-col w-full">
           <Navbar />

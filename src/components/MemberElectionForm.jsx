@@ -41,32 +41,16 @@ const MemberElectionForm = () => {
   const [openMenu2, setOpenMenu2] = useState(false);
 
   return (
-    <div className='flex flex-col items-center justify-center relative mt-4'>
+    <div className='flex flex-col items-center justify-center relative mt-10'>
       <div className='bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4'>Apply as a candidate for the election of board of term 24/25</div>
       <div className="bg-[#0B0B0B] flex flex-col items-center justify-center border-2 border-[#AEC90A] rounded-xl w-3/5 py-9">
         
         <form action="">
-          <div className="grid gap-x-10 gap-y-6 mb-6 md:grid-cols-2">
-            <div className="flex flex-col gap-3 w-80">
-              <label htmlFor="">Full Name</label>
-              <input type="text" placeholder='Kokulrajh Sivarasa' className='block p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'/>
-            </div>
-            <div className="flex flex-col gap-3 w-80">
-              <label htmlFor="">Email Address</label>
-              <input type="text" placeholder='kokularajh32@gmail.com' className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'/>
-            </div>
-            <div className="flex flex-col gap-3 w-80">
-              <label htmlFor="">Register No</label>
-              <input type="text" placeholder='2021cs100' className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'/>
-            </div>
-            <div className="flex flex-col gap-3 w-80">
-              <label htmlFor="">Index No</label>
-              <input type="text" placeholder='21001006' className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'/>
-            </div>
-          </div>
+          
           <div className="grid gap-10 mb-6 md:grid-cols-2">
             <div className="flex flex-col gap-3">
-              <label htmlFor="">Select a Team</label>
+              
+              <label htmlFor="" className="text-white">The team you are from *</label>
               <Menu open={openMenu} handler={setOpenMenu} allowHover>
                 <MenuHandler>
                   <Button
@@ -99,7 +83,8 @@ const MemberElectionForm = () => {
 
             </div>
             <div className="flex flex-col gap-3">
-              <label htmlFor="">Year of Study</label>
+             
+              <label htmlFor="" className="text-white">Year of Study *</label>
               <Menu open={openMenu2} handler={setOpenMenu2} allowHover>
                 <MenuHandler>
                   <Button
@@ -129,8 +114,12 @@ const MemberElectionForm = () => {
             
 
           </div>
+          <label htmlFor="" className="text-white">The board position you would like to apply *</label>
+          <div className="flex mt-5">
+            <input type="text" placeholder='secretary' className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full h-full' />
+          </div>
           <div className="flex mt-9">
-            <input type="text" placeholder='Why You looking forward this Club ?...' className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] w-full h-full' />
+            <input type="text" placeholder='Why You looking forward this Club ?...' className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full h-full' />
           </div>
           <div className="flex items-center justify-center mt-6 gap-4">
             <Button className='border-2 border-[#AEC90A] px-4 py-2 rounded-3xl font-medium text-[#AEC90A]'>Clear Form</Button>
