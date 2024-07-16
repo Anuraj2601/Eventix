@@ -41,8 +41,8 @@ const MemberElectionForm = () => {
   const [openMenu2, setOpenMenu2] = useState(false);
 
   return (
-    <div className='flex flex-col items-center justify-center relative'>
-      <div className='bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4'>Club Registration Form</div>
+    <div className='flex flex-col items-center justify-center relative mt-4'>
+      <div className='bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4'>Apply as a candidate for the election of board of term 24/25</div>
       <div className="bg-[#0B0B0B] flex flex-col items-center justify-center border-2 border-[#AEC90A] rounded-xl w-3/5 py-9">
         
         <form action="">
