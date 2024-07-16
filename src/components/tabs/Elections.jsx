@@ -130,18 +130,18 @@ export function Elections() {
                   <button 
                     onClick={() => navigateToForm(event.joinLink1)}
                     className="text-black text-sm border px-7 py-1 rounded-full" 
-                    style={{ backgroundColor: '#5C690A', borderColor: '#5C690A', marginRight: '80px' , marginBottom: '10px'  }}
+                    style={{ backgroundColor: '#5C690A', borderColor: '#5C690A', marginRight: '80px' , marginBottom: '10px',  fontSize: '17px'  }}
                   >
-                    Apply
+                    <strong>Apply</strong>
                   </button>
                 )}
                 {event.joinLink2 && (
                   <a 
                     href={event.joinLink2} 
                     className="text-black text-sm border px-4 py-1 rounded-full" 
-                    style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(92, 105, 10, 0.23)', marginRight: '70px', marginBottom: '10px'  }}
+                    style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(92, 105, 10, 0.23)', marginRight: '70px', marginBottom: '10px' , fontSize: '17px' }}
                   >
-                    VOTE
+                    <strong>Vote</strong>
                   </a>
                 )}
               </div>
