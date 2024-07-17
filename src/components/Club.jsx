@@ -62,6 +62,7 @@ const clubs = [
         sname: "wicys",
         image: "../src/assets/clubs/wicys.png",
     },
+
     {
         id: "9",
         name: "Rekha",
@@ -74,7 +75,10 @@ const clubs = [
   const getClubDetails = (club) => {
     const basePath = location.pathname === "/student" ? "/student/club" : "/club";
     navigate(`${basePath}/${club.sname}`, { state: { club } });
+
   };
+ 
+  
 
   return (
     <>

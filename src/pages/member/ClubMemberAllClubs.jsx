@@ -18,8 +18,10 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+
 import Club from '../../components/Club';
 import { ClubMemberNav } from '../../components/ClubMemberNav';
+
 //import Exploreclub from './Exploreclub';
 
 
@@ -75,12 +77,12 @@ const ClubMemberAllClubs = () => {
 
   const data = [
     {
-      label: "All Clubs",
+      label: "",
       value: "All Clubs",
       desc: <MultipleCards />, // Use the multiple cards component directly
     },
     {
-      label: "Your Clubs",
+      label: "",
       value: "Your Clubs",
       //desc: <ClubMemberNav />,
       desc: <ClubMemberNav clubName={name} />, // Pass clubName as prop

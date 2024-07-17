@@ -6,27 +6,21 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import { useParams } from "react-router-dom";
-
-import Board from "./Board";
-
 
 const AnnouncementNav = () => {
-  const [activeTab, setActiveTab] = React.useState("OC");
+  const [activeTab, setActiveTab] = React.useState("Announcements");
 
   const data = [
     {
       label: "Announcements",
       value: "Announcements",
-      desc: "List of Announcements goes here.."
-      ,
+      desc: "List of Announcements goes here..",
     },
     {
       label: "Meetings",
       value: "Meeting",
       desc: "List of Announcements goes here..",
     },
-    
   ];
 
   return (
@@ -44,7 +38,7 @@ const AnnouncementNav = () => {
             value={value}
             onClick={() => setActiveTab(value)}
             className={`text-white hover:text-[#AEC90A] ${
-              activeTab === value ? " text-[#AEC90A]" : ""
+              activeTab === value ? "text-[#AEC90A]" : ""
             }`}
           >
             {label}
