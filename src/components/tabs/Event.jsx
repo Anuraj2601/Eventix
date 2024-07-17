@@ -117,6 +117,7 @@ export function Event() {
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MadhackImg from '../../assets/events/madhack.png';
+import ReidImg from '../../assets/events/reid.jpg';
 
 export function Event() {
   const navigate = useNavigate();
@@ -124,6 +125,13 @@ export function Event() {
     {
       name: "MadHack 3.0",
       image: MadhackImg,
+      date: "05.06.2024",
+      link: "https://example.com/join-oc",
+      linkText: "Join OC",
+    },
+    {
+      name: "ReidExtreme 3.0",
+      image: ReidImg,
       date: "05.06.2024",
       link: "https://example.com/join-oc",
       linkText: "Join OC",
