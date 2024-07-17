@@ -365,7 +365,7 @@ export function Meetings() {
                 ) : (
                   <div className="flex items-center">
                     <div style={{ backgroundColor: 'red', width: '10px', height: '10px', marginRight: '5px', borderRadius: '50%' }}></div>
-                    <p style={{ color: 'white', fontSize: '0.875rem', marginRight: '388px' }}>Physical</p>
+                    <p style={{ color: 'white', fontSize: '0.875rem', marginRight: '392px' }}>Physical</p>
                     {event.qrLink && (
                       <a
                         href={event.qrLink}
