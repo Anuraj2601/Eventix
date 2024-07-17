@@ -68,6 +68,7 @@ const App = () => {
 
       
 
+
         <Route path='/member' element={<Explorememberclub />}></Route>
         <Route path='/member/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
         <Route exact path="/member/event" element={<ExploreMemberEvent />} />
@@ -80,6 +81,7 @@ const App = () => {
         
        
         
+
 
         <Route exact path="/club" element={<Exploreclub />} />
         <Route exact path="/event" element={<Exploreevent />} />
