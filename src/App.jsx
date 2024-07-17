@@ -63,7 +63,6 @@ const App = () => {
 
         <Route path='/clubs' element={<Exploreclub />}></Route>
         <Route path='/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
-        
 
         <Route exact path="/club" element={<Exploreclub />} />
         <Route exact path="/event" element={<Exploreevent />} />
