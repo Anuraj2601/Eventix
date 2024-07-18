@@ -27,9 +27,9 @@ const Navbar = () => {
       </div>
 
       {/* Right Section: Image Icons and Search Box */}
-      <div className="flex items-center">
+      <div className="flex items-center ">
         {/* Centered Search Box */}
-        <div className="relative mr-4">
+        <div className="relative mr-4 ">
           <input
             type="text"
             placeholder="Search..."
@@ -40,9 +40,10 @@ const Navbar = () => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="#a3e635"
+              strokeWidth={1.3}
+              stroke="#AEC90A"
               className="size-5"
+              style={{ opacity: 0.7}}
             >
               <path
                 fillRule="evenodd"
