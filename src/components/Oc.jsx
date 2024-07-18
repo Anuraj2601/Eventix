@@ -3,9 +3,13 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IoMdClose } from "react-icons/io";
 import { Button } from "@material-tailwind/react";
 
+
 const TeamSection = ({ title, teamMembers }) => {
     return (
+        
+        
         <div className="w-full bg-[#0b0b0b] p-5 rounded-md overflow-hidden  ">
+             
             <h2 className="text-xl text-white mb-4 text-center">{title}</h2>
             <div className="grid grid-cols-4 gap-4 overflow-auto ">
                 {teamMembers.map((member, index) => (

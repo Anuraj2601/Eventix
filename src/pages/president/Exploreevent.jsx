@@ -107,27 +107,24 @@ const ExploreEvent = () => {
 
                         {/* New Card with background similar to Sponsor card */}
                         <div className="order-4 md:order-4 flex justify-center items-center p-3">
-                            <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]">
-                                <CardBody className="h-full">
-                                    <div className="relative h-full flex flex-col justify-center">
-                                        <Typography color="white" variant="h3" className="mb-2 text-center p-5">
-                                            Another Card
-                                        </Typography>
-                                        <div className="flex flex-col items-center">
-                                            <Typography color="white" variant="subtitle1">
-                                                Organizing Committee Recruitment
-                                            </Typography>
-                                            <CustomSwitch />
-                                        </div>
-                                        <div className="flex flex-col items-center mt-4">
-                                            <Typography color="white" variant="subtitle1">
-                                                Event Registrations
-                                            </Typography>
-                                            <CustomSwitch />
-                                        </div>
-                                    </div>
-                                </CardBody>
-                            </Card>
+                        <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]">
+  <CardBody className="h-full">
+    <div className="relative h-full flex flex-col justify-center">
+   
+      
+      <div className="flex flex-col  mt-4">
+        <Typography color="white" variant="subtitle1">
+          Event Registrations<CustomSwitch />
+        </Typography>
+        
+      </div>
+
+      {/* Create OC Button */}
+      
+    </div>
+  </CardBody>
+</Card>
+
                         </div>
                     </div>
 
