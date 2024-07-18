@@ -15,19 +15,16 @@ export default {
           500: '#0F0F0F',
         },
       },
-     /*  textColor: {
-        default: 'white', // Set your default text color here
-      }, */
       boxShadow: {
         'custom': '0 4px 6px rgba(219, 255, 0, 0.5)', 
       },
+      height: {
+        '256': '64rem', // Adding custom height class
+      },
     },
   },
-
   darkMode: 'class',
- 
   plugins: [
     require('@tailwindcss/forms'),
   ],
-
 }
