@@ -4,7 +4,7 @@ import { RiOpenArmLine } from "react-icons/ri";
 import { IoMdBookmark } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 
-const PresidentClubCard = () => {
+const StudentClubCard = () => {
     const navigate = useNavigate();
 
     const clubs = [
@@ -137,4 +137,4 @@ const PresidentClubCard = () => {
     );
 }
 
-export default PresidentClubCard;
+export default StudentClubCard;
