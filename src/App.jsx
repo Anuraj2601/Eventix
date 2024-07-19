@@ -51,6 +51,7 @@ import StudentClubDetails from './pages/student/StudentClubDetails';
 import StudentNotifications from './pages/student/StudentNotifications';
 
 import { ClubMemberNav } from './components/ClubMemberNav';
+import EventRegistration from './pages/student/EventRegistration';
 
 
 // Import other pages if necessary
@@ -94,9 +95,13 @@ const App = () => {
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
         <Route path='/calendar' element={<Calendar />}></Route>
 
+        {/* STUDENT ROUTES */}
         <Route path='/student' element={<StudentAllClubs/>}></Route>
         <Route path='/student/club/:name' element={<StudentClubDetails/>}></Route>
         <Route path='/student/notifications' element={<StudentNotifications/>}></Route>
+        <Route path='/studentdashboard' element={<StudentDashboard/>}></Route>
+        <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
+        <Route path='/eventregister/:event' element={<EventRegistration/>}></Route>
 
         <Route path='/admin' element={<EventRequests/>}></Route>
         <Route path='/admin/newusers' element={<NewUsers/>}></Route>
@@ -119,8 +124,8 @@ const App = () => {
 
 
 
-        <Route path='/studentdashboard' element={<StudentDashboard/>}></Route>
-        <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
+       
+        
 
 
        {/*  <Route path='/Toggle' element={<Toggle />} /> */}

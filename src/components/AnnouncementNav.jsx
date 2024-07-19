@@ -14,7 +14,7 @@ const AnnouncementNav = () => {
     {
       label: "Announcements",
       value: "Announcements",
-      desc: "List of Announcements goes here..",
+      desc: "The Event registration link will be available soon. ",
     },
     {
       label: "Meetings",
@@ -45,9 +45,10 @@ const AnnouncementNav = () => {
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody className="overflow-y-auto"> {/* Adjust height as needed */}
+      <TabsBody className="overflow-y-auto text-white"> {/* Adjust height as needed */}
         {data.map(({ value, desc }) => (
-          <TabPanel key={value} value={value}>
+          <TabPanel key={value} value={value} className="font-extrabold text-white"
+          >
             {desc}
           </TabPanel>
         ))}
