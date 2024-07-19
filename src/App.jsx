@@ -1,15 +1,11 @@
 
-
-
-
-// src/App.jsx
 /* import React from 'react'; */
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Exploreclub from './pages/president/Exploreclub';
 import StudentAllClubs from './pages/student/StudentAllClubs';
-import Landing from "./pages/Landing"
-import Login from "./components/login"
-import Signup from "./components/Signup"
+import Landing from "./pages/Landing";
+import Login from './components/login';
+import Signup from "./components/Signup";
 
 
 import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';

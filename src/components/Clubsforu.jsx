@@ -26,7 +26,7 @@ const Clubsforu = () => {
 
                             <h2 className="font-base text-lg tracking-wider text-white my-2">IEEE Student Chapter 25</h2>
                             <div className="flex space-x-4">
-                                <button className="bg-gradient-to-r from-primary to-secondary hover:bg-secondary text-dark-background font-base text-[14px] w-28 h-10 py-1 px-5 rounded">
+                                <button className="bg-gradient-to-r from-primary to-secondary hover:bg-secondary text-dark-background font-base text-[15px] w-28 h-10 py-1 px-5 rounded">
                                     Join
                                 </button>
                                 <button className="bg-dark-400 text-secondary font-medium tracking-wide text-[14px] w-28 h-10 rounded border border-primary hover:bg-dark-500">
@@ -72,7 +72,7 @@ const Clubsforu = () => {
 
                     </div>
 
-                    <div className="absolute bottom-0 right-[785px] shadow-lg mb-[81px] flex items-center">
+                    <div className="absolute bottom-10 right-[60vw] shadow-lg mb-[81px] flex items-center">
                         <div className="bg-dark-background w-[190px] h-8 flex items-center px-6 py-6 rounded-md">
                             <img src={dp} alt="Small Image 1" className="w-10 h-10 rounded-full border-2 border-white -ml-2" />
                             <img src={dp} alt="Small Image 2" className="w-10 h-10 rounded-full border-2 border-white -ml-2" />
