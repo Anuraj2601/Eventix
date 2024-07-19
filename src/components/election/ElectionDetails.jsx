@@ -1,33 +1,17 @@
 import React, { useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import {
   Card,
   CardBody,
   Typography,
-  Avatar,
-  Textarea,
-  Badge,
-  Switch,
+  Button,
 } from "@material-tailwind/react";
-import { Button } from "@material-tailwind/react";
+import { FaPlus } from "react-icons/fa";
+import EditDeleteButton from '../EditDeleteButton';
+import Customswitch from "../Customswitch";
 
-import { useNavigate } from "react-router-dom";
-import { FaPlus } from "react-icons/fa6";
-import { FaRegEdit } from "react-icons/fa";
-import Toggle from "./Toggle";
-
-const ElectionDetails = () => {
-  const navigator = useNavigate();
+const ElectionDetails = ({ clubName, electionId }) => {
   const [value, setValue] = useState(false);
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen((cur) => !cur);
-
-  const getClubDetails = (sname) => {
-    navigator(`/club/${sname}`);
-
-    /* history.push(`/club/${sname}`, { name, image }); */
-
-    //console.log(name);
-  };
 
   const elections = [
     {
@@ -38,82 +22,92 @@ const ElectionDetails = () => {
     },
     {
       id: "2",
-      desc: "Club Board of 24/25",
+      desc: "Club Board of 23/24",
       applicationDate: "05.06.2024-09.06.2024",
-      votingDate: "10.06.2024-15.06.2024",
+      votingDate: "10.06.2023-15.06.2023",
     },
   ];
+
+  const handleEdit = (id) => {
+    // Add your edit handling logic here
+  };
+
+  const handleDelete = (id) => {
+    // Add your delete handling logic here
+  };
 
   return (
     <>
       <Button
-        className="flex items-center gap-2 bg-[#AEC90A] h-10 mr-0 mt-0 ml-[950px] pt-0 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
+        className="flex items-center gap-2 bg-[#AEC90A] h-10 ml-auto mt-0 pt-0 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
         variant="gradient"
       >
         <FaPlus />
         New Election
       </Button>
-      <Card className="w-full bg-neutral-900">
+      <Card className="w-full bg-neutral-900 mt-4">
         <CardBody>
-          <div className="flex items-center justify-between p-1 mb-2">
-            <div className="flex items-center gap-[310px]">
-              <div></div>
-              <div>Applications</div>
-              <div>Voting</div>
-              <div></div>
+          <div className="grid grid-cols-6 gap-2 p-1 mb-2 text-white">
+            <div className="col-span-2 flex justify-center items-center">
+              Election for
             </div>
+            <div className="col-span-2 flex justify-center items-center">
+              Candidate Applications open
+            </div>
+            <div className="col-span-1 flex justify-center items-center">
+              Votings open
+            </div>
+            
           </div>
-          <div className="">
-            {elections.map(({ desc, applicationDate, votingDate }, index) => (
+          <div>
+            {elections.map(({ id, desc, applicationDate, votingDate }, index) => (
               <div
-                key={index}
-                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
+                key={id}
+                className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl mb-2 ${index === 1 ? 'opacity-50' : ''}`}
               >
-                <div className="flex items-center gap-x-40">
-                  {/* <Avatar size="sm" src={image} alt={name} className='border-2 border-white rounded-md w-10 h-10'/> */}
-                  <div>
-                    <Typography color="blue-gray" variant="h6">
-                      {desc}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography className="text-[#AEC90A]" variant="h6">
-                      {applicationDate}
-                    </Typography>
-                    <Typography className="flex gap-4 text-white" variant="h6">
-                      <div>Candidate</div>
+                <div className="col-span-2 flex justify-center items-center">
+                  <Typography color={index === 1 ? "gray" : "white"} variant="h6">
+                    {desc}
+                  </Typography>
+                </div>
+                <div className="col-span-2 flex justify-center items-center">
+                  <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
+                    {applicationDate}
+                    <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
+                      <div className="whitespace-nowrap">Applications</div>
                       <div>
-                        <Switch
-                          isOn={value}
-                          handleToggle={() => setValue(!value)}
-                        />
+                        <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
                       </div>
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography className="text-[#AEC90A]" variant="h6">
-                      {votingDate}
-                    </Typography>
-                    <Typography className="text-white" variant="h6">
-                      Voting
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography className="text-[#AEC90A]" variant="h6">
-                      <a href="" className="px-3">
-                        <FaRegEdit className="text-[#AEC90A] hover:text-white inline-block w-6 h-6"></FaRegEdit>
-                        {/* Meeting */}
-                      </a>
-                    </Typography>
-                  </div>
+                    </div>
+                  </Typography>
+                </div>
+                <div className="col-span-1 flex justify-center items-center">
+                  <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
+                    {votingDate}
+                    <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
+                      <div className="whitespace-nowrap">Votings</div>
+                      <div>
+                        <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
+                      </div>
+                    </div>
+                  </Typography>
+                </div>
+               
+                <div className="col-span-6 flex justify-end items-center gap-2 p-5">
+                  <EditDeleteButton
+                    onEdit={() => handleEdit(id)}
+                    onDelete={() => handleDelete(id)}
+                    disabled={index === 1}
+                  />
+                  <Link to={`/club/election`}>
+                    <Button variant="gradient" className={`bg-[#AEC90A] text-black p-2 inline-block ${index === 1 ? 'opacity-50 pointer-events-none' : ''}`}>
+                      View Details
+                    </Button>
+                  </Link>
                 </div>
               </div>
             ))}
           </div>
-          {/* {open && <LeaveModal open={open} handleOpen={handleOpen}/>} */}
-          {/* <LeaveModal open={open} handleOpen={handleOpen}>
-                  fancy modal
-                </LeaveModal> */}
         </CardBody>
       </Card>
     </>

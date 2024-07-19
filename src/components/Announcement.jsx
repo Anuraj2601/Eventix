@@ -15,6 +15,8 @@ import { Dialog, Input } from "@material-tailwind/react";
 import {Chip} from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
+import EditDeleteButton from './EditDeleteButton';
+
 
 const Announcement = () => {
   const navigator = useNavigate();
@@ -33,15 +35,23 @@ const Announcement = () => {
   const meetings = [
     {
       id: "1",
-      desc: "The Board elections of term 24/25 will be commenced from period   05.06.2024 - 09.06.2024, all the club members are invited to participate in the voting",
+      desc: "The Board elections of term 24/25 will be commenced from period 05.06.2024 - 09.06.2024. All the club members are invited to participate in the voting.",
       date: "05.06.2024",
-      
     },
     {
       id: "2",
-      desc: "The Board elections of term 24/25 will be commenced from period   05.06.2024 - 09.06.2024, all the club members are invited to participate in the voting",
-      date: "05.06.2024",
-      
+      desc: "Join us for our annual club picnic on 12.08.2024 at Central Park. Don't miss out on the fun activities and delicious food!",
+      date: "12.08.2024",
+    },
+    {
+      id: "3",
+      desc: "Attention members: Our next club meeting will be held on 18.07.2024. Please mark your calendars and be on time!",
+      date: "18.07.2024",
+    },
+    {
+      id: "4",
+      desc: "Exciting news! We're launching a new mentorship program. Stay tuned for more details on how you can participate.",
+      date: "Coming soon",
     },
     
   ];
@@ -66,7 +76,7 @@ const Announcement = () => {
                 <div className="flex items-center gap-x-40">
                   {/* <Avatar size="sm" src={image} alt={name} className='border-2 border-white rounded-md w-10 h-10'/> */}
                   <div>
-                    <Typography color="blue-gray" variant="h6">
+                    <Typography color="white" variant="h6">
                       {desc}
                     </Typography>
                   </div>
@@ -92,6 +102,12 @@ const Announcement = () => {
                   </Button> */}
 
                   {/* {console.log(isModalOpen)} */}
+                </div>
+                <div className="flex flex-row gap-4">
+                  <EditDeleteButton
+                    onEdit={() => handleEdit(id)}
+                    onDelete={() => handleDelete(id)}
+                  />
                 </div>
               </div>
             ))}
