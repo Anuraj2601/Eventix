@@ -12,6 +12,7 @@ import Club from '../../components/Club';
 import ClubCard from '../../components/ClubCard';
 
 import StudentClubCard from '../../components/StudentClubCard';
+import IgnoredClub from '../../components/IgnoredClub';
 
 const clubs = [
   {
@@ -81,11 +82,13 @@ const clubs = [
  
   ];
 
-const MultipleCards = () => {
+
+
+const IgnoredClubs = () => {
     return (
       <div className="flex flex-wrap items-center justify-center gap-10">
         {clubs.map(( club , index) => (
-          <StudentClubCard key={index} club= {club}/>
+          <IgnoredClub key={index} club= {club}/>
 
         ))}
       </div>
@@ -99,12 +102,17 @@ const StudentAllClubs = () => {
         {
         label: "All Clubs",
         value: "allClubs",
-        desc: <MultipleCards/>,
+        desc: <StudentClubCard />,
         },
         {
         label: "Your Clubs",
         value: "yourClubs",
         desc: <Club/>,
+        },
+        {
+          label: "Ignored Clubs",
+          value: "IgnoredClubs",
+          desc: <IgnoredClubs/>,
         }
        
     ];
@@ -118,7 +126,7 @@ const StudentAllClubs = () => {
                 <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-hidden">
                     <Tabs value={activeTab} className="max-w-full h-full flex flex-col m-6 cursor-pointer">
                         <TabsHeader
-                            className="rounded-none bg-transparent p-0 w-1/4"
+                            className="rounded-none bg-transparent p-0 w-1/3"
                             indicatorProps={{
                             className:
                                 "bg-transparent border-b-2 border-[#AEC90A] shadow-none rounded-none",

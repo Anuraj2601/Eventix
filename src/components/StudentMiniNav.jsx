@@ -14,6 +14,7 @@ import Member from "./Member";
 import StudentMiniNavEvent from './StudentMiniNavEvent';
 import Board from "./Board";
 import Recruitment from './Recruitment';
+import ClubEvent from "./ClubEvent";
 
 
 const StudentMiniNav = () => {
@@ -63,7 +64,7 @@ const StudentMiniNav = () => {
         {
         label: "Events",
         value: "Events",
-        desc:  <StudentMiniNavEvent/> /* `Events` */,
+        desc:  <StudentMiniNavEvent club={clubs}/> /* `Events` */,
         },
         {
         label: "Members",
