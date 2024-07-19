@@ -109,7 +109,7 @@ export function Elections() {
       name: "Club Board of term 24/26",
       date: "05.06.2024",
       joinLink1: "/member-election-form",
-      joinLink2: "https://example.com/join-event2",
+      joinLink2: "/member-voting",
     },
   ];
 
@@ -136,13 +136,13 @@ export function Elections() {
                   </button>
                 )}
                 {event.joinLink2 && (
-                  <a 
-                    href={event.joinLink2} 
+                  <button 
+                    onClick={() => navigateToForm(event.joinLink2)} 
                     className="text-black text-sm border px-4 py-1 rounded-full" 
                     style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(92, 105, 10, 0.23)', marginRight: '70px', marginBottom: '10px' , fontSize: '17px' }}
                   >
                     <strong>Vote</strong>
-                  </a>
+                  </button>
                 )}
               </div>
             </div>
