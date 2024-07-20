@@ -26,12 +26,16 @@ const ClubEvent = ({ club }) => {
       name: "MadHack 3.0",
       image: MadhackImg,
       date: "05.06.2024",
+      venue: "S204 Hall",
+
       link: "https://example.com/join-oc",
     },
     {
       name: "ReidExtreme 3.0",
       image: ReidImg,
       date: "05.06.2024",
+      venue: "S104 Hall",
+
       link: "https://example.com/join-oc",
     },
   ];
@@ -62,7 +66,9 @@ const ClubEvent = ({ club }) => {
             </div>
             <div className="flex mt-4">
               <h3 className="text-xl font-semibold text-white">{event.name}</h3>
-              <span className="text-gray-400 ml-60">{event.date}</span>
+              <span className="text-gray-400 ml-60"> <span className="text-gray-400 ">{event.venue}</span> {event.date}</span>
+              
+
             </div>
           </div>
         ))}

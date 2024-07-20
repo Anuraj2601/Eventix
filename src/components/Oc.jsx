@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button } from "@material-tailwind/react";
 import Modal from "react-modal";
+import { FaTimes } from 'react-icons/fa'; // Import the white cross icon
+
 
 const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick }) => {
     return (
@@ -138,14 +140,20 @@ const App = () => {
     isOpen={modalIsOpen}
     onRequestClose={() => setModalIsOpen(false)}
     contentLabel={`Add New Member to ${currentTeam}`}
-    className="bg-black rounded-lg p-10 w-[80vw] mx-auto my-auto max-h-[80vh] overflow-y-auto" // Adjusted modal width and added scroll
-    overlayClassName="fixed inset-0 bg-neutral-900 bg-opacity-75 flex justify-center items-center"
+    className="fixed inset-0 bg-black p-10 w-full md:w-1/2 mx-auto my-10 rounded-lg overflow-y-auto"
+                overlayClassName="fixed inset-0 bg-black opacity-90"
 >
-    <h2 className="text-2xl text-white mb-4 text-center">
+    <h2 className="text-2xl text-white mb-4 text-center p-10">
         {`Add New Member to ${currentTeam}`}
     </h2> {/* Centered heading */}
     
     <div className="mb-4">
+    <button
+                        className="absolute top-2 right-2 text-white"
+                        onClick={() => setModalIsOpen(false)}
+                    >
+                        <FaTimes size={20} />
+                    </button>
         <h3 className="text-xl text-white mb-2 ">Added Members</h3> {/* Centered subheading */}
         <div className="grid grid-cols-4"> {/* Reduced gap between members */}
             {addedMembers.map((member, index) => (
@@ -183,12 +191,7 @@ const App = () => {
         </div>
     </div>
     
-    <Button
-        className="mt-4 bg-red-500 text-white"
-        onClick={() => setModalIsOpen(false)}
-    >
-        Close
-    </Button>
+    
 </Modal>
 
 

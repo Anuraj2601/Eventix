@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import ReactModal from 'react-modal';
 import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
-import {
-    Card,
-    CardBody,
-    Typography,
-} from "@material-tailwind/react";
+import { Card, CardBody, Typography } from "@material-tailwind/react";
 import { useLocation } from 'react-router-dom';
 import EventNav from '../../components/EventNav';
 import AnnouncementNav from '../../components/AnnouncementNav';
@@ -17,32 +14,27 @@ import silver from "../../assets/silver.png";
 import CustomSwitch from '../../components/Customswitch';
 import RegisterNav from '../../components/RegisterNav';
 import { FaHeart } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
+import { FaTimes } from 'react-icons/fa'; // Import the white cross icon
+
+ReactModal.setAppElement('#root'); // For accessibility
 
 const ExploreEvent = () => {
     const location = useLocation();
-    const { name, image, date, clubName, clubImage } = location.state;
+    const { name, image, date, clubName, clubImage, venue } = location.state;
     const [likes, setLikes] = useState(0);
     const [liked, setLiked] = useState(false);
-    const navigate = useNavigate(); // Hook to navigate programmatically
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [formFields, setFormFields] = useState({
+        budget: '',
+        purpose: '',
+        benefits: '',
+        sponsors: Array(5).fill('') // Initialize 5 sponsor fields
+    });
 
     useEffect(() => {
         const initialLikes = Math.floor(Math.random() * 100) + 1;
         setLikes(initialLikes);
     }, []);
-
-    const descriptions = [
-        "Come join us for a day filled with learning and fun! This event aims to bring together students and professionals to explore new ideas and innovations.",
-        "Discover the latest innovations in technology and creativity. Our event will showcase groundbreaking projects and connect you with industry leaders.",
-        "Explore new opportunities and ideas with industry leaders. This event is designed to inspire and empower students to reach their full potential.",
-        "An event designed to inspire and empower students. Join us for insightful talks, hands-on workshops, and networking opportunities.",
-        "Connect with like-minded individuals and expand your network. Our event provides a platform for students to meet industry professionals and fellow enthusiasts.",
-    ];
-
-    const getRandomDescription = () => {
-        const randomIndex = Math.floor(Math.random() * descriptions.length);
-        return descriptions[randomIndex];
-    };
 
     const handleLikeClick = () => {
         if (!liked) {
@@ -51,20 +43,29 @@ const ExploreEvent = () => {
         }
     };
 
-    const description = getRandomDescription();
-
-    const eventDetails = {
-        name,
-        image,
-        date,
-        clubName,
-        clubImage
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormFields(prevFields => ({
+            ...prevFields,
+            [name]: value
+        }));
     };
 
-    // Function to navigate to the Proposal page
-    const goToProposal = () => {
-        navigate('/proposal', { state: { eventDetails } });
+    const handleSponsorChange = (index, value) => {
+        const updatedSponsors = [...formFields.sponsors];
+        updatedSponsors[index] = value;
+        setFormFields(prevFields => ({
+            ...prevFields,
+            sponsors: updatedSponsors
+        }));
     };
+
+    const isFormComplete = () => {
+        return Object.values(formFields).every(field => field.trim() !== '') && formFields.sponsors.every(sponsor => sponsor.trim() !== '');
+    };
+
+    const openModal = () => setModalIsOpen(true);
+    const closeModal = () => setModalIsOpen(false);
 
     return (
         <div className="fixed inset-0 flex">
@@ -75,9 +76,12 @@ const ExploreEvent = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 w-full h-full">
                         <div className="order-1 md:order-1 flex justify-center items-center">
                             <Card className="w-full bg-neutral-900 h-128 relative">
-                                <CardBody className="h-full">
-                                    <div className="relative h-full flex flex-col justify-center">
+                                <CardBody className="h-full relative">
+                                    <div className="relative">
                                         <img src={image} alt={name} className="w-full h-72 object-cover rounded-lg mb-4" />
+                                        <div className="absolute top-2 right-2">
+                                            <img src={clubImage} alt={clubName} className="w-24 h-24 rounded-full border-4 border-white" />
+                                        </div>
                                         <div className="flex items-center justify-between mb-2">
                                             <Typography color="white" variant="h3">
                                                 {name}
@@ -93,23 +97,25 @@ const ExploreEvent = () => {
                                                 </Typography>
                                             </div>
                                         </div>
-                                        <Typography color="white" variant="subtitle1" className="text-[#AEC90A]">
-                                            On {date}
-                                        </Typography>
-                                        <Typography color="white" variant="subtitle1" className="text-[#AEC90A] mb-2">
-                                            Venue - S1O4 hall
-                                        </Typography>
+                                        <div className="flex items-center justify-between mb-2">
+                                            <Typography color="white" variant="subtitle1" className="text-[#AEC90A]">
+                                                On {date}
+                                            </Typography>
+                                            <Typography color="white" variant="subtitle1" className="text-[#AEC90A]">
+                                                Venue - {venue}
+                                            </Typography>
+                                            <button
+                                                onClick={openModal}
+                                                className="bg-[#AEC90A] text-black px-2 py-2 rounded-lg"
+                                            >
+                                                Proposal 
+                                            </button>
+                                        </div>
                                         <Typography color="white" variant="body1" className="mb-4">
-                                            {description} <a href="" className='text-[#AEC90A]' target="_blank" rel="noopener noreferrer">Click here to Register</a>
+                                            An event designed to inspire and empower students. Join us for insightful talks, hands-on workshops, and networking opportunities.
                                         </Typography>
                                         <div className="order-3 md:order-4 flex justify-center items-center bg-[#1E1E1E]">
                                             <AnnouncementNav />
-                                        </div>
-                                        <div className="absolute top-2 right-2 flex items-center">
-                                            <Typography color="white" variant="subtitle1" className="mr-2">
-                                                Organised by {clubName}
-                                            </Typography>
-                                            <img src={clubImage} alt={clubName} className="w-8 h-8 rounded-full" />
                                         </div>
                                     </div>
                                 </CardBody>
@@ -168,18 +174,156 @@ const ExploreEvent = () => {
                     <div className="w-full p-10">
                         <RegisterNav className="w-full h-96" />
                     </div>
-
-                    {/* Button or link to navigate to Proposal page */}
-                    <div className="flex justify-center items-center p-10">
-                        <button
-                            onClick={goToProposal}
-                            className="bg-[#AEC90A] text-white px-4 py-2 rounded-lg"
-                        >
-                            View Proposal Details
-                        </button>
-                    </div>
                 </div>
             </div>
+
+            {/* Modal for Proposal */}
+            <ReactModal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                className="fixed inset-0 bg-black p-10 w-full md:w-3/4 mx-auto my-10 rounded-lg overflow-y-auto"
+                overlayClassName="fixed inset-0 bg-black opacity-90"
+            >
+                <div className="relative bg-black text-white p-5 rounded-lg w-full">
+                    <button
+                        onClick={closeModal}
+                        className="absolute top-2 right-2 text-white text-lg"
+                    >
+                        <FaTimes size={20} />
+                    </button>
+                    <Typography variant="h4" className="text-center mb-4">
+                        Proposal Details
+                    </Typography>
+
+                    <div className="relative ">
+                     <img
+                            src={image}
+                            alt={name}
+                            className="w-full h-96 object-cover rounded-lg"
+                        />
+                        <div className="absolute top-2 right-2">
+                        <img
+                                src={clubImage}
+                                alt="Hosted By"
+                                className="w-20 h-20 rounded-full border-4 border-white"
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="mb-4">
+                        <Typography variant="h6" className="mb-2">
+                            Event Name
+                        </Typography>
+                        <input
+                            type="text"
+                            name="eventName"
+                            value={name}
+                            readOnly
+                            className="w-full bg-neutral-900 text-white p-2 rounded"
+                        />
+                    </div>
+                    
+                    <div className="mb-4">
+                        <Typography variant="h6" className="mb-2">
+                            Venue
+                        </Typography>
+                        <input
+                            type="text"
+                            name="venue"
+                            value={venue}
+                            readOnly
+                            className="w-full bg-neutral-900 text-white p-2 rounded"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <Typography variant="h6" className="mb-2">
+                            Date
+                        </Typography>
+                        <input
+                            type="text"
+                            name="date"
+                            value={date}
+                            readOnly
+                            className="w-full bg-neutral-900 text-white p-2 rounded"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <Typography variant="h6" className="mb-2">
+                            Description
+                        </Typography>
+                        <textarea
+                            name="description"
+                            value="An event designed to inspire and empower students. Join us for insightful talks, hands-on workshops, and networking opportunities."
+                            readOnly
+                            className="w-full bg-neutral-900 text-white p-2 rounded"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <Typography variant="h6" className="mb-2">
+                            Budget
+                        </Typography>
+                        <input
+                            type="text"
+                            name="budget"
+                            value={formFields.budget}
+                            onChange={handleInputChange}
+                            className="w-full bg-neutral-900 text-white p-2 rounded"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <Typography variant="h6" className="mb-2">
+                            Purpose
+                        </Typography>
+                        <input
+                            type="text"
+                            name="purpose"
+                            value={formFields.purpose}
+                            onChange={handleInputChange}
+                            className="w-full bg-neutral-900 text-white p-2 rounded"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <Typography variant="h6" className="mb-2">
+                            Benefits to UCSC
+                        </Typography>
+                        <input
+                            type="text"
+                            name="benefits"
+                            value={formFields.benefits}
+                            onChange={handleInputChange}
+                            className="w-full bg-neutral-900 text-white p-2 rounded"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <Typography variant="h6" className="mb-2">
+                            Sponsors
+                        </Typography>
+                        {formFields.sponsors.map((sponsor, index) => (
+                            <input
+                                key={index}
+                                type="text"
+                                value={sponsor}
+                                onChange={(e) => handleSponsorChange(index, e.target.value)}
+                                placeholder={`Sponsor ${index + 1}`}
+                                className="w-full bg-neutral-900 text-white p-2 rounded mb-2"
+                            />
+                        ))}
+                    </div>
+
+                    <button
+                        disabled={!isFormComplete()}
+                        className={`w-full py-2 rounded-lg ${isFormComplete() ? 'bg-[#AEC90A]' : 'bg-gray-600'} text-black`}
+                    >
+                        Send Request for Approval
+                    </button>
+                </div>
+            </ReactModal>
         </div>
     );
 };

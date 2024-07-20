@@ -28,7 +28,7 @@ const Proposal = () => {
                         className="bg-neutral-900 text-white border rounded p-2 w-full"
                         readOnly
                     />
-                    <FaEdit className="ml-2 w-30 h-30 cursor-pointer text-white" />
+                    <FaEdit className="ml-2 cursor-pointer text-white" />
                 </div>
                 <div className="flex items-center">
                     <label className="w-32 font-medium text-white">Club Name:</label>
@@ -69,6 +69,40 @@ const Proposal = () => {
                         readOnly
                     />
                     <FaEdit className="ml-2 cursor-pointer text-white" />
+                </div>
+                {/* Additional Input Areas */}
+                <div className="flex items-center">
+                    <label className="w-32 font-medium text-white">Budget:</label>
+                    <input
+                        type="text"
+                        placeholder="Enter budget"
+                        className="bg-neutral-900 text-white border rounded p-2 w-full"
+                    />
+                </div>
+                <div className="flex items-center">
+                    <label className="w-32 font-medium text-white">Purpose:</label>
+                    <input
+                        type="text"
+                        placeholder="Enter purpose"
+                        className="bg-neutral-900 text-white border rounded p-2 w-full"
+                    />
+                </div>
+                <div className="flex items-center">
+                    <label className="w-32 font-medium text-white">Benefits to UCSC:</label>
+                    <input
+                        type="text"
+                        placeholder="Enter benefits"
+                        className="bg-neutral-900 text-white border rounded p-2 w-full"
+                    />
+                </div>
+                <div className="flex justify-center items-center mt-4">
+                    <button
+                        type="button"
+                        className="bg-[#AEC90A] text-white px-4 py-2 rounded-lg"
+                        onClick={() => alert('Request sent for approval')}
+                    >
+                        Send Request for Approval
+                    </button>
                 </div>
             </form>
         </div>
