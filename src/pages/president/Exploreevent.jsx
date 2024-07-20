@@ -233,19 +233,20 @@ const ExploreEvent = () => {
                          Proposal Details
                      </Typography>
  
-                     <div className="relative ">
-                         <img
-                             src={image}
-                             alt={name}
-                             className="w-3/4 h-96 object-cover rounded-lg mb-4 "
-                         />
-                         <div className="absolute bottom-1 right-10 p-5 flex items-center space-x-2">
-                             <span>Organized by</span>
-                             <img src={clubImage} alt={clubName} className="w-10 h-10 rounded-full" />
-                         </div>
-                     </div>
+                     <div className="relative flex justify-center ">
+  <img
+    src={image}
+    alt={name}
+    className="w-2/4 h-96 object-cover rounded-2xl mb-4"
+  />
+  <div className="absolute bottom-20 right-68 p-5 flex items-center space-x-2">
+    <span>Organized by</span>
+    <img src={clubImage} alt={clubName} className="w-10 h-10 rounded-full" />
+  </div>
+</div>
+
  
-                     <div className="mb-4">
+                     <div className="mb-4 text-center">
                          <Typography variant="h5" className="mb-1">Event Name:</Typography>
                          <div className="relative">
                              <input
@@ -253,14 +254,14 @@ const ExploreEvent = () => {
                                  name="name"
                                  value={name}
                                  readOnly
-                                 className="w-full bg-neutral-900 text-white p-2 rounded-md"
+                                 className="w-2/4 bg-neutral-900 text-white p-2 rounded-full text-center"
                              />
                          </div>
                      </div>
  
                     
  
-                     <div className="mb-4">
+                     <div className="mb-4 text-center">
                          <Typography variant="h5" className="mb-1">Venue of the Event:</Typography>
                          <div className="relative">
                              <input
@@ -268,93 +269,94 @@ const ExploreEvent = () => {
                                  name="venue"
                                  value={venue}
                                  readOnly
-                                 className="w-full bg-neutral-900 text-white p-2 rounded-md"
+                                 className="w-2/4 bg-neutral-900 text-white p-2 rounded-full text-center"
                              />
                          </div>
                      </div>
  
-                     <div className="mb-4">
-                         <Typography variant="h5" className="mb-1">Date of the Event</Typography>
+                     <div className="mb-4 text-center">
+                         <Typography variant="h5" className="mb-1">Date of the Event:</Typography>
                          <div className="relative">
                              <input
                                  type="text"
                                  name="date"
                                  value={date}
                                  readOnly
-                                 className="w-full bg-neutral-900 text-white p-2 rounded-md"
+                                 className="w-2/4 bg-neutral-900 text-white p-2 rounded-full text-center"
                              />
                          </div>
                      </div>
  
-                <div className="mb-4">
+                <div className="mb-4 text-center">
                     <label className="block mb-2">Budget of the Event:</label>
                     <input
                         type="text"
                         name="budget"
                         value={formFields.budget}
                         onChange={handleInputChange}
-                        className="w-full  bg-neutral-900 text-white p-2 rounded"
+                        className="w-2/4  bg-neutral-900 text-white p-2 rounded-full text-center"
                     />
                 </div>
-                <div className="mb-4">
+                <div className="mb-4 text-center">
                     <label className="block mb-2">Purpose of the Event:</label>
                     <input
                         type="text"
                         name="purpose"
                         value={formFields.purpose}
                         onChange={handleInputChange}
-                        className="w-full h-40 bg-neutral-900 text-white p-2 rounded"
+                        className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
                     />
                 </div>
-                <div className="mb-4">
+                <div className="mb-4 text-center">
                     <label className="block mb-2">Benefits to UCSC:</label>
                     <input
                         type="text"
                         name="benefits"
                         value={formFields.benefits}
                         onChange={handleInputChange}
-                        className="w-full h-40 bg-neutral-900 text-white p-2 rounded"
+                        className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
                     />
                 </div>
-                <div className="mb-4">
-                    <label className="block mb-2">IUD Approval Status:</label>
-                    <div className="flex space-x-4">
-                        <label className="p-5 ">
-                            <input 
-                                type="radio"
-                                value="approved"
-                                checked={formFields.iudApproval === 'approved'}
-                                onChange={() => handleApprovalChange('approved')}
-                            />
-                           Already Approved
-                        </label>
-                        <label className="p-5">
-                            <input
-                                type="radio"
-                                value="not-approved"
-                                checked={formFields.iudApproval === 'not-approved'}
-                                onChange={() => handleApprovalChange('not-approved')}
-                                
-                            />
-                            Requires Approval
-                        </label>
-                    </div>
-                </div>
-                {formFields.iudApproval === 'approved' && (
-                    <div className="mb-4">
-                        <label className="block mb-2 flex items-center">
-                            Proof of IUD Approval:
-                            <input
-                                type="file"
-                                onChange={handleFileChange}
-                                className="ml-2"
-                            />
-                            <FaUpload className="ml-2" />
-                        </label>
-                    </div>
-                )}
-                <div className="mb-4">
-                    <label className="block mb-2">Sponsors:</label>
+                <div className="mb-4 text-center p-5">
+    <label className="block mb-2 p-5">IUD Approval Status:</label>
+    <div className="flex justify-center space-x-4 items-center">
+        <label className="flex items-center space-x-2">
+            <input 
+                type="radio"
+                value="approved"
+                checked={formFields.iudApproval === 'approved'}
+                onChange={() => handleApprovalChange('approved')}
+            />
+            <span>Already Approved</span>
+        </label>
+        <label className="flex items-center space-x-2">
+            <input
+                type="radio"
+                value="not-approved"
+                checked={formFields.iudApproval === 'not-approved'}
+                onChange={() => handleApprovalChange('not-approved')}
+            />
+            <span>Requires Approval</span>
+        </label>
+    </div>
+</div>
+
+{formFields.iudApproval === 'approved' && (
+    <div className="mb-4 text-center">
+        <label className="block mb-2 flex items-center justify-center p-5">
+            <span className="mr-2">Proof of IUD Approval:</span>
+            <input
+                type="file"
+                onChange={handleFileChange}
+                className="ml-2"
+            />
+            <FaUpload className="ml-2" />
+        </label>
+    </div>
+)}
+
+                <div className="mb-4 text-center">
+                    <label className="block mb-2 text-center">Sponsors:</label>
                     {formFields.sponsors.map((sponsor, index) => (
                         <div key={index} className="mb-2">
                             <input
@@ -362,12 +364,12 @@ const ExploreEvent = () => {
                                 value={sponsor.name}
                                 onChange={(e) => handleSponsorChange(index, 'name', e.target.value)}
                                 placeholder={`Sponsor ${index + 1} Name`}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded mb-2"
+                                className="w-72 bg-neutral-900 text-white p-2 rounded-full mb-2 text-center"
                             />
                             <select
                                 value={sponsor.type}
                                 onChange={(e) => handleSponsorChange(index, 'type', e.target.value)}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded mb-2"
+                                className="w-72 bg-neutral-900 text-white p-2 rounded-full mb-2 text-center"
                             >
                                 <option value="Gold">Gold</option>
                                 <option value="Silver">Silver</option>
@@ -378,7 +380,7 @@ const ExploreEvent = () => {
                                 value={sponsor.amount}
                                 onChange={(e) => handleSponsorChange(index, 'amount', e.target.value)}
                                 placeholder={`Amount for Sponsor ${index + 1}`}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded"
+                                className="w-72 bg-neutral-900 text-white p-2 rounded-full text-center"
                             />
                         </div>
                     ))}
