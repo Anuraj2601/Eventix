@@ -10,6 +10,8 @@ import {
 import Board from "./Board";
 import Registrations from "./Registrations";
 import Budget from "./BudgetTable";
+import Reports from "./Reports";
+
 
 const EventNav = () => {
   const [activeTab, setActiveTab] = React.useState("Registrations");
@@ -28,7 +30,7 @@ const EventNav = () => {
     {
       label: "Reports",
       value: "Reports",
-      desc: "Reports",
+      desc: <Reports />,
     },
   ];
 
