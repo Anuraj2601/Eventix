@@ -49,11 +49,7 @@ const PresidentClubNav = ({ club }) => {
       value: "Announcement",
       desc: <Announcement />,
     },
-    {
-      label: "Recruitment",
-      value: "Recruitment",
-      desc: "Recruitment",
-    },
+    
   ];
 
   return (

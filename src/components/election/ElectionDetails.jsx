@@ -39,7 +39,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
   return (
     <>
       <Button
-        className="flex items-center gap-2 bg-[#AEC90A]  ml-auto mt-0  rounded-full text-black font-bold "
+        className="flex items-center gap-2 bg-[#AEC90A]  ml-auto mt-0  rounded-full text-black font-bold ml-[950px]"
       >
        
         New Election
