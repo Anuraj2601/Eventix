@@ -14,7 +14,8 @@ import silver from "../../assets/silver.png";
 import CustomSwitch from '../../components/Customswitch';
 import RegisterNav from '../../components/RegisterNav';
 import { FaHeart } from "react-icons/fa";
-import { FaTimes } from 'react-icons/fa'; // Import the white cross icon
+import { FaTimes } from 'react-icons/fa';
+import { FaUpload } from 'react-icons/fa'; // Import the upload icon
 
 ReactModal.setAppElement('#root'); // For accessibility
 
@@ -28,13 +29,20 @@ const ExploreEvent = () => {
         budget: '',
         purpose: '',
         benefits: '',
-        sponsors: Array(5).fill('') // Initialize 5 sponsor fields
+        sponsors: Array(5).fill({ name: '', type: 'Gold', amount: '' }), // Initialize sponsor fields
+        iudApproval: 'not-approved',
+        proofOfApproval: ''
     });
+    const [isFormValid, setIsFormValid] = useState(false);
 
     useEffect(() => {
         const initialLikes = Math.floor(Math.random() * 100) + 1;
         setLikes(initialLikes);
     }, []);
+
+    useEffect(() => {
+        validateForm();
+    }, [formFields]);
 
     const handleLikeClick = () => {
         if (!liked) {
@@ -51,17 +59,40 @@ const ExploreEvent = () => {
         }));
     };
 
-    const handleSponsorChange = (index, value) => {
+    const handleSponsorChange = (index, field, value) => {
         const updatedSponsors = [...formFields.sponsors];
-        updatedSponsors[index] = value;
+        updatedSponsors[index] = { ...updatedSponsors[index], [field]: value };
         setFormFields(prevFields => ({
             ...prevFields,
             sponsors: updatedSponsors
         }));
     };
 
-    const isFormComplete = () => {
-        return Object.values(formFields).every(field => field.trim() !== '') && formFields.sponsors.every(sponsor => sponsor.trim() !== '');
+    const handleApprovalChange = (value) => {
+        setFormFields(prevFields => ({
+            ...prevFields,
+            iudApproval: value,
+            proofOfApproval: value === 'approved' ? prevFields.proofOfApproval : ''
+        }));
+        validateForm();
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setFormFields(prevFields => ({
+                ...prevFields,
+                proofOfApproval: file
+            }));
+        }
+    };
+
+    const validateForm = () => {
+        const { budget, purpose, benefits, sponsors, iudApproval, proofOfApproval } = formFields;
+        const isSponsorFilled = sponsors.some(sponsor => sponsor.name.trim() !== '');
+        const isProofRequired = iudApproval === 'approved' && !proofOfApproval;
+        const isValid = budget.trim() !== '' && purpose.trim() !== '' && benefits.trim() !== '' && isSponsorFilled && !isProofRequired;
+        setIsFormValid(isValid);
     };
 
     const openModal = () => setModalIsOpen(true);
@@ -78,10 +109,12 @@ const ExploreEvent = () => {
                             <Card className="w-full bg-neutral-900 h-128 relative">
                                 <CardBody className="h-full relative">
                                     <div className="relative">
-                                        <img src={image} alt={name} className="w-full h-72 object-cover rounded-lg mb-4" />
-                                        <div className="absolute top-2 right-2">
-                                            <img src={clubImage} alt={clubName} className="w-24 h-24 rounded-full border-4 border-white" />
+                                        <img src={image} alt={name} className="w-full h-80 object-cover rounded-lg mb-4" />
+                                        <div className="absolute p-2 rounded-2xl top-1 right-1 flex items-center space-x-2">
+                                            <span>Organized by</span>
+                                            <img src={clubImage} alt={clubName} className="w-10 h-10 rounded-full" />
                                         </div>
+
                                         <div className="flex items-center justify-between mb-2">
                                             <Typography color="white" variant="h3">
                                                 {name}
@@ -108,7 +141,7 @@ const ExploreEvent = () => {
                                                 onClick={openModal}
                                                 className="bg-[#AEC90A] text-black px-2 py-2 rounded-lg"
                                             >
-                                                Proposal 
+                                                Proposal
                                             </button>
                                         </div>
                                         <Typography color="white" variant="body1" className="mb-4">
@@ -179,146 +212,177 @@ const ExploreEvent = () => {
 
             {/* Modal for Proposal */}
             <ReactModal
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
-                className="fixed inset-0 bg-black p-10 w-full md:w-3/4 mx-auto my-10 rounded-lg overflow-y-auto"
-                overlayClassName="fixed inset-0 bg-black opacity-90"
-            >
-                <div className="relative bg-black text-white p-5 rounded-lg w-full">
-                    <button
-                        onClick={closeModal}
-                        className="absolute top-2 right-2 text-white text-lg"
-                    >
-                        <FaTimes size={20} />
-                    </button>
-                    <Typography variant="h4" className="text-center mb-4">
-                        Proposal Details
-                    </Typography>
-
-                    <div className="relative ">
-                     <img
-                            src={image}
-                            alt={name}
-                            className="w-full h-96 object-cover rounded-lg"
-                        />
-                        <div className="absolute top-2 right-2">
-                        <img
-                                src={clubImage}
-                                alt="Hosted By"
-                                className="w-20 h-20 rounded-full border-4 border-white"
+                 isOpen={modalIsOpen}
+                 onRequestClose={closeModal}
+                 className="fixed inset-0 bg-black p-10 w-full md:w-3/4 mx-auto my-10 rounded-lg overflow-y-auto"
+                 overlayClassName="fixed inset-0 bg-black "
+             >
+                 <div className="relative bg-black text-white p-5 rounded-lg w-full">
+                     <button
+                         onClick={closeModal}
+                         className="absolute top-2 right-2 text-white text-lg"
+                     >
+                         <FaTimes size={20} />
+                     </button>
+                     <Typography variant="h4" className="text-center mb-4 ">
+                         Proposal Details
+                     </Typography>
+ 
+                     <div className="relative ">
+                         <img
+                             src={image}
+                             alt={name}
+                             className="w-3/4 h-96 object-cover rounded-lg mb-4 "
+                         />
+                         <div className="absolute bottom-1 right-10 p-5 flex items-center space-x-2">
+                             <span>Organized by</span>
+                             <img src={clubImage} alt={clubName} className="w-10 h-10 rounded-full" />
+                         </div>
+                     </div>
+ 
+                     <div className="mb-4">
+                         <Typography variant="h5" className="mb-1">Event Name</Typography>
+                         <div className="relative">
+                             <input
+                                 type="text"
+                                 name="name"
+                                 value={name}
+                                 readOnly
+                                 className="w-full bg-neutral-900 text-white p-2 rounded-md"
+                             />
+                         </div>
+                     </div>
+ 
+                    
+ 
+                     <div className="mb-4">
+                         <Typography variant="h5" className="mb-1">Venue</Typography>
+                         <div className="relative">
+                             <input
+                                 type="text"
+                                 name="venue"
+                                 value={venue}
+                                 readOnly
+                                 className="w-full bg-neutral-900 text-white p-2 rounded-md"
+                             />
+                         </div>
+                     </div>
+ 
+                     <div className="mb-4">
+                         <Typography variant="h5" className="mb-1">Date</Typography>
+                         <div className="relative">
+                             <input
+                                 type="text"
+                                 name="date"
+                                 value={date}
+                                 readOnly
+                                 className="w-full bg-neutral-900 text-white p-2 rounded-md"
+                             />
+                         </div>
+                     </div>
+ 
+                <div className="mb-4">
+                    <label className="block mb-2">Budget:</label>
+                    <input
+                        type="text"
+                        name="budget"
+                        value={formFields.budget}
+                        onChange={handleInputChange}
+                        className="w-full  bg-neutral-900 text-white p-2 rounded"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-2">Purpose:</label>
+                    <input
+                        type="text"
+                        name="purpose"
+                        value={formFields.purpose}
+                        onChange={handleInputChange}
+                        className="w-full h-40 bg-neutral-900 text-white p-2 rounded"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-2">Benefits to UCSC:</label>
+                    <input
+                        type="text"
+                        name="benefits"
+                        value={formFields.benefits}
+                        onChange={handleInputChange}
+                        className="w-full h-40 bg-neutral-900 text-white p-2 rounded"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-2">IUD Approval Status:</label>
+                    <div className="flex space-x-4">
+                        <label className="p-5 ">
+                            <input 
+                                type="radio"
+                                value="approved"
+                                checked={formFields.iudApproval === 'approved'}
+                                onChange={() => handleApprovalChange('approved')}
+                            />
+                           Already Approved
+                        </label>
+                        <label className="p-5">
+                            <input
+                                type="radio"
+                                value="not-approved"
+                                checked={formFields.iudApproval === 'not-approved'}
+                                onChange={() => handleApprovalChange('not-approved')}
+                                
+                            />
+                            Requires Approval
+                        </label>
+                    </div>
+                </div>
+                {formFields.iudApproval === 'approved' && (
+                    <div className="mb-4">
+                        <label className="block mb-2 flex items-center">
+                            Proof of IUD Approval:
+                            <input
+                                type="file"
+                                onChange={handleFileChange}
+                                className="ml-2"
+                            />
+                            <FaUpload className="ml-2" />
+                        </label>
+                    </div>
+                )}
+                <div className="mb-4">
+                    <label className="block mb-2">Sponsors:</label>
+                    {formFields.sponsors.map((sponsor, index) => (
+                        <div key={index} className="mb-2">
+                            <input
+                                type="text"
+                                value={sponsor.name}
+                                onChange={(e) => handleSponsorChange(index, 'name', e.target.value)}
+                                placeholder={`Sponsor ${index + 1} Name`}
+                                className="w-72 bg-neutral-900 text-white p-2 rounded mb-2"
+                            />
+                            <select
+                                value={sponsor.type}
+                                onChange={(e) => handleSponsorChange(index, 'type', e.target.value)}
+                                className="w-72 bg-neutral-900 text-white p-2 rounded mb-2"
+                            >
+                                <option value="Gold">Gold</option>
+                                <option value="Silver">Silver</option>
+                                <option value="Platinum">Platinum</option>
+                            </select>
+                            <input
+                                type="number"
+                                value={sponsor.amount}
+                                onChange={(e) => handleSponsorChange(index, 'amount', e.target.value)}
+                                placeholder={`Amount for Sponsor ${index + 1}`}
+                                className="w-72 bg-neutral-900 text-white p-2 rounded"
                             />
                         </div>
-                    </div>
-                    
-                    <div className="mb-4">
-                        <Typography variant="h6" className="mb-2">
-                            Event Name
-                        </Typography>
-                        <input
-                            type="text"
-                            name="eventName"
-                            value={name}
-                            readOnly
-                            className="w-full bg-neutral-900 text-white p-2 rounded"
-                        />
-                    </div>
-                    
-                    <div className="mb-4">
-                        <Typography variant="h6" className="mb-2">
-                            Venue
-                        </Typography>
-                        <input
-                            type="text"
-                            name="venue"
-                            value={venue}
-                            readOnly
-                            className="w-full bg-neutral-900 text-white p-2 rounded"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <Typography variant="h6" className="mb-2">
-                            Date
-                        </Typography>
-                        <input
-                            type="text"
-                            name="date"
-                            value={date}
-                            readOnly
-                            className="w-full bg-neutral-900 text-white p-2 rounded"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <Typography variant="h6" className="mb-2">
-                            Description
-                        </Typography>
-                        <textarea
-                            name="description"
-                            value="An event designed to inspire and empower students. Join us for insightful talks, hands-on workshops, and networking opportunities."
-                            readOnly
-                            className="w-full bg-neutral-900 text-white p-2 rounded"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <Typography variant="h6" className="mb-2">
-                            Budget
-                        </Typography>
-                        <input
-                            type="text"
-                            name="budget"
-                            value={formFields.budget}
-                            onChange={handleInputChange}
-                            className="w-full bg-neutral-900 text-white p-2 rounded"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <Typography variant="h6" className="mb-2">
-                            Purpose
-                        </Typography>
-                        <input
-                            type="text"
-                            name="purpose"
-                            value={formFields.purpose}
-                            onChange={handleInputChange}
-                            className="w-full bg-neutral-900 text-white p-2 rounded"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <Typography variant="h6" className="mb-2">
-                            Benefits to UCSC
-                        </Typography>
-                        <input
-                            type="text"
-                            name="benefits"
-                            value={formFields.benefits}
-                            onChange={handleInputChange}
-                            className="w-full bg-neutral-900 text-white p-2 rounded"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <Typography variant="h6" className="mb-2">
-                            Sponsors
-                        </Typography>
-                        {formFields.sponsors.map((sponsor, index) => (
-                            <input
-                                key={index}
-                                type="text"
-                                value={sponsor}
-                                onChange={(e) => handleSponsorChange(index, e.target.value)}
-                                placeholder={`Sponsor ${index + 1}`}
-                                className="w-full bg-neutral-900 text-white p-2 rounded mb-2"
-                            />
-                        ))}
-                    </div>
-
+                    ))}
+                </div></div>
+                <div className="flex justify-center">
                     <button
-                        disabled={!isFormComplete()}
-                        className={`w-full py-2 rounded-lg ${isFormComplete() ? 'bg-[#AEC90A]' : 'bg-gray-600'} text-black`}
+                        onClick={() => {/* Handle send request for approval */}}
+                        className={`px-4 py-2 rounded ${isFormValid ? 'bg-green-500' : 'bg-gray-500 cursor-not-allowed'}`}
+                        disabled={!isFormValid}
                     >
                         Send Request for Approval
                     </button>

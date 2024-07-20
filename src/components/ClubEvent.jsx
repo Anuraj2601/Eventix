@@ -66,7 +66,7 @@ const ClubEvent = ({ club }) => {
             </div>
             <div className="flex mt-4">
               <h3 className="text-xl font-semibold text-white">{event.name}</h3>
-              <span className="text-gray-400 ml-60"> <span className="text-gray-400 ">{event.venue}</span> {event.date}</span>
+              <span className="text- ml-60"> <span className="text-gray-400 ">  {event.venue}</span> {event.date}</span>
               
 
             </div>
