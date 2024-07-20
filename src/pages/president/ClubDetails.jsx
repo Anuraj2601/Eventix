@@ -4,6 +4,8 @@ import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 import { Typography } from "@material-tailwind/react";
 import PresidentClubNav from '../../components/PresidentClubNav';
+import LikeButton from '../../components/LikeButton';
+
 
 const clubs = [
     {
@@ -77,6 +79,7 @@ const ClubDetails = () => {
   const { clubName } = useParams();
   const location = useLocation();
   const { club } = location.state || {};
+  
 
   if (!club) {
     return <div>Club not found</div>;
@@ -96,27 +99,31 @@ const ClubDetails = () => {
       <div className="flex flex-col flex-1 h-full overflow-y-auto">
         <Navbar className="sticky top-0 z-10 p-4" />
         <div className="bg-neutral-900 text-white flex flex-col flex-1 p-6 relative"> {/* Added relative positioning for overlay */}
-          <div className="flex items-start mb-6 bg-[#1E1E1E] p-5 shadow-lg rounded-md">
+          <div className="flex items-start mb-6 bg-[#1E1E1E] p-5 shadow-lg rounded-full">
             <div className="rounded-full overflow-hidden w-24 h-24 flex-shrink-0"> {/* Circle container for image with reduced size */}
               <img
                 src={club.image}
                 alt={club.name}
                 className="object-cover w-full h-full"
               />
-            </div>
+            </div>               
+
             <div className="ml-4 flex flex-col justify-center"> {/* Details column */}
               <Typography variant="h5" className="text-white mb-2">
                 {club.name}
+
               </Typography>
               <div className=""> {/* Transparent box with shadow */}
     {clubDetails.description.split('\n').map((line, index) => (
         <Typography key={index} variant="body1" className="text-white">
             {line}
         </Typography>
+        
     ))}
-    {/* Add more details as needed */}
+   <LikeButton initialLikes={320} className="mt-1" />
 </div>
             </div>
+            
           </div>
           <PresidentClubNav club={club} />
         </div>

@@ -18,12 +18,7 @@ const EventNav = () => {
   const [activeTab, setActiveTab] = React.useState("Registrations");
 
   const data = [
-    {
-      label: "Proposal",
-      value: "Proposal",                     
-      desc:  <Proposal  /> ,
-
-    },
+   
     {
       label: "Registrations",
       value: "Registrations",

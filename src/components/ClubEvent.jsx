@@ -38,17 +38,33 @@ const ClubEvent = ({ club }) => {
 
       link: "https://example.com/join-oc",
     },
+    {
+      name: "ReidExtreme 3.0",
+      image: ReidImg,
+      date: "05.06.2024",
+      venue: "S104 Hall",
+
+      link: "https://example.com/join-oc",
+    },
+    {
+      name: "MadHack 3.0",
+      image: MadhackImg,
+      date: "05.06.2024",
+      venue: "S204 Hall",
+
+      link: "https://example.com/join-oc",
+    },
   ];
 
   return (
-    <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
+    <div className="flex justify-center items-center flex-col p-4 rounded-lg opacity-70" style={{ backgroundColor: 'black' }}>
       <Button
-        className="flex items-center gap-2 bg-[#AEC90A] h-10 mr-0 mt-2 ml-[850px] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
+        className="flex items-center font-bold gap-2 bg-[#AEC90A] h-10 mr-0 mt-2 ml-[850px] pt-1 pb-1 pl-5 pr-5 rounded-full text-black "
         variant="gradient"
         onClick={handleEvent}
       >
-        <FaPlus />
-        New Event
+        
+        Add New Event
       </Button>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-screen-lg">
         {events.map((event, index) => (

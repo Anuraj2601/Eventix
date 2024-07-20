@@ -139,9 +139,9 @@ const ExploreEvent = () => {
                                             </Typography>
                                             <button
                                                 onClick={openModal}
-                                                className="bg-[#AEC90A] text-black px-2 py-2 rounded-lg"
+                                                className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60  px-2 py-2 rounded-full"
                                             >
-                                                Proposal
+                                                Request approval
                                             </button>
                                         </div>
                                         <Typography color="white" variant="body1" className="mb-4">
@@ -241,7 +241,7 @@ const ExploreEvent = () => {
                      </div>
  
                      <div className="mb-4">
-                         <Typography variant="h5" className="mb-1">Event Name</Typography>
+                         <Typography variant="h5" className="mb-1">Event Name:</Typography>
                          <div className="relative">
                              <input
                                  type="text"
@@ -256,7 +256,7 @@ const ExploreEvent = () => {
                     
  
                      <div className="mb-4">
-                         <Typography variant="h5" className="mb-1">Venue</Typography>
+                         <Typography variant="h5" className="mb-1">Venue of the Event:</Typography>
                          <div className="relative">
                              <input
                                  type="text"
@@ -269,7 +269,7 @@ const ExploreEvent = () => {
                      </div>
  
                      <div className="mb-4">
-                         <Typography variant="h5" className="mb-1">Date</Typography>
+                         <Typography variant="h5" className="mb-1">Date of the Event</Typography>
                          <div className="relative">
                              <input
                                  type="text"
@@ -282,7 +282,7 @@ const ExploreEvent = () => {
                      </div>
  
                 <div className="mb-4">
-                    <label className="block mb-2">Budget:</label>
+                    <label className="block mb-2">Budget of the Event:</label>
                     <input
                         type="text"
                         name="budget"
@@ -292,7 +292,7 @@ const ExploreEvent = () => {
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block mb-2">Purpose:</label>
+                    <label className="block mb-2">Purpose of the Event:</label>
                     <input
                         type="text"
                         name="purpose"
@@ -381,7 +381,7 @@ const ExploreEvent = () => {
                 <div className="flex justify-center">
                     <button
                         onClick={() => {/* Handle send request for approval */}}
-                        className={`px-4 py-2 rounded ${isFormValid ? 'bg-green-500' : 'bg-gray-500 cursor-not-allowed'}`}
+                        className={`px-4 py-2 rounded-full ${isFormValid ? '[#AEC90A]' : 'bg-gray-500 cursor-not-allowed'}`}
                         disabled={!isFormValid}
                     >
                         Send Request for Approval

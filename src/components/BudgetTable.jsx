@@ -75,7 +75,7 @@ const BudgetTable = ({ onUpdate, showTable = true, estimatedBudget = 4000 }) => 
                 <select
                   value={newItem.type}
                   onChange={(e) => handleNewItemChange("type", e.target.value)}
-                  className="bg-gray-800 text-white p-2 rounded-lg mr-2 w-28"
+                  className="bg-gray-800 text-white p-2 rounded-full mr-2 w-28"
                 >
                   <option value="cost">Cost</option>
                   <option value="income">Income</option>
@@ -88,7 +88,7 @@ const BudgetTable = ({ onUpdate, showTable = true, estimatedBudget = 4000 }) => 
                   className="bg-gray-800 text-white p-2 rounded-lg mr-2 w-28"
                 />
               </div>
-              <Button type="submit" className="bg-[#AEC90A] text-white p-2 rounded-lg">
+              <Button type="submit" className="bg-[#AEC90A] text-white p-2 rounded-full">
                 Add Item
               </Button>
             </form>
