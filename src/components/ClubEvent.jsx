@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import { IconButton, Button } from '@material-tailwind/react';
+import { IconButton, Button, Tooltip } from '@material-tailwind/react';
 import { FaArrowRight, FaRegSmile, FaRegFrown, FaRegMeh, FaArrowRight as FaArrowRightYellow } from 'react-icons/fa'; // Import icons
 import MadhackImg from "../assets/events/madhack.png";
 import ReidImg from "../assets/events/reid.jpg";
 import LikeButton from './LikeButton'; // Import your LikeButton component
 import { MdAdd } from "react-icons/md"; // Import a different plus icon
+
 
 const ClubEvent = ({ club }) => {
   const [hoveredEvent, setHoveredEvent] = useState(null);
@@ -93,8 +94,7 @@ const ClubEvent = ({ club }) => {
       case "Pending":
         return <FaRegMeh className="text-gray-800 text-4xl" />;
       case "Completed":
-        return <span className="text-yellow-500 text-4xl">😁</span>; // Smiling with teeth emoji
-      default:
+        return <span className="text-yellow-500 text-4xl">🥳</span>;      default:
         return null;
     }
   };
@@ -102,16 +102,16 @@ const ClubEvent = ({ club }) => {
   return (
     <div className="flex justify-center items-center flex-col p-4 rounded-2xl opacity-70" style={{ backgroundColor: 'black' }}>
       <div className='flex justify-end mb-2'>
-        <button
-          className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute top-10 right-32 z-10"
-        >
-          <MdAdd size={24} />
-        </button>
-      </div>
+                    <button
+                        className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute top-10 right-32 z-10"
+                    >
+                        <MdAdd size={24} />
+                    </button>
+                </div>
 
       {/* Upcoming Events */}
       <div className="w-full max-w-screen-lg">
-        <h2 className="text-2xl font-bold text-white mr-4">Upcoming</h2>
+        <h2 className="text-2xl font-bold text-white mb-4">Upcoming</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {events.map((event, index) => (
             <div
@@ -122,7 +122,7 @@ const ClubEvent = ({ club }) => {
             >
               <div className="relative">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
-                <div className="absolute top-0 left-0 m-2 p-1 bg-opacity-75 rounded-full flex items-center justify-center" style={{ backgroundColor: '#000' }}>
+                <div className="absolute top-0 left-0 m-2  bg-opacity-50 rounded-full flex items-center justify-center" style={{ backgroundColor: '#000' }}>
                   <div className="relative group">
                     {getStatusIcon(event.status)}
                     {event.status === "Rejected" && hoveredEvent === event && (
@@ -145,7 +145,7 @@ const ClubEvent = ({ club }) => {
               <div className="flex flex-col mt-4">
                 <h3 className="text-xl font-semibold text-white">{event.name}</h3>
                 <span className="text-gray-400">in {event.venue} on {event.date}</span>
-                <div className="flex justify-end items-center mt-2">
+                <div className=" flex  -mt-10 justify-end items-center">
                   <LikeButton />
                 </div>
               </div>
@@ -162,7 +162,7 @@ const ClubEvent = ({ club }) => {
             <div key={index} className="relative rounded-lg p-4">
               <div className="relative">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
-                <div className="absolute top-0 left-0 m-2  bg-opacity-50 rounded-full flex items-center justify-center" >
+                <div className="absolute top-0 left-0 m-2   rounded-full flex items-center justify-center" >
                   {getStatusIcon(event.status)}
                 </div>
                 <div className="w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center" style={{ backgroundColor: '#AEC90A', color: '#000' }}>
@@ -180,7 +180,7 @@ const ClubEvent = ({ club }) => {
                 <div className="mt-2 flex justify-between items-center">
                   <LikeButton className="mb-2" />
                   <Button
-                    className="bg-[#AEC90A] text-black font-bold rounded-full px-4 py-2"
+                    className="bg-[#AEC90A] text-black font-bold rounded-full px-4 py-2 "
                     onClick={() => handleFeedback(event)}
                   >
                     Give Feedback
