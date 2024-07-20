@@ -39,10 +39,9 @@ const ElectionDetails = ({ clubName, electionId }) => {
   return (
     <>
       <Button
-        className="flex items-center gap-2 bg-[#AEC90A] h-10 ml-auto mt-0 pt-0 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
-        variant="gradient"
+        className="flex items-center gap-2 bg-[#AEC90A]  ml-auto mt-0  rounded-full text-black font-bold ml-[950px]"
       >
-        <FaPlus />
+       
         New Election
       </Button>
       <Card className="w-full bg-neutral-900 mt-4">
@@ -100,7 +99,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
                     disabled={index === 1}
                   />
                   <Link to={`/club/election`}>
-                    <Button variant="gradient" className={`bg-[#AEC90A] text-black p-2 inline-block ${index === 1 ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <Button variant="gradient" className={`bg-[#AEC90A] rounded-full text-black p-2 inline-block ${index === 1 ? 'opacity-50 pointer-events-none' : ''}`}>
                       View Details
                     </Button>
                   </Link>

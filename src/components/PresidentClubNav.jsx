@@ -14,9 +14,11 @@ import Member from "./Member";
 import ElectionDetails from "./election/ElectionDetails";
 import ClubEvent from "./ClubEvent";
 import Board from "./Board";
+import ClubReport from "./ClubReport";
+
 
 const PresidentClubNav = ({ club }) => {
-  const [activeTab, setActiveTab] = React.useState("Event");
+  const [activeTab, setActiveTab] = React.useState("Events");
 
   const data = [
     {
@@ -25,8 +27,8 @@ const PresidentClubNav = ({ club }) => {
       desc: <Board />,
     },
     {
-      label: "Event",
-      value: "Event",
+      label: "Events",
+      value: "Events",
       desc: <ClubEvent club={club} />,
     },
     {
@@ -50,10 +52,11 @@ const PresidentClubNav = ({ club }) => {
       desc: <Announcement />,
     },
     {
-      label: "Recruitment",
-      value: "Recruitment",
-      desc: "Recruitment",
+      label: "Event Reports",
+      value: "Event Reports",
+      desc: <ClubReport />,
     },
+    
   ];
 
   return (
@@ -78,7 +81,7 @@ const PresidentClubNav = ({ club }) => {
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody className="h-[500px] overflow-y-auto"> {/* Adjust height as needed */}
+      <TabsBody className="h-[800px] overflow-y-auto"> {/* Adjust height as needed */}
         {data.map(({ value, desc }) => (
           <TabPanel key={value} value={value}>
             {desc}

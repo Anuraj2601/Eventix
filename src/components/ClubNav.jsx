@@ -50,6 +50,7 @@ const ClubNav = ({ club }) => {
       desc: <Announcement />,
     },
     
+    
   ];
 
   return (

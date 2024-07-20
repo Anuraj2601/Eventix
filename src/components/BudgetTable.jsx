@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardBody, Typography, Button, Input } from "@material-tailwind/react";
+import EditButton from "./EditButton"; // Import your EditDeleteButton component
+
 
 const BudgetTable = ({ onUpdate, showTable = true, estimatedBudget = 4000 }) => {
   const [budgetItems, setBudgetItems] = useState([
@@ -39,9 +41,12 @@ const BudgetTable = ({ onUpdate, showTable = true, estimatedBudget = 4000 }) => 
       {showTable && (
         <Card className="w-full bg-black mb-6">
           <CardBody>
-          <Typography color="white" className="mb-4">
-            Estimated Budget: $40,000
-          </Typography>
+          <Typography color="white" className="mb-4 flex items-center">
+            
+            Estimated Budget: $40,000<span className="mr-2">
+                <EditButton />
+            </span>
+        </Typography>
             <Typography color="white" variant="h4" className="mb-4 text-center">
               Event Budget Tracker
             </Typography>
@@ -75,7 +80,7 @@ const BudgetTable = ({ onUpdate, showTable = true, estimatedBudget = 4000 }) => 
                 <select
                   value={newItem.type}
                   onChange={(e) => handleNewItemChange("type", e.target.value)}
-                  className="bg-gray-800 text-white p-2 rounded-lg mr-2 w-28"
+                  className="bg-gray-800 text-white p-2 rounded-full mr-2 w-28"
                 >
                   <option value="cost">Cost</option>
                   <option value="income">Income</option>
@@ -88,7 +93,7 @@ const BudgetTable = ({ onUpdate, showTable = true, estimatedBudget = 4000 }) => 
                   className="bg-gray-800 text-white p-2 rounded-lg mr-2 w-28"
                 />
               </div>
-              <Button type="submit" className="bg-[#AEC90A] text-white p-2 rounded-lg">
+              <Button type="submit" className="bg-[#AEC90A] text-black p-2 rounded-full">
                 Add Item
               </Button>
             </form>
