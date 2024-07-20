@@ -3,6 +3,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import loginImg from '../assets/loginImg.png';
 import { useNavigate } from 'react-router-dom';
+import UsersService from '../service/UsersService';
 // import {SignUp} from './Components/SignUp';
 
 const Login = () => {
@@ -28,9 +29,36 @@ const Login = () => {
         navigate('/');
     };
 
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const userData = await UsersService.login(email, password)
+            console.log(userData)
+            if(userData.token) {
+                localStorage.setItem('token', userData.token)
+                localStorage.setItem('role', userData.role)
+                navigate('/studentdashboard')
+            } else {
+                setError(userData.message)
+            }
+
+        } catch(error) {
+            console.log(error);
+            setError(error.message)
+            setTimeout(() => {
+                setError('');
+            }, 5000);
+        }
+    }
+
     return (
         <div className="flex h-screen justify-center bg-dark-400">
-
+               
             {/* Left Side */}
             <div className="w-1/3 flex flex-col items-center justify-center relative border border-white" style={{ backgroundColor: '#AEC90A', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }}>
                 <span className="absolute top-4 left-4 cursor-pointer text-white hover:text-dark-400 text-3xl" onClick={handleBackClick}>
@@ -45,7 +73,9 @@ const Login = () => {
 
             {/* Right Side */}
             <div className="w-1/2 bg-dark-background flex flex-col justify-center px-10 border-t border-r border-b border-white border-opacity-30">
+            <form onSubmit={handleSubmit}>
                 <div className="space-y-6 mx-auto w-[30vw]">
+                {error && <p className='error-message text-red-700'>{error}</p>}
                     <div>
                         <label htmlFor="username" className="block text-white text-sm mb-4">User Name</label>
                         <input
@@ -54,6 +84,8 @@ const Login = () => {
                             name="username"
                             className="w-full px-4 py-2 h-[50px] bg-dark-400 text-white border border-white opacity-50 rounded"
                             placeholder="2021cs100@stu.ucsc.cmb.ac.lk"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
 
@@ -66,6 +98,8 @@ const Login = () => {
                                 name="password"
                                 className="w-full px-4 py-2 h-[50px] bg-dark-400 text-white border border-white opacity-50 rounded mb-20"
                                 placeholder="Enter your password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                             <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-white cursor-pointer mb-20" onClick={togglePasswordVisibility}>
                                 {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -84,7 +118,9 @@ const Login = () => {
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
+            
 
             {/* Popup */}
             {showPopup && (
