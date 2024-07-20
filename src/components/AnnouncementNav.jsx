@@ -19,7 +19,7 @@ const AnnouncementNav = () => {
     {
       label: "Meetings",
       value: "Meeting",
-      desc: "List of Announcements goes here..",
+      desc: "There will be a meeting for all the OC members on 24th august 2024",
     },
   ];
 

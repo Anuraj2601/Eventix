@@ -8,6 +8,7 @@ import EditDeleteButton from './EditDeleteButton';
 const Posts = ({ post }) => {
     return (
         <div className="flex items-center justify-center  mb-4">
+            
             <div className='bg-[#0b0b0b] p-5 w-full rounded-md'>
                 <div className="flex flex-row items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
