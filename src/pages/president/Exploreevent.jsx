@@ -10,7 +10,11 @@ import { useLocation } from 'react-router-dom';
 import EventNav from '../../components/EventNav';
 import AnnouncementNav from '../../components/AnnouncementNav';
 import gold from "../../assets/gold.png";
+import gold1 from "../../assets/gold1.png";
+
 import platinum from "../../assets/platinum.png";
+import platinum1 from "../../assets/platinum1.png";
+
 import silver from "../../assets/silver.png";
 import CustomSwitch from '../../components/Customswitch'; // Import your CustomSwitch component
 import RegisterNav from '../../components/RegisterNav';
@@ -69,7 +73,15 @@ const ExploreEvent = () => {
                             </Card>
                         </div>
 
-                        <div className="order-2 md:order-3 flex justify-center items-center p-3">
+                        
+                        <div className="order-3 md:order-2 flex  w-full"> {/* Increased height of first EventNav */}
+                            <EventNav className="w-full h-full" />
+                        </div>
+
+                       
+                    </div>
+
+                    <div className=" flex justify-center items-center p-10">
                             <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]">
                                 <CardBody className="h-full">
                                     <div className="relative h-full flex flex-col justify-center">
@@ -84,7 +96,19 @@ const ExploreEvent = () => {
                                                 </Typography>
                                             </div>
                                             <div className="flex flex-col items-center">
+                                                <img src={platinum1} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-platinum mb-2" />
+                                                <Typography color="white" variant="subtitle1">
+                                                    Platinum Sponsor
+                                                </Typography>
+                                            </div>
+                                            <div className="flex flex-col items-center">
                                                 <img src={gold} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-gold mb-2" />
+                                                <Typography color="white" variant="subtitle1">
+                                                    Gold Sponsor
+                                                </Typography>
+                                            </div>
+                                            <div className="flex flex-col items-center">
+                                                <img src={gold1} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-gold mb-2" />
                                                 <Typography color="white" variant="subtitle1">
                                                     Gold Sponsor
                                                 </Typography>
@@ -95,40 +119,14 @@ const ExploreEvent = () => {
                                                     Silver Sponsor
                                                 </Typography>
                                             </div>
+                                            
                                         </div>
                                     </div>
                                 </CardBody>
                             </Card>
                         </div>
 
-                        <div className="order-3 md:order-2 flex  w-full"> {/* Increased height of first EventNav */}
-                            <EventNav className="w-full h-full" />
-                        </div>
-
-                        {/* New Card with background similar to Sponsor card */}
-                        <div className="order-4 md:order-4 flex justify-center items-center p-3">
-                        <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]">
-  <CardBody className="h-full">
-    <div className="relative h-full flex flex-col justify-center">
-   
-      
-      <div className="flex flex-col  mt-4">
-        <Typography color="white" variant="subtitle1">
-          Event Registrations<CustomSwitch />
-        </Typography>
-        
-      </div>
-
-      {/* Create OC Button */}
-      
-    </div>
-  </CardBody>
-</Card>
-
-                        </div>
-                    </div>
-
-                    <div className="w-full mt-96 p-10">
+                    <div className="w-full p-10">
                         <RegisterNav className="w-full h-96" />
                     </div>
                 </div>

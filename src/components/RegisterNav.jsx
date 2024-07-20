@@ -26,9 +26,9 @@ const EventNav = () => {
       desc: <Budget />,
     },
     {
-      label: "Proposal",
-      value: "Proposal",
-      desc: "Posts",
+      label: "Reports",
+      value: "Reports",
+      desc: "Reports",
     },
   ];
 
