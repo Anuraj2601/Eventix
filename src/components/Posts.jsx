@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IoMdClose } from "react-icons/io";
 import { Button } from "@material-tailwind/react";
 import { MdAdd } from "react-icons/md"; // Import a different plus icon
+import EditButton from "./EditButton"; // Import your EditDeleteButton component
+
 
 const Posts = ({ post }) => {
     return (
@@ -34,18 +36,27 @@ const Posts = ({ post }) => {
 };
 
 const NewsFeed = ({ posts }) => {
+    const [isDropdownVisible, setDropdownVisible] = useState(false);
+
+    const toggleDropdown = () => {
+        setDropdownVisible(!isDropdownVisible);
+    };
+
     return (
-        <div className="bg-neutral-900 text-white  min-h-screen">
-             <div className=' flex justify-end mb-2'>
-                <Button
-                    className=" bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black"
-                    onClick={() => alert("Add New Post clicked!")}
-                >
-Add New                </Button>
+        <div className="bg-neutral-900 text-white min-h-screen relative">
+            <div className='relative'>
+                <div className='flex justify-end mb-2'>
+                    <button
+                        onClick={toggleDropdown}
+                        className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-3 right-8 z-10"
+                    >
+                        <MdAdd size={24} />
+                    </button>
+                </div>
+                {posts.map((post, index) => (
+                    <Posts key={index} post={post} />
+                ))}
             </div>
-            {posts.map((post, index) => (
-                <Posts key={index} post={post} />
-            ))}
         </div>
     );
 };

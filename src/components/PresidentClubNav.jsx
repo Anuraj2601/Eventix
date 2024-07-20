@@ -74,7 +74,7 @@ const PresidentClubNav = ({ club }) => {
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody className="h-[500px] overflow-y-auto"> {/* Adjust height as needed */}
+      <TabsBody className="h-[800px] overflow-y-auto"> {/* Adjust height as needed */}
         {data.map(({ value, desc }) => (
           <TabPanel key={value} value={value}>
             {desc}

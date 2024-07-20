@@ -2,8 +2,8 @@ import React from 'react';
 
 const Board = () => {
   return (
-    <div className="flex flex-col justify-center items-center h-full mt-6 overflow-auto bg-black p-5 rounded-lg">
-      <div className="text-white text-3xl ">Board of Term 23/24</div>
+    <div className="flex flex-col justify-center items-center h-full  overflow-auto bg-black  rounded-2xl">
+      <div className="text-white text-3xl p-5 ">Board of Term 23/24</div>
       <div className="flex justify-center gap-20 p-10">
         {/* President */}
         <div className="flex flex-col items-center text-center">

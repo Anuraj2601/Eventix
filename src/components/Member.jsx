@@ -148,7 +148,7 @@ const Member = () => {
           {members.map((member, index) => (
             <div
               key={member.id}
-              className="relative flex items-start justify-between p-4 mb-4 bg-zinc-950 rounded-xl"
+              className="relative flex items-start justify-between p-4 mb-2 bg-zinc-950 rounded-2xl"
             >
               <div className="flex items-center gap-4">
                 <Avatar

@@ -90,7 +90,7 @@ const Meeting = () => {
                 </div>
                 <div className="flex flex-col w-1/4 items-center">
                   <div className="flex items-center gap-2">
-                    <FaEye className="text-white" />
+                    <FaEye className="text-[#AEC90A]" />
                     <Typography className="text-white font-normal">
                       {audience}
                     </Typography>

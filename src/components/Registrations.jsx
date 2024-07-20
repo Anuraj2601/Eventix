@@ -50,9 +50,22 @@ const members = Array.from({ length: 20 }, (_, index) => {
 
 const Registrations = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [checkedInStatus, setCheckedInStatus] = useState(
+    members.reduce((acc, member) => {
+      acc[member.id] = member.checkedIn;
+      return acc;
+    }, {})
+  );
 
   const handleSwitchChange = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleCheckboxChange = (id) => {
+    setCheckedInStatus((prev) => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
   };
 
   return (
@@ -60,11 +73,10 @@ const Registrations = () => {
       <CardBody>
         {/* Custom Switch and Duration Section */}
         <div>
-          
-          <div className="flex ml-1 items-center p-5 mr-50">
-          <Typography color="white" variant="h6" className="mr-10">
-            Open Registrations
-          </Typography>
+          <div className="flex  items-center  mr-50">
+            <Typography color="white" variant="h6" className="mr-10">
+              Open Registrations
+            </Typography>
             <CustomSwitch 
               isOn={isOpen}
               handleToggle={handleSwitchChange}
@@ -79,7 +91,7 @@ const Registrations = () => {
         {members.map((member) => (
           <div
             key={member.id}
-            className="relative flex items-start justify-between p-4 mb-4 bg-[#1E1E1E] rounded-xl"
+            className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-xl"
           >
             <div className="flex items-center gap-4 w-1/3">
               <Avatar
@@ -105,15 +117,20 @@ const Registrations = () => {
             </div>
             <div className="flex flex-col w-1/3 text-white">
               <Typography color="white" variant="subtitle1" className="mb-1">
-                The reason to join: 
+                The reason to join:
               </Typography>
               {member.why}
             </div>
-            <div className="flex items-center justify-end w-1/3">
-              <Typography color="white" variant="subtitle1" className="mb-1">
-                Check-in
-                {member.checkedIn && <FaCheck className="text-green-500" size={24} />}
-              </Typography>
+            <div className="flex items-center w-1/3 justify-end gap-4">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={checkedInStatus[member.id] || false}
+                  onChange={() => handleCheckboxChange(member.id)}
+                  className="form-checkbox h-5 w-5 text-[#AEC90A]"
+                />
+                <span className="ml-2 text-white">Check-in</span>
+              </label>
             </div>
           </div>
         ))}
