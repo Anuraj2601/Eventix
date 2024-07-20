@@ -138,15 +138,15 @@ const App = () => {
     isOpen={modalIsOpen}
     onRequestClose={() => setModalIsOpen(false)}
     contentLabel={`Add New Member to ${currentTeam}`}
-    className="bg-black rounded p-10 w-[80vw] mx-auto my-auto max-h-[80vh] overflow-y-auto" // Adjusted modal width and added scroll
-    overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center"
+    className="bg-black rounded-lg p-10 w-[80vw] mx-auto my-auto max-h-[80vh] overflow-y-auto" // Adjusted modal width and added scroll
+    overlayClassName="fixed inset-0 bg-neutral-900 bg-opacity-75 flex justify-center items-center"
 >
     <h2 className="text-2xl text-white mb-4 text-center">
         {`Add New Member to ${currentTeam}`}
     </h2> {/* Centered heading */}
     
     <div className="mb-4">
-        <h3 className="text-xl text-white mb-2 text-center">Added Members</h3> {/* Centered subheading */}
+        <h3 className="text-xl text-white mb-2 ">Added Members</h3> {/* Centered subheading */}
         <div className="grid grid-cols-4"> {/* Reduced gap between members */}
             {addedMembers.map((member, index) => (
                 <div key={index} className="flex flex-col items-center">
@@ -162,7 +162,7 @@ const App = () => {
     </div>
     
     <div>
-        <h3 className="text-xl text-white mb-2 text-center">Available Members</h3> {/* Centered subheading */}
+        <h3 className="text-xl text-white mb-2 ">Available Members</h3> {/* Centered subheading */}
         <div className="grid grid-cols-4 gap-1"> {/* Reduced gap between members */}
             {availableMembers.map((member, index) => (
                 <div key={index} className="flex flex-col items-center">
