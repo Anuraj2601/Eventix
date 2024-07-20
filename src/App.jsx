@@ -22,6 +22,7 @@ import ExploreMemberEvent from './pages/member/ExploreMemberEvent';
 import MemberElectionForm from './components/MemberElectionForm';
 import MemberElectionFormSuccess from './components/MemberElectionFormSuccess';
 import MemberVotingProcess from './components/MemberVotingProcess';
+import MemberOCJoinForm from './pages/member/MemberOCJoinForm';
 
 
 import StudentDashboard from './pages/student/StudentDashboard';
@@ -69,14 +70,15 @@ const App = () => {
 
       
 
-
+         {/* member routes */}
         <Route path='/member' element={<Explorememberclub />}></Route>
         <Route path='/member/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
         <Route exact path="/member/event" element={<ExploreMemberEvent />} />      
         <Route path="/member-election-form" element={<MemberElectionForm />} />
         <Route path="/member-form-success" element={<MemberElectionFormSuccess />} />
         <Route path="/member-voting" element={<MemberVotingProcess />} />
-        
+        <Route path="/member-oc-form" element={<MemberOCJoinForm />} />
+         {/* member routes */}
        
        
         
