@@ -1,16 +1,7 @@
-/*import React from 'react'
+import React, { useState} from 'react';
+import Sidebar from './Sidebar';
+import Navbar from './Navbar';
 
-const MemberElectionForm = () => {
-  return (
-    <div>
-      <p>Election Form here...</p>
-    </div>
-  )
-}
-
-export default MemberElectionForm*/
-
-import React, { useState} from 'react'
 
 import {
   Menu,
@@ -41,6 +32,13 @@ const MemberElectionForm = () => {
   const [openMenu2, setOpenMenu2] = useState(false);
 
   return (
+    <>
+      <div className="fixed inset-0 flex">
+        <Sidebar className="flex-shrink-0" />
+        <div className="flex flex-col flex-1">
+          <Navbar className="sticky top-0 z-10 p-4" />
+          <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-hidden">
+
     <div className='flex flex-col items-center justify-center relative mt-10'>
       <div className='bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4'>Apply as a candidate for the election of board of term 24/25</div>
       <div className="bg-[#0B0B0B] flex flex-col items-center justify-center border-2 border-[#AEC90A] rounded-xl w-3/5 py-9">
@@ -131,7 +129,11 @@ const MemberElectionForm = () => {
       </div>
      
     </div>
+    </div>
+        </div>
+      </div>
+    </>
   )
 }
 
-export default MemberElectionForm
+export default MemberElectionForm;
