@@ -16,14 +16,14 @@ import Signup from "./components/Signup"
 import SecretaryExploreclub from './pages/secretary/Exploreclub';
 
 
-
+// member
 import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
 import ExploreMemberEvent from './pages/member/ExploreMemberEvent';
-import MemberElectionForm from './components/MemberElectionForm';
-import MemberElectionFormSuccess from './components/MemberElectionFormSuccess';
-import MemberVotingProcess from './components/MemberVotingProcess';
+import MemberElectionForm from './pages/member/MemberElectionForm';
+import MemberElectionFormSuccess from './pages/member/MemberElectionFormSuccess';
+import MemberVotingProcess from './pages/member/MemberVotingProcess';
 import MemberOCJoinForm from './pages/member/MemberOCJoinForm';
-
+//member
 
 import StudentDashboard from './pages/student/StudentDashboard';
 import ClubDetails from './pages/president/ClubDetails';
