@@ -7,6 +7,8 @@ import { MdInfoOutline } from "react-icons/md";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { BsArrowLeftCircle, BsBell } from "react-icons/bs";
+import { FiMessageSquare } from "react-icons/fi";
+
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -59,7 +61,7 @@ const Navbar = () => {
             <MdInfoOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
           </a>
           <a href="" className="px-3">
-            <MdOutlineEmail className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
+          <FiMessageSquare className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
           </a>
           <Link to='/student/notifications' className="px-3" onClick={handleClick}>
             <BsBell className={`inline-block w-6 h-6 ${isClicked ? 'text-white' : 'text-[#AEC90A] hover:text-white'}`} />

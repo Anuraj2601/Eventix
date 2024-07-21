@@ -20,7 +20,7 @@ import { Fragment, useState } from "react";
 const clubColors = {
   "IEEE": "#008EDE",
   "ISACA": "#FFFFFF",
-  "Gavel": "#8c181b", 
+  "Rekha": "#8c181b", 
   "Pahasara": "#FFE500",  
   "Rotaract" : "#4a093c",
 };
@@ -79,7 +79,7 @@ const meetings = [
   {
     id: 5,
     eventName: "Welocome",
-    club: "Gavel",
+    club: "Rekha ",
     startDatetime: "2024-07-10T14:00",
     endDatetime: "2024-07-12T14:30",
     eventLocation: "UCSC Main Hall",
@@ -224,10 +224,15 @@ const Calendar = () => {
           </div>
           <section className="mt-12 md:mt-0 md:pl-14 bg-black">
             <h2 className="font-semibold text-[#AEC90A] mt-4 text-center">
-              Schedule for{" "}
-              <time dateTime={format(selectedDay, "yyyy-MM-dd")}>
-                {format(selectedDay, "MMM dd, yyy")}
-              </time>
+            {isToday(selectedDay) ? (
+                <>Schedule for Today</>
+              ) : (
+                <>Schedule for{" "}
+                  <time dateTime={format(selectedDay, "yyyy-MM-dd")}>
+                    {format(selectedDay, "MMM dd, yyyy")}
+                  </time>
+                </>
+              )}
             </h2>
             <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
               {selectedDayMeetings.map((meeting) => {

@@ -16,10 +16,12 @@ import Board from "./Board";
 import Recruitment from './Recruitment';
 import ClubEvent from "./ClubEvent";
 import StudentMiniNavMember from './StudentMiniNavMember';
+import ClubPosts from "./ClubPosts";
+
 
 
 const StudentMiniNav = () => {
-    const [activeTab, setActiveTab] = useState("CurrentBoard");
+    const [activeTab, setActiveTab] = useState("Events");
 
     const clubs = [
         {
@@ -62,6 +64,11 @@ const StudentMiniNav = () => {
         value: "CurrentBoard",
         desc: <Board />,
         },
+        {
+          label: "Posts",
+          value: "Posts",
+          desc: <ClubPosts />,
+          },
         {
         label: "Events",
         value: "Events",

@@ -38,15 +38,15 @@ const Event = ({event}) => {
                 <img src={event.image} alt="" className=' object-cover w-auto h-96 mt-3' />
             </div>
             <div className="flex gap-10 mb-8">
-                <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
+                <div className="flex items-center justify-center border-2 border-[#AEC90A] rounded-lg p-2 gap-3 w-1/3">
                     <FaCalendar className='text-[#AEC90A]' size={30}/>
                     <span>{event.date}</span>
                 </div>
-                <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
+                <div className="flex items-center justify-center border-2 border-[#AEC90A] rounded-lg p-2 gap-3 w-1/3">
                     <IoTimeOutline className='text-[#AEC90A]' size={30}/>
                     <span>{event.time}</span>
                 </div>
-                <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
+                <div className="flex items-center justify-center border-2 border-[#AEC90A] rounded-lg p-2 gap-3 w-1/3">
                     <FaLocationDot className='text-[#AEC90A]' size={30}/>
                     <span>{event.venue}</span>
                 </div>
