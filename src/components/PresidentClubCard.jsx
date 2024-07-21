@@ -75,12 +75,13 @@ const PresidentClubCard = () => {
         },
     ];
 
+    
     const handleRegisterClick = (club) => {
         navigate(`/clubregister/${club.name}`);
     }
 
     const handleExploreClick = (club) => {
-        navigate(`/president/club/${club.name}`, { state: { club } });
+        navigate(`/president/club/${club.name}`, { state: { club, image: club.image } });
     }
 
     return (

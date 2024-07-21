@@ -105,7 +105,7 @@ const App = () => {
         
         {/* President ROUTES */}
         <Route exact path="/president" element={<Exploreclub />} />
-        <Route exact path="/event" element={<Exploreevent />} />
+        <Route exact path="/president/club/event" element={<Exploreevent />} />
         <Route path='/president/club/:name' element={<ClubDetails />} />
         <Route path='/Dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>

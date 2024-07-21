@@ -22,7 +22,7 @@ const ClubEvent = ({ club }) => {
       clubImage: club.image,
       ...event,
     };
-    navigate('/event', { state: clubDetails });
+    navigate('/president/club/event', { state: clubDetails });
   };
 
   const handleFeedback = (event) => {

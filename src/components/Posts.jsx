@@ -5,6 +5,10 @@ import { Button } from "@material-tailwind/react";
 import { MdAdd } from "react-icons/md"; // Import a different plus icon
 import EditButton from "./EditButton"; // Import your EditDeleteButton component
 
+// Import images
+import launchImage from '../assets/launch.jpg'; // Adjust path if needed
+import reid3Image from '../assets/reid3.jpg';   // Adjust path if needed
+import speakerImage from '../assets/speaker.jpg'; // Adjust path if needed
 
 const Posts = ({ post }) => {
     return (
@@ -62,13 +66,14 @@ const NewsFeed = ({ posts }) => {
 };
 
 const App = () => {
+    // Use imported image variables in your posts
     const samplePosts = [
         {
             position: 'Secretary',
             userName: 'John Doe',
             userImage: "https://randomuser.me/api/portraits/men/3.jpg",
             caption: 'Are you ready to take the next step in your reidExtreme 3.0 journey? The reidExtreme 3.0 is the perfect opportunity for students to explore potential career paths, network with industry professionals, and discover exciting job and internship opportunities',
-            image: "src/assets//launch.jpg",
+            image: launchImage,
             link: 'Register now',
         },
         {
@@ -76,7 +81,7 @@ const App = () => {
             userName: 'Veron',
             userImage: "https://randomuser.me/api/portraits/men/2.jpg",
             caption: 'While possessing knowledge is all well and good, if you have not the wisdom to wield it to your advantage, it becomes about as useful as soot. All but removing probability, one should not only be able to calculate every way forward, but should also be well-versed enough to choose the best path.Piqued your interest? Read further here - https://www.britannica.com/science/game-theory Register your team for ReidXtreme by visiting ',
-            image: "src/assets/reid3.jpg",
+            image: reid3Image,
             link: 'http://reidxtreme.ucscieee.com/',
         }, 
         {
@@ -84,7 +89,7 @@ const App = () => {
             userName: 'Sarah',
             userImage: "https://randomuser.me/api/portraits/women/7.jpg",
             caption: 'Are you ready to take the next step in your reidExtreme 3.0 journey? The reidExtreme 3.0 is the perfect opportunity for students to explore potential career paths, network with industry professionals, and discover exciting job and internship opportunities',
-            image: "src/assets/speaker.jpg",
+            image: speakerImage,
             link: 'Register now',
         },
         {
