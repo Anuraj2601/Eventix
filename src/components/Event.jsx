@@ -35,7 +35,7 @@ const Event = ({event}) => {
                 <p>Are you ready to take the next step in your career journey? The 2025 Career Fair is the perfect  opportunity for 
                 students to explore potential career paths, network with industry professionals, and discover exciting job and 
                 internship opportunities ...</p>
-                <img src={event.image} alt="" className='border-2 border-[#AEC90A] w-full h-80 mt-3' />
+                <img src={event.image} alt="" className=' object-cover w-auto h-96 mt-3' />
             </div>
             <div className="flex gap-10 mb-8">
                 <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
