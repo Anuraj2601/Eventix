@@ -174,31 +174,31 @@ const ExploreEvent = () => {
                 </Typography>
                 <div className="flex justify-between mb-4">
                     <div className="flex flex-col items-center">
-                        <img src={platinum} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-platinum mb-2" />
+                        <img src={platinum} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 custom-shadow" />
                         <Typography color="white" variant="subtitle1">
                             Platinum Sponsor
                         </Typography>
                     </div>
                     <div className="flex flex-col items-center">
-                        <img src={platinum1} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-platinum mb-2" />
+                        <img src={platinum1} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 custom-shadow" />
                         <Typography color="white" variant="subtitle1">
                             Platinum Sponsor
                         </Typography>
                     </div>
                     <div className="flex flex-col items-center">
-                        <img src={gold} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-gold mb-2" />
+                        <img src={gold} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 custom-shadow" />
                         <Typography color="white" variant="subtitle1">
                             Gold Sponsor
                         </Typography>
                     </div>
                     <div className="flex flex-col items-center">
-                        <img src={gold1} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-gold mb-2" />
+                        <img src={gold1} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 custom-shadow" />
                         <Typography color="white" variant="subtitle1">
                             Gold Sponsor
                         </Typography>
                     </div>
                     <div className="flex flex-col items-center">
-                        <img src={silver} alt="Silver Sponsor" className="w-40 h-40 rounded-full border-4 border-silver mb-2" />
+                        <img src={silver} alt="Silver Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 custom-shadow" />
                         <Typography color="white" variant="subtitle1">
                             Silver Sponsor
                         </Typography>

@@ -224,10 +224,15 @@ const Calendar = () => {
           </div>
           <section className="mt-12 md:mt-0 md:pl-14 bg-black">
             <h2 className="font-semibold text-[#AEC90A] mt-4 text-center">
-              Schedule for{" "}
-              <time dateTime={format(selectedDay, "yyyy-MM-dd")}>
-                {format(selectedDay, "MMM dd, yyy")}
-              </time>
+            {isToday(selectedDay) ? (
+                <>Schedule for Today</>
+              ) : (
+                <>Schedule for{" "}
+                  <time dateTime={format(selectedDay, "yyyy-MM-dd")}>
+                    {format(selectedDay, "MMM dd, yyyy")}
+                  </time>
+                </>
+              )}
             </h2>
             <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
               {selectedDayMeetings.map((meeting) => {

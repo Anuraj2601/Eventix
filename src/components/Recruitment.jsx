@@ -124,7 +124,9 @@ const Recruitment = () => {
                 )}
               </div>
             </div>
+            
           </div>
+          
           <div className="space-y-6">
             {sampleData.map((entry) => {
               const isInterviewSlotAvailable = currentTime >= entry.interviewSlot;
