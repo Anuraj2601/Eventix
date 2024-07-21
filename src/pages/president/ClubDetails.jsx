@@ -105,13 +105,13 @@ const ClubDetails = () => {
       <Sidebar className="flex-shrink-0" />
       <div className="flex flex-col flex-1 h-full overflow-y-auto">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="bg-neutral-900 text-white flex flex-col flex-1 p-6 relative">
-      <div className="flex items-start mb-6 bg-[#1E1E1E] p-5 shadow-lg rounded-full">
+        <div className="bg-neutral-900 text-white flex flex-col flex-1 p-3 relative">
+      <div className="flex items-start mb-6 bg-[#1E1E1E] p-3 shadow-lg rounded-full">
         <div className="rounded-full overflow-hidden w-24 h-24 flex-shrink-0">
           <img
             src={club.image}
             alt={club.name}
-            className="object-cover w-full h-full"
+            className="object-cover flex items-start w-full h-full"
           />
         </div>
 
@@ -129,10 +129,10 @@ const ClubDetails = () => {
             </div>
             <div className="flex items-center">
               {/* Like Button */}
-              <LikeButton initialLikes={320} className="mr-4" />
+              <LikeButton initialLikes={320} className="mr-2" />
 
               {/* Successful Events */}
-              <div className="flex items-center mr-6 bg-[#1E1E1E] p-2 rounded-full">
+              <div className="flex items-center mr-6 bg-[#1E1E1E]  rounded-full">
                 <FaCheckCircle className="text-[#AEC90A] text-lg" />
                 <Typography variant="body1" className="text-white ml-2">
                   10 Successful Events
@@ -140,7 +140,7 @@ const ClubDetails = () => {
               </div>
 
               {/* Members */}
-              <div className="flex items-center bg-[#1E1E1E] p-2 rounded-full">
+              <div className="flex items-center bg-[#1E1E1E]  rounded-full">
                 <FaUsers className="text-[#AEC90A] text-lg" />
                 <Typography variant="body1" className="text-white ml-2">
                   200 Members Community

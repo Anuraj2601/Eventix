@@ -117,7 +117,7 @@ const Calendar = () => {
 
   return (
     <div className="pt-5">
-      <div className="w-full p-4 sm:px-7 md:max-w-full md:px-6 bg-[#050505]">
+      <div className="w-full h-full p-4 sm:px-7 md:max-w-full md:px-6 bg-[#050505] rounded-lg">
         <div className="md:grid md:grid-cols-2 md:divide-x md:divide-[#050505]">
           <div className="md:pr-14">
             <div className="flex items-center">
