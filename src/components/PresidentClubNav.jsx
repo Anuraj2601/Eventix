@@ -16,6 +16,8 @@ import ClubEvent from "./ClubEvent";
 import Board from "./Board";
 import ClubReport from "./ClubReport";
 import ClubPosts from "./ClubPosts";
+import Recruitment from "./Recruitment";
+
 
 
 
@@ -66,7 +68,7 @@ const PresidentClubNav = ({ club }) => {
     {
       label: "Recruitment",
       value: "Recruitment",
-      desc: <ClubReport />,
+      desc: <Recruitment />,
     },
     
   ];

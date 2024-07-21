@@ -6,6 +6,8 @@ import { Typography } from "@material-tailwind/react";
 import PresidentClubNav from '../../components/PresidentClubNav';
 import LikeButton from '../../components/LikeButton';
 import CustomSwitch from '../../components/Customswitch'; // Ensure correct import path
+import { FaCheckCircle, FaUsers } from 'react-icons/fa'; // Import icons for successful events and members
+
 
 const clubs = [
   {
@@ -103,48 +105,53 @@ const ClubDetails = () => {
       <Sidebar className="flex-shrink-0" />
       <div className="flex flex-col flex-1 h-full overflow-y-auto">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="bg-neutral-900 text-white flex flex-col flex-1 p-6 relative">
-          <div className="flex items-start mb-6 bg-[#1E1E1E] p-5 shadow-lg rounded-full">
-            <div className="rounded-full overflow-hidden w-24 h-24 flex-shrink-0">
-              <img
-                src={club.image}
-                alt={club.name}
-                className="object-cover w-full h-full"
-              />
-            </div>
+        <div className="bg-neutral-900 text-white flex flex-col flex-1 p-3 relative">
+      <div className="flex items-start mb-6 bg-[#1E1E1E] p-3 shadow-lg rounded-full">
+        <div className="rounded-full overflow-hidden w-24 h-24 flex-shrink-0">
+          <img
+            src={club.image}
+            alt={club.name}
+            className="object-cover flex items-start w-full h-full"
+          />
+        </div>
 
-            <div className="ml-4 flex flex-col flex-1">
-              <Typography variant="h5" className="text-white mb-2">
-                {club.name}
-              </Typography>
-              <div className="flex flex-col flex-1">
-                <div className="mb-4">
-                  {clubDetails.description.split('\n').map((line, index) => (
-                    <Typography key={index} variant="body1" className="text-white">
-                      {line}
-                    </Typography>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between">
-                  <LikeButton initialLikes={320} className="mr-4" />
-                  <div className="flex items-center ml-auto ">
-                    <span   className="mr-1 text-grey-800">
-                      Open Club Recruitment 
-                    </span>
-                    <CustomSwitch  className="mr-3"
-                      isOn={isOpen}
-                      handleToggle={handleSwitchChange}
-                    />
-                    <span   className="mr-6">
-                      01 July 2024 - 31 July 2024
-                    </span>
-                  </div>
-                </div>
+        <div className="ml-4 flex flex-col flex-1">
+          <Typography variant="h5" className="text-white mb-2">
+            {club.name}
+          </Typography>
+          <div className="flex flex-col flex-1">
+            <div className="mb-4">
+              {clubDetails.description.split('\n').map((line, index) => (
+                <Typography key={index} variant="body1" className="text-white">
+                  {line}
+                </Typography>
+              ))}
+            </div>
+            <div className="flex items-center">
+              {/* Like Button */}
+              <LikeButton initialLikes={320} className="mr-2" />
+
+              {/* Successful Events */}
+              <div className="flex items-center mr-6 bg-[#1E1E1E]  rounded-full">
+                <FaCheckCircle className="text-[#AEC90A] text-lg" />
+                <Typography variant="body1" className="text-white ml-2">
+                  10 Successful Events
+                </Typography>
+              </div>
+
+              {/* Members */}
+              <div className="flex items-center bg-[#1E1E1E]  rounded-full">
+                <FaUsers className="text-[#AEC90A] text-lg" />
+                <Typography variant="body1" className="text-white ml-2">
+                  200 Members Community
+                </Typography>
               </div>
             </div>
           </div>
-          <PresidentClubNav club={club} />
         </div>
+      </div>
+      <PresidentClubNav club={club} />
+    </div>
       </div>
     </div>
   );
