@@ -15,7 +15,7 @@ import posonImage from "../assets/poson.jpg";
 
 const Posts = ({ post }) => {
     return (
-        <div className="bg-[#0b0b0b] p-10 rounded-md mb-4  relative">
+        <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4  relative">
             <div className="flex flex-row items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <img src={post.userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />

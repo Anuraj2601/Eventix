@@ -14,13 +14,28 @@ import UsersService from '../service/UsersService';
 
 const Sidebar = () => {
   const location = useLocation();
+  const currentPath = location.pathname;
+
+  // Function to determine if the item should be selected
+  const isSelected = (path) => currentPath.includes(path);
   const isAuthenticated = UsersService.isAuthenticated();
   const isAdmin = UsersService.isAdmin();
 
   // Utility function to determine if link should have active style
   const linkClass = (path) => {
-    return location.pathname.startsWith(path) ? 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2 bg-[#AEC90A] text-black' : 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2';
+    const currentPath = location.pathname;
+  
+    // Check if the current path either starts with, ends with, or contains the given path
+    const isSelected =
+      currentPath.startsWith(path) ||
+      currentPath.endsWith(path) ||
+      currentPath.includes(path);
+  
+    return isSelected
+      ? 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2 bg-[#AEC90A] text-black'
+      : 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2';
   };
+  
 
   const handleLogout = () => {
       const confirmDelete = window.confirm('Are you sure you want to Logout?');
@@ -82,7 +97,7 @@ const Sidebar = () => {
 
 
           <li className={linkClass('/Dashboard')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
-            <a href="/Dashboard" className='px-3'>
+            <a href="/presidentdashboard" className='px-3'>
               <FaHome className='inline-block w-9 h-9 mt-1 -ml-0.5' />
             </a>
           </li>
@@ -113,8 +128,8 @@ const Sidebar = () => {
         <li className='w-28 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2'>
           <a className='px-3'>
           {isAuthenticated &&
-           <Link to="/" onClick={handleLogout} > <span className='text-end mr-2 mt-6'>Logout</span></Link> }
-            <IoExitOutline className='inline-block w-6 h-6 mt-0' />
+           <Link to="/" onClick={handleLogout} > <span className='text-white mr-2 mt-6'>Logout</span> 
+            <IoExitOutline className='inline-block w-6 h-6 mt-0' /></Link>}
           </a>
         </li>
       </ul>

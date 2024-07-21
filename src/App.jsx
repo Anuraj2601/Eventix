@@ -104,13 +104,19 @@ const App = () => {
         
         
         {/* President ROUTES */}
-        <Route exact path="/president" element={<Exploreclub />} />
+        <Route exact path="/president/club" element={<Exploreclub />} />
         <Route exact path="/president/club/event" element={<Exploreevent />} />
         <Route path='/president/club/:name' element={<ClubDetails />} />
-        <Route path='/Dashboard' element={<Dashboard  />} ></Route>
+        <Route path='/presidentdashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
         <Route path='/calendar' element={<Calendar />}></Route>
         <Route path='/club/election' element={<Election/>}></Route>
+
+         {/* secretary ROUTES */}
+         <Route exact path="/secretary/club" element={<Exploreclubsecretary />} />
+        <Route path='/secretary/club/:name' element={<ClubDetailssecretary />} />
+        <Route exact path="/secretary/club/event" element={<Exploreevent />} />
+
 
         
 

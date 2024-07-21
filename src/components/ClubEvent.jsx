@@ -1,32 +1,36 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import { IconButton, Button, Tooltip } from '@material-tailwind/react';
-import { FaArrowRight, FaRegSmile, FaRegFrown, FaRegMeh, FaArrowRight as FaArrowRightYellow } from 'react-icons/fa'; // Import icons
+import { useLocation, useNavigate } from 'react-router-dom';
+import { IconButton, Button } from '@material-tailwind/react';
+import { FaArrowRight, FaRegSmile, FaRegFrown, FaRegMeh, FaArrowRight as FaArrowRightYellow } from 'react-icons/fa';
 import MadhackImg from "../assets/events/madhack.png";
 import ReidImg from "../assets/events/reid.jpg";
-import LikeButton from './LikeButton'; // Import your LikeButton component
-import { MdAdd } from "react-icons/md"; // Import a different plus icon
-
+import LikeButton from './LikeButton'; // Ensure LikeButton is correctly implemented
+import { MdAdd } from "react-icons/md";
 
 const ClubEvent = ({ club }) => {
   const [hoveredEvent, setHoveredEvent] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleEvent = () => {
     navigate(`/club/${club.club_name}/add-event`);
   };
 
   const handleExploreEvent = (event) => {
+    const basePath = location.pathname.startsWith('/president')
+        ? '/president/club/event'
+        : '/secretary/club/event';
+
     const clubDetails = {
-      clubName: club.club_name,
-      clubImage: club.image,
-      ...event,
+        clubName: club.club_name,
+        clubImage: club.image,
+        ...event,
     };
-    navigate('/president/club/event', { state: clubDetails });
+
+    navigate(basePath, { state: clubDetails });
   };
 
   const handleFeedback = (event) => {
-    // Function to handle feedback submission
     console.log(`Feedback for ${event.name}`);
   };
 
@@ -94,20 +98,22 @@ const ClubEvent = ({ club }) => {
       case "Pending":
         return <FaRegMeh className="text-gray-800 text-4xl" />;
       case "Completed":
-        return <span className="text-yellow-500 text-4xl">🥳</span>;      default:
+        return <span className="text-yellow-500 text-4xl">🥳</span>;
+      default:
         return null;
     }
   };
 
   return (
-    <div className="flex justify-center items-center flex-col p-4 rounded-2xl opacity-70" style={{ backgroundColor: 'black' }}>
+    <div className="flex justify-center items-center flex-col p-4 rounded-2xl bg-black opacity-70">
       <div className='flex justify-end mb-2'>
-                    <button
-                        className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute top-10 right-32 z-10"
-                    >
-                        <MdAdd size={24} />
-                    </button>
-                </div>
+        <button
+          className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute top-10 right-32 z-10"
+          onClick={handleEvent} // Ensure this button triggers handleEvent
+        >
+          <MdAdd size={24} />
+        </button>
+      </div>
 
       {/* Upcoming Events */}
       <div className="w-full max-w-screen-lg">
@@ -122,7 +128,7 @@ const ClubEvent = ({ club }) => {
             >
               <div className="relative">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
-                <div className="absolute top-0 left-0 m-2  bg-opacity-50 rounded-full flex items-center justify-center" style={{ backgroundColor: '#000' }}>
+                <div className="absolute top-0 left-0 m-2 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
                   <div className="relative group">
                     {getStatusIcon(event.status)}
                     {event.status === "Rejected" && hoveredEvent === event && (
@@ -145,7 +151,7 @@ const ClubEvent = ({ club }) => {
               <div className="flex flex-col mt-4">
                 <h3 className="text-xl font-semibold text-white">{event.name}</h3>
                 <span className="text-gray-400">in {event.venue} on {event.date}</span>
-                <div className=" flex  -mt-10 justify-end items-center">
+                <div className="flex justify-end items-center -mt-10">
                   <LikeButton />
                 </div>
               </div>
@@ -162,7 +168,7 @@ const ClubEvent = ({ club }) => {
             <div key={index} className="relative rounded-lg p-4">
               <div className="relative">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
-                <div className="absolute top-0 left-0 m-2   rounded-full flex items-center justify-center" >
+                <div className="absolute top-0 left-0 m-2 rounded-full flex items-center justify-center">
                   {getStatusIcon(event.status)}
                 </div>
                 <div className="w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center" style={{ backgroundColor: '#AEC90A', color: '#000' }}>
@@ -180,7 +186,7 @@ const ClubEvent = ({ club }) => {
                 <div className="mt-2 flex justify-between items-center">
                   <LikeButton className="mb-2" />
                   <Button
-                    className="bg-[#AEC90A] text-black font-bold rounded-full px-4 py-2 "
+                    className="bg-[#AEC90A] text-black font-bold rounded-full px-4 py-2"
                     onClick={() => handleFeedback(event)}
                   >
                     Give Feedback

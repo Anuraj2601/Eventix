@@ -4,104 +4,88 @@ import { Button } from "@material-tailwind/react";
 import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
 import { Dialog } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import rotaractImage from '../assets/clubs/rotaract.png';
-import acmImage from '../assets/clubs/acm.png';
-import pahasaraImage from '../assets/clubs/pahasara1.png';
-import isacaImage from '../assets/clubs/isaca1.png';
-import wieImage from '../assets/clubs/wie.png';
-import ieeeImage from '../assets/clubs/ieee.png';
-import msImage from '../assets/clubs/ms.png';
-import wicysImage from '../assets/clubs/wicys.png';
-import rekhaImage from '../assets/clubs/rekha.png';
+// Import images with correct paths
+import rotaractImage from "../../assets/clubs/rotaract.png";
+import acmImage from "../../assets/clubs/acm.png";
+import pahasaraImage from "../../assets/clubs/pahasara1.png";
+import isacaImage from "../../assets/clubs/isaca1.png";
+import wieImage from "../../assets/clubs/wie.png";
+import ieeeImage from "../../assets/clubs/ieee.png";
+import msImage from "../../assets/clubs/ms.png";
+import wicysImage from "../../assets/clubs/wicys.png";
+import rekhaImage from "../../assets/clubs/rekha.png";
 
-
-const ClubPresident = () => {
+const ClubSecretary = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen((cur) => !cur);
 
   const getClubDetails = (club) => {
-    // Assuming the ClubDetails page is at the path `/president/club/:name`
-    navigate(`/president/club/${club.name}`, { state: { club } });
+    // Assuming the ClubDetails page is at the path `/club/:name`
+    navigate(`/secretary/club/${club.name}`, { state: { club } });
   };
 
   const clubs = [
     {
         id: "1",
         name: "Rotaract Club of UCSC",
-        reg_status: "yes",
-        description: "The Rotaract Club of UCSC, part of Rotary International District 3220, empowers youth to enact positive change locally and globally.",
-        image: rotaractImage,
         sname: "rotract",
+        image: rotaractImage,
     },
     {
         id: "2",
         name: "ACM Student Chapter",
-        reg_status: "yes",
-        description: "The ACM Student Chapter aims to advance computing as a science and profession. Activities include coding competitions, guest lectures, and career development workshops.",
-        image: acmImage,
         sname: "acm",
+        image: acmImage,
     },
     {
         id: "3",
         name: "Pahasara Club (Innovation and Creativity)",
-        reg_status: "yes",
-        description: "The Pahasara Club offers a platform for photography enthusiasts to enhance their skills through workshops, photo walks, and exhibitions.",
-        image: pahasaraImage,
         sname: "pahasara",
+        image: pahasaraImage,
     },
     {
         id: "4",
         name: "ISACA Student Group",
-        reg_status: "yes",
-        description: "The Debate Society aims to improve public speaking and critical thinking skills through regular debates, public speaking workshops, and competitions.",
-        image: isacaImage,
         sname: "isaca",
+        image: isacaImage,
     },
     {
         id: "5",
         name: "(IEEE WIE) IEEE Women in Engineering",
-        reg_status: "yes",
-        description: "The IEEE Women in Engineering (WIE) Student Branch at the University of Colombo School of Computing strives to enhance women’s participation and empowerment in electrical and electronic engineering.",
-        image: wieImage,
         sname: "wie",
+        image: wieImage,
     },
     {
         id: "6",
         name: "IEEE Student Chapter",
-        reg_status: "yes",
-        description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
-        image: ieeeImage,
         sname: "ieee",
+        image: ieeeImage,
     },
     {
         id: "7",
         name: "Mechatronic Society Of UCSC",
-        reg_status: "yes",
-        description: "The Mechatronic Society Of UCSC focuses on sustainability and environmental awareness. Activities include clean-up drives, tree planting, and educational workshops.",
-        image: msImage,
         sname: "ms",
+        image: msImage,
     },
     {
         id: "8",
         name: "Women in Cybersecurity",
-        reg_status: "yes",
-        description: "This club is part of the Institute of Electrical and Electronics Engineers (IEEE) and focuses on all aspects of computer science and engineering.",
-        image: wicysImage,
         sname: "wicys",
+        image: wicysImage,
     },
     {
         id: "9",
         name: "Rekha",
-        reg_status: "yes",
-        description: "Get the opportunity to learn from industry professionals, prepare for certifications like CISA and CRISC, and network with professionals in the field.",
-        image: rekhaImage,
         sname: "rekha",
+        image: rekhaImage,
     },
-];
+  ];
+
   return (
     <>
       <Card className="w-full bg-neutral-900">
@@ -131,9 +115,8 @@ const ClubPresident = () => {
                     Leave
                   </Button>
                   <Button
-                    className={`pt-1 pb-1 pl-5 pr-5 rounded-2xl font-medium text-sm ${club.reg_status === 'yes' ? 'bg-[#AEC90A] text-black' : 'bg-[#AEC90A80] text-[#1E1E1E] cursor-not-allowed'}`}
+                    className="bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
                     onClick={() => getClubDetails(club)}
-                    disabled={club.reg_status !== 'yes'}
                   >
                     Explore
                   </Button>
@@ -149,7 +132,7 @@ const ClubPresident = () => {
         handler={handleOpen}
         className="bg-transparent w-screen h-screen bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-200 flex items-center"
       >
-        <Card className="mx-auto w-full max-w-[24rem] p-3 relative">
+        <Card className="mx-auto w-full max-w-[24rem] p-3">
           <IoIosCloseCircle
             className="absolute text-xl top-1 right-1 cursor-pointer"
             onClick={handleOpen}
@@ -160,7 +143,7 @@ const ClubPresident = () => {
               variant="paragraph"
               color="gray"
             >
-              Why are you leaving? Let us know your reason:
+              Why are you Leaving, Let us know your problem?
             </Typography>
             <div className="relative">
               <Textarea
@@ -178,4 +161,4 @@ const ClubPresident = () => {
   );
 };
 
-export default ClubPresident;
+export default ClubSecretary;
