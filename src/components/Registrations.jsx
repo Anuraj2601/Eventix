@@ -1,16 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardBody, Typography, Avatar } from "@material-tailwind/react";
 import { FaCheck } from "react-icons/fa";
+import CustomSwitch from "./Customswitch"; // Updated import path
+import EditButton from "./EditButton"; // Import your EditDeleteButton component
 
-// Predefined teams
+// Predefined teams and events
 const teams = ["Content", "Design", "Marketing", "Finance"];
-
-// Predefined events
-const predefinedEvents = [
-  "Reid Extreme 3.0",
-  "MadHack 2.0",
-  "FreshHack 1.0"
-];
+const predefinedEvents = ["Reid Extreme 3.0", "MadHack 2.0", "FreshHack 1.0"];
 
 const getRandomEvents = () => {
   const shuffledEvents = predefinedEvents.sort(() => 0.5 - Math.random());
@@ -18,7 +14,7 @@ const getRandomEvents = () => {
 };
 
 const getRandomYear = () => Math.floor(Math.random() * 3) + 2021;
-const getRandomProgram = () => [ "cs", "is"][Math.floor(Math.random() * 2)];
+const getRandomProgram = () => ["cs", "is"][Math.floor(Math.random() * 2)];
 const getRandomNumber = () => Math.floor(Math.random() * 900) + 100;
 const getRandomMobile = () => `077${Math.floor(Math.random() * 9000000) + 1000000}`;
 const getRandomWhy = () => [
@@ -53,13 +49,49 @@ const members = Array.from({ length: 20 }, (_, index) => {
 });
 
 const Registrations = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [checkedInStatus, setCheckedInStatus] = useState(
+    members.reduce((acc, member) => {
+      acc[member.id] = member.checkedIn;
+      return acc;
+    }, {})
+  );
+
+  const handleSwitchChange = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleCheckboxChange = (id) => {
+    setCheckedInStatus((prev) => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
   return (
     <Card className="w-full bg-neutral-900">
       <CardBody>
+        {/* Custom Switch and Duration Section */}
+        <div>
+          <div className="flex  items-center  mr-50">
+            <Typography color="white" variant="h6" className="mr-10">
+              Open Registrations
+            </Typography>
+            <CustomSwitch 
+              isOn={isOpen}
+              handleToggle={handleSwitchChange}
+            />
+            <Typography color="white" variant="subtitle1" className="ml-4">
+              Duration: 01 July 2024 - 31 July 2024
+            </Typography>
+            <EditButton className="ml-4" /> {/* Display only the delete button */}
+          </div>
+        </div>
+        {/* Registered Members Section */}
         {members.map((member) => (
           <div
             key={member.id}
-            className="relative flex items-start justify-between p-4 mb-4 bg-[#1E1E1E] rounded-xl"
+            className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-xl"
           >
             <div className="flex items-center gap-4 w-1/3">
               <Avatar
@@ -72,27 +104,34 @@ const Registrations = () => {
                 <Typography color="white" variant="h5" className="mb-1">
                   {member.name}
                 </Typography>
-                <Typography  variant="subtitle1" className="mb-1">
+                <Typography variant="subtitle1" className="mb-1">
                   Reg No: {member.registrationNumber}
                 </Typography>
-                <Typography  variant="subtitle1" className="mb-1">
+                <Typography variant="subtitle1" className="mb-1">
                   Mobile: {member.mobile}
                 </Typography>
-                <Typography  variant="subtitle1" className="mb-1">
+                <Typography variant="subtitle1" className="mb-1">
                   Email: {member.email}
                 </Typography>
               </div>
             </div>
             <div className="flex flex-col w-1/3 text-white">
               <Typography color="white" variant="subtitle1" className="mb-1">
-                The reason to join: 
-              </Typography>{member.why}
+                The reason to join:
+              </Typography>
+              {member.why}
             </div>
-            <div className="flex items-center justify-end w-1/3">
-            <Typography color="white" variant="subtitle1" className="mb-1">
-                check-in
-              {member.checkedIn && <FaCheck className="text-green-500" size={24} />}
-              </Typography></div>
+            <div className="flex items-center w-1/3 justify-end gap-4">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={checkedInStatus[member.id] || false}
+                  onChange={() => handleCheckboxChange(member.id)}
+                  className="form-checkbox h-5 w-5 text-[#AEC90A]"
+                />
+                <span className="ml-2 text-white">Check-in</span>
+              </label>
+            </div>
           </div>
         ))}
       </CardBody>

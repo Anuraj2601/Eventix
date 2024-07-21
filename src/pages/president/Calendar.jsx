@@ -9,8 +9,8 @@ const Calendarpage = () => {
             <Sidebar className="flex-shrink-0" />
             <div className="flex flex-col flex-1">
                 <Navbar className="sticky top-0 z-10 p-4" />
-                <div className="bg-neutral-900  text-white flex flex-col flex-1 overflow-hidden">
-                    <div className="p-2 overflow-y-auto">
+                <div className="bg-neutral-900  text-white flex flex-col flex-1 overflow-y-auto p-5">
+                    <div className=" overflow-y-auto">
                         <Calendar /> {/* Render the Calendar component */}
                     </div>
                 </div>

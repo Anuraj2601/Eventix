@@ -9,7 +9,7 @@ const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick }) => {
         <div className="w-full p-5 rounded-md overflow-auto">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl text-white">{title}</h2>
-                <Button className="bg-[#AEC90A] text-black" onClick={onAddNewClick}>Add member</Button>
+                <Button className="bg-[#AEC90A] text-black rounded-full" onClick={onAddNewClick}>Add member</Button>
             </div>
             <div className="grid grid-cols-4 gap-4 overflow-auto">
                 {teamMembers.map((member, index) => (
@@ -149,7 +149,7 @@ const App = () => {
     
     <div className="mb-4">
     <button
-                        className="absolute top-2 right-2 text-white"
+                        className="absolute top-2 right-2 text-white "
                         onClick={() => setModalIsOpen(false)}
                     >
                         <FaTimes size={20} />
@@ -181,7 +181,7 @@ const App = () => {
                     />
                     <p className="text-white text-center">{member.userName}</p> {/* Centered text */}
                     <Button
-                        className="bg-[#AEC90A] text-black mt-2"
+                        className="bg-[#AEC90A] text-black mt-2 rounded-full"
                         onClick={() => handleAddMember(member, currentTeam)}
                     >
                         Add

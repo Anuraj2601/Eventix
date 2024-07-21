@@ -1,22 +1,32 @@
 // src/components/Sidebar.jsx
 /* import React from 'react'; */
 
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { BsMegaphone } from 'react-icons/bs';
 import { FaHome } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { IoCalendarNumberOutline, IoExitOutline, IoVideocamOutline } from 'react-icons/io5';
 
 import Logo from '../assets/eventix Logo1.png';
+import UsersService from '../service/UsersService';
 
 
 
 const Sidebar = () => {
   const location = useLocation();
+  const isAuthenticated = UsersService.isAuthenticated();
+  const isAdmin = UsersService.isAdmin();
 
   // Utility function to determine if link should have active style
   const linkClass = (path) => {
     return location.pathname.startsWith(path) ? 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2 bg-[#AEC90A] text-black' : 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2';
+  };
+
+  const handleLogout = () => {
+      const confirmDelete = window.confirm('Are you sure you want to Logout?');
+      if(confirmDelete) {
+          UsersService.logout();
+      }
   };
 
   return (
@@ -101,8 +111,9 @@ const Sidebar = () => {
       </div>
       <ul className='mt-10 ml-0 text-black'>
         <li className='w-28 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2'>
-          <a href="/logout" className='px-3'>
-            <span className='text-end mr-2 mt-6'>Logout</span>
+          <a className='px-3'>
+          {isAuthenticated &&
+           <Link to="/" onClick={handleLogout} > <span className='text-end mr-2 mt-6'>Logout</span></Link> }
             <IoExitOutline className='inline-block w-6 h-6 mt-0' />
           </a>
         </li>
