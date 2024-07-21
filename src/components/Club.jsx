@@ -50,25 +50,7 @@ const clubs = [
         sname: "ieee",
         image: "../src/assets/clubs/ieee.png",
     },
-    {
-        id: "7",
-        name: "Mechatronic Society Of UCSC",
-        sname: "ms",
-        image: "../src/assets/clubs/ms.png",
-    },
-    {
-        id: "8",
-        name: "Women in Cybersecurity",
-        sname: "wicys",
-        image: "../src/assets/clubs/wicys.png",
-    },
-
-    {
-        id: "9",
-        name: "Rekha",
-        sname: "rekha",
-        image: "../src/assets/clubs/rekha.png",
-    },
+   
 ];
 
 

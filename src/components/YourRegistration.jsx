@@ -77,7 +77,7 @@ const NewsFeed = ({ posts }) => {
     );
 };
 
-const App = () => {
+const YourRegistration = () => {
     // Use imported image variables in your posts
     const samplePosts = [
         {
@@ -119,4 +119,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default YourRegistration;

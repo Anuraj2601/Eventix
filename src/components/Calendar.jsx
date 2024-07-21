@@ -20,7 +20,7 @@ import { Fragment, useState } from "react";
 const clubColors = {
   "IEEE": "#008EDE",
   "ISACA": "#FFFFFF",
-  "Gavel": "#8c181b", 
+  "Rekha": "#8c181b", 
   "Pahasara": "#FFE500",  
   "Rotaract" : "#4a093c",
 };
@@ -79,7 +79,7 @@ const meetings = [
   {
     id: 5,
     eventName: "Welocome",
-    club: "Gavel",
+    club: "Rekha ",
     startDatetime: "2024-07-10T14:00",
     endDatetime: "2024-07-12T14:30",
     eventLocation: "UCSC Main Hall",

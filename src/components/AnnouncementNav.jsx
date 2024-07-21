@@ -7,27 +7,36 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa"; // Import icons
+import { useLocation } from "react-router-dom"; // Import useLocation hook
 
 const AnnouncementNav = () => {
   const [activeTab, setActiveTab] = React.useState("Announcements");
+  const location = useLocation(); // Get the current path
+  const isStudentPage = location.pathname.startsWith('/student'); // Check if the path starts with /student
 
   const data = [
     {
       label: "Announcements",
       value: "Announcements",
       desc: "The Event registration link will be available soon.",
+      editable: !isStudentPage, // Set editable based on the page
     },
-    {
-      label: "Meetings",
-      value: "Meeting",
-      desc: "There will be a meeting for all the OC members on 24th August 2024",
-    },
+    ...(!isStudentPage
+      ? [
+          {
+            label: "Meetings",
+            value: "Meeting",
+            desc: "There will be a meeting for all the OC members on 24th August 2024",
+            editable: true,
+          },
+        ]
+      : []),
   ];
 
   return (
     <Tabs value={activeTab}>
       <TabsHeader
-        className="rounded-none bg-transparent p-0 grid grid-cols-3"
+        className={`rounded-none bg-transparent p-0 ${isStudentPage ? 'grid grid-cols-1' : 'grid grid-cols-3'}`}
         indicatorProps={{
           className:
             "mt-8 absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 rounded-full transition-opacity bg-transparent border-b-[8px] border-[#AEC90A] shadow-none",
@@ -47,7 +56,7 @@ const AnnouncementNav = () => {
         ))}
       </TabsHeader>
       <TabsBody className="overflow-y-auto text-white">
-        {data.map(({ value, desc }) => (
+        {data.map(({ value, desc, editable }) => (
           <TabPanel
             key={value}
             value={value}
@@ -55,23 +64,25 @@ const AnnouncementNav = () => {
           >
             <div className="relative group">
               <p className="mb-4">{desc}</p>
-              <div className="absolute inset-0 flex items-center justify-between px-4 py-2 bg-black opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="flex items-center">
-                  <FaEye className="text-[#AEC90A] mr-2" />
-                  <select className="bg-neutral-900 text-white border border-[#AEC90A] rounded px-2 py-1">
-                    <option value="everyone">Everyone</option>
-                    <option value="oc">OC</option>
-                  </select>
+              {editable && (
+                <div className="absolute inset-0 flex items-center justify-between px-4 py-2 bg-black opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center">
+                    <FaEye className="text-[#AEC90A] mr-2" />
+                    <select className="bg-neutral-900 text-white border border-[#AEC90A] rounded px-2 py-1">
+                      <option value="everyone">Everyone</option>
+                      <option value="oc">OC</option>
+                    </select>
+                  </div>
+                  <div className="flex items-center">
+                    <button className="text-[#AEC90A] hover:text-white mr-2">
+                      <FaEdit />
+                    </button>
+                    <button className="text-red-600 hover:text-white">
+                      <FaTrash />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <button className="text-[#AEC90A] hover:text-white mr-2">
-                    <FaEdit />
-                  </button>
-                  <button className="text-red-600 hover:text-white">
-                    <FaTrash />
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           </TabPanel>
         ))}

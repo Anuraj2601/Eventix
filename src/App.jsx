@@ -28,6 +28,10 @@ import ClubRegistration from './pages/student/ClubRegistration';
 import StudentClubDetails from './pages/student/StudentClubDetails';
 import StudentNotifications from './pages/student/StudentNotifications';
 import EventRegistration from './pages/student/EventRegistration';
+import Exploreeventstudent from './pages/student/Exploreevent';
+import StudentEventCalendar from './pages/student/StudentEventCalendar';
+
+
 
 
 
@@ -66,7 +70,6 @@ import EventNav from './components/EventNav';
 import AddEvent from './components/AddEvent';
 
 import { ClubMemberNav } from './components/ClubMemberNav';
-import StudentEventCalendar from './pages/student/StudentEventCalendar';
 
 
 // Import other pages if necessary
@@ -94,12 +97,18 @@ const App = () => {
         
              
                 {/* STUDENT ROUTES */}
-        <Route path='/student' element={<StudentAllClubs/>}></Route>
+        <Route path='/student/club' element={<StudentAllClubs/>}></Route>
         <Route path='/student/club/:name' element={<StudentClubDetails/>}></Route>
         <Route path='/student/notifications' element={<StudentNotifications/>}></Route>
-        <Route path='/studentdashboard' element={<StudentDashboard/>}></Route>
+        <Route path='/student/dashboard' element={<StudentDashboard/>}></Route>
         <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
         <Route path='/eventregister/:event' element={<EventRegistration/>}></Route>
+        <Route path='/student/club/event' element={<Exploreeventstudent />}></Route>
+        <Route path='/student/calendar' element={<StudentEventCalendar />}></Route>
+        <Route path='/student' element={<StudentDashboard/>}></Route>
+
+
+
        
         
         
@@ -107,15 +116,24 @@ const App = () => {
         <Route exact path="/president/club" element={<Exploreclub />} />
         <Route exact path="/president/club/event" element={<Exploreevent />} />
         <Route path='/president/club/:name' element={<ClubDetails />} />
-        <Route path='/presidentdashboard' element={<Dashboard  />} ></Route>
+        <Route path='/president/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
-        <Route path='/calendar' element={<Calendar />}></Route>
-        <Route path='/club/election' element={<Election/>}></Route>
+        <Route path='/president/calendar' element={<Calendar />}></Route>
+        <Route path='/president/club/election' element={<Election/>}></Route>
+        <Route path='/president' element={<Dashboard  />} ></Route>
+
+        
 
          {/* secretary ROUTES */}
          <Route exact path="/secretary/club" element={<Exploreclubsecretary />} />
         <Route path='/secretary/club/:name' element={<ClubDetailssecretary />} />
         <Route exact path="/secretary/club/event" element={<Exploreevent />} />
+        <Route path='/secretary/dashboard' element={<Dashboard  />} ></Route>
+        <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
+        <Route path='/secretary/calendar' element={<Calendar />}></Route>
+        <Route path='/secretary/club/election' element={<Election/>}></Route>
+        <Route path='/secretary' element={<Dashboard  />} ></Route>
+
 
 
         

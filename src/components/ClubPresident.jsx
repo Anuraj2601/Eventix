@@ -77,30 +77,7 @@ const ClubPresident = () => {
         image: ieeeImage,
         sname: "ieee",
     },
-    {
-        id: "7",
-        name: "Mechatronic Society Of UCSC",
-        reg_status: "yes",
-        description: "The Mechatronic Society Of UCSC focuses on sustainability and environmental awareness. Activities include clean-up drives, tree planting, and educational workshops.",
-        image: msImage,
-        sname: "ms",
-    },
-    {
-        id: "8",
-        name: "Women in Cybersecurity",
-        reg_status: "yes",
-        description: "This club is part of the Institute of Electrical and Electronics Engineers (IEEE) and focuses on all aspects of computer science and engineering.",
-        image: wicysImage,
-        sname: "wicys",
-    },
-    {
-        id: "9",
-        name: "Rekha",
-        reg_status: "yes",
-        description: "Get the opportunity to learn from industry professionals, prepare for certifications like CISA and CRISC, and network with professionals in the field.",
-        image: rekhaImage,
-        sname: "rekha",
-    },
+    
 ];
   return (
     <>

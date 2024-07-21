@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { MdAdd } from "react-icons/md";
 import EditButton from "./EditButton";
 import LikeButton from './LikeButton';
-
+import { useLocation } from 'react-router-dom'; // Import useLocation hook
 
 import vesakImage from "../assets/vesak.jpg";
 import eidImage from "../assets/eid.jpg";
@@ -12,10 +12,12 @@ import farewellImage from "../assets/farewell.jpg";
 import esalaImage from "../assets/esala.jpg";
 import posonImage from "../assets/poson.jpg";
 
-
 const Posts = ({ post }) => {
+    const location = useLocation(); // Get the current path
+    const isStudentPage = location.pathname.startsWith('/student'); // Check if the path starts with /student
+
     return (
-        <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4  relative">
+        <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4 relative">
             <div className="flex flex-row items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <img src={post.userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
@@ -24,19 +26,20 @@ const Posts = ({ post }) => {
                         <p className="text-[#AEC90A]">{post.position}</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-4">
-                    <HiOutlineDotsVertical className='text-[#AEC90A]' size={30} />
-                    <IoMdClose className='text-[#AEC90A]' size={30} />
-                </div>
+                {!isStudentPage && (
+                    <div className="flex items-center gap-4">
+                        <HiOutlineDotsVertical className='text-[#AEC90A]' size={30} />
+                        <IoMdClose className='text-[#AEC90A]' size={30} />
+                    </div>
+                )}
             </div>
             <div className="flex flex-col w-full mb-4">
                 <p>
                     {post.caption}
                     {post.link && <a href={post.link} className='text-[#AEC90A] underline' target="_blank" rel="noopener noreferrer">{post.link}</a>}
                 </p>
-                {post.image && <img src={post.image} alt="" className=' w-auto h-100 object-cover mt-3' />}
-                                  <LikeButton initialLikes={320} className=" absolute bottom-4 right-4" />
-
+                {post.image && <img src={post.image} alt="" className='w-auto h-100 object-cover mt-3' />}
+                <LikeButton initialLikes={320} className="absolute bottom-4 right-4" />
             </div>
         </div>
     );

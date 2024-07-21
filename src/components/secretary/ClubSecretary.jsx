@@ -66,24 +66,7 @@ const ClubSecretary = () => {
         sname: "ieee",
         image: ieeeImage,
     },
-    {
-        id: "7",
-        name: "Mechatronic Society Of UCSC",
-        sname: "ms",
-        image: msImage,
-    },
-    {
-        id: "8",
-        name: "Women in Cybersecurity",
-        sname: "wicys",
-        image: wicysImage,
-    },
-    {
-        id: "9",
-        name: "Rekha",
-        sname: "rekha",
-        image: rekhaImage,
-    },
+   
   ];
 
   return (

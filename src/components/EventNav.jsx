@@ -7,14 +7,19 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import { MdAdd } from "react-icons/md"; // Import the plus icon
+import { useLocation } from "react-router-dom"; // Import useLocation hook
 
 import Board from "./Board";
 import Posts from "./Posts";
 import Oc from "./Oc";
+import YourRegistration from "./YourRegistration"; // Import YourRegistration component
 
 const EventNav = () => {
   const [activeTab, setActiveTab] = React.useState("Posts");
   const [isDropdownVisible, setDropdownVisible] = React.useState(false);
+
+  const location = useLocation(); // Get the current path
+  const isStudentPage = location.pathname.startsWith('/student'); // Check if the path starts with /student
 
   const data = [
     {
@@ -27,6 +32,15 @@ const EventNav = () => {
       value: "OC",
       desc: <Oc />,
     },
+    ...(isStudentPage
+      ? [
+          {
+            label: "Your Registration",
+            value: "Registration",
+            desc: <YourRegistration />,
+          },
+        ]
+      : []),
   ];
 
   const toggleDropdown = () => {
@@ -37,7 +51,7 @@ const EventNav = () => {
     <div className="relative">
       <Tabs className="w-full" value={activeTab}>
         <TabsHeader
-          className="rounded-none bg-transparent p-0 grid grid-cols-2"
+          className={`rounded-none bg-transparent p-0 ${isStudentPage ? 'grid grid-cols-3' : 'grid grid-cols-2'}`}
           indicatorProps={{
             className:
               "mt-8 absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 rounded-full transition-opacity bg-transparent border-b-[8px] border-[#AEC90A] shadow-none",
