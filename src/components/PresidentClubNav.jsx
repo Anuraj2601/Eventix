@@ -15,6 +15,8 @@ import ElectionDetails from "./election/ElectionDetails";
 import ClubEvent from "./ClubEvent";
 import Board from "./Board";
 import ClubReport from "./ClubReport";
+import ClubPosts from "./ClubPosts";
+
 
 
 const PresidentClubNav = ({ club }) => {
@@ -25,6 +27,11 @@ const PresidentClubNav = ({ club }) => {
       label: "Current Board",
       value: "Current Board",
       desc: <Board />,
+    },
+    {
+      label: "Posts",
+      value: "Posts",
+      desc: <ClubPosts />,
     },
     {
       label: "Events",
@@ -54,6 +61,11 @@ const PresidentClubNav = ({ club }) => {
     {
       label: "Event Reports",
       value: "Event Reports",
+      desc: <ClubReport />,
+    },
+    {
+      label: "Recruitment",
+      value: "Recruitment",
       desc: <ClubReport />,
     },
     

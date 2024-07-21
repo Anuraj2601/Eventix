@@ -28,7 +28,7 @@ const Posts = ({ post }) => {
                         {post.caption}
                         {post.link && <a href={post.link} className='text-[#AEC90A] underline' target="_blank" rel="noopener noreferrer">{post.link}</a>}
                     </p>
-                    {post.image && <img src={post.image} alt="" className='border-1 border-[#AEC90A] w-full h-80 object-cover mt-3' />}
+                    {post.image && <img src={post.image} alt="" className='border-1 border-[#AEC90A] w-full h-88 object-cover mt-3' />}
                 </div>
             </div>
         </div>
@@ -75,9 +75,9 @@ const App = () => {
             position: 'President',
             userName: 'Veron',
             userImage: "https://randomuser.me/api/portraits/men/2.jpg",
-            caption: 'Are you ready to take the next step in your reidExtreme 3.0 journey? The reidExtreme 3.0 is the perfect opportunity for students to explore potential career paths, network with industry professionals, and discover exciting job and internship opportunities',
-            image: "src/assets/speaker.jpg",
-            link: 'Join the OC',
+            caption: 'While possessing knowledge is all well and good, if you have not the wisdom to wield it to your advantage, it becomes about as useful as soot. All but removing probability, one should not only be able to calculate every way forward, but should also be well-versed enough to choose the best path.Piqued your interest? Read further here - https://www.britannica.com/science/game-theory Register your team for ReidXtreme by visiting ',
+            image: "src/assets/reid3.jpg",
+            link: 'http://reidxtreme.ucscieee.com/',
         }, 
         {
             position: 'OC',
