@@ -13,11 +13,9 @@ const ClubPresident = () => {
 
   const handleOpen = () => setOpen((cur) => !cur);
 
-  
-
   const getClubDetails = (club) => {
-    const basePath = location.pathname.includes("/president") ? "/club" : "/club";
-    navigate(`${basePath}/${club.sname}`, { state: { club } });
+    // Assuming the ClubDetails page is at the path `/club/:name`
+    navigate(`/president/club/${club.name}`, { state: { club } });
   };
 
   const clubs = [
@@ -69,19 +67,13 @@ const ClubPresident = () => {
         sname: "wicys",
         image: "../src/assets/clubs/wicys.png",
     },
-
     {
         id: "9",
         name: "Rekha",
         sname: "rekha",
         image: "../src/assets/clubs/rekha.png",
     },
-];
-
-
-
-  
-
+  ];
 
   return (
     <>
