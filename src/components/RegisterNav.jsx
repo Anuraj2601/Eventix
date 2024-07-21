@@ -18,12 +18,7 @@ const EventNav = () => {
   const [activeTab, setActiveTab] = React.useState("Registrations");
 
   const data = [
-    {
-      label: "Proposal",
-      value: "Proposal",                     
-      desc:  <Proposal  /> ,
-
-    },
+   
     {
       label: "Registrations",
       value: "Registrations",
@@ -57,7 +52,7 @@ const EventNav = () => {
             onClick={() => setActiveTab(value)}
             className={`flex-1 text-center text-white hover:text-[#AEC90A] ${
               activeTab === value
-                ? "text-[#AEC90A] border-2 border-[#AEC90A] rounded-lg"
+                ? "text-[#AEC90A] border-2 border-[#AEC90A] rounded-2xl"
                 : ""
             }`}
           >
