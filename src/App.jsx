@@ -66,7 +66,6 @@ import EventNav from './components/EventNav';
 import AddEvent from './components/AddEvent';
 
 import { ClubMemberNav } from './components/ClubMemberNav';
-import EventRegistration from './pages/student/EventRegistration';
 import StudentEventCalendar from './pages/student/StudentEventCalendar';
 
 
