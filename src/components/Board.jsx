@@ -8,11 +8,11 @@ const Board = () => {
         {/* President */}
         <div className="flex flex-col items-center p-5 bg-black text-center rounded-2xl">
           <img
-            className="h-64 w-64 md:h-48 md:w-48 rounded-full object-cover object-center"
+            className="h-64 w-64 md:h-48 md:w-48  object-cover object-center"
             src="https://randomuser.me/api/portraits/men/78.jpg"
             alt="President"
           />
-          <div className="mt-2">
+          <div className="mt-2 ">
             <div className="text-lg font-medium text-[#AEC90A]">President</div>
             <div className="text-white">Kokul</div>
             <p className="text-gray-300 mt-2">

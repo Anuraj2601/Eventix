@@ -140,9 +140,16 @@ const StudentMiniNavEvent = ({ club }) => {
               <div className="flex flex-col mt-4">
                 <h3 className="text-xl font-semibold text-white">{event.name}</h3>
                 <span className="text-gray-400">in {event.venue} on {event.date}</span>
-                <div className="flex justify-end items-center -mt-10">
+                <span className="text-gray-400"><button
+                                                className=" text-[#AEC90A] opacity-90   rounded-full"
+                                            >
+                                                Register Now
+                                            </button></span>
+                <div className="flex justify-end items-center -mt-10 ">
+                
                   <LikeButton />
                 </div>
+                
               </div>
             </div>
           ))}
