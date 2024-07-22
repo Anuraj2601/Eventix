@@ -9,9 +9,21 @@ import {
 import { FaPlus } from "react-icons/fa";
 import EditDeleteButton from '../EditDeleteButton';
 import Customswitch from "../Customswitch";
+import { useNavigate } from 'react-router-dom';
 
 const ElectionDetails = ({ clubName, electionId }) => {
   const [value, setValue] = useState(false);
+  const navigate = useNavigate();
+
+  const events = [
+    {
+      joinLink1: "/president-new-election-form",     
+    },
+  ];
+
+  const navigateToForm = (link) => {
+    navigate(link);
+  };
 
   const elections = [
     {
@@ -38,12 +50,15 @@ const ElectionDetails = ({ clubName, electionId }) => {
 
   return (
     <>
+    {events.map((event, index) => (
       <Button
+      onClick={() => navigateToForm(event.joinLink1)}
         className="flex items-center gap-2 bg-[#AEC90A]  ml-auto mt-0  rounded-full text-black font-bold ml-[950px]"
       >
        
         New Election
       </Button>
+      ))}
       <Card className="w-full bg-neutral-900 mt-4">
         <CardBody>
           <div className="grid grid-cols-6 gap-2 p-1 mb-2 text-white">

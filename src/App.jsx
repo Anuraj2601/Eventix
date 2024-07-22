@@ -12,6 +12,7 @@ import ClubDetails from './pages/president/ClubDetails';
 import Election from './pages/president/Election';
 import Dashboard from './pages/president/Dashboard';
 import Calendar from './pages/president/Calendar';
+import NewElectionForm from './pages/president/NewElectionForm';
 
 import Exploreclubsecretary from './pages/secretary/Exploreclub';
 import Exploreeventsecretary from './pages/secretary/Exploreevent';
@@ -109,6 +110,7 @@ const App = () => {
         <Route path='/student/club/event' element={<Exploreeventstudent />}></Route>
         <Route path='/student/calendar' element={<StudentEventCalendar />}></Route>
         <Route path='/student' element={<StudentDashboard/>}></Route>
+        
 
 
 
@@ -125,6 +127,7 @@ const App = () => {
         <Route path='/president/calendar' element={<Calendar />}></Route>
         <Route path='/president/club/election' element={<Election/>}></Route>
         <Route path='/president' element={<Dashboard  />} ></Route>
+        <Route path="/president-new-election-form" element={<NewElectionForm />} />
 
         
 
