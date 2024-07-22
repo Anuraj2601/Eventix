@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
     Card,
     CardBody,
@@ -22,31 +22,6 @@ const getRandomEvents = () => {
 };
 
 const StudentMiniNavMember = () => {
-
-    const chartConfig = {
-        type: "pie",
-        width: 80,
-        height: 80,
-        series: [20, 80],
-        options: {
-          chart: {
-            toolbar: {
-              show: false,
-            },
-          },
-          title: {
-            show: "",
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          colors: ["#1E1E1E", "#AEC90A"],
-          legend: {
-            show: false,
-          },
-        },
-    };
-
     const members = [
         {
           id: "1",
@@ -152,54 +127,43 @@ const StudentMiniNavMember = () => {
 
   return (
     <>
-    <Card className="w-full bg-neutral-900">
-        <CardBody>
-            {members.map((member, index) => (
-            <div
-                key={member.id}
-                className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-xl"
-            >
-                <div className="flex items-center gap-4">
-                <Avatar
-                    size="xl"
-                    src={member.image}
-                    alt={member.name}
-                    className="border-2 border-white rounded-full w-24 h-24"
-                />
-                <div>
-                    <Typography color="white" variant="h5" className="mb-1">
-                    {member.name}
-                    </Typography>
-                    <Typography color="white" variant="subtitle1" className="mb-1">
-                    From Team: {member.team}
-                    </Typography>
-                </div>
-                </div>
-                <div className="flex-1 mx-4">
-                    <Typography color="white" variant="subtitle1" className="mb-1">
-                    </Typography>
-                    <Typography color="white">
-                        {member.description}
-                    </Typography>
-                </div>
-                <div className="flex flex-col gap-2 mr-4">
-                <Typography color="white" variant="subtitle1" className="mb-1">
-                    Joined Event OCs:
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-10">
+        {members.map((member, index) => (
+        <Card key={member.id} className="w-full bg-black bg-opacity-20 custom-3d-shadow relative custom-card">
+        <CardBody className="flex flex-col items-center">
+              <Avatar
+                size="xl"
+                src={member.image}
+                alt={member.name}
+                className="rounded-full w-30 h-30 mb-4 custom-card"
+              />
+              <Typography color="white" variant="h5" className="mb-2">
+                {member.name}
+              </Typography>
+              <Typography color="white" variant="subtitle1" className="mb-2">
+                From Team: {member.team}
+              </Typography>
+              <Typography color="white" className="mb-4 text-center">
+                {member.description}
+              </Typography>
+              <div className="flex flex-col items-center">
+                <Typography color="white" variant="subtitle1" className="mb-2">
+                  Joined Event OCs:
                 </Typography>
-                <ul className="list-disc list-inside">
-                    {member.events.map((event, idx) => (
+                <ul className="list-disc list-inside text-center">
+                  {member.events.map((event, idx) => (
                     <li key={idx} className="text-[#AEC90A]">
-                        {event}
+                      {event}
                     </li>
-                    ))}
+                  ))}
                 </ul>
-                </div>
-            </div>
-            ))}
-        </CardBody>
-    </Card>
+              </div>
+            </CardBody>
+          </Card>
+        ))}
+      </div>
     </>
-  )
+  );
 }
 
 export default StudentMiniNavMember;

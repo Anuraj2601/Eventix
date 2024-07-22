@@ -131,12 +131,12 @@ const Recruitment = () => {
             {sampleData.map((entry) => {
               const isInterviewSlotAvailable = currentTime >= entry.interviewSlot;
               return (
-                <div key={entry.id} className="bg-black p-6 rounded-2xl shadow-lg flex items-center space-x-4">
+                <div key={entry.id} className="bg-black bg-opacity-70 p-6 rounded-2xl shadow-lg flex items-center space-x-4 relative  custom-3d-shadow ">
                   <div className="flex-shrink-0">
                     <img
                       src={entry.image}
                       alt="Student"
-                      className="w-24 h-24 rounded-full object-cover border-2 border-black"
+                      className="w-24 h-24 rounded-full object-cover border-2 border-black relative  custom-3d-shadow custom-card"
                     />
                   </div>
                   <div className="flex-1">

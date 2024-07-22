@@ -14,3 +14,37 @@
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+/* src/index.css */
+@layer components {
+  .custom-3d-shadow {
+    position: relative;
+    border-radius: inherit; /* Maintain the card's border-radius */
+  }
+  .custom-3d-shadow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit; /* Maintain the card's border-radius */
+    /* Increase the thickness of the shadow */
+    box-shadow: 
+      0px 4px 4px rgba(91, 88, 88, 0.3), /* Increased blur and opacity */
+      6px 0px 4px rgba(90, 91, 88, 0.3);  /* Increased blur and opacity */
+    z-index: -1; /* Place behind the card */
+    transform: translate(4px, 4px); /* Adjust the shadow shift for better effect */
+  }
+}
+
+
+/* Add this to your global CSS file or a module-specific CSS file */
+
+.custom-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.custom-card:hover {
+  transform: scale(1.05); /* Scale the card slightly larger on hover */
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3); /* Optional: Increase the shadow on hover */
+}

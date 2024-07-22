@@ -113,15 +113,15 @@ const StudentMiniNavEvent = ({ club }) => {
       {/* Upcoming Events */}
       <div className="w-full max-w-screen-lg">
         <h2 className="text-2xl font-bold text-white mb-4">Upcoming</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
           {events.map((event, index) => (
             <div
               key={index}
-              className="relative rounded-lg p-4"
+              className="relative rounded-lg p-4  custom-card "
               onMouseEnter={() => event.status === "Rejected" && setHoveredEvent(event)}
               onMouseLeave={() => event.status === "Rejected" && setHoveredEvent(null)}
             >
-              <div className="relative">
+              <div className="relative  custom-3d-shadow custom-card">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
                 <div className="absolute top-0 left-0 m-2 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
                   <div className="relative group">
@@ -130,7 +130,7 @@ const StudentMiniNavEvent = ({ club }) => {
                 </div>
                 <div className="w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center" style={{ backgroundColor: '#AEC90A', color: '#000' }}>
                   <IconButton
-                    className="font-extrabold text-lg text-black"
+                    className="font-extrabold text-lg text-black custom-card"
                     onClick={() => handleExploreEvent(event)}
                   >
                     <FaArrowRight />
@@ -141,11 +141,11 @@ const StudentMiniNavEvent = ({ club }) => {
                 <h3 className="text-xl font-semibold text-white">{event.name}</h3>
                 <span className="text-gray-400">in {event.venue} on {event.date}</span>
                 <span className="text-gray-400"><button
-                                                className=" text-[#AEC90A] opacity-90   rounded-full"
+                                                className=" text-[#AEC90A] opacity-90  custom-card rounded-full"
                                             >
                                                 Register Now
                                             </button></span>
-                <div className="flex justify-end items-center -mt-10 ">
+                <div className="flex justify-end items-center -mt-10 custom-card">
                 
                   <LikeButton />
                 </div>
@@ -161,15 +161,15 @@ const StudentMiniNavEvent = ({ club }) => {
         <h2 className="text-2xl font-bold text-white mb-4">Past Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {pastEvents.map((event, index) => (
-            <div key={index} className="relative rounded-lg p-4">
-              <div className="relative">
+            <div key={index} className="relative rounded-lg p-4  custom-card ">
+              <div className="relative relative  custom-3d-shadow custom-card">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
                 <div className="absolute top-0 left-0 m-2 rounded-full flex items-center justify-center">
                   {getStatusIcon(event.status)}
                 </div>
                 <div className="w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center" style={{ backgroundColor: '#AEC90A', color: '#000' }}>
                   <IconButton
-                    className="font-extrabold text-lg text-black"
+                    className="font-extrabold text-lg text-black  custom-card"
                     onClick={() => handleExploreEvent(event)}
                   >
                     <FaArrowRight />
@@ -182,7 +182,7 @@ const StudentMiniNavEvent = ({ club }) => {
                 <div className="mt-2 flex justify-between items-center">
                   <LikeButton className="mb-2" />
                   <Button
-                    className="bg-[#AEC90A] text-black font-bold rounded-full px-4 py-2"
+                    className="bg-[#AEC90A] text-black font-bold rounded-full px-4 py-2  custom-card"
                     onClick={() => handleFeedback(event)}
                   >
                     Give Feedback

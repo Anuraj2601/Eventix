@@ -65,7 +65,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
         New Election
       </Button>
       ))}
-      <Card className="w-full bg-neutral-900 mt-4">
+      <Card className="w-full bg-neutral-900 mt-4 ">
         <CardBody>
           <div className="grid grid-cols-6 gap-2 p-1 mb-2 text-white">
             <div className="col-span-2 flex justify-center items-center">
@@ -82,7 +82,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
             {elections.map(({ id, desc, applicationDate, votingDate }, index) => (
               <div
                 key={id}
-                className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl mb-2 ${index === 1 ? 'opacity-50' : ''}`}
+                className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl custom-3d-shadow relative mb-2 ${index === 1 ? 'opacity-50' : ''}`}
               >
                 <div className="col-span-2 flex justify-center items-center">
                   <Typography color={index === 1 ? "gray" : "white"} variant="h6">
@@ -118,7 +118,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
                     disabled={index === 1}
                   />
                   <Link to={targetPath}>
-                    <Button variant="gradient" className={`bg-[#AEC90A] rounded-full text-black p-2 inline-block ${index === 1 ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <Button variant="gradient" className={`bg-[#AEC90A] rounded-full text-black p-2 inline-block`}>
                       View Details
                     </Button>
                   </Link>

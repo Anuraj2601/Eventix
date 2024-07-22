@@ -135,7 +135,7 @@ const Votestab = () => {
                 <img
                   src={candidate.image}
                   alt={`Candidate ${candidate.id}`}
-                  className="w-56 h-56 rounded-full object-cover border-black border-4 "
+                  className="w-56 h-56 rounded-full object-cover border-black border-4 custom-3d-shadow relative"
                 />
                 <div className="text-center mt-2">
                   <div className="text-white">{candidate.name}</div>

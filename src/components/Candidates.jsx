@@ -109,7 +109,7 @@ const Candidates = ({ activeTab }) => {
       {members.map((member) => (
         <div
           key={member.id}
-          className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-2xl"
+          className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-2xl custom-3d-shadow relative"
         >
           <div className="flex items-center gap-4">
             <Avatar
