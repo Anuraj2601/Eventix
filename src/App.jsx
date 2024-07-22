@@ -12,6 +12,7 @@ import ClubDetails from './pages/president/ClubDetails';
 import Election from './pages/president/Election';
 import Dashboard from './pages/president/Dashboard';
 import Calendar from './pages/president/Calendar';
+import NewElectionForm from './pages/president/NewElectionForm';
 
 import Exploreclubsecretary from './pages/secretary/Exploreclub';
 import Exploreeventsecretary from './pages/secretary/Exploreevent';
@@ -45,12 +46,12 @@ import SecretaryExploreclub from './pages/secretary/Exploreclub';
 // member
 import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
 import ExploreMemberEvent from './pages/member/ExploreMemberEvent';
-
+import ExploreMemberclub from './pages/member/ExploreMemberClub';
 import MemberElectionForm from './pages/member/MemberElectionForm';
 import MemberElectionFormSuccess from './pages/member/MemberElectionFormSuccess';
 import MemberVotingProcess from './pages/member/MemberVotingProcess';
 import MemberOCJoinForm from './pages/member/MemberOCJoinForm';
-//member
+
 
 
 
@@ -89,12 +90,13 @@ const App = () => {
       
 
          {/* member routes */}
-        <Route path='/member' element={<Explorememberclub />}></Route>
+        <Route path='/member' element={<ExploreMemberclub />}></Route>
         <Route path='/member/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
         <Route exact path="/member/event" element={<ExploreMemberEvent />} />      
         <Route path="/member-election-form" element={<MemberElectionForm />} />
         <Route path="/member-form-success" element={<MemberElectionFormSuccess />} />
         <Route path="/member-voting" element={<MemberVotingProcess />} />
+        <Route path="/member-oc-form" element={<MemberOCJoinForm />} />
 
         
              
@@ -108,6 +110,7 @@ const App = () => {
         <Route path='/student/club/event' element={<Exploreeventstudent />}></Route>
         <Route path='/student/calendar' element={<StudentEventCalendar />}></Route>
         <Route path='/student' element={<StudentDashboard/>}></Route>
+        
 
 
 
@@ -124,6 +127,7 @@ const App = () => {
         <Route path='/president/calendar' element={<Calendar />}></Route>
         <Route path='/president/club/election' element={<Election/>}></Route>
         <Route path='/president' element={<Dashboard  />} ></Route>
+        <Route path="/president-new-election-form" element={<NewElectionForm />} />
 
         
 
