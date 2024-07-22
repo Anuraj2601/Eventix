@@ -129,13 +129,18 @@ const StudentMiniNavMember = () => {
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-10">
         {members.map((member, index) => (
-        <Card key={member.id} className="w-full bg-black bg-opacity-20 custom-3d-shadow relative custom-card">
+        <Card key={member.id} className="w-full bg-black  custom-card"  style={{ 
+          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+        }}>
         <CardBody className="flex flex-col items-center">
               <Avatar
                 size="xl"
                 src={member.image}
                 alt={member.name}
                 className="rounded-full w-30 h-30 mb-4 custom-card"
+                style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}
               />
               <Typography color="white" variant="h5" className="mb-2">
                 {member.name}

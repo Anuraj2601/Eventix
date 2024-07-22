@@ -82,9 +82,9 @@ const ElectionDetails = ({ clubName, electionId }) => {
             {elections.map(({ id, desc, applicationDate, votingDate }, index) => (
               <div
                 key={id}
-                className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl custom-3d-shadow relative mb-2 ${index === 1 ? 'opacity-50' : ''}`}
+                className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl  mb-2 ${index === 1 ? 'opacity-50' : ''}`}  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.8)'}}
               >
-                <div className="col-span-2 flex justify-center items-center">
+                <div className="col-span-2 flex justify-center items-center " >
                   <Typography color={index === 1 ? "gray" : "white"} variant="h6">
                     {desc}
                   </Typography>

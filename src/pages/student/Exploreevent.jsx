@@ -110,21 +110,26 @@ const ExploreEvent = () => {
                             <Card className="w-full bg-neutral-900 h-128 relative">
                                 <CardBody className="h-full relative ">
                                     <div className="relative">
-                                        <img src={image} alt={name} className="w-full h-80 object-cover rounded-2xl mb-4  custom-3d-shadow  custom-card" />
+                                        <img src={image} alt={name} className="w-full h-80 object-cover rounded-2xl mb-4  custom-3d-shadow  custom-card"  style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }} />
                                         <div className="absolute p-2 rounded-2xl top-1 right-1 flex items-center space-x-2 ">
                                             <span>Organized by</span>
                                             <img src={clubImage} alt={clubName} className="w-10 h-10 rounded-full custom-3d-shadow  custom-card" />
                                         </div>
 
-                                        <div className="flex items-center justify-between mb-2  custom-card">
+                                        <div className="flex items-center justify-between mb-2  ">
                                             <Typography color="white" variant="h3">
                                                 {name}
                                             </Typography>
-                                            <div className="flex items-center   custom-card">
+                                            <div className="flex items-center    " >
                                                 <FaHeart
                                                     onClick={handleLikeClick}
                                                     className={`cursor-pointer mr-2 ${liked ? 'text-red-500' : 'text-white'}`}
                                                     size={24}
+                                                    style={{ 
+                                                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                                      }} 
                                                 />
                                                 <Typography color="white" variant="subtitle1">
                                                     {likes}
@@ -139,7 +144,9 @@ const ExploreEvent = () => {
                                                 Venue - {venue}
                                             </Typography>
                                             <button
-                                                className="  custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90  px-2 py-2 rounded-full"
+                                                className="  custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90  px-2 py-2 rounded-full"  style={{ 
+                                                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                                  }}
                                             >
                                                 Register Now
                                             </button>
@@ -161,40 +168,52 @@ const ExploreEvent = () => {
                     </div>
 
                     <div className="flex justify-center items-center p-10">
-    <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]">
+    <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }} >
         <CardBody className="h-full relative">
-           
+            
             <div className="relative h-full flex flex-col justify-center">
                 <Typography color="white" variant="h3" className="mb-2 text-center p-5">
                     Sponsors
                 </Typography>
                 <div className="flex justify-between mb-4">
-                    <div className="flex flex-col items-center ">
-                        <img src={platinum} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow" />
+                <div className="flex flex-col items-center ">
+                        <img src={platinum} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }} />
                         <Typography color="white" variant="subtitle1">
                             Platinum Sponsor
                         </Typography>
                     </div>
                     <div className="flex flex-col items-center">
-                        <img src={platinum1} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" />
+                        <img src={platinum1} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }} />
                         <Typography color="white" variant="subtitle1">
                             Platinum Sponsor
                         </Typography>
                     </div>
                     <div className="flex flex-col items-center">
-                        <img src={gold} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" />
+                        <img src={gold} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }} />
                         <Typography color="white" variant="subtitle1">
                             Gold Sponsor
                         </Typography>
                     </div>
                     <div className="flex flex-col items-center">
-                        <img src={gold1} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" />
+                        <img src={gold1} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }} />
                         <Typography color="white" variant="subtitle1">
                             Gold Sponsor
                         </Typography>
                     </div>
                     <div className="flex flex-col items-center">
-                        <img src={silver} alt="Silver Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" />
+                        <img src={silver} alt="Silver Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }} />
                         <Typography color="white" variant="subtitle1">
                             Silver Sponsor
                         </Typography>

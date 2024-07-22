@@ -148,8 +148,10 @@ const Member = () => {
           {members.map((member, index) => (
             <div
               key={member.id}
-              className="relative flex items-start justify-between p-4 mb-2 bg-zinc-950 bg-opacity-80 rounded-2xl custom-3d-shadow relative"
-            >
+              className="relative flex items-start justify-between p-3 mb-5 bg-zinc-950 bg-opacity-80 rounded-2xl custom-3d-shadow relative"  style={{ 
+                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+              }}>
+            
               <div className="flex items-center gap-4">
                 <Avatar
                   size="xl"

@@ -131,7 +131,9 @@ const Recruitment = () => {
             {sampleData.map((entry) => {
               const isInterviewSlotAvailable = currentTime >= entry.interviewSlot;
               return (
-                <div key={entry.id} className="bg-black bg-opacity-70 p-6 rounded-2xl shadow-lg flex items-center space-x-4 relative  custom-3d-shadow ">
+                <div key={entry.id} className="bg-black bg-opacity-70 p-6 rounded-2xl shadow-lg flex items-center space-x-4 "style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}>
                   <div className="flex-shrink-0">
                     <img
                       src={entry.image}

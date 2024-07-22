@@ -109,14 +109,16 @@ const Candidates = ({ activeTab }) => {
       {members.map((member) => (
         <div
           key={member.id}
-          className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-2xl custom-3d-shadow relative"
+          className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-2xl " style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}
         >
           <div className="flex items-center gap-4">
             <Avatar
               size="xl"
               src={member.image}
               alt={member.name}
-              className="border-4 border-black rounded-full w-24 h-24"
+              className="border-4 border-black rounded-full w-24 h-24 custom-card"
             />
             <div>
               <Typography color="white" variant="h5" className="mb-1">
@@ -164,12 +166,12 @@ const Candidates = ({ activeTab }) => {
               <SelectRemove onEdit={() => {}} onDelete={() => {}} />
             )}
             {member.status === "Selected" && (
-              <button className="px-4 py-2 border-[#AEC90A] border-2 text-[#AEC90A] rounded">
+              <button className="px-4 py-2 border-[#AEC90A] border-2 text-[#AEC90A] rounded-full custom-card">
                 Selected
               </button>
             )}
             {member.status === "Rejected" && (
-              <button className="px-4 py-2 border-red-700 border-2 text-red-700 rounded">
+              <button className="px-4 py-2 border-red-700 border-2 text-red-700 rounded-full custom-card">
                 Rejected
               </button>
             )}
@@ -181,7 +183,7 @@ const Candidates = ({ activeTab }) => {
 
   return (
     <div className="w-full bg-neutral-900">
-      <Card className="w-full bg-neutral-900">
+      <Card className="w-full bg-neutral-900" >
         <CardBody>
           {Object.keys(displayMembers).map((position) =>
             renderMembers(displayMembers[position], position)

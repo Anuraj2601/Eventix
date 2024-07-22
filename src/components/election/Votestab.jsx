@@ -96,17 +96,22 @@ const Votestab = () => {
                 key={candidate.id}
                 className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
                 >
-                <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full">
+                <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full" style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}>
                   {index + 1}
                 </span>
                 <img
                   src={candidate.image}
                   alt={`Candidate ${candidate.id}`}
-                  className="w-56 h-56 rounded-full object-cover border-black border-4 "
+                  className="w-56 h-56 rounded-full object-cover border-black border-4 custom-card"
+                  style={{ 
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                  }}
                 />
                 <div className="text-center mt-2">
-                  <div className="text-white">{candidate.name}</div>
-                  <span className="text-[#AEC90A] font-bold">{candidate.votes} votes</span>
+                  <div className="text-white text-2xl">{candidate.name}</div>
+                  <span className="text-[#AEC90A] font-bold text-2xl">{candidate.votes} votes</span>
                 </div>
               </div>
             ))}
@@ -129,17 +134,22 @@ const Votestab = () => {
                key={candidate.id}
                className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
               >
-                <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full">
+                <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full" style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}>
                   {index + 1}
                 </span>
                 <img
                   src={candidate.image}
                   alt={`Candidate ${candidate.id}`}
-                  className="w-56 h-56 rounded-full object-cover border-black border-4 custom-3d-shadow relative"
+                  className="w-56 h-56 rounded-full object-cover border-black border-4 custom-card"
+                  style={{ 
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                  }}
                 />
                 <div className="text-center mt-2">
-                  <div className="text-white">{candidate.name}</div>
-                  <span className="text-[#AEC90A] font-bold">{candidate.votes} votes</span>
+                  <div className="text-white text-2xl">{candidate.name}</div>
+                  <span className="text-[#AEC90A] font-bold text-2xl">{candidate.votes} votes</span>
                 </div>
               </div>
             ))}
@@ -162,17 +172,22 @@ const Votestab = () => {
                 key={candidate.id}
                 className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
               >
-                <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full">
+                <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full " style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}>
                   {index + 1}
                 </span>
                 <img
                   src={candidate.image}
                   alt={`Candidate ${candidate.id}`}
-                  className="w-56 h-56 rounded-full object-cover border-black border-4 "
+                  className="w-56 h-56 rounded-full object-cover border-black border-4 custom-card"
+                  style={{ 
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                  }}
                 />
                 <div className="text-center mt-2">
-                  <div className="text-white">{candidate.name}</div>
-                  <span className="text-[#AEC90A] font-bold">{candidate.votes} votes</span>
+                  <div className="text-white text-2xl">{candidate.name}</div>
+                  <span className="text-[#AEC90A] font-bold text-2xl">{candidate.votes} votes</span>
                 </div>
               </div>
             ))}

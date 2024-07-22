@@ -161,7 +161,7 @@ const StudentMiniNavEvent = ({ club }) => {
         <h2 className="text-2xl font-bold text-white mb-4">Past Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {pastEvents.map((event, index) => (
-            <div key={index} className="relative rounded-lg p-4  custom-card ">
+            <div key={index} className="relative rounded-lg p-4  ">
               <div className="relative relative  custom-3d-shadow custom-card">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
                 <div className="absolute top-0 left-0 m-2 rounded-full flex items-center justify-center">
