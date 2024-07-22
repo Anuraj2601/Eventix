@@ -155,7 +155,7 @@ const Member = () => {
                   size="xl"
                   src={member.image}
                   alt={member.name}
-                  className="border-2 border-white rounded-full w-24 h-24"
+                  className="border-2 border-black rounded-full w-24 h-24"
                 />
                 <div>
                   <Typography color="white" variant="h5" className="mb-1">

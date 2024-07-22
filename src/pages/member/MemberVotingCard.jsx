@@ -4,7 +4,8 @@ const MemberVotingCard = ({ title, candidates, onVote }) => {
   return (
     <div className="bg-neutral-800 rounded-lg p-6 w-full">
       <p className="text-xl text-white mb-4 text-center">
-        Select <span className="text-[#AEC90A]">one</span> candidate for the {title} position
+        {/* Select <span className="text-[#AEC90A]">one</span> candidate for the {title} position */}
+        Select <span className="text-[#AEC90A]">one</span> candidate for the <span className="text-[#AEC90A]">{title}</span> position
       </p>
       <div className="flex justify-center space-x-4">
         {candidates.map((candidate, index) => (
