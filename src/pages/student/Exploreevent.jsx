@@ -138,7 +138,11 @@ const ExploreEvent = () => {
                                             <Typography color="white" variant="subtitle1" className="text-[#AEC90A]">
                                                 Venue - {venue}
                                             </Typography>
-                                           
+                                            <button
+                                                className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-90  px-2 py-2 rounded-full"
+                                            >
+                                                Register Now
+                                            </button>
                                         </div>
                                         <Typography color="white" variant="body1" className="mb-4">
                                             An event designed to inspire and empower students. Join us for insightful talks, hands-on workshops, and networking opportunities.

@@ -44,7 +44,7 @@ const CandidatesNav = () => {
               value={value}
               onClick={() => setActiveTab(value)}
               className={`text-white hover:text-[#AEC90A] mx-4 ${
-                activeTab === value ? "bg-[#AEC90A] text-black rounded-lg" : ""
+                activeTab === value ? "bg-black text-[#AEC90A] rounded-lg" : ""
               }`}
             >
               {label}
