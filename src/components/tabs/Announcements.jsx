@@ -39,8 +39,11 @@ import { IconButton } from "@material-tailwind/react";
 };*/
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function Announcements() {
+  const navigate = useNavigate();
+
   const events = [
     {
       name: "The Board elections of term 24/25 will be commenced from period 05.06.2024 - 09.06.2024, all the club members are invited to participate in the voting.",
@@ -48,9 +51,13 @@ export function Announcements() {
     },
     {
       name: "The Board elections of term 24/25 will be commenced from period 05.06.2024 - 09.06.2024, all the club members are invited to apply as a candidate.",
-      joinLink2: "https://example.com/join-event2",
+      joinLink: "/member-election-form",
     },
   ];
+
+  const navigateToForm = (link) => {
+    navigate(link);
+  };
 
   return (
     <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
@@ -62,16 +69,16 @@ export function Announcements() {
             
               <div className="flex items-center space-x-4">
                              
-               {event.joinLink2 && (
-                  <a 
-                    href={event.joinLink2} 
+               {event.joinLink && (
+                  <button
+                  onClick={() => navigateToForm(event.joinLink)}
                     className="text-white text-sm border px-4 py-1 rounded-full" 
                    
                     style={{ backgroundColor: '#5C690A', borderColor: '#5C690A', marginLeft: '850px'}}
 
                   >
                     Apply
-                  </a>
+                  </button>
                   
                 )}
               </div>
