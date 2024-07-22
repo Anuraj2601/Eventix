@@ -1,9 +1,8 @@
-import React from 'react';
-import Sidebar from '../../components/Sidebar';
-import Navbar from '../../components/Navbar';
-import Event from '../../components/Event';
+import React from 'react'
+import Sidebar from '../../components/Sidebar'
+import Navbar from '../../components/Navbar'
+import Event from '../../components/Event'
 
-// Import images
 import dp from '../../assets/dp.png';
 import dp1 from '../../assets/dp1.png';
 import madhackImage from '../../assets/events/madhack.jpg';
@@ -92,18 +91,26 @@ const Dashboard = () => {
     }
   ];
 
+
   return (
     <div className="fixed inset-0 flex">
         <Sidebar className="flex-shrink-0"/>
         <div className="flex flex-col flex-1">
             <Navbar className="sticky top-0 z-10 p-4"/>
             <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-auto">
-                {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
-                {events.length > 0 && events.map(event => <Event event={event} key={event.id}/>)}
+                
+                  {events.length === 0 && <div className='text-[#AEC90A]'> No events yet</div>}
+                  {events.length > 0 && events.map( event => <Event event= {event} key={event.id}/>)}
+                
+                
+
+                
             </div>
+
         </div>
+
     </div>
-  );
+  )
 }
 
-export default Dashboard;
+export default Dashboard

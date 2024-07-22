@@ -6,70 +6,77 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { Dialog } from "@material-tailwind/react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const Club = () => {
+// Import images with correct paths
+import rotaractImage from "../../assets/clubs/rotaract.png";
+import acmImage from "../../assets/clubs/acm.png";
+import pahasaraImage from "../../assets/clubs/pahasara1.png";
+import isacaImage from "../../assets/clubs/isaca1.png";
+import wieImage from "../../assets/clubs/wie.png";
+import ieeeImage from "../../assets/clubs/ieee.png";
+import msImage from "../../assets/clubs/ms.png";
+import wicysImage from "../../assets/clubs/wicys.png";
+import rekhaImage from "../../assets/clubs/rekha.png";
+
+const ClubSecretary = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen((cur) => !cur);
 
-const clubs = [
+  const getClubDetails = (club) => {
+    // Assuming the ClubDetails page is at the path `/club/:name`
+    navigate(`/secretary/club/${club.name}`, { state: { club } });
+  };
+
+  const clubs = [
     {
         id: "1",
         name: "Rotaract Club of UCSC",
         sname: "rotract",
-        image: "../src/assets/clubs/rotaract.png",
+        image: rotaractImage,
     },
     {
         id: "2",
         name: "ACM Student Chapter",
         sname: "acm",
-        image: "../src/assets/clubs/acm.png",
+        image: acmImage,
     },
     {
         id: "3",
         name: "Pahasara Club (Innovation and Creativity)",
         sname: "pahasara",
-        image: "../src/assets/clubs/pahasara1.png",
+        image: pahasaraImage,
     },
     {
         id: "4",
         name: "ISACA Student Group",
         sname: "isaca",
-        image: "../src/assets/clubs/isaca1.png",
+        image: isacaImage,
     },
     {
         id: "5",
         name: "(IEEE WIE) IEEE Women in Engineering",
         sname: "wie",
-        image: "../src/assets/clubs/wie.png",
+        image: wieImage,
     },
     {
         id: "6",
         name: "IEEE Student Chapter",
         sname: "ieee",
-        image: "../src/assets/clubs/ieee.png",
+        image: ieeeImage,
     },
    
-];
-
-
-const getClubDetails = (club) => {
-  const basePath = location.pathname.startsWith("/student") ? "/student/club" : "/student/club";
-  navigate(`${basePath}/${club.sname}`, { state: { club } });
-};
-
- 
-  
+  ];
 
   return (
     <>
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div>
-            {clubs.map((club, index) => (
+            {clubs.map((club) => (
               <div
-                key={index}
+                key={club.id}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
               >
                 <div className="flex items-center gap-x-3">
@@ -102,7 +109,6 @@ const getClubDetails = (club) => {
           </div>
         </CardBody>
       </Card>
-
       <Dialog
         size="xs"
         open={open}
@@ -138,4 +144,4 @@ const getClubDetails = (club) => {
   );
 };
 
-export default Club;
+export default ClubSecretary;

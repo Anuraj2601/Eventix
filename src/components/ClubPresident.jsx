@@ -4,72 +4,89 @@ import { Button } from "@material-tailwind/react";
 import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
 import { Dialog } from "@material-tailwind/react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Club = () => {
+import rotaractImage from '../assets/clubs/rotaract.png';
+import acmImage from '../assets/clubs/acm.png';
+import pahasaraImage from '../assets/clubs/pahasara1.png';
+import isacaImage from '../assets/clubs/isaca1.png';
+import wieImage from '../assets/clubs/wie.png';
+import ieeeImage from '../assets/clubs/ieee.png';
+import msImage from '../assets/clubs/ms.png';
+import wicysImage from '../assets/clubs/wicys.png';
+import rekhaImage from '../assets/clubs/rekha.png';
+
+
+const ClubPresident = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen((cur) => !cur);
 
-const clubs = [
+  const getClubDetails = (club) => {
+    // Assuming the ClubDetails page is at the path `/president/club/:name`
+    navigate(`/president/club/${club.name}`, { state: { club } });
+  };
+
+  const clubs = [
     {
         id: "1",
         name: "Rotaract Club of UCSC",
+        reg_status: "yes",
+        description: "The Rotaract Club of UCSC, part of Rotary International District 3220, empowers youth to enact positive change locally and globally.",
+        image: rotaractImage,
         sname: "rotract",
-        image: "../src/assets/clubs/rotaract.png",
     },
     {
         id: "2",
         name: "ACM Student Chapter",
+        reg_status: "yes",
+        description: "The ACM Student Chapter aims to advance computing as a science and profession. Activities include coding competitions, guest lectures, and career development workshops.",
+        image: acmImage,
         sname: "acm",
-        image: "../src/assets/clubs/acm.png",
     },
     {
         id: "3",
         name: "Pahasara Club (Innovation and Creativity)",
+        reg_status: "yes",
+        description: "The Pahasara Club offers a platform for photography enthusiasts to enhance their skills through workshops, photo walks, and exhibitions.",
+        image: pahasaraImage,
         sname: "pahasara",
-        image: "../src/assets/clubs/pahasara1.png",
     },
     {
         id: "4",
         name: "ISACA Student Group",
+        reg_status: "yes",
+        description: "The Debate Society aims to improve public speaking and critical thinking skills through regular debates, public speaking workshops, and competitions.",
+        image: isacaImage,
         sname: "isaca",
-        image: "../src/assets/clubs/isaca1.png",
     },
     {
         id: "5",
         name: "(IEEE WIE) IEEE Women in Engineering",
+        reg_status: "yes",
+        description: "The IEEE Women in Engineering (WIE) Student Branch at the University of Colombo School of Computing strives to enhance women’s participation and empowerment in electrical and electronic engineering.",
+        image: wieImage,
         sname: "wie",
-        image: "../src/assets/clubs/wie.png",
     },
     {
         id: "6",
         name: "IEEE Student Chapter",
+        reg_status: "yes",
+        description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
+        image: ieeeImage,
         sname: "ieee",
-        image: "../src/assets/clubs/ieee.png",
     },
-   
+    
 ];
-
-
-const getClubDetails = (club) => {
-  const basePath = location.pathname.startsWith("/student") ? "/student/club" : "/student/club";
-  navigate(`${basePath}/${club.sname}`, { state: { club } });
-};
-
- 
-  
-
   return (
     <>
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div>
-            {clubs.map((club, index) => (
+            {clubs.map((club) => (
               <div
-                key={index}
+                key={club.id}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
               >
                 <div className="flex items-center gap-x-3">
@@ -91,8 +108,9 @@ const getClubDetails = (club) => {
                     Leave
                   </Button>
                   <Button
-                    className="bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
+                    className={`pt-1 pb-1 pl-5 pr-5 rounded-2xl font-medium text-sm ${club.reg_status === 'yes' ? 'bg-[#AEC90A] text-black' : 'bg-[#AEC90A80] text-[#1E1E1E] cursor-not-allowed'}`}
                     onClick={() => getClubDetails(club)}
+                    disabled={club.reg_status !== 'yes'}
                   >
                     Explore
                   </Button>
@@ -102,14 +120,13 @@ const getClubDetails = (club) => {
           </div>
         </CardBody>
       </Card>
-
       <Dialog
         size="xs"
         open={open}
         handler={handleOpen}
         className="bg-transparent w-screen h-screen bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-200 flex items-center"
       >
-        <Card className="mx-auto w-full max-w-[24rem] p-3">
+        <Card className="mx-auto w-full max-w-[24rem] p-3 relative">
           <IoIosCloseCircle
             className="absolute text-xl top-1 right-1 cursor-pointer"
             onClick={handleOpen}
@@ -120,7 +137,7 @@ const getClubDetails = (club) => {
               variant="paragraph"
               color="gray"
             >
-              Why are you Leaving, Let us know your problem?
+              Why are you leaving? Let us know your reason:
             </Typography>
             <div className="relative">
               <Textarea
@@ -138,4 +155,4 @@ const getClubDetails = (club) => {
   );
 };
 
-export default Club;
+export default ClubPresident;

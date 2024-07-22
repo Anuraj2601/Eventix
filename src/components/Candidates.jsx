@@ -103,20 +103,20 @@ const Candidates = ({ activeTab }) => {
 
   const renderMembers = (members, position) => (
     <>
-      <Typography color="white" variant="h4" className="mb-4 mt-8">
+      <Typography color="white" variant="h4" className="mb-4 ">
         {position} Position
       </Typography>
       {members.map((member) => (
         <div
           key={member.id}
-          className="relative flex items-start justify-between p-4 mb-4 bg-[#1E1E1E] rounded-xl"
+          className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-2xl"
         >
           <div className="flex items-center gap-4">
             <Avatar
               size="xl"
               src={member.image}
               alt={member.name}
-              className="border-2 border-white rounded-full w-24 h-24"
+              className="border-4 border-black rounded-full w-24 h-24"
             />
             <div>
               <Typography color="white" variant="h5" className="mb-1">

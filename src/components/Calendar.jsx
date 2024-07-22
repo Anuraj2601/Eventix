@@ -20,7 +20,7 @@ import { Fragment, useState } from "react";
 const clubColors = {
   "IEEE": "#008EDE",
   "ISACA": "#FFFFFF",
-  "Gavel": "#8c181b", 
+  "Rekha": "#8c181b", 
   "Pahasara": "#FFE500",  
   "Rotaract" : "#4a093c",
 };
@@ -79,7 +79,7 @@ const meetings = [
   {
     id: 5,
     eventName: "Welocome",
-    club: "Gavel",
+    club: "Rekha ",
     startDatetime: "2024-07-10T14:00",
     endDatetime: "2024-07-12T14:30",
     eventLocation: "UCSC Main Hall",
@@ -224,40 +224,57 @@ const Calendar = () => {
           </div>
           <section className="mt-12 md:mt-0 md:pl-14 bg-black">
             <h2 className="font-semibold text-[#AEC90A] mt-4 text-center">
-              Schedule for{" "}
-              <time dateTime={format(selectedDay, "yyyy-MM-dd")}>
-                {format(selectedDay, "MMM dd, yyy")}
-              </time>
+            {isToday(selectedDay) ? (
+                <>Schedule for Today</>
+              ) : (
+                <>Schedule for{" "}
+                  <time dateTime={format(selectedDay, "yyyy-MM-dd")}>
+                    {format(selectedDay, "MMM dd, yyyy")}
+                  </time>
+                </>
+              )}
             </h2>
-            <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
-              {selectedDayMeetings.map((meeting) => {
-                const startDateTime = parseISO(meeting.startDatetime);
-                const endDateTime = parseISO(meeting.endDatetime);
-                const borderColor = clubColors[meeting.club];
-
-                return (
+            {selectedDayMeetings.length > 0 ? (
+              <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
+                {selectedDayMeetings.map((meeting) => (
                   <li
-                    key={meeting.id}
-                    className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-[#171717]"
-                    style={{ borderColor: borderColor, borderWidth: "2px" }}
+                  key={meeting.id}
+                  className="flex items-center justify-between px-4 py-2 border rounded-lg"
+                  style={{ borderColor: clubColors[meeting.club] }}
+                >
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-white">
+                      {meeting.eventName}
+                    </h3>
+                    <p className="text-white">
+                      <time dateTime={meeting.startDatetime}>
+                        {format(parseISO(meeting.startDatetime), "hh:mm a")}
+                      </time>{" "}
+                      -{" "}
+                      <time dateTime={meeting.endDatetime}>
+                        {format(parseISO(meeting.endDatetime), "hh:mm a")}
+                      </time>
+                    </p>
+                    <p className="text-white">
+                      {meeting.eventLocation}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="ml-4 py-2 px-4 text-white rounded-full"
+                    style={{ backgroundColor: clubColors[meeting.club], borderColor: clubColors[meeting.club] }}
                   >
-                    <div className="flex-auto">
-                      <p className="text-white">{`${meeting.eventName} | ${meeting.club}`}</p>
-                      <p className="mt-0.5 flex items-center space-x-2">
-                        <time dateTime={meeting.startDatetime}>
-                          {format(startDateTime, "h:mm a")}
-                        </time>
-                        <span>-</span>
-                        <time dateTime={meeting.endDatetime}>
-                          {format(endDateTime, "h:mm a")}
-                        </time>
-                        <span className="ml-4">{meeting.eventLocation}</span>
-                      </p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
+                    Remind Me
+                  </button>
+                </li>
+                
+                ))}
+              </ol>
+            ) : (
+              <div className="mt-4 space-y-1 text-sm leading-6 text-center text-gray-500">
+                <p className="text-white">No events today, stay tuned...</p>
+              </div>
+            )}
           </section>
         </div>
       </div>
@@ -265,31 +282,8 @@ const Calendar = () => {
   );
 };
 
-function Meeting({ meeting }) {
-  let startDateTime = parseISO(meeting.startDatetime);
-  let endDateTime = parseISO(meeting.endDatetime);
-
-  return (
-    <li className="flex items-center px-4 py-2 space-x-4 group rounded-xl border-2 border-[#0080C8] focus-within:bg-gray-100 hover:bg-[#171717]">
-      <div className="flex-auto">
-        <p className="text-white">{`${meeting.eventName} | ${meeting.club}`}</p>
-        <p className="mt-0.5 flex items-center space-x-2">
-          <time dateTime={meeting.startDatetime}>
-            {format(startDateTime, "h:mm a")}
-          </time>
-          <span>-</span>
-          <time dateTime={meeting.endDatetime}>
-            {format(endDateTime, "h:mm a")}
-          </time>
-          <span className="ml-4">{meeting.eventLocation}</span>
-        </p>
-      </div>
-      
-    </li>
-  );
-}
-
 export default Calendar;
+
 
 let colStartClasses = [
   "",

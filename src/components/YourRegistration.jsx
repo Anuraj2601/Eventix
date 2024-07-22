@@ -50,8 +50,11 @@ const Posts = ({ post }) => {
 };
 
 const NewsFeed = ({ posts }) => {
+    const [isDropdownVisible, setDropdownVisible] = useState(false);
 
-    
+    const toggleDropdown = () => {
+        setDropdownVisible(!isDropdownVisible);
+    };
 
     return (
         <div className="bg-neutral-900 text-white min-h-screen relative">
@@ -59,7 +62,7 @@ const NewsFeed = ({ posts }) => {
                 {!window.location.pathname.startsWith('/student') && (
                     <div className='flex justify-end mb-2'>
                         <button
-                           
+                            onClick={toggleDropdown}
                             className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-3 right-8 z-10"
                         >
                             <MdAdd size={24} />
@@ -74,7 +77,7 @@ const NewsFeed = ({ posts }) => {
     );
 };
 
-const App = () => {
+const YourRegistration = () => {
     // Use imported image variables in your posts
     const samplePosts = [
         {
@@ -116,4 +119,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default YourRegistration;

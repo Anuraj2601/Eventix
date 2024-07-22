@@ -2,26 +2,32 @@ import React, { useState } from 'react';
 import { Button } from "@material-tailwind/react";
 import Modal from "react-modal";
 import { FaTimes } from 'react-icons/fa'; // Import the white cross icon
+import { useLocation } from 'react-router-dom'; // Import useLocation hook
 
-
-const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick }) => {
+const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick, showAddButton }) => {
     return (
         <div className="w-full p-5 rounded-md overflow-auto">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl text-white">{title}</h2>
-                <Button className="bg-[#AEC90A] text-black rounded-full" onClick={onAddNewClick}>Add member</Button>
+                {showAddButton && (
+                    <Button className="bg-[#AEC90A] text-black rounded-full" onClick={onAddNewClick}>
+                        Add member
+                    </Button>
+                )}
             </div>
             <div className="grid grid-cols-4 gap-4 overflow-auto">
                 {teamMembers.map((member, index) => (
                     <div key={index} className="flex flex-col items-center">
                         <img src={member.userImage} alt={member.userName} className='w-30 h-30 rounded-full p-2' />
                         <p className="text-white">{member.userName}</p>
-                        <Button
-                            className="text-red-500 mt-2"
-                            onClick={() => onRemove(index, title)}
-                        >
-                            Remove
-                        </Button>
+                        {showAddButton && (
+                            <Button
+                                className="text-red-500 mt-2"
+                                onClick={() => onRemove(index, title)}
+                            >
+                                Remove
+                            </Button>
+                        )}
                     </div>
                 ))}
             </div>
@@ -97,6 +103,9 @@ const App = () => {
     const [addedMembers, setAddedMembers] = useState([]);
     const [availableMembers, setAvailableMembers] = useState([]);
 
+    const location = useLocation(); // Get the current path
+    const isStudentPage = location.pathname.startsWith('/student'); // Check if the path starts with /student
+
     const handleRemove = (index, teamName) => {
         const newTeams = { ...teams };
         newTeams[teamName].splice(index, 1);
@@ -133,9 +142,11 @@ const App = () => {
                         teamMembers={teams[teamName]}
                         onRemove={handleRemove}
                         onAddNewClick={() => handleAddNewClick(teamName)}
+                        showAddButton={!isStudentPage} // Show or hide button based on path
                     />
                 ))}
             </div>
+
             <Modal
     isOpen={modalIsOpen}
     onRequestClose={() => setModalIsOpen(false)}
@@ -193,9 +204,6 @@ const App = () => {
     
     
 </Modal>
-
-
-
         </div>
     );
 };
