@@ -136,7 +136,7 @@ const Recruitment = () => {
                     <img
                       src={entry.image}
                       alt="Student"
-                      className="w-24 h-24 rounded-full object-cover border-2 border-[#AEC90A]"
+                      className="w-24 h-24 rounded-full object-cover border-2 border-black"
                     />
                   </div>
                   <div className="flex-1">
