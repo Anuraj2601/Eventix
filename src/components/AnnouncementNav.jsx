@@ -6,6 +6,7 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa"; // Import icons
 
 const AnnouncementNav = () => {
   const [activeTab, setActiveTab] = React.useState("Announcements");
@@ -14,12 +15,12 @@ const AnnouncementNav = () => {
     {
       label: "Announcements",
       value: "Announcements",
-      desc: "The Event registration link will be available soon. ",
+      desc: "The Event registration link will be available soon.",
     },
     {
       label: "Meetings",
       value: "Meeting",
-      desc: "List of Announcements goes here..",
+      desc: "There will be a meeting for all the OC members on 24th August 2024",
     },
   ];
 
@@ -45,11 +46,33 @@ const AnnouncementNav = () => {
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody className="overflow-y-auto text-white"> {/* Adjust height as needed */}
+      <TabsBody className="overflow-y-auto text-white">
         {data.map(({ value, desc }) => (
-          <TabPanel key={value} value={value} className="font-extrabold text-white"
+          <TabPanel
+            key={value}
+            value={value}
+            className="relative font-extrabold text-white"
           >
-            {desc}
+            <div className="relative group">
+              <p className="mb-4">{desc}</p>
+              <div className="absolute inset-0 flex items-center justify-between px-4 py-2 bg-black opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center">
+                  <FaEye className="text-[#AEC90A] mr-2" />
+                  <select className="bg-neutral-900 text-white border border-[#AEC90A] rounded px-2 py-1">
+                    <option value="everyone">Everyone</option>
+                    <option value="oc">OC</option>
+                  </select>
+                </div>
+                <div className="flex items-center">
+                  <button className="text-[#AEC90A] hover:text-white mr-2">
+                    <FaEdit />
+                  </button>
+                  <button className="text-red-600 hover:text-white">
+                    <FaTrash />
+                  </button>
+                </div>
+              </div>
+            </div>
           </TabPanel>
         ))}
       </TabsBody>
