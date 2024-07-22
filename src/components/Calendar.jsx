@@ -234,35 +234,47 @@ const Calendar = () => {
                 </>
               )}
             </h2>
-            <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
-              {selectedDayMeetings.map((meeting) => {
-                const startDateTime = parseISO(meeting.startDatetime);
-                const endDateTime = parseISO(meeting.endDatetime);
-                const borderColor = clubColors[meeting.club];
-
-                return (
+            {selectedDayMeetings.length > 0 ? (
+              <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
+                {selectedDayMeetings.map((meeting) => (
                   <li
-                    key={meeting.id}
-                    className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-[#171717]"
-                    style={{ borderColor: borderColor, borderWidth: "2px" }}
+                  key={meeting.id}
+                  className="flex items-center justify-between px-4 py-2 border rounded-lg"
+                  style={{ borderColor: clubColors[meeting.club] }}
+                >
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-white">
+                      {meeting.eventName}
+                    </h3>
+                    <p className="text-white">
+                      <time dateTime={meeting.startDatetime}>
+                        {format(parseISO(meeting.startDatetime), "hh:mm a")}
+                      </time>{" "}
+                      -{" "}
+                      <time dateTime={meeting.endDatetime}>
+                        {format(parseISO(meeting.endDatetime), "hh:mm a")}
+                      </time>
+                    </p>
+                    <p className="text-white">
+                      {meeting.eventLocation}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="ml-4 py-2 px-4 text-white rounded-full"
+                    style={{ backgroundColor: clubColors[meeting.club], borderColor: clubColors[meeting.club] }}
                   >
-                    <div className="flex-auto">
-                      <p className="text-white">{`${meeting.eventName} | ${meeting.club}`}</p>
-                      <p className="mt-0.5 flex items-center space-x-2">
-                        <time dateTime={meeting.startDatetime}>
-                          {format(startDateTime, "h:mm a")}
-                        </time>
-                        <span>-</span>
-                        <time dateTime={meeting.endDatetime}>
-                          {format(endDateTime, "h:mm a")}
-                        </time>
-                        <span className="ml-4">{meeting.eventLocation}</span>
-                      </p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
+                    Remind Me
+                  </button>
+                </li>
+                
+                ))}
+              </ol>
+            ) : (
+              <div className="mt-4 space-y-1 text-sm leading-6 text-center text-gray-500">
+                <p className="text-white">No events today, stay tuned...</p>
+              </div>
+            )}
           </section>
         </div>
       </div>
@@ -270,31 +282,8 @@ const Calendar = () => {
   );
 };
 
-function Meeting({ meeting }) {
-  let startDateTime = parseISO(meeting.startDatetime);
-  let endDateTime = parseISO(meeting.endDatetime);
-
-  return (
-    <li className="flex items-center px-4 py-2 space-x-4 group rounded-xl border-2 border-[#0080C8] focus-within:bg-gray-100 hover:bg-[#171717]">
-      <div className="flex-auto">
-        <p className="text-white">{`${meeting.eventName} | ${meeting.club}`}</p>
-        <p className="mt-0.5 flex items-center space-x-2">
-          <time dateTime={meeting.startDatetime}>
-            {format(startDateTime, "h:mm a")}
-          </time>
-          <span>-</span>
-          <time dateTime={meeting.endDatetime}>
-            {format(endDateTime, "h:mm a")}
-          </time>
-          <span className="ml-4">{meeting.eventLocation}</span>
-        </p>
-      </div>
-      
-    </li>
-  );
-}
-
 export default Calendar;
+
 
 let colStartClasses = [
   "",
