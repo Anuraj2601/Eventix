@@ -1,17 +1,24 @@
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link, useLocation } from 'react-router-dom';
 import {
   Card,
   CardBody,
   Typography,
   Button,
 } from "@material-tailwind/react";
-import { FaPlus } from "react-icons/fa";
 import EditDeleteButton from '../EditDeleteButton';
 import Customswitch from "../Customswitch";
 
 const ElectionDetails = ({ clubName, electionId }) => {
   const [value, setValue] = useState(false);
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  // Determine the target path based on the current path
+  let targetPath = '/president/club/election';
+  if (currentPath.startsWith('/secretary')) {
+    targetPath = '/secretary/club/election';
+  }
 
   const elections = [
     {
@@ -39,9 +46,8 @@ const ElectionDetails = ({ clubName, electionId }) => {
   return (
     <>
       <Button
-        className="flex items-center gap-2 bg-[#AEC90A]  ml-auto mt-0  rounded-full text-black font-bold ml-[950px]"
+        className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold ml-[950px]"
       >
-       
         New Election
       </Button>
       <Card className="w-full bg-neutral-900 mt-4">
@@ -56,7 +62,6 @@ const ElectionDetails = ({ clubName, electionId }) => {
             <div className="col-span-1 flex justify-center items-center">
               Votings open
             </div>
-            
           </div>
           <div>
             {elections.map(({ id, desc, applicationDate, votingDate }, index) => (
@@ -91,14 +96,13 @@ const ElectionDetails = ({ clubName, electionId }) => {
                     </div>
                   </Typography>
                 </div>
-               
                 <div className="col-span-6 flex justify-end items-center gap-2 p-5">
                   <EditDeleteButton
                     onEdit={() => handleEdit(id)}
                     onDelete={() => handleDelete(id)}
                     disabled={index === 1}
                   />
-                  <Link to={`/club/election`}>
+                  <Link to={targetPath}>
                     <Button variant="gradient" className={`bg-[#AEC90A] rounded-full text-black p-2 inline-block ${index === 1 ? 'opacity-50 pointer-events-none' : ''}`}>
                       View Details
                     </Button>
