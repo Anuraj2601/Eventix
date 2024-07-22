@@ -127,7 +127,7 @@ const App = () => {
         <Route path='/president/calendar' element={<Calendar />}></Route>
         <Route path='/president/club/election' element={<Election/>}></Route>
         <Route path='/president' element={<Dashboard  />} ></Route>
-        <Route path="/president-new-election-form" element={<NewElectionForm />} />
+        <Route path="/president/club/election/add" element={<NewElectionForm />} />
 
         
 

@@ -24,7 +24,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
 
   const events = [
     {
-      joinLink1: "/president-new-election-form",     
+      joinLink1: "/president/club/election/add",     
     },
   ];
 
