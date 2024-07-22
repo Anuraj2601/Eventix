@@ -42,14 +42,15 @@ import Signup from "./components/Signup"
 import SecretaryExploreclub from './pages/secretary/Exploreclub';
 
 
-
+// member
 import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
 import ExploreMemberEvent from './pages/member/ExploreMemberEvent';
-import MemberElectionForm from './components/MemberElectionForm';
-import MemberElectionFormSuccess from './components/MemberElectionFormSuccess';
-import MemberVotingProcess from './components/MemberVotingProcess';
-import Explorememberclub from './pages/member/ExploreMemberClub';
 
+import MemberElectionForm from './pages/member/MemberElectionForm';
+import MemberElectionFormSuccess from './pages/member/MemberElectionFormSuccess';
+import MemberVotingProcess from './pages/member/MemberVotingProcess';
+import MemberOCJoinForm from './pages/member/MemberOCJoinForm';
+//member
 
 
 
@@ -87,13 +88,14 @@ const App = () => {
 
       
 
-
+         {/* member routes */}
         <Route path='/member' element={<Explorememberclub />}></Route>
         <Route path='/member/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
         <Route exact path="/member/event" element={<ExploreMemberEvent />} />      
         <Route path="/member-election-form" element={<MemberElectionForm />} />
         <Route path="/member-form-success" element={<MemberElectionFormSuccess />} />
         <Route path="/member-voting" element={<MemberVotingProcess />} />
+
         
              
                 {/* STUDENT ROUTES */}
@@ -109,7 +111,8 @@ const App = () => {
 
 
 
-       
+
+      
         
         
         {/* President ROUTES */}
