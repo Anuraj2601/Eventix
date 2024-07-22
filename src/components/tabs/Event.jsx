@@ -11,7 +11,6 @@ export function Event() {
       name: "MadHack 3.0",
       image: MadhackImg,
       date: "05.06.2024",
-      // link: "https://example.com/join-oc",
       link: "/member-oc-form",
       linkText: "Join OC",
     },
@@ -19,7 +18,6 @@ export function Event() {
       name: "ReidExtreme 3.0",
       image: ReidImg,
       date: "05.06.2024",
-      // link: "https://example.com/join-oc",
       link: "/member-oc-form",
       linkText: "Join OC",
     },
@@ -27,7 +25,6 @@ export function Event() {
       name: "MadHack 3.0",
       image: MadhackImg,
       date: "05.06.2024",
-      // link: "https://example.com/join-oc",
       link: "/member-oc-form",
       linkText: "Join OC",
     },
@@ -35,7 +32,6 @@ export function Event() {
       name: "MadHack 3.0",
       image: MadhackImg,
       date: "05.06.2024",
-      // link: "https://example.com/join-oc",
       link: "/member-oc-form",
       linkText: "Join OC",
     },
@@ -43,7 +39,6 @@ export function Event() {
       name: "MadHack 3.0",
       image: MadhackImg,
       date: "05.06.2024",
-      // link: "https://example.com/join-oc",
       link: "/member-oc-form",
       linkText: "Join OC",
     },
@@ -51,7 +46,6 @@ export function Event() {
       name: "MadHack 3.0",
       image: MadhackImg,
       date: "05.06.2024",
-      // link: "https://example.com/join-oc",
       link: "/member-oc-form",
       linkText: "Join OC",
     },
@@ -86,7 +80,7 @@ export function Event() {
               <h3 className="text-xl font-semibold text-white">{event.name}</h3>
               <div className="flex justify-between items-center mt-2">
                 <button
-                onClick={() => navigateToForm(event.link)}className="text-md" style={{ color: '#AEC90A' }}>
+                onClick={() => navigateToForm(event.link)}className="font-bold text-lg" style={{ color: '#AEC90A' }}>
                   {event.linkText}
                 </button>
                 <span className="text-gray-400">{event.date}</span>
