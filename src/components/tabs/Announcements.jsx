@@ -72,9 +72,9 @@ export function Announcements() {
                {event.joinLink && (
                   <button
                   onClick={() => navigateToForm(event.joinLink)}
-                    className="text-white text-sm border px-4 py-1 rounded-full" 
+                    className="text-black font-semibold text-md border px-4 py-1 rounded-full" 
                    
-                    style={{ backgroundColor: '#5C690A', borderColor: '#5C690A', marginLeft: '850px'}}
+                    style={{ backgroundColor: '#AEC90A', borderColor: '#AEC90A', marginLeft: '850px'}}
 
                   >
                     Apply
