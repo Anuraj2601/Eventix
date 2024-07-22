@@ -9,7 +9,7 @@ import {
     TabPanel,
 } from "@material-tailwind/react";
 import PresidentClubCard from '../../components/PresidentClubCard';
-import Club from '../../components/Club';
+import ClubPresident from '../../components/ClubPresident'; // Corrected import
 
 import { useNavigate } from 'react-router-dom';
 
@@ -26,7 +26,7 @@ const ExploreClub = () => {
         {
             label: "Your Clubs",
             value: "yourClubs",
-            desc: <Club />, // Replace with appropriate component for "Your Clubs"
+            desc: <ClubPresident />, // Correct component
         }
     ];
 

@@ -3,12 +3,14 @@ import { Button } from "@material-tailwind/react";
 import { RiOpenArmLine } from "react-icons/ri";
 import { IoMdBookmark } from "react-icons/io";
 
+// Import your images
+
 const IgnoredClub = ({club}) => {
   return (
     <div className='bg-[#0B0B0B] p-6 w-2/5 rounded-2xl'>
         <div className="flex items-center justify-between mb-4">
             <div className='flex gap-4 items-center justify-center'>
-                <img src={club.image} alt="" className='w-16 h-16 rounded-md'/>
+                <img src={club.image || exampleClubImage} alt="" className='w-16 h-16 rounded-md'/>
                 <p className='mb-2 tracking-wide text-white'>{club.club_name}</p>
                 {/* <div className="reg">
                     <p className='mb-2 tracking-wide text-white'>{club.club_name}</p>
@@ -43,7 +45,6 @@ const IgnoredClub = ({club}) => {
         <div className="flex items-center justify-end gap-4">
             <Button className= "text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium bg-primary">UNDO</Button>
         </div>
-        
     </div>
   )
 }

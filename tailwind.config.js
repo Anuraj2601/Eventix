@@ -16,7 +16,8 @@ export default {
         },
       },
       boxShadow: {
-        'custom': '0 4px 6px rgba(219, 255, 0, 0.5)', 
+        'custom': '0 4px 6px rgba(219, 255, 0, 0.5)', // Custom shadow
+        '3d': '0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19)' // 3D shadow
       },
       height: {
         '256': '64rem', // Adding custom height class
