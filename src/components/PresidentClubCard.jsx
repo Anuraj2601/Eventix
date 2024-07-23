@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from "@material-tailwind/react";
 import { RiOpenArmLine } from "react-icons/ri";
 import { IoMdBookmark } from "react-icons/io";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Import images directly from the assets folder
 import rotaractImage from '../assets/clubs/rotaract.png';
@@ -17,6 +17,7 @@ import rekhaImage from '../assets/clubs/rekha.png';
 
 const PresidentClubCard = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const clubs = [
         {
@@ -25,7 +26,7 @@ const PresidentClubCard = () => {
             reg_status: "yes",
             description: "The Rotaract Club of UCSC, part of Rotary International District 3220, empowers youth to enact positive change locally and globally.",
             image: rotaractImage,
-            sname: "rotract",
+            sname: "rotaract",
         },
         {
             id: "2",
@@ -35,7 +36,6 @@ const PresidentClubCard = () => {
             image: acmImage,
             sname: "acm",
         },
-       
         {
             id: "4",
             name: "ISACA Student Group",
@@ -83,7 +83,6 @@ const PresidentClubCard = () => {
             description: "Get the opportunity to learn from industry professionals, prepare for certifications like CISA and CRISC, and network with professionals in the field.",
             image: rekhaImage,
             sname: "rekha",
-            
         },
         {
             id: "3",
@@ -100,7 +99,27 @@ const PresidentClubCard = () => {
     };
 
     const handleExploreClick = (club) => {
-        navigate(`/president/club/${club.sname}`, { state: { club, image: club.image } });
+        let basePath;
+        switch (true) {
+            case location.pathname.startsWith('/president'):
+                basePath = '/president';
+                break;
+            case location.pathname.startsWith('/oc'):
+                basePath = '/oc';
+                break;
+            case location.pathname.startsWith('/admin'):
+                basePath = '/admin';
+                break;
+            case location.pathname.startsWith('/member'):
+                basePath = '/member';
+                break;
+            case location.pathname.startsWith('/treasurer'):
+                basePath = '/treasurer';
+                break;
+            default:
+                basePath = ''; // Default base path or handle other cases
+        }
+        navigate(`${basePath}/club/${club.sname}`, { state: { club, image: club.image } });
     };
 
     return (

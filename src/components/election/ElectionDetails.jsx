@@ -20,6 +20,10 @@ const ElectionDetails = ({ clubName, electionId }) => {
   if (currentPath.startsWith('/secretary')) {
     targetPath = '/secretary/club/election';
   }
+
+  // Check if the current path is either '/president' or '/secretary'
+  const isEditable = currentPath.startsWith('/president') || currentPath.startsWith('/secretary');
+
   const navigate = useNavigate();
 
   const events = [
@@ -57,15 +61,15 @@ const ElectionDetails = ({ clubName, electionId }) => {
 
   return (
     <>
-    {events.map((event, index) => (
-      <Button
-      onClick={() => navigateToForm(event.joinLink1)}
-        className="flex items-center gap-2 bg-[#AEC90A]  ml-auto mt-0  rounded-full text-black font-bold ml-[950px]"
-      >
-        New Election
-      </Button>
-      ))}
-      <Card className="w-full bg-neutral-900 mt-4 ">
+      {isEditable && (
+        <Button
+          onClick={() => navigateToForm(events[0].joinLink1)}
+          className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold ml-[950px]"
+        >
+          New Election
+        </Button>
+      )}
+      <Card className="w-full bg-neutral-900 mt-4">
         <CardBody>
           <div className="grid grid-cols-6 gap-2 p-1 mb-2 text-white">
             <div className="col-span-2 flex justify-center items-center">
@@ -82,9 +86,10 @@ const ElectionDetails = ({ clubName, electionId }) => {
             {elections.map(({ id, desc, applicationDate, votingDate }, index) => (
               <div
                 key={id}
-                className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl  mb-2 ${index === 1 ? 'opacity-50' : ''}`}  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.8)'}}
+                className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl mb-2 ${index === 1 ? 'opacity-50' : ''}`}  
+                style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.8)' }}
               >
-                <div className="col-span-2 flex justify-center items-center " >
+                <div className="col-span-2 flex justify-center items-center">
                   <Typography color={index === 1 ? "gray" : "white"} variant="h6">
                     {desc}
                   </Typography>
@@ -92,31 +97,37 @@ const ElectionDetails = ({ clubName, electionId }) => {
                 <div className="col-span-2 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
                     {applicationDate}
-                    <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
-                      <div className="whitespace-nowrap">Applications</div>
-                      <div>
-                        <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
+                    {isEditable && (
+                      <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
+                        <div className="whitespace-nowrap">Applications</div>
+                        <div>
+                          <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </Typography>
                 </div>
                 <div className="col-span-1 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
                     {votingDate}
-                    <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
-                      <div className="whitespace-nowrap">Votings</div>
-                      <div>
-                        <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
+                    {isEditable && (
+                      <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
+                        <div className="whitespace-nowrap">Votings</div>
+                        <div>
+                          <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </Typography>
                 </div>
                 <div className="col-span-6 flex justify-end items-center gap-2 p-5">
-                  <EditDeleteButton
-                    onEdit={() => handleEdit(id)}
-                    onDelete={() => handleDelete(id)}
-                    disabled={index === 1}
-                  />
+                  {isEditable && (
+                    <EditDeleteButton
+                      onEdit={() => handleEdit(id)}
+                      onDelete={() => handleDelete(id)}
+                      disabled={index === 1}
+                    />
+                  )}
                   <Link to={targetPath}>
                     <Button variant="gradient" className={`bg-[#AEC90A] rounded-full text-black p-2 inline-block`}>
                       View Details

@@ -23,10 +23,29 @@ const ClubPresident = () => {
 
   const handleOpen = () => setOpen((cur) => !cur);
 
-  const getClubDetails = (club) => {
-    // Assuming the ClubDetails page is at the path `/president/club/:name`
-    navigate(`/president/club/${club.name}`, { state: { club } });
-  };
+  const getClubDetails = (club)  => {
+    let basePath;
+    switch (true) {
+        case location.pathname.startsWith('/president'):
+            basePath = '/president';
+            break;
+        case location.pathname.startsWith('/oc'):
+            basePath = '/oc';
+            break;
+        case location.pathname.startsWith('/admin'):
+            basePath = '/admin';
+            break;
+        case location.pathname.startsWith('/member'):
+            basePath = '/member';
+            break;
+        case location.pathname.startsWith('/treasurer'):
+            basePath = '/treasurer';
+            break;
+        default:
+            basePath = ''; // Default base path or handle other cases
+    }
+    navigate(`${basePath}/club/${club.sname}`, { state: { club, image: club.image } });
+};
 
   const clubs = [
     {

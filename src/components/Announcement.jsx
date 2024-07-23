@@ -9,17 +9,27 @@ import {
 } from "@material-tailwind/react";
 import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import EditDeleteButton from './EditDeleteButton';
 import { FaEye } from "react-icons/fa";
 
 const Announcement = () => {
-  const navigator = useNavigate();
   const [open, setOpen] = useState(false);
+  const navigator = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  // Check if the current path is either '/president' or '/secretary'
+  const isEditable = currentPath.startsWith('/president') || currentPath.startsWith('/secretary');
+
   const handleOpen = () => setOpen((cur) => !cur);
 
-  const getClubDetails = (sname) => {
-    navigator(`/club/${sname}`);
+  const handleEdit = (id) => {
+    // Add your edit handling logic here
+  };
+
+  const handleDelete = (id) => {
+    // Add your delete handling logic here
   };
 
   const meetings = [
@@ -51,21 +61,25 @@ const Announcement = () => {
 
   return (
     <>
-      <Button
-        className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold ml-[950px]"
-      >
-        New Announcement
-      </Button>
+      {isEditable && (
+        <Button
+          className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold ml-[950px]"
+          onClick={handleOpen}
+        >
+          New Announcement
+        </Button>
+      )}
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div>
             {meetings.map(({ desc, date, to, id }, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4" style={{ 
+                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
+                style={{ 
                   boxShadow: '0 8px 16px rgba(0, 0, 0, 0.6), 0 0 8px rgba(255, 255, 255, 0.1)' 
-                }}>
-              
+                }}
+              >
                 <div className="flex flex-col w-full">
                   <div className="flex flex-col mb-2">
                     <Typography color="white" variant="h6">
@@ -82,13 +96,15 @@ const Announcement = () => {
                       {date}
                     </Typography>
                     <div className="flex items-center">
-                      <FaEye className="text-[#AEC90A] mr-2" />
+                      {isEditable && <FaEye className="text-[#AEC90A] mr-2" />}
                       <Typography className="text-white">{to}</Typography>
                     </div>
-                    <EditDeleteButton
-                      onEdit={() => handleEdit(id)}
-                      onDelete={() => handleDelete(id)}
-                    />
+                    {isEditable && (
+                      <EditDeleteButton
+                        onEdit={() => handleEdit(id)}
+                        onDelete={() => handleDelete(id)}
+                      />
+                    )}
                   </div>
                 </div>
               </div>

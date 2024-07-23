@@ -61,14 +61,12 @@ const Posts = ({ post }) => {
 const NewsFeed = ({ posts }) => {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
 
-    const toggleDropdown = () => {
-        setDropdownVisible(!isDropdownVisible);
-    };
+   
     const navigate = useNavigate();
     
     const events = [
         {
-            joinLink: "/president/new-post",
+            joinLink: "/club/new-post",
         }
     ];
     const navigateToForm = (link) => {
@@ -85,10 +83,9 @@ const NewsFeed = ({ posts }) => {
 
                         //onClick={toggleDropdown}
                         onClick={() => navigateToForm(event.joinLink)}
-                        className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-1 right-8 z-10"
+                        className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-2 right-8 z-10"
 >
                         <MdAdd size={24} />
-                        <p className='text-black text-md font-semibold'>Add Post</p>
                     </button>
                     </div>
                      ))}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IconButton, Button } from '@material-tailwind/react';
-import { FaArrowRight, FaRegSmile, FaRegFrown, FaRegMeh, FaArrowRight as FaArrowRightYellow } from 'react-icons/fa';
+import { FaArrowRight, FaRegSmile, FaRegFrown, FaRegMeh } from 'react-icons/fa';
 import MadhackImg from "../assets/events/madhack.png";
 import ReidImg from "../assets/events/reid.jpg";
 import LikeButton from './LikeButton'; // Ensure LikeButton is correctly implemented
@@ -17,14 +17,32 @@ const ClubEvent = ({ club }) => {
   };
 
   const handleExploreEvent = (event) => {
-    const basePath = location.pathname.startsWith('/president')
-        ? '/president/club/event'
-        : '/secretary/club/event';
+    let basePath;
+
+    switch (true) {
+      case location.pathname.startsWith('/president'):
+        basePath = '/president/club/event';
+        break;
+      case location.pathname.startsWith('/secretary'):
+        basePath = '/secretary/club/event';
+        break;
+      case location.pathname.startsWith('/admin'):
+        basePath = '/admin/club/event';
+        break;
+      case location.pathname.startsWith('/member'):
+        basePath = '/member/club/event';
+        break;
+      case location.pathname.startsWith('/treasurer'):
+        basePath = '/treasurer/club/event';
+        break;
+      default:
+        basePath = '/oc/club/event';
+        break;
+    }
 
     const clubDetails = {
-        clubName: club.club_name,
-        clubImage: club.image,
-        ...event,
+      clubImage: club.image,
+      ...event,
     };
 
     navigate(basePath, { state: clubDetails });
@@ -104,16 +122,22 @@ const ClubEvent = ({ club }) => {
     }
   };
 
+  const isAuthorizedUser = () => {
+    return location.pathname.startsWith('/president') || location.pathname.startsWith('/secretary');
+  };
+
   return (
     <div className="flex justify-center items-center flex-col p-4 rounded-2xl bg-black opacity-70">
-      <div className='flex justify-end mb-2'>
-        <button
-          className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute top-10 right-32 z-10"
-          onClick={handleEvent} // Ensure this button triggers handleEvent
-        >
-          <MdAdd size={24} />
-        </button>
-      </div>
+      {isAuthorizedUser() && (
+        <div className='flex justify-end mb-2'>
+          <button
+            className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute top-10 right-32 z-10"
+            onClick={handleEvent} // Ensure this button triggers handleEvent
+          >
+            <MdAdd size={24} />
+          </button>
+        </div>
+      )}
 
       {/* Upcoming Events */}
       <div className="w-full max-w-screen-lg">
@@ -144,7 +168,7 @@ const ClubEvent = ({ club }) => {
                     className="font-extrabold text-lg text-black "
                     onClick={() => handleExploreEvent(event)}
                   >
-                    <FaArrowRightYellow />
+                    <FaArrowRight />
                   </IconButton>
                 </div>
               </div>
@@ -176,21 +200,15 @@ const ClubEvent = ({ club }) => {
                     className="font-extrabold text-lg text-black"
                     onClick={() => handleExploreEvent(event)}
                   >
-                    <FaArrowRightYellow />
+                    <FaArrowRight />
                   </IconButton>
                 </div>
               </div>
               <div className="flex flex-col mt-4">
                 <h3 className="text-xl font-semibold text-white">{event.name}</h3>
                 <span className="text-gray-400">{event.venue} {event.date}</span>
-                <div className="mt-2 flex justify-between items-center">
-                  <LikeButton className="mb-2 custom-card" />
-                  <Button
-                    className="bg-[#AEC90A] text-black font-bold rounded-full px-4 py-2 custom-card"
-                    onClick={() => handleFeedback(event)}
-                  >
-                    Give Feedback
-                  </Button>
+                <div className="mt-2 flex justify-end items-center -mt-10 custom-card">
+                  <LikeButton />
                 </div>
               </div>
             </div>
