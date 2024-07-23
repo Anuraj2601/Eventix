@@ -13,6 +13,7 @@ import Election from './pages/president/Election';
 import Dashboard from './pages/president/Dashboard';
 import Calendar from './pages/president/Calendar';
 import NewElectionForm from './pages/president/NewElectionForm';
+import AddNewPostForm from './pages/president/AddNewPostForm';
 
 import Exploreclubsecretary from './pages/secretary/Exploreclub';
 import Exploreeventsecretary from './pages/secretary/Exploreevent';
@@ -132,6 +133,7 @@ const App = () => {
         <Route path='/president/club/election' element={<Election/>}></Route>
         <Route path='/president' element={<Dashboard  />} ></Route>
         <Route path="/president/club/election/add" element={<NewElectionForm />} />
+        <Route path="/president/new-post" element={<AddNewPostForm />} />
 
         
 

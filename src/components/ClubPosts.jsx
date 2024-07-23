@@ -11,10 +11,21 @@ import eidImage from "../assets/eid.jpg";
 import farewellImage from "../assets/farewell.jpg";
 import esalaImage from "../assets/esala.jpg";
 import posonImage from "../assets/poson.jpg";
+import { useNavigate } from 'react-router-dom';
 
 const Posts = ({ post }) => {
     const location = useLocation(); // Get the current path
     const isStudentPage = location.pathname.startsWith('/student'); // Check if the path starts with /student
+    // const navigate = useNavigate();
+    
+    // const events = [
+    //     {
+    //         joinLink: "/new-post",
+    //     }
+    // ];
+    // const navigateToForm = (link) => {
+    //     navigate(link);
+    //   };
 
     return (
         <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4 custom-3d-shadow " style={{ 
@@ -53,17 +64,34 @@ const NewsFeed = ({ posts }) => {
     const toggleDropdown = () => {
         setDropdownVisible(!isDropdownVisible);
     };
+    const navigate = useNavigate();
+    
+    const events = [
+        {
+            joinLink: "/president/new-post",
+        }
+    ];
+    const navigateToForm = (link) => {
+        navigate(link);
+      };
 
     return (
         <div className="bg-neutral-900 text-white min-h-screen relative px-10">
             <div className='relative'>
-                <div className='flex justify-end mb-2'>
+                <div className='flex justify-end mb-2 mb-2'>
+                {events.map((event, index) => (
+                    <div key={index} className="w-full rounded-full p-2 flex flex-col mb-4" style={{ backgroundColor: '#171717' }}>
                     <button
-                        onClick={toggleDropdown}
-                        className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-1 right-8 z-10 custom-card"
-                    >
+
+                        //onClick={toggleDropdown}
+                        onClick={() => navigateToForm(event.joinLink)}
+                        className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-1 right-8 z-10"
+
                         <MdAdd size={24} />
+                        <p className='text-black text-md font-semibold'>Add Post</p>
                     </button>
+                    </div>
+                     ))}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
                     {posts.map((post, index) => (
