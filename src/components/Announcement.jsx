@@ -62,8 +62,10 @@ const Announcement = () => {
             {meetings.map(({ desc, date, to, id }, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
-              >
+                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4" style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.6), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}>
+              
                 <div className="flex flex-col w-full">
                   <div className="flex flex-col mb-2">
                     <Typography color="white" variant="h6">

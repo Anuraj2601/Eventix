@@ -54,11 +54,11 @@ const clubs = [
 ];
 
 
-  const getClubDetails = (club) => {
-    const basePath = location.pathname === "/student" ? "/student/club" : "/club";
-    navigate(`${basePath}/${club.sname}`, { state: { club } });
+const getClubDetails = (club) => {
+  const basePath = location.pathname.startsWith("/student") ? "/student/club" : "/student/club";
+  navigate(`${basePath}/${club.sname}`, { state: { club } });
+};
 
-  };
  
   
 

@@ -48,7 +48,7 @@ const Meeting = () => {
             {meetings.map(({ id, desc, date, time, status, audience }) => (
               <div
                 key={id}
-                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
+                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"  style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)' }}
               >
                 <div className="flex flex-col w-1/4">
                   <Typography className="text-white font-normal" variant="h6">

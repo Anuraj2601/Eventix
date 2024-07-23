@@ -10,19 +10,19 @@ const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick, showAddButto
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl text-white">{title}</h2>
                 {showAddButton && (
-                    <Button className="bg-[#AEC90A] text-black rounded-full" onClick={onAddNewClick}>
+                    <Button className="bg-[#AEC90A] text-black rounded-full  custom-card" onClick={onAddNewClick}>
                         Add member
                     </Button>
                 )}
             </div>
             <div className="grid grid-cols-4 gap-4 overflow-auto">
                 {teamMembers.map((member, index) => (
-                    <div key={index} className="flex flex-col items-center">
+                    <div key={index} className="flex flex-col items-center  custom-card">
                         <img src={member.userImage} alt={member.userName} className='w-30 h-30 rounded-full p-2' />
                         <p className="text-white">{member.userName}</p>
                         {showAddButton && (
                             <Button
-                                className="text-red-500 mt-2"
+                                className="text-red-500 mt-2  custom-card"
                                 onClick={() => onRemove(index, title)}
                             >
                                 Remove
@@ -160,7 +160,7 @@ const App = () => {
     
     <div className="mb-4">
     <button
-                        className="absolute top-2 right-2 text-white "
+                        className="absolute top-2 right-2 text-white  custom-card "
                         onClick={() => setModalIsOpen(false)}
                     >
                         <FaTimes size={20} />
@@ -168,7 +168,7 @@ const App = () => {
         <h3 className="text-xl text-white mb-2 ">Added Members</h3> {/* Centered subheading */}
         <div className="grid grid-cols-4"> {/* Reduced gap between members */}
             {addedMembers.map((member, index) => (
-                <div key={index} className="flex flex-col items-center">
+                <div key={index} className="flex flex-col items-center  custom-card">
                     <img
                         src={member.userImage}
                         alt={member.userName}
@@ -184,7 +184,7 @@ const App = () => {
         <h3 className="text-xl text-white mb-2 ">Available Members</h3> {/* Centered subheading */}
         <div className="grid grid-cols-4 gap-1"> {/* Reduced gap between members */}
             {availableMembers.map((member, index) => (
-                <div key={index} className="flex flex-col items-center">
+                <div key={index} className="flex flex-col items-center  custom-card">
                     <img
                         src={member.userImage}
                         alt={member.userName}
@@ -192,7 +192,7 @@ const App = () => {
                     />
                     <p className="text-white text-center">{member.userName}</p> {/* Centered text */}
                     <Button
-                        className="bg-[#AEC90A] text-black mt-2 rounded-full"
+                        className="bg-[#AEC90A] text-black mt-2 rounded-full  custom-card"
                         onClick={() => handleAddMember(member, currentTeam)}
                     >
                         Add

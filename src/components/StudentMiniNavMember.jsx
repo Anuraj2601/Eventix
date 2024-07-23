@@ -1,12 +1,10 @@
-import React from 'react'
+import React from 'react';
 import {
     Card,
     CardBody,
     Typography,
     Avatar,
 } from "@material-tailwind/react";
-import Chart from "react-apexcharts";
-import Remove from "./Remove";
 
 // Predefined teams
 const teams = ["Content", "Design", "Marketing", "Finance"];
@@ -23,35 +21,7 @@ const getRandomEvents = () => {
   return shuffledEvents.slice(0, Math.floor(Math.random() * shuffledEvents.length) + 1);
 };
 
-
-  
-
 const StudentMiniNavMember = () => {
-
-    const chartConfig = {
-        type: "pie",
-        width: 80,
-        height: 80,
-        series: [20, 80],
-        options: {
-          chart: {
-            toolbar: {
-              show: false,
-            },
-          },
-          title: {
-            show: "",
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          colors: ["#1E1E1E", "#AEC90A"],
-          legend: {
-            show: false,
-          },
-        },
-    };
-
     const members = [
         {
           id: "1",
@@ -61,6 +31,7 @@ const StudentMiniNavMember = () => {
           events: getRandomEvents(),
           ocPercentage: 80,
           attendancePercentage: 70,
+          description: "Being part of the Content team has been a fantastic experience. I've had the chance to enhance my writing skills and collaborate on creative projects. It's been a great opportunity for personal and professional growth."
         },
         {
           id: "2",
@@ -70,6 +41,7 @@ const StudentMiniNavMember = () => {
           events: getRandomEvents(),
           ocPercentage: 70,
           attendancePercentage: 65,
+          description: "Joining the tech events team has been incredibly rewarding. I've enjoyed working on the latest technologies and leading projects. The experience has broadened my skills and expanded my network."
         },
         {
           id: "3",
@@ -79,6 +51,7 @@ const StudentMiniNavMember = () => {
           events: getRandomEvents(),
           ocPercentage: 75,
           attendancePercentage: 68,
+          description: "As a member of the Wellness team, I've been able to contribute to initiatives that improve student well-being. The role has allowed me to make a positive impact and work with passionate individuals."
         },
         {
           id: "4",
@@ -88,6 +61,7 @@ const StudentMiniNavMember = () => {
           events: getRandomEvents(),
           ocPercentage: 78,
           attendancePercentage: 72,
+          description: "Being involved in the Design team has been a rewarding challenge. I love the creative process and the opportunity to experiment with new ideas. It's been a great environment for honing my design skills."
         },
         {
           id: "5",
@@ -97,6 +71,7 @@ const StudentMiniNavMember = () => {
           events: getRandomEvents(),
           ocPercentage: 72,
           attendancePercentage: 67,
+          description: "Working in the Finance team has been an insightful experience. I've learned a lot about budgeting and financial planning. It's been a valuable part of my personal and professional development."
         },
         {
           id: "6",
@@ -106,6 +81,7 @@ const StudentMiniNavMember = () => {
           events: getRandomEvents(),
           ocPercentage: 76,
           attendancePercentage: 71,
+          description: "Joining the Marketing team has allowed me to explore new strategies and tactics. I've enjoyed the creative aspects of the role and the chance to work on impactful campaigns."
         },
         {
           id: "7",
@@ -115,6 +91,7 @@ const StudentMiniNavMember = () => {
           events: getRandomEvents(),
           ocPercentage: 74,
           attendancePercentage: 69,
+          description: "Being part of the Design team has given me the chance to work on diverse projects. I appreciate the collaborative atmosphere and the opportunity to push creative boundaries."
         },
         {
           id: "8",
@@ -124,6 +101,7 @@ const StudentMiniNavMember = () => {
           events: getRandomEvents(),
           ocPercentage: 77,
           attendancePercentage: 70,
+          description: "The club's projects have been a great platform for me to apply my skills and learn new ones. I've enjoyed the collaborative spirit and the chance to make meaningful contributions."
         },
         {
           id: "9",
@@ -133,6 +111,7 @@ const StudentMiniNavMember = () => {
           events: getRandomEvents(),
           ocPercentage: 73,
           attendancePercentage: 68,
+          description: "Working with the Finance team has been a valuable learning experience. I've gained insights into financial management and enjoyed working with a team of dedicated individuals."
         },
         {
           id: "10",
@@ -142,56 +121,54 @@ const StudentMiniNavMember = () => {
           events: getRandomEvents(),
           ocPercentage: 75,
           attendancePercentage: 69,
+          description: "The Content team has provided me with numerous opportunities to grow. I've loved the creative challenges and the supportive team environment that has helped me develop my skills."
         },
     ];
 
-
   return (
     <>
-    <Card className="w-full bg-neutral-900">
-        <CardBody >
-            {members.map((member, index) => (
-            <div
-                key={member.id}
-                className="relative flex items-start justify-between p-4 mb-4 bg-[#1E1E1E] rounded-xl"
-            >
-                <div className="flex items-center gap-4">
-                <Avatar
-                    size="xl"
-                    src={member.image}
-                    alt={member.name}
-                    className="border-2 border-white rounded-full w-24 h-24"
-                />
-                <div>
-                    <Typography color="white" variant="h5" className="mb-1">
-                    {member.name}
-                    </Typography>
-                    <Typography color="white" variant="subtitle1" className="mb-1">
-                    From Team: {member.team}
-                    </Typography>
-                    <div >
-                </div>
-                </div>
-                </div>
-                <div className="flex flex-col gap-2 mr-4">
-                <Typography color="white" variant="subtitle1" className="mb-1">
-                    Joined Event OCs:
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-10">
+        {members.map((member, index) => (
+        <Card key={member.id} className="w-full bg-black  custom-card"  style={{ 
+          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+        }}>
+        <CardBody className="flex flex-col items-center">
+              <Avatar
+                size="xl"
+                src={member.image}
+                alt={member.name}
+                className="rounded-full w-30 h-30 mb-4 custom-card"
+                style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}
+              />
+              <Typography color="white" variant="h5" className="mb-2">
+                {member.name}
+              </Typography>
+              <Typography color="white" variant="subtitle1" className="mb-2">
+                From Team: {member.team}
+              </Typography>
+              <Typography color="white" className="mb-4 text-center">
+                {member.description}
+              </Typography>
+              <div className="flex flex-col items-center">
+                <Typography color="white" variant="subtitle1" className="mb-2">
+                  Joined Event OCs:
                 </Typography>
-                <ul className="list-disc list-inside">
-                    {member.events.map((event, idx) => (
+                <ul className="list-disc list-inside text-center">
+                  {member.events.map((event, idx) => (
                     <li key={idx} className="text-[#AEC90A]">
-                        {event}
+                      {event}
                     </li>
-                    ))}
+                  ))}
                 </ul>
-                </div>
-               
-            </div>
-            ))}
-        </CardBody>
-    </Card>
+              </div>
+            </CardBody>
+          </Card>
+        ))}
+      </div>
     </>
-  )
+  );
 }
 
-export default StudentMiniNavMember
+export default StudentMiniNavMember;
