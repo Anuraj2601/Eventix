@@ -86,7 +86,7 @@ const NewsFeed = ({ posts }) => {
                         //onClick={toggleDropdown}
                         onClick={() => navigateToForm(event.joinLink)}
                         className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-1 right-8 z-10"
-
+>
                         <MdAdd size={24} />
                         <p className='text-black text-md font-semibold'>Add Post</p>
                     </button>
