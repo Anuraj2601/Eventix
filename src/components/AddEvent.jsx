@@ -85,23 +85,24 @@ const AddEvent = () => {
             <Sidebar className="flex-shrink-0"/>
             <div className="flex flex-col flex-1">
                 <Navbar className="sticky top-0 z-10 p-4"/>
-                <div className="bg-black text-white flex-col text-center items-center justify-center overflow-y-auto p-20">
+                <div className="bg-black  bg-opacity-90 text-white flex-col text-center items-center justify-center overflow-y-auto p-20">
                     <Typography variant="h3" className="mb-4">Proposal Form</Typography>
                     <div className="">
                         {/* Include EditButton if it is defined */}
                         {/* <EditButton className="absolute top-2 right-2" /> */}
-                        <div className="mb-4">
-                            <label className="block mb-2">Event Image:</label>
-                            <label className="block mb-2 flex items-center">
-                                <input
-                                    type="file"
-                                    name="eventImage"
-                                    onChange={handleFileChange}
-                                    className="mr-2"
-                                />
-                                <FaUpload className="ml-2" />
-                            </label>
-                        </div>
+                        <div className="mb-4 flex flex-col items-center">
+    <label className="block mb-2">Event Image:</label>
+    <div className="flex items-center space-x-2">
+        <input
+            type="file"
+            name="eventImage"
+            onChange={handleFileChange}
+            className="bg-neutral-700 text-white p-2 rounded-lg"
+        />
+        <FaUpload className="text-white" />
+    </div>
+</div>
+
                         <div className="mb-4">
                             <label className="block mb-2">Name of the Event:</label>
                             <input
@@ -109,7 +110,7 @@ const AddEvent = () => {
                                 name="name"
                                 value={formFields.name}
                                 onChange={handleInputChange}
-                                className="w-full bg-neutral-700 text-white p-2 rounded-lg"
+                                className="w-72 bg-neutral-700 text-white p-2 rounded-lg"
                             />
                         </div>
                         <div className="mb-4">
@@ -119,7 +120,7 @@ const AddEvent = () => {
                                 name="venue"
                                 value={formFields.venue}
                                 onChange={handleInputChange}
-                                className="w-full bg-neutral-700 text-white p-2 rounded-lg"
+                                className="w-72 bg-neutral-700 text-white p-2 rounded-lg"
                             />
                         </div>
                         <div className="mb-4">
@@ -129,7 +130,7 @@ const AddEvent = () => {
                                 name="date"
                                 value={formFields.date}
                                 onChange={handleInputChange}
-                                className="w-full bg-neutral-700 text-white p-2 rounded-lg"
+                                className="w-72 bg-neutral-700 text-white p-2 rounded-lg"
                             />
                         </div>
                         <div className="mb-4">
@@ -139,7 +140,7 @@ const AddEvent = () => {
                                 name="budget"
                                 value={formFields.budget}
                                 onChange={handleInputChange}
-                                className="w-full bg-neutral-700 text-white p-2 rounded-lg"
+                                className="w-72 bg-neutral-700 text-white p-2 rounded-lg"
                             />
                         </div>
                         <div className="mb-4">
@@ -160,43 +161,46 @@ const AddEvent = () => {
                                 className="w-full h-32 bg-neutral-700 text-white p-2 rounded-lg"
                             />
                         </div>
-                        <div className="mb-4">
-                            <label className="block mb-2">IUD Approval Status:</label>
-                            <div className="flex space-x-4">
-                                <label className="flex items-center space-x-2">
-                                    <input 
-                                        type="radio"
-                                        value="approved"
-                                        checked={formFields.iudApproval === 'approved'}
-                                        onChange={() => handleApprovalChange('approved')}
-                                    />
-                                    <span>Already Approved</span>
-                                </label>
-                                <label className="flex items-center space-x-2">
-                                    <input
-                                        type="radio"
-                                        value="not-approved"
-                                        checked={formFields.iudApproval === 'not-approved'}
-                                        onChange={() => handleApprovalChange('not-approved')}
-                                    />
-                                    <span>Requires Approval</span>
-                                </label>
-                            </div>
-                        </div>
-                        {formFields.iudApproval === 'approved' && (
-                            <div className="mb-4">
-                                <label className="block mb-2 flex items-center">
-                                    <span className="mr-2">Proof of IUD Approval:</span>
-                                    <input
-                                        type="file"
-                                        name="proofOfApproval"
-                                        onChange={handleFileChange}
-                                        className="ml-2"
-                                    />
-                                    <FaUpload className="ml-2" />
-                                </label>
-                            </div>
-                        )}
+                        <div className="mb-4 flex flex-col items-center">
+    <label className="block mb-2">IUD Approval Status:</label>
+    <div className="flex space-x-4">
+        <label className="flex items-center space-x-2">
+            <input 
+                type="radio"
+                value="approved"
+                checked={formFields.iudApproval === 'approved'}
+                onChange={() => handleApprovalChange('approved')}
+            />
+            <span>Already Approved</span>
+        </label>
+        <label className="flex items-center space-x-2">
+            <input
+                type="radio"
+                value="not-approved"
+                checked={formFields.iudApproval === 'not-approved'}
+                onChange={() => handleApprovalChange('not-approved')}
+            />
+            <span>Requires Approval</span>
+        </label>
+    </div>
+    {formFields.iudApproval === 'approved' && (
+        <div className="mt-4 flex flex-col items-center">
+            <label className="block mb-2 flex items-center">
+                <span className="mr-2">Proof of IUD Approval:</span>
+                <div className="flex items-center space-x-2">
+                    <input
+                        type="file"
+                        name="proofOfApproval"
+                        onChange={handleFileChange}
+                        className="bg-neutral-700 text-white p-2 rounded-lg"
+                    />
+                    <FaUpload className="text-white" />
+                </div>
+            </label>
+        </div>
+    )}
+</div>
+
                         
                         
                         <div className="flex justify-center">
