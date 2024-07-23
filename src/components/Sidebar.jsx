@@ -72,12 +72,12 @@ const Sidebar = () => {
             </li>
           </ul>
         </div>
-        <ul className='mt-10 ml-0 text-black'>
+        <ul className='mt-10 ml-0'>
           <li className='w-28 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2'>
             <a className='px-3'>
               {isAuthenticated &&
                 <Link to="/" onClick={handleLogout}>
-                  <span className='text-white mr-2 mt-6'>Logout</span>
+                  <span className='text-[#AEC90A] hover:text-black  mr-2 mt-6'>Logout</span>
                   <IoExitOutline className='inline-block w-6 h-6 mt-0' />
                 </Link>}
             </a>

@@ -45,6 +45,7 @@ import SecretaryExploreclub from './pages/secretary/Exploreclub';
 // member
 import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
 import ExploreMemberEvent from './pages/member/ExploreMemberEvent';
+import ExploreMemberClub from './pages/member/ExploreMemberClub';
 
 import MemberElectionForm from './pages/member/MemberElectionForm';
 import MemberElectionFormSuccess from './pages/member/MemberElectionFormSuccess';
@@ -89,7 +90,7 @@ const App = () => {
       
 
          {/* member routes */}
-        <Route path='/member' element={<Explorememberclub />}></Route>
+        <Route path='/member' element={<ExploreMemberClub />}></Route>
         <Route path='/member/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
         <Route exact path="/member/event" element={<ExploreMemberEvent />} />      
         <Route path="/member-election-form" element={<MemberElectionForm />} />
