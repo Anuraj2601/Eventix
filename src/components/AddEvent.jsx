@@ -224,7 +224,7 @@ const AddEvent = () => {
         className={`p-2 rounded-2xl ${isFormValid ? 'bg-green-500' : 'bg-gray-500'} text-white`}
         style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
     >
-        Create Event
+        Create Event 
     </button>
 </div>
 

@@ -101,10 +101,14 @@ const UpcomingEvent = () => {
                 <span className="text-lg font-normal pl-3 text-white uppercase">Upcoming events</span>
             </div>
 
-            <div className="bg-dark-400 w-[82vw] h-[76vh] mt-2 rounded-lg flex items-center relative p-10 mb-20">
+            <div className="bg-dark-400 w-[82vw] h-[76vh] mt-2 rounded-lg flex items-center relative p-10 mb-20" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
                 <div className={`w-full h-full rounded-md p-0 flex items-start ${animationClass}`}>
                     <div className="w-[300px] h-[300px] mt-10">
-                        <img src={activeEvent.image} alt={activeEvent.name} className="h-full rounded-xl border-4 border-white object-cover" />
+                        <img src={activeEvent.image} alt={activeEvent.name} className="h-full rounded-xl border-4 border-white object-cover"  style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}/>
                     </div>
                     <div className="ml-10">
                         <div className="flex items-left space-x-6 mt-0 ml-0">
@@ -126,24 +130,30 @@ const UpcomingEvent = () => {
                                 </a>
                             </div>
                         </div>
-                        <div className="mt-10 ml-0 flex justify-center items-center gap-4">
-                            <div className="text-[15px] font-normal bg-dark-background w-1/2 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary">
+                        <div className="mt-10 ml-0 flex justify-center items-center gap-4" >
+                            <div className="text-[15px] text-white font-normal bg-dark-background w-1/2 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
                                 Deadline : <span className="ml-2 text-[15px] font-normal text-primary">{activeEvent.deadline}</span>
                             </div>
 
-                            <div className="text-[15px] font-normal bg-dark-background w-1/2 ml-0 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary">
+                            <div className="text-[15px] font-normal text-white bg-dark-background w-1/2 ml-0 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
                                 Event Date : <span className="ml-2 text-[15px] font-normal text-primary">{activeEvent.eventDate}</span>
                             </div>
                         </div>
 
-                        <div className="relative mt-10 bg-dark-500 rounded-md w-[700px] mx-auto h-26 flex items-center p-5">
+                        <div className="relative mt-10 bg-dark-500 rounded-md w-[700px] mx-auto h-26 flex items-center p-5" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
                             <div className="flex items-center h-full">
                                 <div className="rounded-full w-12 h-12 bg-primary flex items-center justify-center ml-4 mb-16">
                                     <span className="text-dark-400 font-bold text-[16px] mb-0">10</span>
                                 </div>
-                                <div className="ml-3 flex flex-col justify-center">
+                                <div className="ml-3 flex flex-col justify-center" >
                                     <div className="flex items-center">
-                                        <p className="text-[15px] font-normal flex items-center mr-5 mt-0">
+                                        <p className="text-[15px] text-white font-normal flex items-center mr-5 mt-0">
                                             {activeEvent.name}
                                             <RiTeamFill className="ml-3 w-6 h-6 mb-1 text-primary" />
                                         </p>
@@ -153,7 +163,9 @@ const UpcomingEvent = () => {
                                         <span className="mr-8 text-[14px] font-normal">{activeEvent.time}</span>
                                         <MdLocationOn className="mr-2 w-6 h-7 text-primary" />
                                         <span className="mr-8 text-[14px] font-normal">{activeEvent.location}</span>
-                                        <button className="bg-dark-400 text-white text-[14px] font-normal hover:font-semibold hover:bg-primary hover:text-dark-400 tracking-wide px-5 py-1 ml-10 rounded-full">
+                                        <button className="bg-dark-400 text-white text-[14px] font-normal hover:font-semibold hover:bg-primary hover:text-dark-400 tracking-wide px-5 py-1 ml-10 rounded-full" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
                                             Go with post
                                         </button>
                                     </div>

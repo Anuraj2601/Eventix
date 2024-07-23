@@ -95,10 +95,13 @@ const Announcement = () => {
                     <Typography className="text-[#AEC90A]" variant="h6">
                       {date}
                     </Typography>
-                    <div className="flex items-center">
-                      {isEditable && <FaEye className="text-[#AEC90A] mr-2" />}
-                      <Typography className="text-white">{to}</Typography>
-                    </div>
+                    {isEditable && (
+  <div className="flex items-center">
+    <FaEye className="text-[#AEC90A] mr-2" />
+    <Typography className="text-white">{to}</Typography>
+  </div>
+)}
+
                     {isEditable && (
                       <EditDeleteButton
                         onEdit={() => handleEdit(id)}
