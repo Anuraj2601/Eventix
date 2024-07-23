@@ -108,11 +108,11 @@ const ClubDetails = () => {
           <div className="flex items-start mb-6 bg-[#1E1E1E] p-3 shadow-lg rounded-full"  style={{ 
                                                         boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                                                       }}>
-            <div className="rounded-full overflow-hidden w-24 h-24 flex-shrink-0">
+            <div className="rounded-full overflow-hidden w-24 h-24 flex-shrink-0m custom-card">
               <img
                 src={clubDetails.image}
                 alt={clubDetails.name}
-                className="object-cover flex items-start w-full h-full"
+                className="object-cover flex items-start w-full h-full "
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = fallbackImage; // Fallback image
@@ -136,12 +136,12 @@ const ClubDetails = () => {
                 </div>
                 <div className="flex items-center">
                   {/* Like Button */}
-                  <LikeButton initialLikes={320} className="mr-2" />
+                  <LikeButton initialLikes={320} className="mr-2 custom-card" />
 
                   {/* Successful Events */}
                   <div className="flex items-center mr-6 bg-[#1E1E1E] rounded-full">
                     <FaCheckCircle className="text-[#AEC90A] text-lg" />
-                    <Typography variant="body1" className="text-white ml-2">
+                    <Typography variant="body1" className="text-white ml-2 custom-card">
                       10 Successful Events
                     </Typography>
                   </div>
@@ -149,7 +149,7 @@ const ClubDetails = () => {
                   {/* Members */}
                   <div className="flex items-center bg-[#1E1E1E] rounded-full">
                     <FaUsers className="text-[#AEC90A] text-lg" />
-                    <Typography variant="body1" className="text-white ml-2">
+                    <Typography variant="body1" className="text-white ml-2 custom-card">
                       200 Members Community
                     </Typography>
                   </div>
