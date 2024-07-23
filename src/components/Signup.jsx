@@ -81,7 +81,7 @@ const Signup = () => {
         <div className="flex h-screen justify-center bg-dark-400 ">
 
         {/* Left Side */}
-        <div className="w-1/3 flex flex-col items-center justify-center relative border border-white" style={{ backgroundColor: '#AEC90A', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }}>
+        <div className="w-1/3 flex flex-col items-center justify-center relative" style={{ backgroundColor: '#AEC90A', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }}>
             <span className="absolute top-4 left-4 cursor-pointer text-black hover:text-dark-400 text-3xl" onClick={handleBackClick}>
                 <IoArrowBackCircleOutline />
             </span>
@@ -89,7 +89,7 @@ const Signup = () => {
                 <h1 className="text-2xl font-bold mt-10 text-dark-400">Create New Account</h1>
                 <p className="text-[15px] font-semibold text-dark-400 mt-2"> Signup to Eventix</p>
             </div> */}
-            <img src={signupMan} alt="signup" className="w-[700px] mt-28 h-auto" />
+            <img src={signupMan} alt="signup" className="w-[700px] mt-32 h-auto" />
         </div>
 
             {/* Right Side */}

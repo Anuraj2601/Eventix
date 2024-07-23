@@ -80,7 +80,7 @@ const Login = () => {
                 <span className="absolute top-4 left-4 cursor-pointer text-black hover:text-dark-400 text-3xl" onClick={handleBackClick}>
                     <IoArrowBackCircleOutline />
                 </span>
-                <img src={loginImg} alt="Login" className="mt-28 w-full h-auto" />
+                <img src={loginImg} alt="Login" className="mt-32 w-full h-auto" />
             </div>
 
             {/* Right Side */}
