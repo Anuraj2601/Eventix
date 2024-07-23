@@ -93,14 +93,15 @@ const AddEvent = () => {
                         <div className="mb-4 flex flex-col items-center">
     <label className="block mb-2">Event Image:</label>
     <div className="flex items-center space-x-2">
-        <input
-            type="file"
-            name="eventImage"
-            onChange={handleFileChange}
-            className="bg-neutral-700 text-white p-2 rounded-lg"
-        />
-        <FaUpload className="text-white" />
-    </div>
+                    <input
+                        type="file"
+                        name="proofOfApproval"
+                        onChange={handleFileChange}
+                        className="w-full h-32 bg-black text-white p-2 rounded-2xl" style={{ 
+                          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                        }}                    />
+                    <FaUpload className="text-white" />
+                </div>
 </div>
 
                         <div className="mb-4">
@@ -110,8 +111,9 @@ const AddEvent = () => {
                                 name="name"
                                 value={formFields.name}
                                 onChange={handleInputChange}
-                                className="w-72 bg-neutral-700 text-white p-2 rounded-lg"
-                            />
+                                className="w-72 h-16 bg-black text-white p-2 rounded-2xl" style={{ 
+                                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                }}                            />
                         </div>
                         <div className="mb-4">
                             <label className="block mb-2">Venue of the Event:</label>
@@ -120,8 +122,9 @@ const AddEvent = () => {
                                 name="venue"
                                 value={formFields.venue}
                                 onChange={handleInputChange}
-                                className="w-72 bg-neutral-700 text-white p-2 rounded-lg"
-                            />
+                                className="w-72 h-16  bg-black text-white p-2 rounded-2xl" style={{ 
+                                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                }}                            />
                         </div>
                         <div className="mb-4">
                             <label className="block mb-2">Tentative Date of the Event:</label>
@@ -130,8 +133,9 @@ const AddEvent = () => {
                                 name="date"
                                 value={formFields.date}
                                 onChange={handleInputChange}
-                                className="w-72 bg-neutral-700 text-white p-2 rounded-lg"
-                            />
+                                className="w-72 h-16  bg-black text-white p-2 rounded-2xl" style={{ 
+                                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                }}                            />
                         </div>
                         <div className="mb-4">
                             <label className="block mb-2">Budget of the Event:</label>
@@ -140,8 +144,9 @@ const AddEvent = () => {
                                 name="budget"
                                 value={formFields.budget}
                                 onChange={handleInputChange}
-                                className="w-72 bg-neutral-700 text-white p-2 rounded-lg"
-                            />
+                                className="w-72 h-16  bg-black text-white p-2 rounded-2xl" style={{ 
+                                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                }}                            />
                         </div>
                         <div className="mb-4">
                             <label className="block mb-2">Purpose of the Event:</label>
@@ -149,7 +154,9 @@ const AddEvent = () => {
                                 name="purpose"
                                 value={formFields.purpose}
                                 onChange={handleInputChange}
-                                className="w-full h-32 bg-neutral-700 text-white p-2 rounded-lg"
+                                className="w-full h-32 bg-black text-white p-2 rounded-2xl" style={{ 
+                                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                }}
                             />
                         </div>
                         <div className="mb-4">
@@ -158,8 +165,9 @@ const AddEvent = () => {
                                 name="benefits"
                                 value={formFields.benefits}
                                 onChange={handleInputChange}
-                                className="w-full h-32 bg-neutral-700 text-white p-2 rounded-lg"
-                            />
+                                className="w-full h-32 bg-black text-white p-2 rounded-2xl" style={{ 
+                                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                }}                            />
                         </div>
                         <div className="mb-4 flex flex-col items-center">
     <label className="block mb-2">IUD Approval Status:</label>
@@ -192,8 +200,9 @@ const AddEvent = () => {
                         type="file"
                         name="proofOfApproval"
                         onChange={handleFileChange}
-                        className="bg-neutral-700 text-white p-2 rounded-lg"
-                    />
+                        className="w-full h-32 bg-black text-white p-2 rounded-2xl" style={{ 
+                          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                        }}                    />
                     <FaUpload className="text-white" />
                 </div>
             </label>
