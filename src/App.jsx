@@ -47,7 +47,9 @@ import SecretaryExploreclub from './pages/secretary/Exploreclub';
 // member
 import ClubMemberAllClubs from './pages/member/ClubMemberAllClubs';
 import ExploreMemberEvent from './pages/member/ExploreMemberEvent';
+
 import ExploreMemberclub from './pages/member/ExploreMemberClub';
+
 import MemberElectionForm from './pages/member/MemberElectionForm';
 import MemberElectionFormSuccess from './pages/member/MemberElectionFormSuccess';
 import MemberVotingProcess from './pages/member/MemberVotingProcess';
@@ -91,7 +93,9 @@ const App = () => {
       
 
          {/* member routes */}
+
         <Route path='/member' element={<ExploreMemberclub />}></Route>
+
         <Route path='/member/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
         <Route exact path="/member/event" element={<ExploreMemberEvent />} />      
         <Route path="/member-election-form" element={<MemberElectionForm />} />
@@ -136,7 +140,7 @@ const App = () => {
          {/* secretary ROUTES */}
          <Route exact path="/secretary/club" element={<Exploreclubsecretary />} />
         <Route path='/secretary/club/:name' element={<ClubDetailssecretary />} />
-        <Route exact path="/secretary/club/event" element={<Exploreevent />} />
+        <Route exact path="/secretary/club/event" element={<Exploreeventsecretary />} />
         <Route path='/secretary/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
         <Route path='/secretary/calendar' element={<Calendar />}></Route>

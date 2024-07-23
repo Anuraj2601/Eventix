@@ -20,7 +20,7 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="bg-neutral-900 p-6 shadow-2xl flex items-center justify-between py-2 text-white px-4">
+    <nav className="bg-neutral-900 shadow-2xl flex items-center justify-between py-1 text-white px-4">
       {/* Left Section: Back Button */}
       <div className="flex items-center">
         <div className="mr-4 cursor-pointer" onClick={() => navigate(-1)}>

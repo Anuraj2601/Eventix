@@ -42,7 +42,7 @@ const Login = () => {
             if(userData.token) {
                 localStorage.setItem('token', userData.token)
                 localStorage.setItem('role', userData.role)
-                navigate('/studentdashboard')
+                navigate('/student')
             } else {
                 setError(userData.message)
             }

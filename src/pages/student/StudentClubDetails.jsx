@@ -104,9 +104,11 @@ const ClubDetails = () => {
       <Sidebar className="flex-shrink-0" />
       <div className="flex flex-col flex-1 h-full overflow-y-auto">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="bg-neutral-900 text-white flex flex-col flex-1 p-3 relative ">
-        <div className="flex items-start mb-6 bg-[#1E1E1E] p-3 shadow-lg rounded-full">
-            <div className="rounded-full overflow-hidden w-24 h-24 flex-shrink-0 ">
+        <div className="bg-neutral-900 text-white flex flex-col flex-1 px-8 py-2 relative ">
+        <div className="flex items-start mb-6 bg-[#1E1E1E] p-3 shadow-lg rounded-full "  style={{ 
+                                                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                                      }}>
+            <div className="rounded-full overflow-hidden w-24 h-24 flex-shrink-0 custom-card">
               <img
                 src={clubDetails.image}
                 alt={clubDetails.name}

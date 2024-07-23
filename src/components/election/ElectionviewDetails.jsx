@@ -26,10 +26,12 @@ const ElectionviewDetails = ({ clubName, electionId }) => {
 
   return (
     <div className="flex justify-center items-center w-full mt-4">
-      <Card className="w-156 bg-neutral-900">
+      <Card className="w-156 bg-[#1E1E1E] "style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}>
         <CardBody>
           {elections.map(({ id, desc, applicationDate, votingDate }) => (
-            <div key={id} className="p-4 bg-[#1E1E1E] rounded-xl mb-4">
+            <div key={id} className="p-4 bg- rounded-xl mb-4">
               <Typography className="text-center text-[#AEC90A] p-5" variant="h5">
                 {desc}
               </Typography>
