@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import { Card, CardBody, Typography, Chip } from "@material-tailwind/react";
-import { Button } from "@material-tailwind/react";
+import { useLocation } from 'react-router-dom';
+import { Card, CardBody, Typography, Chip, Button } from "@material-tailwind/react";
 import EditDeleteButton from './EditDeleteButton';
 import { FaEye } from 'react-icons/fa'; // Import view icon
 
 const Meeting = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen((cur) => !cur);
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  // Check if the current path is either '/president' or '/secretary'
+  const isEditable = currentPath.startsWith('/president') || currentPath.startsWith('/secretary');
 
   const meetings = [
     {
@@ -35,13 +39,23 @@ const Meeting = () => {
     },
   ];
 
+  const handleEdit = (id) => {
+    // Add your edit handling logic here
+  };
+
+  const handleDelete = (id) => {
+    // Add your delete handling logic here
+  };
+
   return (
     <>
-      <Button
-        className="flex items-center gap-2 bg-[#AEC90A] mr-0 mt-2 font-bold rounded-full text-black ml-[950px]"
-      >
-        New Meeting
-      </Button>
+      {isEditable && (
+        <Button
+          className="flex items-center gap-2 bg-[#AEC90A] mr-0 mt-2 font-bold rounded-full text-black ml-[950px]"
+        >
+          New Meeting
+        </Button>
+      )}
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div className="">
@@ -49,6 +63,7 @@ const Meeting = () => {
               <div
                 key={id}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
+                style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)' }}
               >
                 <div className="flex flex-col w-1/4">
                   <Typography className="text-white font-normal" variant="h6">
@@ -89,27 +104,30 @@ const Meeting = () => {
                   )}
                 </div>
                 <div className="flex flex-col w-1/4 items-center">
-                  <div className="flex items-center gap-2">
-                    <FaEye className="text-[#AEC90A]" />
-                    <Typography className="text-white font-normal">
-                      {audience}
-                    </Typography>
-                  </div>
+                  {isEditable && (
+                    <div className="flex items-center gap-2">
+                      <FaEye className="text-[#AEC90A]" />
+                      <Typography className="text-white font-normal">
+                        {audience}
+                      </Typography>
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center gap-4 w-1/4 justify-end">
                   <Button
                     color="gray"
                     className="text-gray-400 shadow-black shadow-md"
-                    disabled={status !== "Online"}
                   >
                     Join
                   </Button>
-                  <div className="flex items-center gap-4">
-                    <EditDeleteButton
-                      onEdit={() => handleEdit(id)}
-                      onDelete={() => handleDelete(id)}
-                    />
-                  </div>
+                  {isEditable && (
+                    <div className="flex items-center gap-4">
+                      <EditDeleteButton
+                        onEdit={() => handleEdit(id)}
+                        onDelete={() => handleDelete(id)}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

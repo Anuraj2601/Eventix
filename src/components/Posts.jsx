@@ -18,10 +18,12 @@ const Posts = ({ post }) => {
     const isStudentPage = location.pathname.startsWith('/student'); // Check if path starts with /student
 
     return (
-        <div className="flex items-center justify-center mb-4">
-            <div className='bg-[#0b0b0b] p-5 w-full rounded-md'>
+        <div className="flex items-center justify-center mb-8 p-8 -mt-10">
+            <div className='bg-[#0b0b0b] p-10 w-full rounded-md'  style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
                 <div className="flex flex-row items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2  custom-card">
                         <img src={post.userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
                         <div className="flex flex-col">
                             <p>{post.userName}</p>
@@ -30,19 +32,18 @@ const Posts = ({ post }) => {
                     </div>
                     {!isStudentPage && (
                         <div className="flex items-center gap-4">
-                            <HiOutlineDotsVertical className='text-[#AEC90A]' size={30} />
-                            <IoMdClose className='text-[#AEC90A]' size={30} />
+                            <HiOutlineDotsVertical className='text-[#AEC90A]  custom-card' size={30} />
+                            <IoMdClose className='text-[#AEC90A]  custom-card' size={30} />
                         </div>
                     )}
                 </div>
                 <div className="flex flex-col w-full mb-4">
                     <p>
                         {post.caption}
-                        {post.link && <a href={post.link} className='text-[#AEC90A] underline' target="_blank" rel="noopener noreferrer">{post.link}</a>}
-                    </p>                    <LikeButton initialLikes={320} className=" absolute bottom-4 right-4" />
+                        {post.link && <a href={post.link} className='text-[#AEC90A] underline  custom-card' target="_blank" rel="noopener noreferrer">{post.link}</a>}
+                    </p>                  
 
                     {post.image && <img src={post.image} alt="" className='border-1 border-[#AEC90A] w-full h-88 object-cover mt-3' />}
-
                 </div>
             </div>
         </div>
@@ -60,7 +61,7 @@ const NewsFeed = ({ posts }) => {
                     <div className='flex justify-end mb-2'>
                         <button
                            
-                            className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-3 right-8 z-10"
+                            className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-3 right-8 z-10  custom-card"
                         >
                             <MdAdd size={24} />
                         </button>

@@ -124,7 +124,7 @@ const ClubReport = () => {
   };
 
   return (
-    <div className="p-4" style={{ backgroundColor: 'black' }}>
+    <div className="px-40 py-5 rounded-2xl " style={{ backgroundColor: 'black' }}>
         <div className="mb-8">
         <h2 className="text-xl text-center font-bold mb-2" style={{ color: 'white' }}>Version Comparison by Event</h2>
         <Chart

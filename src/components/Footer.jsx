@@ -5,7 +5,7 @@ import { HiSpeakerphone } from "react-icons/hi";
 
 const Footer = () => {
   return (
-    <footer className="b-0 mt-0 border-t-2 w-full mt-o bg-dark-500 text-white flex flex-col items-center py-6">
+    <footer className="b-0 mt-0 border-t-2 w-full mt-o bg-dark-500 text-white flex flex-col items-center py-6" >
       <div className="text-center mb-4">
         <h2 className="text-[15px] text-secondary tracking-wide font-normal">
           EventiX <span className="text-white tracking-wide">The Event Management System</span>

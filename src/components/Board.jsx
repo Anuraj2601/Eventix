@@ -4,11 +4,13 @@ const Board = () => {
   return (
     <div className="flex flex-col justify-center items-center h-full  overflow-auto   rounded-2xl">
       <div className="text-[#AEC90A] text-3xl mt-2">Board of Term 23/24</div>
-      <div className="flex justify-center gap-5 p-10">
+      <div className="flex justify-center gap-16 p-10">
         {/* President */}
-        <div className="flex flex-col items-center p-5 bg-black text-center rounded-2xl">
+        <div className="flex flex-col items-center p-5  bg-black rounded-2xl  custom-card text-center "  style={{ 
+                                                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                                      }}>
           <img
-            className="h-64 w-64 md:h-48 md:w-48  object-cover object-center"
+            className="h-64 w-64 md:h-48 md:w-48  rounded-full object-cover object-center"
             src="https://randomuser.me/api/portraits/men/78.jpg"
             alt="President"
           />
@@ -21,7 +23,9 @@ const Board = () => {
           </div>
         </div>
         {/* Secretary */}
-        <div className="flex flex-col items-center p-5 bg-black text-center rounded-2xl">
+        <div className="flex flex-col items-center p-5 bg-black rounded-2xl  custom-card text-center "  style={{ 
+                                                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                                      }}>
           <img
             className="h-64 w-64 md:h-48 md:w-48 rounded-full object-cover object-center"
             src="https://randomuser.me/api/portraits/men/89.jpg"
@@ -36,7 +40,9 @@ const Board = () => {
           </div>
         </div>
         {/* Treasurer */}
-        <div className="flex flex-col items-center p-5 bg-black text-center rounded-2xl">
+        <div className="flex flex-col items-center p-5  bg-black rounded-2xl  custom-card text-center "  style={{ 
+                                                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                                      }}>
           <img
             className="h-64 w-64 md:h-48 md:w-48 rounded-full object-cover object-center"
             src="https://randomuser.me/api/portraits/men/30.jpg"

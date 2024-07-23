@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from "@material-tailwind/react";
 import { RiOpenArmLine } from "react-icons/ri";
 import { IoMdBookmark } from "react-icons/io";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Import images directly from the assets folder
 import rotaractImage from '../assets/clubs/rotaract.png';
@@ -17,6 +17,7 @@ import rekhaImage from '../assets/clubs/rekha.png';
 
 const PresidentClubCard = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const clubs = [
         {
@@ -25,7 +26,7 @@ const PresidentClubCard = () => {
             reg_status: "yes",
             description: "The Rotaract Club of UCSC, part of Rotary International District 3220, empowers youth to enact positive change locally and globally.",
             image: rotaractImage,
-            sname: "rotract",
+            sname: "rotaract",
         },
         {
             id: "2",
@@ -34,14 +35,6 @@ const PresidentClubCard = () => {
             description: "The ACM Student Chapter aims to advance computing as a science and profession. Activities include coding competitions, guest lectures, and career development workshops.",
             image: acmImage,
             sname: "acm",
-        },
-        {
-            id: "3",
-            name: "Pahasara Club (Innovation and Creativity)",
-            reg_status: "yes",
-            description: "The Pahasara Club offers a platform for photography enthusiasts to enhance their skills through workshops, photo walks, and exhibitions.",
-            image: pahasaraImage,
-            sname: "pahasara",
         },
         {
             id: "4",
@@ -91,6 +84,14 @@ const PresidentClubCard = () => {
             image: rekhaImage,
             sname: "rekha",
         },
+        {
+            id: "3",
+            name: "Pahasara Club (Innovation and Creativity)",
+            reg_status: "yes",
+            description: "The Pahasara Club offers a platform for photography enthusiasts to enhance their skills through workshops, photo walks, and exhibitions.",
+            image: pahasaraImage,
+            sname: "pahasara",
+        },
     ];
 
     const handleRegisterClick = (club) => {
@@ -98,13 +99,35 @@ const PresidentClubCard = () => {
     };
 
     const handleExploreClick = (club) => {
-        navigate(`/president/club/${club.sname}`, { state: { club, image: club.image } });
+        let basePath;
+        switch (true) {
+            case location.pathname.startsWith('/president'):
+                basePath = '/president';
+                break;
+            case location.pathname.startsWith('/oc'):
+                basePath = '/oc';
+                break;
+            case location.pathname.startsWith('/admin'):
+                basePath = '/admin';
+                break;
+            case location.pathname.startsWith('/member'):
+                basePath = '/member';
+                break;
+            case location.pathname.startsWith('/treasurer'):
+                basePath = '/treasurer';
+                break;
+            default:
+                basePath = ''; // Default base path or handle other cases
+        }
+        navigate(`${basePath}/club/${club.sname}`, { state: { club, image: club.image } });
     };
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {clubs.map((club) => (
-                <div key={club.id} className='bg-[#0B0B0B] w-full h-[28rem] rounded-2xl overflow-hidden flex flex-col shadow-lg'>
+                <div key={club.id} className='bg-[#0B0B0B] w-full h-[28rem] rounded-2xl overflow-hidden flex flex-col shadow-lg mb-4 mt-4 custom-3d-shadow custom-card' style={{ 
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                  }}>
                     <div className="h-2/5 overflow-hidden">
                         <img src={club.image} alt={club.name} className='w-full h-full object-cover' />
                     </div>
@@ -118,12 +141,12 @@ const PresidentClubCard = () => {
                                             {
                                                 club.reg_status === 'yes' ? (
                                                     <>
-                                                        <RiOpenArmLine className='text-[#AEC90A]' size={20} />
+                                                        <RiOpenArmLine className='text-[#AEC90A] custom-card' size={20} />
                                                         <span className='text-[#AEC90A]'>Registrations are Open</span>
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <RiOpenArmLine className='text-[#5C690A]' size={20} />
+                                                        <RiOpenArmLine className='text-[#5C690A] custom-card' size={20} />
                                                         <span className='text-[#5C690A]'>Registrations are Closed</span>
                                                     </>
                                                 )
@@ -131,22 +154,22 @@ const PresidentClubCard = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <IoMdBookmark className='text-[#AEC90A]' size={30} />
+                                <IoMdBookmark className='text-[#AEC90A] custom-card' size={30} />
                             </div>
                             <div className="mb-4">
                                 <p className='text-[#F5F5F5]'>{club.description}</p>
                             </div>
                         </div>
                         <div className="flex items-center justify-end gap-4">
-                            <Button className="bg-white text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium">Ignore</Button>
+                            <Button className="bg-white text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card">Ignore</Button>
                             <Button
-                                className={`text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium ${club.reg_status === "yes" ? 'bg-[#AEC90A]' : 'bg-[#AEC90A80] cursor-not-allowed'}`}
+                                className={`text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card ${club.reg_status === "yes" ? 'bg-[#AEC90A]' : 'bg-[#AEC90A80] cursor-not-allowed'}`}
                                 onClick={() => handleRegisterClick(club)}
                                 disabled={club.reg_status !== "yes"}
                             >
                                 Register
                             </Button>
-                            <Button className="bg-[#AEC90A] text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium" onClick={() => handleExploreClick(club)}>Explore</Button>
+                            <Button className="bg-[#AEC90A] text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card" onClick={() => handleExploreClick(club)}>Explore</Button>
                         </div>
                     </div>
                 </div>

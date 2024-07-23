@@ -40,7 +40,7 @@ const Reports = () => {
       <BudgetTable onUpdate={handleUpdate} showTable={false} />
 
       {/* Budget Overview Chart */}
-      <Card className="w-full bg-neutral-900 rounded-lg ">
+      <Card className="w-full bg-neutral-900 rounded-2xl px-10 ">
         <CardBody>
           <Typography color="white" variant="h4" className="mb-4 text-center">
             Budget Overview
