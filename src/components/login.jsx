@@ -4,13 +4,15 @@ import { IoArrowBackCircleOutline } from "react-icons/io5";
 import loginImg from '../assets/loginImg.png';
 import { useNavigate } from 'react-router-dom';
 import UsersService from '../service/UsersService';
-// import {SignUp} from './Components/SignUp';
 
 const Login = () => {
     const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -29,53 +31,62 @@ const Login = () => {
         navigate('/');
     };
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
+    const validate = () => {
+        const newErrors = {};
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@stu\.ucsc\.cmb\.ac\.lk$/;
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+        if (!email) newErrors.email = "Email is required";
+        else if (!emailRegex.test(email)) newErrors.email = "Invalid Email format";
+
+        if (!password) newErrors.password = "Password is required";
+        else if (!passwordRegex.test(password)) newErrors.password = "Password must be at least 8 characters long and contain both letters and numbers";
+
+        return newErrors;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const validationErrors = validate();
+        if (Object.keys(validationErrors).length > 0) {
+            setError(Object.values(validationErrors).join(', '));
+            return;
+        }
 
         try {
-            const userData = await UsersService.login(email, password)
-            console.log(userData)
-            if(userData.token) {
-                localStorage.setItem('token', userData.token)
-                localStorage.setItem('role', userData.role)
-                navigate('/student')
+            const userData = await UsersService.login(email, password);
+            console.log(userData);
+            if (userData.token) {
+                localStorage.setItem('token', userData.token);
+                localStorage.setItem('role', userData.role);
+                navigate('/student');
             } else {
-                setError(userData.message)
+                setError(userData.message);
             }
-
-        } catch(error) {
+        } catch (error) {
             console.log(error);
-            setError(error.message)
+            setError(error.message);
             setTimeout(() => {
                 setError('');
             }, 5000);
         }
-    }
+    };
 
     return (
-        <div className="flex h-screen justify-center bg-dark-400">
-               
+        <div className="flex h-screen bg-dark-400">
+
             {/* Left Side */}
-            <div className="w-1/3 flex flex-col items-center justify-center relative border border-white" style={{ backgroundColor: '#AEC90A', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }}>
-                <span className="absolute top-4 left-4 cursor-pointer text-white hover:text-dark-400 text-3xl" onClick={handleBackClick}>
+            <div className="w-1/3 flex flex-col items-center justify-center relative bg-[#AEC90A] border-r border-white border-opacity-30 rounded-r-lg">
+                <span className="absolute top-4 left-4 cursor-pointer text-black hover:text-dark-400 text-3xl" onClick={handleBackClick}>
                     <IoArrowBackCircleOutline />
                 </span>
-                {/* <div className="text-center">
-                    <h1 className="text-4xl font-bold mt-10 text-dark-400">WELCOME</h1>
-                    <p className="text-[15px] font-semibold text-dark-400 mt-2">Login to Eventix</p>
-                </div> */}
-                <img src={loginImg} alt="Login" className="mt-28 w-[600px] h-auto" />
+                <img src={loginImg} alt="Login" className="mt-32 w-full h-auto" />
             </div>
 
             {/* Right Side */}
-            <div className="w-1/2 bg-dark-background flex flex-col justify-center px-10 border-t border-r border-b border-white border-opacity-30">
-            <form onSubmit={handleSubmit}>
-                <div className="space-y-6 mx-auto w-[30vw]">
-                {error && <p className='error-message text-red-700'>{error}</p>}
+            <div className="w-2/3 bg-dark-background flex flex-col justify-center px-10 border-t border-r border-b border-white border-opacity-30">
+                <form onSubmit={handleSubmit} className="space-y-6 mx-auto w-[60%]">
+                    {error && <p className='error-message text-red-700'>{error}</p>}
                     <div>
                         <label htmlFor="username" className="block text-white text-sm mb-4">User Name</label>
                         <input
@@ -87,6 +98,7 @@ const Login = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
+                        {error && error.includes('Email') && <p className='text-red-500 text-sm'>{error}</p>}
                     </div>
 
                     <div>
@@ -96,31 +108,30 @@ const Login = () => {
                                 type={showPassword ? "text" : "password"}
                                 id="password"
                                 name="password"
-                                className="w-full px-4 py-2 h-[50px] bg-dark-400 text-white border border-white opacity-50 rounded mb-20"
+                                className="w-full px-4 py-2 h-[50px] bg-dark-400 text-white border border-white opacity-50 rounded"
                                 placeholder="Enter your password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
-                            <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-white cursor-pointer mb-20" onClick={togglePasswordVisibility}>
+                            <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-white cursor-pointer" onClick={togglePasswordVisibility}>
                                 {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </span>
                         </div>
+                        {error && error.includes('Password') && <p className='text-red-500 text-sm'>{error}</p>}
                     </div>
 
-                    <div className='mt-40'>
-                        <button className="w-full bg-primary text-black py-2 h-[50px] rounded font-bold hover:bg-secondary font-base text-[14px]">LOGIN</button>
+                    <div className='mt-10'>
+                        <button type="submit" className="w-full bg-primary text-black py-2 h-[50px] rounded font-bold hover:bg-secondary rounded-full">LOGIN</button>
                         <div className="flex justify-center mt-5">
-                            <button className="w-full border border-white py-2 h-[50px] rounded font-base text-[14px]">Signup</button>
+                            <button className="w-full border border-white py-2 h-[50px] rounded font-base text-white text-[14px] rounded-full">Signup</button>
                         </div>
 
                         <div className="text-right mt-4">
                             <a href="#" className="text-sm text-secondary hover:underline">Forgot password?</a>
                         </div>
                     </div>
-                </div>
                 </form>
             </div>
-            
 
             {/* Popup */}
             {showPopup && (
