@@ -235,10 +235,10 @@ const ClubEvent = ({ club }) => {
 
                 {isAuthorizedUser() && hoveredIndex === index && (
                   <div className="absolute top-2 right-2 flex space-x-2">
-                    <IconButton className="text-white" onClick={() => handleEditEvent(event)}>
+                    <IconButton className="text-white bg-black" onClick={() => handleEditEvent(event)}>
                       <MdEdit size={20} />
                     </IconButton>
-                    <IconButton className="text-white" onClick={() => handleDeleteEvent(event)}>
+                    <IconButton className="text-white bg-black" onClick={() => handleDeleteEvent(event)}>
                       <MdDelete size={20} />
                     </IconButton>
                   </div>
