@@ -78,10 +78,10 @@ const Signup = () => {
     };
 
     return (
-        <div className="flex h-screen justify-center bg-dark-400 ">
+        <div className="flex h-screen justify-center bg-dark-400  ">
 
         {/* Left Side */}
-        <div className="w-1/3 flex flex-col items-center justify-center relative" style={{ backgroundColor: '#AEC90A', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }}>
+        <div className="w-1/3 flex flex-col items-center justify-center relative ml-20" style={{ backgroundColor: '#AEC90A', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }}>
             <span className="absolute top-4 left-4 cursor-pointer text-black hover:text-dark-400 text-3xl" onClick={handleBackClick}>
                 <IoArrowBackCircleOutline />
             </span>
@@ -93,101 +93,104 @@ const Signup = () => {
         </div>
 
             {/* Right Side */}
-            <div className="w-2/3 bg-dark-background flex flex-col justify-center px-10 border-l border-white border-opacity-30">
-                <div className="space-y-2 mx-auto w-[50%] py-10">
-                    <div>
-                        <label htmlFor="firstname" className="block text-white text-sm mb-2">First Name</label>
-                        <input
-                            type="text"
-                            id="firstname"
-                            name="firstname"
-                            className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
-                            placeholder="Cusherah"
-                            value={formData.firstname}
-                            onChange={handleChange}
-                        />
-                        {errors.firstname && <p className="text-red-500 text-sm mt-1">{errors.firstname}</p>}
-                    </div>
-                    <div>
-                        <label htmlFor="lastname" className="block text-white text-sm mb-2">Last Name</label>
-                        <input
-                            type="text"
-                            id="lastname"
-                            name="lastname"
-                            className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
-                            placeholder="Kugananthan"
-                            value={formData.lastname}
-                            onChange={handleChange}
-                        />
-                        {errors.lastname && <p className="text-red-500 text-sm mt-1">{errors.lastname}</p>}
-                    </div>
-                    <div>
-                        <label htmlFor="regNo" className="block text-white text-sm mb-2">Registration Number</label>
-                        <input
-                            type="text"
-                            id="regNo"
-                            name="regNo"
-                            className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
-                            placeholder="2021cs100"
-                            value={formData.regNo}
-                            onChange={handleChange}
-                        />
-                        {errors.regNo && <p className="text-red-500 text-sm mt-1">{errors.regNo}</p>}
-                    </div>
-                    <div>
-                        <label htmlFor="email" className="block text-white text-sm mb-2">Student Email</label>
-                        <input
-                            type="text"
-                            id="email"
-                            name="email"
-                            className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
-                            placeholder="2021cs100@stu.ucsc.cmb.ac.lk"
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-                    </div>
-                    <div>
-                        <label htmlFor="password" className="block text-white text-sm mb-2">Password</label>
-                        <div className="relative">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="password"
-                                name="password"
-                                className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
-                                placeholder="Enter your password"
-                                value={formData.password}
-                                onChange={handleChange}
-                            />
-                            <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-white cursor-pointer" onClick={togglePasswordVisibility}>
-                                {showPassword ? <FaEyeSlash /> : <FaEye />}
-                            </span>
-                        </div>
-                        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
-                    </div>
-                    <div>
-                        <label htmlFor="confirmpassword" className="block text-white text-sm mb-2">Confirm Password</label>
-                        <div className="relative">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="confirmpassword"
-                                name="confirmpassword"
-                                className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
-                                placeholder="Confirm your password"
-                                value={formData.confirmpassword}
-                                onChange={handleChange}
-                            />
-                            <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-white cursor-pointer" onClick={togglePasswordVisibility}>
-                                {showPassword ? <FaEyeSlash /> : <FaEye />}
-                            </span>
-                        </div>
-                        {errors.confirmpassword && <p className="text-red-500 text-sm mt-1">{errors.confirmpassword}</p>}
-                    </div>
+            <div className="w-1/2 bg-dark-background flex flex-col justify-center px-10 border-l border-white border-opacity-30">
+            <div className="space-y-2 mx-auto w-[50%] py-10">
+    <div className="flex space-x-4">
+        <div className="w-1/2">
+            <label htmlFor="firstname" className="block text-white text-sm mb-2">First Name</label>
+            <input
+                type="text"
+                id="firstname"
+                name="firstname"
+                className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
+                placeholder="Cusherah"
+                value={formData.firstname}
+                onChange={handleChange}
+            />
+            {errors.firstname && <p className="text-red-500 text-sm mt-1">{errors.firstname}</p>}
+        </div>
+        <div className="w-1/2">
+            <label htmlFor="lastname" className="block text-white text-sm mb-2">Last Name</label>
+            <input
+                type="text"
+                id="lastname"
+                name="lastname"
+                className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
+                placeholder="Kugananthan"
+                value={formData.lastname}
+                onChange={handleChange}
+            />
+            {errors.lastname && <p className="text-red-500 text-sm mt-1">{errors.lastname}</p>}
+        </div>
+    </div>
+    <div>
+        <label htmlFor="regNo" className="block text-white text-sm mb-2">Registration Number</label>
+        <input
+            type="text"
+            id="regNo"
+            name="regNo"
+            className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
+            placeholder="2021cs100"
+            value={formData.regNo}
+            onChange={handleChange}
+        />
+        {errors.regNo && <p className="text-red-500 text-sm mt-1">{errors.regNo}</p>}
+    </div>
+    <div>
+        <label htmlFor="email" className="block text-white text-sm mb-2">Student Email</label>
+        <input
+            type="text"
+            id="email"
+            name="email"
+            className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
+            placeholder="2021cs100@stu.ucsc.cmb.ac.lk"
+            value={formData.email}
+            onChange={handleChange}
+        />
+        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+    </div>
+    <div>
+        <label htmlFor="password" className="block text-white text-sm mb-2">Password</label>
+        <div className="relative">
+            <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+            />
+            <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-white cursor-pointer" onClick={togglePasswordVisibility}>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+        </div>
+        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+    </div>
+    <div>
+        <label htmlFor="confirmpassword" className="block text-white text-sm mb-2">Confirm Password</label>
+        <div className="relative">
+            <input
+                type={showPassword ? "text" : "password"}
+                id="confirmpassword"
+                name="confirmpassword"
+                className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
+                placeholder="Confirm your password"
+                value={formData.confirmpassword}
+                onChange={handleChange}
+            />
+            <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-white cursor-pointer" onClick={togglePasswordVisibility}>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+        </div>
+        {errors.confirmpassword && <p className="text-red-500 text-sm mt-1">{errors.confirmpassword}</p>}
+    </div>
 
-                    <div>
-                        <button className="w-full bg-primary text-black py-2 h-[50px] rounded-full font-bold hover:bg-secondary" onClick={handleSubmit}>SIGNUP</button>
-                    </div>
-                </div>
+    <div>
+        <button className="w-full bg-primary text-black py-2 h-[50px] rounded-full font-bold hover:bg-secondary" onClick={handleSubmit}>SIGNUP</button>
+    </div>
+</div>
+
             </div>
 
             {/* Popup */}
