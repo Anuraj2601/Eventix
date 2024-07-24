@@ -17,8 +17,12 @@ const Clubsforu = () => {
                 <span className="text-lg font-normal pl-3 text-white uppercase">Clubs for you</span>
             </div>
 
-            <div className="bg-dark-400 w-[82vw] h-[76vh] mt-2 rounded-lg flex items-center relative p-10">
-                <img src={ieee} alt="IEEE" className="w-[300px] h-[300px] rounded-xl border-4 border-white" />
+            <div className="bg-dark-400 w-[82vw] h-[76vh] mt-2 rounded-lg flex items-center relative p-10" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
+                <img src={ieee} alt="IEEE" className="w-[300px] h-[300px] rounded-xl " style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}/>
 
                 <div className="ml-5 flex flex-col w-full mt-0">
                     <div className="flex items-center justify-between">
@@ -37,9 +41,11 @@ const Clubsforu = () => {
 
                     </div>
 
-                    <div className="mt-4 space-y-4">
+                    <div className="mt-4 space-y-4" >
 
-                        <div className="flex items-center text-white mb-4 bg-dark-background p-4 rounded-lg hover:shadow-xl">
+                        <div className="flex items-center text-white mb-4 bg-dark-background p-4 rounded-lg hover:shadow-xl" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
                             <div className="bg-secondary w-12 h-12 rounded-full flex items-center justify-center mr-3">
                                 <BsCalendar2EventFill className="text-2xl text-dark-background" />
                             </div>
@@ -49,7 +55,9 @@ const Clubsforu = () => {
                             </div>
                         </div>
 
-                        <div className="flex items-center text-white mb-4 bg-dark-background p-4 rounded-lg hover:shadow-xl">
+                        <div className="flex items-center text-white mb-4 bg-dark-background p-4 rounded-lg hover:shadow-xl" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
                             <div className="bg-secondary w-12 h-12 rounded-full flex items-center justify-center mr-3">
                                 <GrTechnology className="text-2xl text-dark-background" />
                             </div>
@@ -59,7 +67,9 @@ const Clubsforu = () => {
                             </div>
                         </div>
 
-                        <div className="flex items-center text-white bg-dark-background p-4 rounded-lg hover:shadow-xl">
+                        <div className="flex items-center text-white bg-dark-background p-4 rounded-lg hover:shadow-xl" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
                             <div className="bg-secondary w-12 h-12 rounded-full flex items-center justify-center mr-3">
                                 <RiDiscountPercentFill className="text-3xl text-dark-background" />
                             </div>
@@ -72,11 +82,11 @@ const Clubsforu = () => {
 
                     </div>
 
-                    <div className="absolute bottom-0 right-[785px] shadow-lg mb-[81px] flex items-center">
-                        <div className="bg-dark-background w-[190px] h-8 flex items-center px-6 py-6 rounded-md">
-                            <img src={dp} alt="Small Image 1" className="w-10 h-10 rounded-full border-2 border-white -ml-2" />
-                            <img src={dp} alt="Small Image 2" className="w-10 h-10 rounded-full border-2 border-white -ml-2" />
-                            <img src={dp} alt="Small Image 3" className="w-10 h-10 rounded-full border-2 border-white -ml-2" />
+                    <div className="absolute bottom-0 right-[890px] shadow-lg mb-[81px] flex items-center bg-black rounded-full bg-opacity-80">
+                        <div className=" w-[190px] h-8 flex items-center px-6 py-6 rounded-md">
+                            <img src={dp} alt="Small Image 1" className="w-10 h-10 rounded-full border-2 border-black -ml-2" />
+                            <img src={dp} alt="Small Image 2" className="w-10 h-10 rounded-full border-2 border-black -ml-2" />
+                            <img src={dp} alt="Small Image 3" className="w-10 h-10 rounded-full border-2 border-black -ml-2" />
                             <span className="text-white text-lg font-normal ml-2">200+</span>
                         </div>
                     </div>
@@ -85,7 +95,9 @@ const Clubsforu = () => {
                 </div>
             </div>
 
-            <div className="bg-dark-400 mt-20 w-[82vw] h-72 rounded-lg grid grid-cols-4 gap-20 p-5 text-[14px] font-normal mb-40">
+            <div className="bg-dark-400 mt-20 w-[82vw] h-72 rounded-lg grid grid-cols-4 gap-20 p-5 text-[14px] font-normal mb-40" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
                 {[
                     { img: gavel, title: "Gavel AGM 24", border: "border-red-800" },
                     { img: rotract, title: "Rotract of UCSC", border: "border-purple-800" },
@@ -97,6 +109,9 @@ const Clubsforu = () => {
                             src={club.img}
                             alt={club.title}
                             className={`w-[200px] h-[200px] object-cover rounded-lg mt-2 ${club.border} transform transition-transform duration-500 group-hover:scale-110 group-hover:brightness-50`}
+                            style={{ 
+                                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                              }}
                         />
                         <span className="text-white text-center mt-2 tracking-wide">{club.title}</span>
                         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center space-x-2 opacity-0 transition-opacity duration-500 group-hover:opacity-100">

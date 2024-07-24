@@ -66,11 +66,15 @@ const LandingNav = () => {
               ))}
             </ul>
             <div className="flex space-x-6 py-5">
-              <a href="#" className="py-2 px-3 border rounded-md w-26 h-10">
+              <a href="#" className="py-2 px-3 border rounded-md w-26 h-10" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
                 Login
               </a>
               <a
-                href="#" className="py-2 px-3 rounded-md bg-gradient-to-r from-primary to-secondary w-22 h-10">
+                href="#" className="py-2 px-3 rounded-md bg-gradient-to-r from-primary to-secondary w-22 h-10" style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}>
                 SignUp
               </a>
             </div>

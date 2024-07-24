@@ -97,7 +97,9 @@ const SecretaryClubCard = () => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {clubs.map((club) => (
-                <div key={club.id} className='bg-[#0B0B0B] w-full h-[28rem] rounded-2xl overflow-hidden flex flex-col shadow-lg'>
+                <div key={club.id} className='bg-[#0B0B0B] w-full h-[28rem] rounded-2xl overflow-hidden flex flex-col shadow-lg mb-4 mt-4 custom-3d-shadow custom-card' style={{ 
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                  }}>
                     <div className="h-2/5 overflow-hidden">
                         <img src={club.image} alt={club.name} className='w-full h-full object-cover' />
                     </div>

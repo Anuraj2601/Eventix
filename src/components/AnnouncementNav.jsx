@@ -12,16 +12,18 @@ import { useLocation } from "react-router-dom"; // Import useLocation hook
 const AnnouncementNav = () => {
   const [activeTab, setActiveTab] = React.useState("Announcements");
   const location = useLocation(); // Get the current path
-  const isStudentPage = location.pathname.startsWith('/student'); // Check if the path starts with /student
+
+  // Check if the path starts with one of the specified routes
+  const isEditablePage = ['/treasurer', '/secretary', '/president'].some(path => location.pathname.startsWith(path));
 
   const data = [
     {
       label: "Announcements",
       value: "Announcements",
       desc: "The Event registration link will be available soon.",
-      editable: !isStudentPage, // Set editable based on the page
+      editable: isEditablePage, // Set editable based on the page
     },
-    ...(!isStudentPage
+    ...(!isEditablePage
       ? [
           {
             label: "Meetings",
@@ -36,7 +38,7 @@ const AnnouncementNav = () => {
   return (
     <Tabs value={activeTab}>
       <TabsHeader
-        className={`rounded-none bg-transparent p-0 ${isStudentPage ? 'grid grid-cols-1' : 'grid grid-cols-3'}`}
+        className={`rounded-none bg-transparent p-0 ${isEditablePage ? 'grid grid-cols-1' : 'grid grid-cols-3'}`}
         indicatorProps={{
           className:
             "mt-8 absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 rounded-full transition-opacity bg-transparent border-b-[8px] border-[#AEC90A] shadow-none",
