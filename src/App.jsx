@@ -15,9 +15,18 @@ import Calendar from './pages/president/Calendar';
 import NewElectionForm from './pages/president/NewElectionForm';
 import AddNewPostForm from './pages/president/AddNewPostForm';
 
+import Explorecluboc from './pages/oc/Exploreclub';
+import Exploreeventoc from './pages/oc/Exploreevent';
+import ClubDetailsoc from './pages/oc/ClubDetails';
+import Electionoc from './pages/oc/Election';
+import Dashboardoc from './pages/oc/Dashboard';
+import Calendaroc from './pages/oc/Calendar';
+import NewElectionFormoc from './pages/oc/NewElectionForm';
+import AddNewPostFormoc from './pages/oc/AddNewPostForm';
+
 import Exploreclubsecretary from './pages/secretary/Exploreclub';
 import Exploreeventsecretary from './pages/secretary/Exploreevent';
-import ClubDetailssecretary from './pages/secretary/ClubDetails';
+import ClubDetailssecretary from './pages/president/ClubDetails';
 import Electionsecretary from './pages/secretary/Election';
 import Dashboardsecretary from './pages/secretary/Dashboard';
 import Calendarsecretary from './pages/secretary/Calendar';
@@ -94,9 +103,11 @@ const App = () => {
 
          {/* member routes */}
 
-        <Route path='/member' element={<ExploreMemberclub />}></Route>
+        <Route path='/member' element={<Dashboard />}></Route>
+        <Route path='/member/dashboard' element={<Dashboard  />} ></Route>
+        <Route path='/member/club' element={<ExploreMemberclub />}></Route>
 
-        <Route path='/member/clubs/:name' element={<ClubMemberAllClubs />} ></Route>
+        <Route path='/member/club/:name' element={<ClubMemberAllClubs />} ></Route>
         <Route exact path="/member/event" element={<ExploreMemberEvent />} />      
         <Route path="/member-election-form" element={<MemberElectionForm />} />
         <Route path="/member-form-success" element={<MemberElectionFormSuccess />} />
@@ -133,7 +144,7 @@ const App = () => {
         <Route path='/president/club/election' element={<Election/>}></Route>
         <Route path='/president' element={<Dashboard  />} ></Route>
         <Route path="/president/club/election/add" element={<NewElectionForm />} />
-        <Route path="/president/new-post" element={<AddNewPostForm />} />
+        <Route path="/club/new-post" element={<AddNewPostForm />} />
 
         
 
@@ -147,7 +158,18 @@ const App = () => {
         <Route path='/secretary/club/election' element={<Election/>}></Route>
         <Route path='/secretary' element={<Dashboard  />} ></Route>
 
+        {/* OC ROUTES */}
+        <Route exact path="/oc/club" element={<Explorecluboc />} />
+        <Route exact path="/oc/club/event" element={<Exploreeventoc />} />
+        <Route path='/oc/club/:name' element={<ClubDetailsoc />} />
+        <Route path='/oc/dashboard' element={<Dashboard  />} ></Route>
 
+        <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
+        <Route path='/oc/calendar' element={<Calendar />}></Route>
+        <Route path='/oc/club/election' element={<Election/>}></Route>
+        <Route path='/oc' element={<Dashboardoc  />} ></Route>
+        <Route path="/oc/club/election/add" element={<NewElectionForm />} />
+        <Route path="/oc/new-post" element={<AddNewPostFormoc />} />
 
         
 

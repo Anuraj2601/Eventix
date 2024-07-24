@@ -6,7 +6,7 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import Meeting from "./Meeting";
 import Announcement from "./Announcement";
@@ -18,11 +18,12 @@ import ClubReport from "./ClubReport";
 import ClubPosts from "./ClubPosts";
 import Recruitment from "./Recruitment";
 
-
-
-
 const PresidentClubNav = ({ club }) => {
   const [activeTab, setActiveTab] = React.useState("Events");
+  const location = useLocation();
+
+  const authorizedPaths = ['/president', '/treasurer', '/secretary'];
+  const showRestrictedTabs = authorizedPaths.some(path => location.pathname.startsWith(path));
 
   const data = [
     {
@@ -60,17 +61,18 @@ const PresidentClubNav = ({ club }) => {
       value: "Announcement",
       desc: <Announcement />,
     },
-    {
-      label: "Event Reports",
-      value: "Event Reports",
-      desc: <ClubReport />,
-    },
-    {
-      label: "Recruitment",
-      value: "Recruitment",
-      desc: <Recruitment />,
-    },
-    
+    ...(showRestrictedTabs ? [
+      {
+        label: "Event Reports",
+        value: "Event Reports",
+        desc: <ClubReport />,
+      },
+      {
+        label: "Recruitment",
+        value: "Recruitment",
+        desc: <Recruitment />,
+      }
+    ] : []),
   ];
 
   return (

@@ -18,8 +18,8 @@ const Posts = ({ post }) => {
     const isStudentPage = location.pathname.startsWith('/student'); // Check if path starts with /student
 
     return (
-        <div className="flex items-center justify-center mb-8">
-            <div className='bg-[#0b0b0b] p-5 w-full rounded-md'  style={{ 
+        <div className="flex items-center justify-center mb-8 p-8 -mt-10">
+            <div className='bg-[#0b0b0b] p-10 w-full rounded-md'  style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
                 <div className="flex flex-row items-center justify-between mb-4">
@@ -44,7 +44,6 @@ const Posts = ({ post }) => {
                     </p>                  
 
                     {post.image && <img src={post.image} alt="" className='border-1 border-[#AEC90A] w-full h-88 object-cover mt-3' />}
-                    <LikeButton initialLikes={320} className=" absolute bottom-4 right-4  custom-card" />
                 </div>
             </div>
         </div>

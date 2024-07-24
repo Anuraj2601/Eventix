@@ -23,12 +23,42 @@ const ClubPresident = () => {
 
   const handleOpen = () => setOpen((cur) => !cur);
 
-  const getClubDetails = (club) => {
-    // Assuming the ClubDetails page is at the path `/president/club/:name`
-    navigate(`/president/club/${club.name}`, { state: { club } });
-  };
+  const getClubDetails = (club)  => {
+    let basePath;
+    switch (true) {
+        case location.pathname.startsWith('/president'):
+            basePath = '/president';
+            break;
+        case location.pathname.startsWith('/oc'):
+            basePath = '/oc';
+            break;
+        case location.pathname.startsWith('/admin'):
+            basePath = '/admin';
+            break;
+            case location.pathname.startsWith('/secretary'):
+            basePath = '/secretary';
+            break;
+        case location.pathname.startsWith('/member'):
+            basePath = '/member';
+            break;
+        case location.pathname.startsWith('/treasurer'):
+            basePath = '/treasurer';
+            break;
+        default:
+            basePath = ''; // Default base path or handle other cases
+    }
+    navigate(`${basePath}/club/${club.sname}`, { state: { club, image: club.image } });
+};
 
   const clubs = [
+    {
+      id: "6",
+      name: "IEEE Student Chapter",
+      reg_status: "yes",
+      description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
+      image: ieeeImage,
+      sname: "ieee",
+  },
     {
         id: "1",
         name: "Rotaract Club of UCSC",
@@ -69,14 +99,7 @@ const ClubPresident = () => {
         image: wieImage,
         sname: "wie",
     },
-    {
-        id: "6",
-        name: "IEEE Student Chapter",
-        reg_status: "yes",
-        description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
-        image: ieeeImage,
-        sname: "ieee",
-    },
+    
     
 ];
   return (
@@ -87,14 +110,18 @@ const ClubPresident = () => {
             {clubs.map((club) => (
               <div
                 key={club.id}
-                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
+                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4 " style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}
               >
-                <div className="flex items-center gap-x-3">
+                <div className="flex items-center gap-x-3 custom-3d-shadow">
                   <Avatar
                     size="sm"
                     src={club.image}
                     alt={club.name}
-                    className="border-2 border-white rounded-md w-20 h-10"
+                    className=" rounded-md w-20 h-10 custom-card" style={{ 
+                      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                    }}
                   />
                   <Typography color="white" className="font-medium">
                     {club.name}
@@ -102,13 +129,13 @@ const ClubPresident = () => {
                 </div>
                 <div className="flex gap-4">
                   <Button
-                    className="bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
+                    className="bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm custom-card"
                     onClick={handleOpen}
                   >
                     Leave
                   </Button>
                   <Button
-                    className={`pt-1 pb-1 pl-5 pr-5 rounded-2xl font-medium text-sm ${club.reg_status === 'yes' ? 'bg-[#AEC90A] text-black' : 'bg-[#AEC90A80] text-[#1E1E1E] cursor-not-allowed'}`}
+                    className={` custom-card pt-1 pb-1 pl-5 pr-5 rounded-2xl font-medium text-sm ${club.reg_status === 'yes' ? 'bg-[#AEC90A] text-black' : 'bg-[#AEC90A80] text-[#1E1E1E] cursor-not-allowed'}`}
                     onClick={() => getClubDetails(club)}
                     disabled={club.reg_status !== 'yes'}
                   >

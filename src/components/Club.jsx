@@ -14,6 +14,12 @@ const Club = () => {
   const handleOpen = () => setOpen((cur) => !cur);
 
 const clubs = [
+  {
+    id: "6",
+    name: "IEEE Student Chapter",
+    sname: "ieee",
+    image: "../src/assets/clubs/ieee.png",
+},
     {
         id: "1",
         name: "Rotaract Club of UCSC",
@@ -44,12 +50,7 @@ const clubs = [
         sname: "wie",
         image: "../src/assets/clubs/wie.png",
     },
-    {
-        id: "6",
-        name: "IEEE Student Chapter",
-        sname: "ieee",
-        image: "../src/assets/clubs/ieee.png",
-    },
+   
    
 ];
 
@@ -70,28 +71,30 @@ const getClubDetails = (club) => {
             {clubs.map((club, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
-              >
+                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4 "style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}                            >
                 <div className="flex items-center gap-x-3">
                   <Avatar
                     size="sm"
                     src={club.image}
                     alt={club.name}
-                    className="border-2 border-white rounded-md w-20 h-10"
-                  />
+                    className=" rounded-md w-20 h-10 custom-card" style={{ 
+                      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                    }}                  />
                   <Typography color="white" className="font-medium">
                     {club.name}
                   </Typography>
                 </div>
                 <div className="flex gap-4">
                   <Button
-                    className="bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
+                    className=" custom-card bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
                     onClick={handleOpen}
                   >
                     Leave
                   </Button>
                   <Button
-                    className="bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
+                    className=" custom-card bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
                     onClick={() => getClubDetails(club)}
                   >
                     Explore
