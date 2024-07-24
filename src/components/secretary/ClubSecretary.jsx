@@ -31,6 +31,12 @@ const ClubSecretary = () => {
 
   const clubs = [
     {
+      id: "6",
+      name: "IEEE Student Chapter",
+      sname: "ieee",
+      image: ieeeImage,
+  },
+    {
         id: "1",
         name: "Rotaract Club of UCSC",
         sname: "rotract",
@@ -60,12 +66,7 @@ const ClubSecretary = () => {
         sname: "wie",
         image: wieImage,
     },
-    {
-        id: "6",
-        name: "IEEE Student Chapter",
-        sname: "ieee",
-        image: ieeeImage,
-    },
+   
    
   ];
 

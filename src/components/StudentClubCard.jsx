@@ -9,6 +9,13 @@ const StudentClubCard = () => {
 
     const clubs = [
         {
+            id: "6",
+            name: "IEEE Student Chapter",
+            reg_status: "yes",
+            description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
+            image: "../src/assets/clubs/ieee.png",
+        },
+        {
             id: "1",
             name: "Rotaract Club of UCSC",
             reg_status: "yes",
@@ -39,13 +46,7 @@ const StudentClubCard = () => {
             description: "The IEEE Women in Engineering (WIE) Student Branch at the University of Colombo School of Computing strives to enhance women’s participation and empowerment in electrical and electronic engineering.",
             image: "../src/assets/clubs/wie.png",
         },
-        {
-            id: "6",
-            name: "IEEE Student Chapter",
-            reg_status: "yes",
-            description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
-            image: "../src/assets/clubs/ieee.png",
-        },
+       
         {
             id: "7",
             name: "Mechatronic Society Of UCSC",

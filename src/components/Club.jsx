@@ -14,6 +14,12 @@ const Club = () => {
   const handleOpen = () => setOpen((cur) => !cur);
 
 const clubs = [
+  {
+    id: "6",
+    name: "IEEE Student Chapter",
+    sname: "ieee",
+    image: "../src/assets/clubs/ieee.png",
+},
     {
         id: "1",
         name: "Rotaract Club of UCSC",
@@ -44,12 +50,7 @@ const clubs = [
         sname: "wie",
         image: "../src/assets/clubs/wie.png",
     },
-    {
-        id: "6",
-        name: "IEEE Student Chapter",
-        sname: "ieee",
-        image: "../src/assets/clubs/ieee.png",
-    },
+   
    
 ];
 
