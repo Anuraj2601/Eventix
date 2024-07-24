@@ -42,7 +42,18 @@ const Login = () => {
             if(userData.token) {
                 localStorage.setItem('token', userData.token)
                 localStorage.setItem('role', userData.role)
-                navigate('/student')
+                if(userData.role == 'student')
+                {
+                    navigate('/student')
+                }
+                if(userData.role == 'ADMIN')
+                {
+                    navigate('/admin')
+                }
+                if(userData.role == 'president')
+                {
+                    navigate('/president/dashboard')
+                }
             } else {
                 setError(userData.message)
             }
