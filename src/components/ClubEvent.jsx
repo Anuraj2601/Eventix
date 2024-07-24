@@ -2,8 +2,38 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IconButton } from '@material-tailwind/react';
 import { FaArrowRight, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import MadhackImg from "../assets/events/madhack.png";
-import ReidImg from "../assets/events/reid.jpg";
+ 
+//upcoming events of ieee
+import ieee1 from "../assets/events/madhack.png";
+import ieee2 from "../assets/events/reid.jpg";
+import ieee3 from "../assets/events/intro.jpg";
+import ieee4 from "../assets/events/ieeeday.jpg";
+//past events of ieee
+import ieee5 from "../assets/events/revol.jpg";
+import ieee6 from "../assets/events/reid2.jpg";
+
+
+//upcoming events of rac
+import rac1 from "../assets/events/trail.jpg";
+import rac2 from "../assets/events/snap.jpg";
+import rac3 from "../assets/events/dev.jpg";
+import rac4 from "../assets/events/sport.jpg";
+//past events of rac
+import rac5 from "../assets/events/gtech.jpg";
+import rac6 from "../assets/events/training.jpg";
+
+
+//upcoming events of acm
+import acm1 from "../assets/events/8.jpg";
+import acm2 from "../assets/events/hour.jpg";
+import acm3 from "../assets/events/ballet.jpg";
+import acm4 from "../assets/events/discussion.jpg";
+//past events of acm
+import acm5 from "../assets/events/revol.jpg";
+import acm6 from "../assets/events/reid2.jpg";
+
+
+
 import LikeButton from './LikeButton';
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
 
@@ -69,7 +99,7 @@ const ClubEvent = ({ club }) => {
   const events = [
     {
       name: "MadHack 3.0",
-      image: MadhackImg,
+      image: ieee1,
       date: "05.06.2024",
       venue: "S204 Hall",
       status: "Approved",
@@ -77,15 +107,15 @@ const ClubEvent = ({ club }) => {
     },
     {
       name: "ReidExtreme 3.0",
-      image: ReidImg,
+      image: ieee2,
       date: "05.06.2024",
       venue: "S104 Hall",
       status: "Pending",
       link: "https://example.com/join-oc",
     },
     {
-      name: "ReidExtreme 3.0",
-      image: ReidImg,
+      name: "Introductory Session",
+      image: ieee3,
       date: "05.06.2024",
       venue: "S104 Hall",
       status: "Rejected",
@@ -93,8 +123,8 @@ const ClubEvent = ({ club }) => {
       link: "https://example.com/join-oc",
     },
     {
-      name: "MadHack 3.0",
-      image: MadhackImg,
+      name: "Revolux 3.0",
+      image: ieee5,
       date: "05.06.2024",
       venue: "S204 Hall",
       status: "Approved",
@@ -104,8 +134,8 @@ const ClubEvent = ({ club }) => {
 
   const pastEvents = [
     {
-      name: "MadHack 2.0",
-      image: MadhackImg,
+      name: "IEEE Day 3.0",
+      image: ieee4,
       date: "01.09.2023",
       venue: "A101 Hall",
       status: "Completed",
@@ -113,7 +143,7 @@ const ClubEvent = ({ club }) => {
     },
     {
       name: "ReidExtreme 2.0",
-      image: ReidImg,
+      image: ieee6,
       date: "15.12.2023",
       venue: "B202 Hall",
       status: "Completed",
