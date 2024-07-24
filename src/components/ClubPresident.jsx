@@ -35,6 +35,9 @@ const ClubPresident = () => {
         case location.pathname.startsWith('/admin'):
             basePath = '/admin';
             break;
+            case location.pathname.startsWith('/secretary'):
+            basePath = '/secretary';
+            break;
         case location.pathname.startsWith('/member'):
             basePath = '/member';
             break;

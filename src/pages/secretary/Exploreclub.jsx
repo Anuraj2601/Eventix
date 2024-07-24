@@ -8,8 +8,8 @@ import {
     Tab,
     TabPanel,
 } from "@material-tailwind/react";
-import SecretaryClubCard from '../../components/secretary/SecretaryClubCard ';
-import ClubSecretary from '../../components/secretary/ClubSecretary'; // Corrected import
+import PresidentClubCard from '../../components/PresidentClubCard';
+import ClubPresident from '../../components/ClubPresident'; // Corrected import
 
 import { useNavigate } from 'react-router-dom';
 
@@ -21,12 +21,12 @@ const ExploreClub = () => {
         {
             label: "All Clubs",
             value: "allClubs",
-            desc: <SecretaryClubCard />,
+            desc: <PresidentClubCard />,
         },
         {
             label: "Your Clubs",
             value: "yourClubs",
-            desc: <ClubSecretary />, // Correct component
+            desc: <ClubPresident />, // Correct component
         }
     ];
 

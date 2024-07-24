@@ -108,6 +108,9 @@ const PresidentClubCard = () => {
             case location.pathname.startsWith('/oc'):
                 basePath = '/oc';
                 break;
+                case location.pathname.startsWith('/secretary'):
+                    basePath = '/secretary';
+                    break;
             case location.pathname.startsWith('/admin'):
                 basePath = '/admin';
                 break;

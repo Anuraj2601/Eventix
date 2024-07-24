@@ -14,6 +14,8 @@ const StudentClubCard = () => {
             reg_status: "yes",
             description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
             image: "../src/assets/clubs/ieee.png",
+            sname: "ieee",
+
         },
         {
             id: "1",
@@ -38,6 +40,8 @@ const StudentClubCard = () => {
             reg_status: "no",
             description: "The Debate Society aims to improve public speaking and critical thinking skills through regular debates, public speaking workshops, and competitions.",
             image: "../src/assets/clubs/isaca1.png",
+            sname: "isaca",
+
         },
         {
             id: "5",
@@ -45,6 +49,8 @@ const StudentClubCard = () => {
             reg_status: "yes",
             description: "The IEEE Women in Engineering (WIE) Student Branch at the University of Colombo School of Computing strives to enhance women’s participation and empowerment in electrical and electronic engineering.",
             image: "../src/assets/clubs/wie.png",
+            sname: "wie",
+
         },
        
         {
@@ -53,6 +59,8 @@ const StudentClubCard = () => {
             reg_status: "no",
             description: "The Mechatronic Society Of UCSC focuses on sustainability and environmental awareness. Activities include clean-up drives, tree planting, and educational workshops.",
             image: "../src/assets/clubs/ms.png",
+            sname: "mech",
+
         },
         {
             id: "8",
@@ -60,6 +68,8 @@ const StudentClubCard = () => {
             reg_status: "no",
             description: "This club is part of the Institute of Electrical and Electronics Engineers (IEEE) and focuses on all aspects of computer science and engineering.",
             image: "../src/assets/clubs/wicys.png",
+            sname: "cyb",
+
         },
         {
             id: "9",
@@ -67,6 +77,8 @@ const StudentClubCard = () => {
             reg_status: "yes",
             description: "Get the opportunity to learn from industry professionals, prepare for certifications like CISA and CRISC and and network with professionals in the field.",
             image: "../src/assets/clubs/rekha.png",
+            sname: "rekha",
+
         },
         {
             id: "3",
@@ -74,6 +86,8 @@ const StudentClubCard = () => {
             reg_status: "yes",
             description: "The Pahasara Club offers a platform for photography enthusiasts to enhance their skills through workshops, photo walks, and exhibitions.",
             image: "../src/assets/clubs/pahasara1.png",
+            sname: "pahasara",
+
         },
     ];
 

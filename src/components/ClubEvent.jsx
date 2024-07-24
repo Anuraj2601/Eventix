@@ -29,7 +29,7 @@ import acm2 from "../assets/events/hour.jpg";
 import acm3 from "../assets/events/ballet.jpg";
 import acm4 from "../assets/events/discussion.jpg";
 //past events of acm
-import acm5 from "../assets/events/revol.jpg";
+import acm5 from "../assets/events/creative.jpg";
 import acm6 from "../assets/events/reid2.jpg";
 
 
@@ -50,6 +50,18 @@ const ClubEvent = ({ club }) => {
            location.pathname.startsWith('/treasurer');
   };
 
+  const getButtonStyles = (status) => {
+    if (status === "Approved") {
+      return "";
+    } else {
+      return "bg-gray-400 text-white cursor-not-allowed";
+    }
+  };
+  
+  const getButtonDisabled = (status) => {
+    return status !== "Approved";
+  };
+   
   const handleEvent = () => {
     navigate(`/club/${club.club_name}/add-event`);
   };
@@ -96,71 +108,67 @@ const ClubEvent = ({ club }) => {
     // Add your delete logic here
   };
 
-  const events = [
-    {
-      name: "MadHack 3.0",
-      image: ieee1,
-      date: "05.06.2024",
-      venue: "S204 Hall",
-      status: "Approved",
-      link: "https://example.com/join-oc",
-    },
-    {
-      name: "ReidExtreme 3.0",
-      image: ieee2,
-      date: "05.06.2024",
-      venue: "S104 Hall",
-      status: "Pending",
-      link: "https://example.com/join-oc",
-    },
-    {
-      name: "Introductory Session",
-      image: ieee3,
-      date: "05.06.2024",
-      venue: "S104 Hall",
-      status: "Rejected",
-      reason: "Budget not approved",
-      link: "https://example.com/join-oc",
-    },
-    {
-      name: "Revolux 3.0",
-      image: ieee5,
-      date: "05.06.2024",
-      venue: "S204 Hall",
-      status: "Approved",
-      link: "https://example.com/join-oc",
-    },
-  ];
+  const getEvents = () => {
+    if (location.pathname.includes('ieee')) {
+      return {
+        upcoming: [
+          { name: "MadHack 3.0", image: ieee1, date: "25.08.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
+          { name: "ReidExtreme 3.0", image: ieee2, date: "09.09.2024", venue: "S104 Hall", status: "Approved", link: "https://example.com/join-oc" },
+          { name: "Introductory Session", image: ieee3, date: "19.09.2024", venue: "S104 Hall", status: "Rejected", reason: "Budget not approved", link: "https://example.com/join-oc" },
+          { name: "Revolux 3.0", image: ieee5, date: "29.09.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
+        ],
+        past: [
+          { name: "IEEE Day 3.0", image: ieee4, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
+          { name: "ReidExtreme 2.0", image: ieee6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
+        ]
+      };
+    } else if (location.pathname.includes('rotaract') || 
+    location.pathname.includes('rotract') || 
+    location.pathname.includes('Rotaract Club of UCSC')) {
+      return {
+        upcoming: [
+          { name: "Tech Trail Blazer'23", image: rac1, date: "07.09.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
+          { name: "SnapFlix", image: rac2, date: "17.09.2024", venue: "S104 Hall", status: "Pending", link: "https://example.com/join-oc" },
+          { name: "Dev Possible", image: rac3, date: "27.09.2024", venue: "S104 Hall", status: "Rejected", reason: "Budget not approved", link: "https://example.com/join-oc" },
+          { name: "Sport X", image: rac4, date: "07.10.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
+        ],
+        past: [
+          { name: "G-Tech", image: rac5, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
+          { name: "Training Session", image: rac6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
+        ]
+      };
+    } else if (location.pathname.includes('acm')) {
+      return {
+        upcoming: [
+          { name: "8 Weeks of Code", image: acm1, date: "05.09.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
+          { name: "Hour of Code", image: acm2, date: "15.09.2024", venue: "S104 Hall", status: "Pending", link: "https://example.com/join-oc" },
+          { name: "Ballet Code", image: acm3, date: "25.09.2024", venue: "S104 Hall", status: "Rejected", reason: "Budget not approved", link: "https://example.com/join-oc" },
+          { name: "Discussion Session", image: acm4, date: "05.01.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
+        ],
+        past: [
+          { name: "Creative Friday", image: acm5, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
+          { name: "ReidExtreme", image: acm6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
+        ]
+      };
+    } else {
+      // Fallback to empty arrays if none of the keywords match
+      return { upcoming: [], past: [] };
+    }
+  };
 
-  const pastEvents = [
-    {
-      name: "IEEE Day 3.0",
-      image: ieee4,
-      date: "01.09.2023",
-      venue: "A101 Hall",
-      status: "Completed",
-      link: "https://example.com/join-oc",
-    },
-    {
-      name: "ReidExtreme 2.0",
-      image: ieee6,
-      date: "15.12.2023",
-      venue: "B202 Hall",
-      status: "Completed",
-      link: "https://example.com/join-oc",
-    },
-  ];
+
+  const { upcoming, past } = getEvents();
 
   const getStatusIcon = (status) => {
     switch (status) {
       case "Approved":
-        return <FaCheckCircle className="text-green-500 text-4xl" />;
+        return <FaCheckCircle className="text-[#AEC90A] text-4xl" />;
       case "Rejected":
         return <FaTimesCircle className="text-red-500 text-4xl" />;
       case "Pending":
         return null;
       case "Completed":
-        return <FaCheckCircle className="text-[#AEC90A] text-4xl" />;
+        return <FaCheckCircle className="text-green-500 text-4xl" />;
       default:
         return null;
     }
@@ -183,7 +191,7 @@ const ClubEvent = ({ club }) => {
       <div className="w-full max-w-screen-lg">
         <h2 className="text-2xl font-bold text-white mb-4">Upcoming</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-          {events.map((event, index) => (
+        {upcoming.map((event, index) => (
             <div
               key={index}
               className="relative rounded-lg p-4 custom-card"
@@ -209,14 +217,22 @@ const ClubEvent = ({ club }) => {
                     )}
                   </div>
                 </div>
-                <div className="w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center custom-card" style={{ backgroundColor: '#AEC90A', color: '#000' }}>
-                  <IconButton
-                    className="font-extrabold text-lg text-black"
-                    onClick={() => handleExploreEvent(event)}
-                  >
-                    <FaArrowRight />
-                  </IconButton>
-                </div>
+                {event.status === "Approved" && (
+  <div
+    className={`w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center ${getButtonStyles(event.status)}`}
+    style={{ backgroundColor: '#AEC90A', color: '#000' }}
+  >
+    <IconButton
+      onClick={() => handleExploreEvent(event)}
+      className="p-1"
+      disabled={getButtonDisabled(event.status)}
+    >
+      <FaArrowRight className="text-lg text-black" />
+    </IconButton>
+  </div>
+)}
+
+
                 {isAuthorizedUser() && hoveredIndex === index && (
                   <div className="absolute top-2 right-2 flex space-x-2">
                     <IconButton className="text-white" onClick={() => handleEditEvent(event)}>
@@ -244,7 +260,7 @@ const ClubEvent = ({ club }) => {
       <div className="w-full max-w-screen-lg mt-8">
         <h2 className="text-2xl font-bold text-white mb-4">Past Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-          {pastEvents.map((event, index) => (
+        {past.map((event, index) => (
             <div key={index} className="relative rounded-lg p-4 custom-card">
               <div className="relative custom-3d-shadow custom-card">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
