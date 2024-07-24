@@ -25,6 +25,7 @@ import ClubRegistration from './pages/student/ClubRegistration';
 import AddEvent from './components/AddEvent';
 
 import MainAnnouncement from './components/MainAnnouncement';
+import MainMeeting from './components/MainMeeting';
 
 
 
@@ -41,7 +42,9 @@ const App = () => {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/Signup" element={<Signup />}></Route>
 
-        <Route path="/Announcement" element={<MainAnnouncement />}></Route>
+        <Route path="/announcement" element={<MainAnnouncement />}></Route>
+        <Route path="/meeting" element={<MainMeeting />}></Route>
+
 
 
       
