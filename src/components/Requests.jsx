@@ -62,17 +62,7 @@ const RequestTable = ({ type, onAccept, onReject }) => {
   return (
     <div className="bg-black rounded-xl p-3 h-full overflow-auto text-white">
       <table className="w-full">
-        <thead className="text-[#AEC90A] text-center tracking-wide p-3">
-          <tr>
-            <th className="w-48">President</th>
-            <th className="w-24">Club</th>
-            <th>Event</th>
-            <th>Date</th>
-            <th>Venue</th>
-            <th className="w-52">Event Proposal</th>
-            <th className="w-60">Action</th>
-          </tr>
-        </thead>
+       
         <tbody>
           {data[type].map((row) => (
             <tr key={row.id} className="  text-center">
@@ -83,14 +73,15 @@ const RequestTable = ({ type, onAccept, onReject }) => {
                     alt="President"
                     className="w-12 h-12 rounded-full mr-3"
                   />
-                  <span >{row.president} </span>
+                  <span >{row.president}<br /></span>
+                  <span>president of {row.club}</span>
                 </div>
               </td>
-              <td className="p-3">
-              <span>president of {row.club}</span>
+              
+              
                
-              </td>
-              <td className="p-3 ">  <img
+             
+              <td className="p-3 "> for <img
                   src={ieee1} // Placeholder club image
                   alt="Club Logo"
                   className="w-40 h-20 rounded-md"
@@ -181,9 +172,9 @@ const Requests = () => {
             </Tab>
           ))}
         </TabsHeader>
-        <TabsBody className="flex-1 overflow-auto">
+        <TabsBody className="overflow-auto">
           {subTabs.map(({ value }) => (
-            <TabPanel key={value} value={value} className={`flex-1 p-6 ${activeTab === value ? 'block' : 'hidden'}`}>
+            <TabPanel key={value} value={value} className={` ${activeTab === value ? 'block' : 'hidden'}`}>
               <RequestTable type={value} onAccept={handleAccept} onReject={handleReject} />
             </TabPanel>
           ))}
