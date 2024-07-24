@@ -24,6 +24,9 @@ import ClubRegistration from './pages/student/ClubRegistration';
 /* import Toggle from './components/election/Toggle'; */
 import AddEvent from './components/AddEvent';
 
+import MainAnnouncement from './components/MainAnnouncement';
+
+
 
 // Import other pages if necessary
 
@@ -37,6 +40,9 @@ const App = () => {
         <Route exact path="/" element={<Landing />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/Signup" element={<Signup />}></Route>
+
+        <Route path="/Announcement" element={<MainAnnouncement />}></Route>
+
 
       
 
