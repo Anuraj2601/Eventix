@@ -72,7 +72,7 @@ const NewsFeed = ({ posts }) => {
                         <div key={index} className="w-full rounded-full p-2 flex flex-col mb-4 -mt-8" style={{ backgroundColor: '#171717' }}>
                             <button
                                 onClick={() => navigateToForm(event.joinLink)}
-                                className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute top-4 -left-10 z-10"
+                                className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute top-4 left-2 z-10"
                             >
                                 <MdAdd size={24} />
                             </button>
