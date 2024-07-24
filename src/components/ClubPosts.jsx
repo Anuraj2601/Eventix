@@ -18,10 +18,10 @@ const Posts = ({ post }) => {
     const isStudentPage = location.pathname.startsWith('/student'); // Check if the path starts with /student
 
     return (
-        <div className="bg-[#0b0b0b] p-8 rounded-2xl mb-4 custom-3d-shadow" style={{ 
+        <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4 custom-3d-shadow " style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-        }}>
-            <div className="flex flex-row items-center justify-between mb-6 mt-1">
+          }}>
+            <div className="flex flex-row items-center justify-between mb-6">
                 <div className="flex items-center gap-2 custom-card">
                     <img src={post.userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
                     <div className="flex flex-col">
@@ -32,7 +32,7 @@ const Posts = ({ post }) => {
                 {!isStudentPage && (
                     <div className="flex items-center gap-4">
                         <HiOutlineDotsVertical className='text-[#AEC90A]' size={30} />
-                        <IoMdClose className='text-[#AEC90A] custom-card' size={30} />
+                        <IoMdClose className='text-[#AEC90A]' size={30} />
                     </div>
                 )}
             </div>
@@ -41,7 +41,7 @@ const Posts = ({ post }) => {
                     {post.caption}
                     {post.link && <a href={post.link} className='text-[#AEC90A] underline' target="_blank" rel="noopener noreferrer">{post.link}</a>}
                 </p>
-                {post.image && <img src={post.image} alt="" className='w-auto h-100 object-cover mt-1 ' />}
+                {post.image && <img src={post.image} alt="" className='w-auto h-100 object-cover mt-3 ' />}
                 <LikeButton initialLikes={320} className="absolute bottom-4 right-4 custom-card" />
             </div>
         </div>
@@ -64,8 +64,9 @@ const NewsFeed = ({ posts }) => {
     };
 
     return (
-        <div className="bg-neutral-900 text-white min-h-screen relative px-10">
+        <div className="bg-neutral-900 text-white min-h-screen relative">
             <div className='relative'>
+
                 <div className='flex justify-end mb-2'>
                     {events.map((event, index) => (
                         <div key={index} className="w-full rounded-full p-2 flex flex-col mb-4 -mt-8" style={{ backgroundColor: '#171717' }}>
@@ -77,8 +78,9 @@ const NewsFeed = ({ posts }) => {
                             </button>
                         </div>
                     ))}
+
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
                     {posts.map((post, index) => (
                         <Posts key={index} post={post} />
                     ))}
