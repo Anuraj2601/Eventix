@@ -10,7 +10,7 @@ const MainMeeting = () => {
                 <Navbar className="sticky top-0 z-10 p-4" />
                 <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-hidden">
                     <div className="p-6 overflow-y-auto">
-                         {/* main announcement content */}
+                         {/* main  meetings content */}
                     </div>
                 </div>
             </div>
