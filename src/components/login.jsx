@@ -54,12 +54,25 @@ const Login = () => {
         }
 
         try {
-            const userData = await UsersService.login(email, password);
-            console.log(userData);
-            if (userData.token) {
-                localStorage.setItem('token', userData.token);
-                localStorage.setItem('role', userData.role);
-                navigate('/student');
+
+            const userData = await UsersService.login(email, password)
+            console.log(userData)
+            if(userData.token) {
+                localStorage.setItem('token', userData.token)
+                localStorage.setItem('role', userData.role)
+                if(userData.role == 'student')
+                {
+                    navigate('/student')
+                }
+                if(userData.role == 'ADMIN')
+                {
+                    navigate('/admin')
+                }
+                if(userData.role == 'president')
+                {
+                    navigate('/president/dashboard')
+                }
+
             } else {
                 setError(userData.message);
             }
