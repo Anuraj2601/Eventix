@@ -54,12 +54,25 @@ const Login = () => {
         }
 
         try {
-            const userData = await UsersService.login(email, password);
-            console.log(userData);
-            if (userData.token) {
-                localStorage.setItem('token', userData.token);
-                localStorage.setItem('role', userData.role);
-                navigate('/student');
+
+            const userData = await UsersService.login(email, password)
+            console.log(userData)
+            if(userData.token) {
+                localStorage.setItem('token', userData.token)
+                localStorage.setItem('role', userData.role)
+                if(userData.role == 'student')
+                {
+                    navigate('/student')
+                }
+                if(userData.role == 'ADMIN')
+                {
+                    navigate('/admin')
+                }
+                if(userData.role == 'president')
+                {
+                    navigate('/president/dashboard')
+                }
+
             } else {
                 setError(userData.message);
             }
@@ -73,18 +86,18 @@ const Login = () => {
     };
 
     return (
-        <div className="flex h-screen bg-dark-400">
+        <div className="flex h-screen justify-center bg-dark-400  ">
 
-            {/* Left Side */}
-            <div className="w-1/3 flex flex-col items-center justify-center relative bg-[#AEC90A] border-r border-white border-opacity-30 rounded-r-lg">
-                <span className="absolute top-4 left-4 cursor-pointer text-black hover:text-dark-400 text-3xl" onClick={handleBackClick}>
+        {/* Left Side */}
+        <div className="w-1/3 flex flex-col items-center justify-center relative ml-20" style={{ backgroundColor: '#AEC90A', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }}>
+            <span  className="absolute top-4 left-4 cursor-pointer text-black hover:text-dark-400 text-3xl" onClick={handleBackClick}>
                     <IoArrowBackCircleOutline />
                 </span>
                 <img src={loginImg} alt="Login" className="mt-32 w-full h-auto" />
             </div>
 
             {/* Right Side */}
-            <div className="w-2/3 bg-dark-background flex flex-col justify-center px-10 border-t border-r border-b border-white border-opacity-30">
+            <div className="w-1/2 bg-dark-background flex flex-col justify-center px-10 border-t border-r border-b border-white border-opacity-30">
                 <form onSubmit={handleSubmit} className="space-y-6 mx-auto w-[60%]">
                     {error && <p className='error-message text-red-700'>{error}</p>}
                     <div>

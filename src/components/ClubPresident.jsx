@@ -35,6 +35,9 @@ const ClubPresident = () => {
         case location.pathname.startsWith('/admin'):
             basePath = '/admin';
             break;
+            case location.pathname.startsWith('/secretary'):
+            basePath = '/secretary';
+            break;
         case location.pathname.startsWith('/member'):
             basePath = '/member';
             break;
@@ -48,6 +51,14 @@ const ClubPresident = () => {
 };
 
   const clubs = [
+    {
+      id: "6",
+      name: "IEEE Student Chapter",
+      reg_status: "yes",
+      description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
+      image: ieeeImage,
+      sname: "ieee",
+  },
     {
         id: "1",
         name: "Rotaract Club of UCSC",
@@ -88,14 +99,7 @@ const ClubPresident = () => {
         image: wieImage,
         sname: "wie",
     },
-    {
-        id: "6",
-        name: "IEEE Student Chapter",
-        reg_status: "yes",
-        description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
-        image: ieeeImage,
-        sname: "ieee",
-    },
+    
     
 ];
   return (

@@ -6,6 +6,14 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { Dialog } from "@material-tailwind/react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+// Import images
+import ieeeImage from "../assets/clubs/ieee.png";
+import rotaractImage from "../assets/clubs/rotaract.png";
+import acmImage from "../assets/clubs/acm.png";
+import pahasaraImage from "../assets/clubs/pahasara1.png";
+import isacaImage from "../assets/clubs/isaca1.png";
+import wieImage from "../assets/clubs/wie.png";
+
 const Club = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,46 +21,44 @@ const Club = () => {
 
   const handleOpen = () => setOpen((cur) => !cur);
 
-const clubs = [
+  const clubs = [
     {
-        id: "1",
-        name: "Rotaract Club of UCSC",
-        sname: "rotract",
-        image: "../src/assets/clubs/rotaract.png",
+      id: "6",
+      name: "IEEE Student Chapter",
+      sname: "ieee",
+      image: ieeeImage,
     },
     {
-        id: "2",
-        name: "ACM Student Chapter",
-        sname: "acm",
-        image: "../src/assets/clubs/acm.png",
+      id: "1",
+      name: "Rotaract Club of UCSC",
+      sname: "rotract",
+      image: rotaractImage,
     },
     {
-        id: "3",
-        name: "Pahasara Club (Innovation and Creativity)",
-        sname: "pahasara",
-        image: "../src/assets/clubs/pahasara1.png",
+      id: "2",
+      name: "ACM Student Chapter",
+      sname: "acm",
+      image: acmImage,
     },
     {
-        id: "4",
-        name: "ISACA Student Group",
-        sname: "isaca",
-        image: "../src/assets/clubs/isaca1.png",
+      id: "3",
+      name: "Pahasara Club (Innovation and Creativity)",
+      sname: "pahasara",
+      image: pahasaraImage,
     },
     {
-        id: "5",
-        name: "(IEEE WIE) IEEE Women in Engineering",
-        sname: "wie",
-        image: "../src/assets/clubs/wie.png",
+      id: "4",
+      name: "ISACA Student Group",
+      sname: "isaca",
+      image: isacaImage,
     },
     {
-        id: "6",
-        name: "IEEE Student Chapter",
-        sname: "ieee",
-        image: "../src/assets/clubs/ieee.png",
+      id: "5",
+      name: "(IEEE WIE) IEEE Women in Engineering",
+      sname: "wie",
+      image: wieImage,
     },
-   
-];
-
+  ];
 
 const getClubDetails = (club) => {
   const basePath = location.pathname.startsWith("/student") ? "/student/club" : "/student/club";

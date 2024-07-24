@@ -20,6 +20,15 @@ const SecretaryClubCard = () => {
 
     const clubs = [
         {
+            id: "6",
+            name: "IEEE Student Chapter",
+            reg_status: "yes",
+            description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
+            image: ieeeImage,
+            sname: "ieee",
+
+        },
+        {
             id: "1",
             name: "Rotaract Club of UCSC",
             reg_status: "yes",
@@ -41,6 +50,8 @@ const SecretaryClubCard = () => {
             reg_status: "yes",
             description: "The Pahasara Club offers a platform for photography enthusiasts to enhance their skills through workshops, photo walks, and exhibitions.",
             image: pahasaraImage,
+            sname: "pahasara",
+
         },
         {
             id: "4",
@@ -48,6 +59,8 @@ const SecretaryClubCard = () => {
             reg_status: "no",
             description: "The Debate Society aims to improve public speaking and critical thinking skills through regular debates, public speaking workshops, and competitions.",
             image: isacaImage,
+            sname: "isaca",
+
         },
         {
             id: "5",
@@ -55,20 +68,18 @@ const SecretaryClubCard = () => {
             reg_status: "yes",
             description: "The IEEE Women in Engineering (WIE) Student Branch at the University of Colombo School of Computing strives to enhance women’s participation and empowerment in electrical and electronic engineering.",
             image: wieImage,
+            sname: "wie",
+
         },
-        {
-            id: "6",
-            name: "IEEE Student Chapter",
-            reg_status: "yes",
-            description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
-            image: ieeeImage,
-        },
+       
         {
             id: "7",
             name: "Mechatronic Society Of UCSC",
             reg_status: "no",
             description: "The Mechatronic Society Of UCSC focuses on sustainability and environmental awareness. Activities include clean-up drives, tree planting, and educational workshops.",
             image: msImage,
+            sname: "mech",
+
         },
         {
             id: "8",
@@ -76,6 +87,8 @@ const SecretaryClubCard = () => {
             reg_status: "no",
             description: "This club is part of the Institute of Electrical and Electronics Engineers (IEEE) and focuses on all aspects of computer science and engineering.",
             image: wicysImage,
+            sname: "cyb",
+
         },
         {
             id: "9",
@@ -83,6 +96,8 @@ const SecretaryClubCard = () => {
             reg_status: "yes",
             description: "Get the opportunity to learn from industry professionals, prepare for certifications like CISA and CRISC and network with professionals in the field.",
             image: rekhaImage,
+            sname: "rekha",
+
         },
     ];
 
@@ -91,7 +106,7 @@ const SecretaryClubCard = () => {
     }
 
     const handleExploreClick = (club) => {
-        navigate(`/secretary/club/${club.name}`, { state: { club, image: club.image } });
+        navigate(`/secretary/club/${club.sname}`, { state: { club, image: club.image } });
     }
 
     return (

@@ -26,7 +26,7 @@ import AddNewPostFormoc from './pages/oc/AddNewPostForm';
 
 import Exploreclubsecretary from './pages/secretary/Exploreclub';
 import Exploreeventsecretary from './pages/secretary/Exploreevent';
-import ClubDetailssecretary from './pages/secretary/ClubDetails';
+import ClubDetailssecretary from './pages/president/ClubDetails';
 import Electionsecretary from './pages/secretary/Election';
 import Dashboardsecretary from './pages/secretary/Dashboard';
 import Calendarsecretary from './pages/secretary/Calendar';

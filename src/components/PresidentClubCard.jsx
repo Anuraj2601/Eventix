@@ -21,6 +21,14 @@ const PresidentClubCard = () => {
 
     const clubs = [
         {
+            id: "6",
+            name: "IEEE Student Chapter",
+            reg_status: "yes",
+            description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
+            image: ieeeImage,
+            sname: "ieee",
+        },
+        {
             id: "1",
             name: "Rotaract Club of UCSC",
             reg_status: "yes",
@@ -52,14 +60,7 @@ const PresidentClubCard = () => {
             image: wieImage,
             sname: "wie",
         },
-        {
-            id: "6",
-            name: "IEEE Student Chapter",
-            reg_status: "yes",
-            description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
-            image: ieeeImage,
-            sname: "ieee",
-        },
+        
         {
             id: "7",
             name: "Mechatronic Society Of UCSC",
@@ -107,6 +108,9 @@ const PresidentClubCard = () => {
             case location.pathname.startsWith('/oc'):
                 basePath = '/oc';
                 break;
+                case location.pathname.startsWith('/secretary'):
+                    basePath = '/secretary';
+                    break;
             case location.pathname.startsWith('/admin'):
                 basePath = '/admin';
                 break;
