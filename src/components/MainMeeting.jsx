@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
-import physicalMeeting from '../assets/physicalMeeting.png';
+import physicalMeeting from '../assets/physicalMeeting02.png';
+import onlineMeeting from '../assets/onlineMeeting.png';
 import ieee from '../assets/ieee.jpeg';
 import isaca from '../assets/isaca.png';
 import rotract from '../assets/rotract.jpeg';
@@ -25,7 +26,7 @@ const MainMeeting = () => {
         { 
             id: 2, 
             title: 'Team Building Workshop', 
-            description: 'A workshop designed to enhance team collaboration.', 
+            description: 'A workshop to enhance team collaboration.', 
             date: '2024-08-12', 
             time: '02:00 PM', 
             location: 'W002', 
@@ -48,42 +49,76 @@ const MainMeeting = () => {
         },
     ];
 
-    const handleGetQRCode = (id) => {
-        console.log('Get QR Code for meeting ID:', id);
+    const unionAnnouncements = [
+        { 
+            id: 1, 
+            title: 'Union General Meeting', 
+            description: 'Annual general meeting for all union members.', 
+            date: '2024-09-01', 
+            time: '03:00 PM', 
+            location: 'Main Hall', 
+            postedDate: '2024-07-25', 
+            postedTime: '10:00 AM'
+        },
+        { 
+            id: 2, 
+            title: 'Union Budget Review', 
+            description: 'Review of the annual budget and allocation.', 
+            date: '2024-09-10', 
+            time: '01:00 PM', 
+            location: 'Conference Room A', 
+            postedDate: '2024-07-26', 
+            postedTime: '11:00 AM'
+        },
+        { 
+            id: 3, 
+            title: 'Union Leadership Summit', 
+            description: 'Meeting of union leaders to discuss future strategies.', 
+            date: '2024-09-15', 
+            time: '09:00 AM', 
+            location: 'Main Hall', 
+            postedDate: '2024-07-27', 
+            postedTime: '09:00 AM'
+        },
+        { 
+            id: 4, 
+            title: 'Union Member Engagement Event', 
+            description: 'Event to engage with union members and discuss ongoing projects.', 
+            date: '2024-09-20', 
+            time: '02:00 PM', 
+            location: 'Event Center', 
+            postedDate: '2024-07-28', 
+            postedTime: '10:00 AM'
+        },
+    ];
+
+    const handleJoinMeeting = (id) => {
+        console.log('Join Meeting for meeting ID:', id);
     };
 
     const renderContent = () => {
         if (selectedFilter === 'physical') {
             return (
                 <div className="flex flex-col items-center">
-                    <img src={physicalMeeting} alt="Physical Meeting" className="w-full h-auto mb-6 rounded-lg shadow-lg" />
+                    <img src={physicalMeeting} alt="Physical Meeting" className="w-full h-auto mb-6 shadow-lg" />
                 </div>
             );
         } else {
             return (
                 <div className="flex flex-col items-center">
-                    <div className="bg-dark-500 p-4 rounded-lg w-full max-w-md text-center">
-                        <h2 className="text-xl font-bold mb-4">Join an Online Meeting</h2>
-                        <input
-                            type="text"
-                            placeholder="Meeting ID"
-                            className="bg-neutral-800 p-2 mb-4 rounded w-full text-white"
-                        />
-                        <button className="px-4 py-2 bg-primary text-black rounded font-medium w-full">
-                            Join Meeting
-                        </button>
-                    </div>
+                    <img src={onlineMeeting} alt="Online Meeting" className="w-full h-auto mb-6 shadow-lg" />
                 </div>
             );
         }
     };
 
     const renderMeetingAnnouncements = () => {
+        const announcementsToShow = selectedFilter === 'online' ? meetingAnnouncements.slice(0, 2) : meetingAnnouncements;
         return (
-            <div className="p-4 rounded-lg  mb-20">
-                <h2 className="text-[16px] font-medium mb-4">Upcoming Physical Meetings</h2>
+            <div className="p-4 rounded-lg mb-20 mx-4">
+                <h2 className="text-[16px] font-medium mb-4">Upcoming CLUB Meetings</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {meetingAnnouncements.map((announcement) => (
+                    {announcementsToShow.map((announcement) => (
                         <div key={announcement.id} className="relative bg-dark-500 rounded-lg flex flex-col items-center p-4 h-80">
                             <div className="flex flex-col items-center mb-6 flex-grow">
                                 <img src={announcement.clubImage} alt={announcement.clubName} className="w-12 h-12 rounded-full mb-2" />
@@ -97,21 +132,32 @@ const MainMeeting = () => {
                                 </p>
                             </div>
                             
-                            <div className="flex space-x-2 mb-10 w-full">
-                                <button 
-                                    onClick={() => handleGetQRCode(announcement.id)} 
-                                    className="px-4 py-2  w-1/2 bg-gray-600 text-black rounded font-medium"
-                                >
-                                    Decline
-                                </button>
-                                <button 
-                                    onClick={() => handleGetQRCode(announcement.id)} 
-                                    className="px-4 py-2 w-1/2 bg-primary text-black rounded font-medium"
-                                >
-                                    Get QR Code
-                                </button>
-                            </div>
-    
+                            {selectedFilter === 'physical' ? (
+                                <div className="flex space-x-2 mb-10 w-full">
+                                    <button 
+                                        onClick={() => handleJoinMeeting(announcement.id)} 
+                                        className="px-4 py-2 w-1/2 bg-dark-400 opacity-100 text-primary rounded font-medium hover:bg-dark-400 hover:scale-105 transition-transform duration-200"
+                                    >
+                                        Decline
+                                    </button>
+                                    <button 
+                                        onClick={() => handleJoinMeeting(announcement.id)} 
+                                        className="px-4 py-2 w-1/2 bg-primary text-dark-500 rounded font-semibold hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                                    >
+                                        Get QR Code
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex space-x-2 mb-10 w-full">
+                                    <button 
+                                        onClick={() => handleJoinMeeting(announcement.id)} 
+                                        className="px-4 py-2 w-full bg-primary text-dark-500 rounded font-semibold hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                                    >
+                                        Join Meeting
+                                    </button>
+                                </div>
+                            )}
+        
                             <div className="text-xs text-gray-400 absolute bottom-2 w-full text-right">
                                 <span className="mx-0">{announcement.postedDate}</span>
                                 <span className="mx-2">{announcement.postedTime}</span>
@@ -122,7 +168,60 @@ const MainMeeting = () => {
             </div>
         );
     };
-    
+
+    const renderUnionAnnouncements = () => {
+        const announcementsToShow = selectedFilter === 'online' ? unionAnnouncements.slice(0, 3) : unionAnnouncements;
+        return (
+            <div className="p-4 rounded-lg mb-10 mx-4">
+                <h2 className="text-[16px] font-medium mb-4">Upcoming UNION Meetings</h2>
+                {announcementsToShow.map((announcement) => (
+                    <div key={announcement.id} className="relative bg-dark-500 rounded-lg flex items-center p-4 mb-4 w-full h-[100px]">
+                        <div className="flex flex-col justify-between flex-grow">
+                            <div>
+                                <p className="text-sm mt-2">
+                                    <span className="block font-medium text-[14px] leading-loose">
+                                        {announcement.title} | <span className="font-normal text-[14px] leading-loose text-white opacity-50">{announcement.description}</span>
+                                    </span>
+                                    <span className='block text-[15px] text-primary opacity-100 mt-1'>
+                                        {announcement.date} | {announcement.time} | {announcement.location}
+                                    </span>
+                                </p>
+                            </div>
+                            <div className="text-xs text-white opacity-50 mt-2">
+                                <span>{announcement.postedDate}</span>
+                                <span className="mx-2">{announcement.postedTime}</span>
+                            </div>
+                        </div>
+                        <div className="flex-none ml-4 flex space-x-2">
+                            {selectedFilter === 'physical' ? (
+                                <>
+                                    <button 
+                                        onClick={() => handleJoinMeeting(announcement.id)} 
+                                        className="px-4 py-2 bg-dark-400 text-primary rounded font-medium w-[150px] hover:scale-105 transition-transform duration-200"
+                                    >
+                                        Decline
+                                    </button>
+                                    <button 
+                                        onClick={() => handleJoinMeeting(announcement.id)} 
+                                        className="px-4 py-2 bg-primary text-dark-500 rounded font-semibold w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                                    >
+                                        Get QR Code
+                                    </button>
+                                </>
+                            ) : (
+                                <button 
+                                    onClick={() => handleJoinMeeting(announcement.id)} 
+                                    className="px-4 py-2 bg-primary text-dark-500 rounded font-semibold w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                                >
+                                    Join Meeting
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    };
 
     return (
         <div className="fixed inset-0 flex">
@@ -147,6 +246,7 @@ const MainMeeting = () => {
                         </div>
                         {renderContent()}
                         {renderMeetingAnnouncements()}
+                        {renderUnionAnnouncements()}
                     </div>
                 </div>
             </div>
