@@ -100,6 +100,7 @@ import EventNav from './components/EventNav';
 import AddEvent from './components/AddEvent';
 
 import { ClubMemberNav } from './components/ClubMemberNav';
+import AddNewAnnouncementForm from './pages/president/AddNewAnnouncementForm';
 
 
 // Import other pages if necessary
@@ -161,6 +162,7 @@ const App = () => {
         <Route path='/president' element={<Dashboard  />} ></Route>
         <Route path="/president/club/election/add" element={<NewElectionForm />} />
         <Route path="/club/new-post" element={<AddNewPostForm />} />
+        <Route path="/preident/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
 
         
 

@@ -15,7 +15,7 @@ import { FaEye } from "react-icons/fa";
 
 const Announcement = () => {
   const [open, setOpen] = useState(false);
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -31,6 +31,10 @@ const Announcement = () => {
   const handleDelete = (id) => {
     // Add your delete handling logic here
   };
+
+  const openAnnouncementForm = () => {
+    navigate(`/preident/club/announcement/add`);
+  }
 
   const meetings = [
     {
@@ -64,7 +68,7 @@ const Announcement = () => {
       {isEditable && (
         <Button
           className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold ml-[950px]"
-          onClick={handleOpen}
+          onClick={openAnnouncementForm}
         >
           New Announcement
         </Button>
