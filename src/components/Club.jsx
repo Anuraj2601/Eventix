@@ -46,18 +46,18 @@ const Club = () => {
       sname: "pahasara",
       image: pahasaraImage,
     },
-    {
-      id: "4",
-      name: "ISACA Student Group",
-      sname: "isaca",
-      image: isacaImage,
-    },
-    {
-      id: "5",
-      name: "(IEEE WIE) IEEE Women in Engineering",
-      sname: "wie",
-      image: wieImage,
-    },
+    // {
+    //   id: "4",
+    //   name: "ISACA Student Group",
+    //   sname: "isaca",
+    //   image: isacaImage,
+    // },
+    // {
+    //   id: "5",
+    //   name: "(IEEE WIE) IEEE Women in Engineering",
+    //   sname: "wie",
+    //   image: wieImage,
+    // },
   ];
 
 const getClubDetails = (club) => {

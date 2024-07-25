@@ -90,7 +90,7 @@ const StudentClubCard = () => {
             description: "The Pahasara Club offers a platform for photography enthusiasts to enhance their skills through workshops, photo walks, and exhibitions.",
             image: pahasaraImg,
             sname: "pahasara",
-        },
+        }
     ];
 
     const handleRegisterClick = (club) => {
