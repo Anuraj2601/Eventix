@@ -64,16 +64,16 @@ const Navbar = () => {
         {/* Image Icons */}
         <div className="flex">
           <Link to={getLinkPath(basePath, 'inquiry')} className="px-3">
-            <MdInfoOutline className={`inline-block w-6 h-6 ${isSelected('inquiry') ? 'text-black bg-white rounded-full ' : 'text-[#AEC90A] hover:text-white'}`} />
+            <MdInfoOutline size={32} className={`inline-block  ${isSelected('inquiry') ? 'text-black bg-[#AEC90A]  rounded-full ' : 'text-[#AEC90A] hover:text-white'}`} />
           </Link>
-          <Link to={getLinkPath(basePath, 'message')} className="px-3">
-            <FiMessageSquare className={`inline-block w-6 h-6 ${isSelected('message') ? 'text-black bg-white rounded-full ' : 'text-[#AEC90A] hover:text-white'}`} />
+          <Link to={getLinkPath(basePath, 'messages')} className="px-3">
+            <FiMessageSquare size={32} className={`inline-block  ${isSelected('message') ? 'text-black bg-[#AEC90A]  rounded-full p-1' : 'text-[#AEC90A] hover:text-white'}`} />
           </Link>
           <Link to={getLinkPath(basePath, 'notifications')} className="px-3">
-            <BsBell className={`inline-block w-6 h-6 ${isSelected('notifications') ? 'text-black bg-white rounded-full ' : 'text-[#AEC90A] hover:text-white'}`} />
+            <BsBell size={32} className={`inline-block  ${isSelected('notifications') ? 'text-black bg-[#AEC90A]  rounded-full p-1' : 'text-[#AEC90A] hover:text-white'}`} />
           </Link>
           <Link to={getLinkPath(basePath, 'profile')} className="px-3">
-            <IoPersonCircleOutline className={`inline-block w-6 h-6 ${isSelected('profile') ? 'text-black bg-white rounded-full' : 'text-[#AEC90A] hover:text-white'}`} />
+            <IoPersonCircleOutline size={32} className={`inline-block  ${isSelected('profile') ? 'text-black bg-[#AEC90A]  rounded-full' : 'text-[#AEC90A] hover:text-white'}`} />
           </Link>
         </div>
       </div>
