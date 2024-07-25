@@ -68,10 +68,26 @@ import MemberOCJoinForm from './pages/member/MemberOCJoinForm';
 
 
 
-
-import EventRequests from './pages/admin/EventRequests';
+import StudentDashboardadmin from './pages/student/StudentDashboard';
+import StudentAllClubsadmin from './pages/student/StudentAllClubs';
+import ClubRegistrationadmin from './pages/student/ClubRegistration';
+import StudentClubDetailsadmin from './pages/student/StudentClubDetails';
+import StudentNotificationsadmin from './pages/student/StudentNotifications';
+import EventRegistrationadmin from './pages/student/EventRegistration';
+import Exploreeventstudentadmin from './pages/student/Exploreevent';
+import StudentEventCalendaradmin from './pages/student/StudentEventCalendar';
+import EventRequests from './pages/admin/Requests';
 import NewUsers from './pages/admin/NewUsers';
 
+
+import StudentDashboardtreasurer from './pages/student/StudentDashboard';
+import StudentAllClubstreasurer from './pages/student/StudentAllClubs';
+import ClubRegistrationtreasurer from './pages/student/ClubRegistration';
+import StudentClubDetailstreasurer from './pages/student/StudentClubDetails';
+import StudentNotificationstreasurer from './pages/student/StudentNotifications';
+import EventRegistrationtreasurer from './pages/student/EventRegistration';
+import Exploreeventstudenttreasurer from './pages/student/Exploreevent';
+import StudentEventCalendartreasurer from './pages/student/StudentEventCalendar';
 import EventRequestsNew from './pages/treasurer/EventRequestsNew';
 
 
@@ -175,9 +191,17 @@ const App = () => {
 
 
        
-
-        <Route path='/admin' element={<EventRequests/>}></Route>
-        <Route path='/admin/newusers' element={<NewUsers/>}></Route>
+        <Route path='/admin/club' element={<StudentAllClubsadmin/>}></Route>
+        <Route path='/admin/club/:name' element={<StudentClubDetailsadmin/>}></Route>
+        <Route path='/admin/notifications' element={<StudentNotificationsadmin/>}></Route>
+        <Route path='/admin/dashboard' element={<StudentDashboardadmin/>}></Route>
+        <Route path='/clubregister/:name' element={<ClubRegistrationadmin/>}></Route>
+        <Route path='/eventregister/:event' element={<EventRegistrationadmin/>}></Route>
+        <Route path='/admin/club/event' element={<Exploreeventstudentadmin />}></Route>
+        <Route path='/admin/calendar' element={<StudentEventCalendaradmin />}></Route>
+        <Route path='/admin' element={<StudentDashboardadmin/>}></Route>
+        <Route path='/admin/requests' element={<EventRequests/>}></Route>
+        <Route path='/admin/users' element={<NewUsers/>}></Route>
 
 
         <Route path='/treasurer' element={<EventRequestsNew/>}></Route>
