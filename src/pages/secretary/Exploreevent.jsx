@@ -33,9 +33,16 @@ const ExploreEvent = () => {
         benefits: '',
         sponsors: Array(5).fill({ name: '', type: 'Gold', amount: '' }), // Initialize sponsor fields
         iudApproval: 'not-approved',
-        proofOfApproval: ''
+        proofOfApproval: '',
+        budget: "1000 USD",  // Dummy budget value
+        purpose: "To enhance the skills of students through practical workshops.",  // Dummy purpose value
+        benefits: "Increased engagement in club activities and better preparation for industry challenges."  // Dummy benefits value
+     
     });
+  
     const [isFormValid, setIsFormValid] = useState(false);
+
+    const [budget, setBudget] = useState('1000 USD');
 
     useEffect(() => {
         const initialLikes = Math.floor(Math.random() * 100) + 1;
@@ -129,7 +136,7 @@ const ExploreEvent = () => {
                                                     className={`cursor-pointer mr-2 ${liked ? 'text-red-500' : 'text-white'}`}
                                                     size={24}
                                                 />
-                                                <Typography color="white " variant="subtitle1">
+                                                <Typography color="white" variant="subtitle1">
                                                     {likes}
                                                 </Typography>
                                             </div>
@@ -147,12 +154,12 @@ const ExploreEvent = () => {
     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
   }} 
 >
-  Request approval
-</button>
+View Details</button>
 
                                         </div>
                                         <Typography color="white" variant="body1" className="mb-4">
                                             An event designed to inspire and empower students. Join us for insightful talks, hands-on workshops, and networking opportunities.
+                                            
                                         </Typography>
                                         <div className="order-3 md:order-4 flex justify-center items-center bg-[#1E1E1E] custom-3d-shadow  custom-card">
                                             <AnnouncementNav />
@@ -304,74 +311,36 @@ const ExploreEvent = () => {
                          </div>
                      </div>
  
-                <div className="mb-4 text-center">
-                    <label className="block mb-2">Budget of the Event:</label>
-                    <input
-                        type="text"
-                        name="budget"
-                        value={formFields.budget}
-                        onChange={handleInputChange}
-                        className="w-2/4  bg-neutral-900 text-white p-2 rounded-full text-center"
-                    />
-                </div>
-                <div className="mb-4 text-center">
-                    <label className="block mb-2">Purpose of the Event:</label>
-                    <input
-                        type="text"
-                        name="purpose"
-                        value={formFields.purpose}
-                        onChange={handleInputChange}
-                        className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
-                    />
-                </div>
-                <div className="mb-4 text-center">
-                    <label className="block mb-2">Benefits to UCSC:</label>
-                    <input
-                        type="text"
-                        name="benefits"
-                        value={formFields.benefits}
-                        onChange={handleInputChange}
-                        className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
-                    />
-                </div>
-                <div className="mb-4 text-center p-5">
-    <label className="block mb-2 p-5">IUD Approval Status:</label>
-    <div className="flex justify-center space-x-4 items-center">
-        <label className="flex items-center space-x-2">
-            <input 
-                type="radio"
-                value="approved"
-                checked={formFields.iudApproval === 'approved'}
-                onChange={() => handleApprovalChange('approved')}
-            />
-            <span>Already Approved</span>
-        </label>
-        <label className="flex items-center space-x-2">
-            <input
-                type="radio"
-                value="not-approved"
-                checked={formFields.iudApproval === 'not-approved'}
-                onChange={() => handleApprovalChange('not-approved')}
-            />
-            <span>Requires Approval</span>
-        </label>
-    </div>
-</div>
-
-{formFields.iudApproval === 'approved' && (
-    <div className="mb-4 text-center">
-        <label className="block mb-2 flex items-center justify-center p-5">
-            <span className="mr-2">Proof of IUD Approval:</span>
-            <input
-                type="file"
-                onChange={handleFileChange}
-                className="ml-2"
-            />
-            <FaUpload className="ml-2" />
-        </label>
-    </div>
-)}
-
+                     <div className="mb-4 text-center">
+        <label className="block mb-2">Budget of the Event:</label>
+        <input
+          type="text"
+          name="budget"
+          value={budget}
+          onChange={handleInputChange}
+          className="w-2/4 bg-neutral-900 text-white p-2 rounded-full text-center"
+        />
+      </div>
+      <div className="mb-4 text-center">
+        <label className="block mb-2">Purpose of the Event:</label>
+        <input
+          type="text"
+          name="purpose"
+          value={formFields.purpose}
+          onChange={handleInputChange}
+          className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
+        />
+      </div>
+      <div className="mb-4 text-center">
+        <label className="block mb-2">Benefits to UCSC:</label>
+        <input
+          type="text"
+          name="benefits"
+          value={formFields.benefits}
+          onChange={handleInputChange}
+          className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
+        />
+      </div>
                 <div className="mb-4 text-center">
                     <label className="block mb-2 text-center">Sponsors:</label>
                     {formFields.sponsors.map((sponsor, index) => (
@@ -408,8 +377,7 @@ const ExploreEvent = () => {
                         className={`px-4 py-2 rounded-full ${isFormValid ? 'bg-[#AEC90A]' : 'bg-gray-500 cursor-not-allowed'}`}
                         disabled={!isFormValid}
                     >
-                        Send Request for Approval
-                    </button>
+Download Proposal                    </button>
                 </div>
             </ReactModal>
         </div>
