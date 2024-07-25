@@ -17,7 +17,6 @@ import pahasaraImg from '../assets/clubs/pahasara1.png';
 
 const StudentClubCard = () => {
     const navigate = useNavigate();
-
     const clubs = [
         {
             id: "6",
@@ -90,8 +89,9 @@ const StudentClubCard = () => {
             description: "The Pahasara Club offers a platform for photography enthusiasts to enhance their skills through workshops, photo walks, and exhibitions.",
             image: pahasaraImg,
             sname: "pahasara",
-        },
+        }
     ];
+
 
     const handleRegisterClick = (club) => {
         navigate(`/clubregister/${club.name}`);
