@@ -1,82 +1,36 @@
 import React, { useState } from "react";
-import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
 import { Tabs, TabsHeader, TabsBody, Tab, TabPanel } from "@material-tailwind/react";
 import { FaDownload } from "react-icons/fa";
 import { IconButton } from '@material-tailwind/react';
-
 import { HiDocumentText } from "react-icons/hi2";
 
-import ieee1 from "../assets/events/madhack.png";
-import ieee2 from "../assets/events/reid.jpg";
-import ieee3 from "../assets/events/intro.jpg";
-import ieee4 from "../assets/events/ieeeday.jpg";
-import ieee5 from "../assets/events/revol.jpg";
-import ieee6 from "../assets/events/reid2.jpg";
-
-import rac1 from "../assets/events/trail.jpg";
-import rac2 from "../assets/events/snap.jpg";
-import rac3 from "../assets/events/dev.jpg";
-import rac4 from "../assets/events/sport.jpg";
-import rac5 from "../assets/events/gtech.jpg";
-import rac6 from "../assets/events/training.jpg";
-
-import acm1 from "../assets/events/8.jpg";
-import acm2 from "../assets/events/hour.jpg";
-import acm3 from "../assets/events/ballet.jpg";
-import acm4 from "../assets/events/discussion.jpg";
-import acm5 from "../assets/events/creative.jpg";
-import acm6 from "../assets/events/reid2.jpg";
-
-import p1 from "../assets/events/8.jpg";
-import p2 from "../assets/events/hour.jpg";
-import p3 from "../assets/events/ballet.jpg";
-import p4 from "../assets/events/discussion.jpg";
-import p5 from "../assets/events/creative.jpg";
-import p6 from "../assets/events/reid2.jpg";
-
-import ieeeImage from '../assets/clubs/ieee.png';
-import rotaractImage from '../assets/clubs/rotaract.png';
-import acmImage from '../assets/clubs/acm.png';
-import pahasaraImage from '../assets/clubs/pahasara1.png';
-import isacaImage from '../assets/clubs/isaca1.png';
-import wieImage from '../assets/clubs/wie.png';
-import msImage from '../assets/clubs/ms.png';
-import wicysImage from '../assets/clubs/wicys.png';
-import rekhaImage from '../assets/clubs/rekha.png';
-
-const eventImages = {
-  IEEE: [ieee1, ieee2, ieee3, ieee4, ieee5, ieee6],
-  Rotaract: [rac1, rac2, rac3, rac4, rac5, rac6],
-  ACM: [acm1, acm2, acm3, acm4, acm5, acm6],
-  
+// User Images
+const userImages = [
+  "https://randomuser.me/api/portraits/men/1.jpg",
+  "https://randomuser.me/api/portraits/men/2.jpg",
+  "https://randomuser.me/api/portraits/men/3.jpg",
+  "https://randomuser.me/api/portraits/men/4.jpg",
+  "https://randomuser.me/api/portraits/men/5.jpg",
+  "https://randomuser.me/api/portraits/women/1.jpg",
+  "https://randomuser.me/api/portraits/women/2.jpg",
+  "https://randomuser.me/api/portraits/women/3.jpg",
+  "https://randomuser.me/api/portraits/women/4.jpg",
+  "https://randomuser.me/api/portraits/women/6.jpg",
 
   
+];
 
+// Function to generate a random registration number
+const generateRegNumber = () => {
+  const year = 2024; // Or any year close to 2024
+  const randomNum = Math.floor(Math.random() * 1000); // Random number between 0 and 999
+  const prefix = Math.random() < 0.5 ? 'is' : 'cs'; // Randomly choose 'is' or 'cs'
+  return `${year}${prefix}${randomNum.toString().padStart(3, '0')}`;
 };
 
-// Club Images
-const clubImages = {
-  IEEE: ieeeImage,
-  Rotaract: rotaractImage,
-  ACM: acmImage,
-  Pahasara: pahasaraImage,
-  ISACA: isacaImage,
-  WIE: wieImage,
-  MS: msImage,
-  WICYS: wicysImage,
-  Rekha: rekhaImage,
-};
-
-// Function to get random event image
-// Function to get a random event image within a specified range
-const getRandomEventImage = (club, start = 0, end = 5) => {
-  const images = eventImages[club] || [];
-  // Ensure the end index does not exceed the length of the images array
-  const validEnd = Math.min(end, images.length - 1);
-  const range = images.slice(start, validEnd + 1);
-  return range[Math.floor(Math.random() * range.length)];
-};
+// Function to generate a random email based on the registration number
+const generateEmail = (regNumber) => `${regNumber}@ucsc.cmb.ac.lk`;
 
 // Dialog Component
 const Dialog = ({ children, isOpen, onClose, title, primaryAction, secondaryAction, primaryActionClass, icon }) => (
@@ -111,22 +65,20 @@ const Dialog = ({ children, isOpen, onClose, title, primaryAction, secondaryActi
   ) : null
 );
 
-// RequestTable Component
+// RequestTable Component for User Requests
 const RequestTable = ({ type, onAccept, onReject }) => {
   const data = {
     all: [
-      { id: 1, president: "Kokul", club: "IEEE", event: "Madhack 3.0", date: "2024-09-15", venue: "Tech Park", image: "https://randomuser.me/api/portraits/men/4.jpg" },
-      { id: 2, president: "Jane", club: "Rotaract", event: "TechFest 4.0", date: "2024-10-22", venue: "Convention Center", image: "https://randomuser.me/api/portraits/women/4.jpg" },
-      { id: 3, president: "Doe", club: "IEEE", event: "Hackathon 2.0", date: "2024-11-05", venue: "Innovation Hub", image: "https://randomuser.me/api/portraits/men/5.jpg" },
-      { id: 4, president: "Alex", club: "ACM", event: "SpaceX Launch", date: "2024-12-12", venue: "Space Station", image: "https://randomuser.me/api/portraits/women/5.jpg" },
+      { id: 1, firstName: "John", lastName: "Doe", regNumber: generateRegNumber(), image: userImages[0] },
+      { id: 2, firstName: "Jane", lastName: "Smith", regNumber: generateRegNumber(), image: userImages[1] },
+      { id: 3, firstName: "Alice", lastName: "Johnson", regNumber: generateRegNumber(), image: userImages[2] },
+      { id: 4, firstName: "Bob", lastName: "Brown", regNumber: generateRegNumber(), image: userImages[3] },
     ],
     accepted: [
-      { id: 1, president: "Nina", club: "Rotaract", event: "AI Summit", date: "2024-09-30", venue: "AI Center", image: "https://randomuser.me/api/portraits/men/6.jpg" },
-      { id: 2, president: "Liam", club: "ACM", event: "Robotics Expo", date: "2024-11-15", venue: "Expo Hall", image: "https://randomuser.me/api/portraits/women/6.jpg" },
+      { id: 1, firstName: "Nina", lastName: "Williams", regNumber: generateRegNumber(), image: userImages[4] },
     ],
     rejected: [
-      { id: 1, president: "Sophia", club: "IEEE", event: "Quantum Computing", date: "2024-10-01", venue: "Quantum Lab", image: "https://randomuser.me/api/portraits/men/7.jpg" },
-      { id: 2, president: "John", club: "ACM", event: "BioTech Conference", date: "2024-11-25", venue: "BioTech Center", image: "https://randomuser.me/api/portraits/women/7.jpg" },
+      { id: 1, firstName: "Sophia", lastName: "Miller", regNumber: generateRegNumber(), image: userImages[5] },
     ],
   };
 
@@ -139,32 +91,21 @@ const RequestTable = ({ type, onAccept, onReject }) => {
       ? `${baseClass} text-[#AEC90A] border-[#AEC90A] border`
       : `${baseClass} text-[#D32F2F] border border-[#D32F2F]`;
   };
+
   return (
     <div className="overflow-auto rounded-lg">
       {data[type].map((row) => (
         <div
           key={row.id}
-          className="bg-black text-white rounded-2xl p-4 mb-6 flex flex-col md:flex-row items-center justify-between"
+          className="bg-black text-white rounded-2xl p-4 mb-6 flex items-center justify-between"
         >
-          <div className="flex items-center mb-4 md:mb-0">
-            <img src={row.image} alt="President" className="w-12 h-12 rounded-full mr-4" />
-            <span>{row.president}</span>
-          </div>
-          <div className="flex items-center mb-4 md:mb-0">
-            <img src={clubImages[row.club]} alt="Club Logo" className="w-16 h-16 rounded-md mr-4" />
-            <span>President of {row.club}</span>
-          </div>
-          <div className="flex flex-col items-center mb-4 md:mb-0">
-            <span>To conduct:</span>
-            <img src={getRandomEventImage(row.club)} alt="Event" className="w-32 h-16 rounded-md mb-2" />
-            <span>{row.event}</span>
-          </div>
-          <div className="flex flex-col items-center mb-4 md:mb-0">
-            <span>Date: {row.date}</span>
-            <span>Venue: {row.venue}</span>
-          </div>
-          <div className="flex items-center mb-4 md:mb-0"> <IconButton>
-            <FaDownload size={20} className="text-white cursor-pointer mr-4" /></IconButton>
+          <div className="flex items-center">
+            <img src={row.image} alt="User" className="w-12 h-12 rounded-full mr-4" />
+            <div className="flex flex-col">
+              <span>{`${row.firstName} ${row.lastName}`}</span>
+              <span>{row.regNumber}</span>
+              <span>{generateEmail(row.regNumber)}</span>
+            </div>
           </div>
           <div className="flex items-center space-x-2">
             <button
@@ -184,8 +125,8 @@ const RequestTable = ({ type, onAccept, onReject }) => {
       ))}
     </div>
   );
-  
 };
+
 // Main Requests Component
 const Requests = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -217,15 +158,15 @@ const Requests = () => {
 
   const handleDialogConfirm = () => {
     if (currentAction === 'accept') {
-      console.log(`Accepted event: ${currentRow.event}`);
+      console.log(`Accepted user: ${currentRow.firstName} ${currentRow.lastName}`);
     } else if (currentAction === 'reject') {
-      console.log(`Rejected event: ${currentRow.event}`);
+      console.log(`Rejected user: ${currentRow.firstName} ${currentRow.lastName}`);
     }
     handleDialogClose();
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col  mt-6">
       <Tabs value={activeTab} className="flex flex-col flex-1">
         <TabsHeader
             className="rounded-none bg-transparent p-0 w-1/4"
@@ -258,15 +199,15 @@ const Requests = () => {
       <Dialog
         isOpen={isDialogOpen}
         onClose={handleDialogClose}
-        title={currentAction === 'accept' ? 'Accept Event' : 'Reject Event'}
+        title={currentAction === 'accept' ? 'Accept User' : 'Reject User'}
         primaryAction={{ label: currentAction === 'accept' ? 'Confirm Accept' : 'Confirm Reject', onClick: handleDialogConfirm }}
         secondaryAction={{ label: "Cancel", onClick: handleDialogClose }}
         primaryActionClass={currentAction === 'accept' ? 'bg-[#AEC90A]' : 'bg-[#D32F2F]'}
       >
         <p className="text-black">
           {currentAction === 'accept'
-            ? "Are you sure you want to accept this event?"
-            : "Are you sure you want to reject this event?"}
+            ? `Are you sure you want to accept ${currentRow?.firstName} ${currentRow?.lastName}?`
+            : `Are you sure you want to reject ${currentRow?.firstName} ${currentRow?.lastName}?`}
         </p>
       </Dialog>
     </div>

@@ -93,6 +93,9 @@ const ClubEvent = ({ club }) => {
       case location.pathname.startsWith('/president'):
         basePath = '/president/club/event';
         break;
+        case location.pathname.startsWith('/student'):
+          basePath = '/student/club/event';
+          break;
       case location.pathname.startsWith('/secretary'):
         basePath = '/secretary/club/event';
         break;

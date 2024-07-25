@@ -225,7 +225,7 @@ const Requests = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col  mt-6">
       <Tabs value={activeTab} className="flex flex-col flex-1">
         <TabsHeader
             className="rounded-none bg-transparent p-0 w-1/4"

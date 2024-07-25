@@ -8,12 +8,13 @@ import { Tabs, TabsHeader, Tab } from "@material-tailwind/react";
 
 
 const ExploreClub = () => {
-    const [activeTab, setActiveTab] = useState("User Requests");
+    const [activeTab, setActiveTab] = useState("new-users");
 
     const mainTabs = [
-        { label: "New Users", value: "New Users" },        { label: "Event Requests", value: "Event Requests" },
-
+        { label: "New Users", value: "new-users" },
+        { label: "Event Requests", value: "event-requests" },
     ];
+    
 
     return (
         <div className="fixed inset-0 flex">
@@ -21,7 +22,7 @@ const ExploreClub = () => {
             <div className="flex flex-col flex-1">
                 <Navbar className="sticky top-0 z-10 p-4" />
                 <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-hidden">
-                    <Tabs value={activeTab} className="max-w-full h-full flex flex-col m-6 cursor-pointer">
+                    <Tabs value={activeTab} className="max-w-full h-full flex flex-col mt-2 cursor-pointer">
                         <TabsHeader
                             className="rounded-none bg-transparent p-0 w-full"
                             indicatorProps={{
@@ -39,9 +40,10 @@ const ExploreClub = () => {
                                 </Tab>
                             ))}
                         </TabsHeader>
-                        <div className=" overflow-y-auto ">
-                            {activeTab === "Event Requests" && <Requests />}
-                            {activeTab === "New Users" && <div>New Users content goes here</div>}
+                        <div className=" overflow-y-auto px-10">
+                            {activeTab === "event-requests" && <Requests />}
+                            {activeTab === "new-users" && <Users />}
+
                         </div>
                     </Tabs>
                 </div>

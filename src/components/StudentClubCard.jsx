@@ -98,7 +98,30 @@ const StudentClubCard = () => {
     }
 
     const handleExploreClick = (club) => {
-        navigate(`/student/club/${club.sname}`, { state: { club, image: club.image } });
+        let basePath;
+        switch (true) {
+            case location.pathname.startsWith('/student'):
+                basePath = '/student';
+                break;
+            case location.pathname.startsWith('/oc'):
+                basePath = '/oc';
+                break;
+                case location.pathname.startsWith('/secretary'):
+                    basePath = '/secretary';
+                    break;
+            case location.pathname.startsWith('/admin'):
+                basePath = '/admin';
+                break;
+            case location.pathname.startsWith('/member'):
+                basePath = '/member';
+                break;
+            case location.pathname.startsWith('/treasurer'):
+                basePath = '/treasurer';
+                break;
+            default:
+                basePath = ''; // Default base path or handle other cases
+        }
+        navigate(`${basePath}/club/${club.sname}`, { state: { club, image: club.image } });
     };
 
     return (
