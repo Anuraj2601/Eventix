@@ -14,6 +14,10 @@ import Dashboard from './pages/president/Dashboard';
 import Calendar from './pages/president/Calendar';
 import NewElectionForm from './pages/president/NewElectionForm';
 import AddNewPostForm from './pages/president/AddNewPostForm';
+import PresidentNotifications from './pages/student/StudentNotifications';
+import Announcementpresident from './components/MainAnnouncement';
+
+
 
 import Explorecluboc from './pages/oc/Exploreclub';
 import Exploreeventoc from './pages/oc/Exploreevent';
@@ -23,6 +27,9 @@ import Dashboardoc from './pages/oc/Dashboard';
 import Calendaroc from './pages/oc/Calendar';
 import NewElectionFormoc from './pages/oc/NewElectionForm';
 import AddNewPostFormoc from './pages/oc/AddNewPostForm';
+import OcNotifications from './pages/student/StudentNotifications';
+import Announcementoc from './components/MainAnnouncement';
+
 
 import Exploreclubsecretary from './pages/secretary/Exploreclub';
 import Exploreeventsecretary from './pages/secretary/Exploreevent';
@@ -30,6 +37,9 @@ import ClubDetailssecretary from './pages/president/ClubDetails';
 import Electionsecretary from './pages/secretary/Election';
 import Dashboardsecretary from './pages/secretary/Dashboard';
 import Calendarsecretary from './pages/secretary/Calendar';
+import SecretaryNotifications from './pages/student/StudentNotifications';
+import Announcementsecretary from './components/MainAnnouncement';
+
 
 
 
@@ -42,11 +52,11 @@ import EventRegistration from './pages/student/EventRegistration';
 import Exploreeventstudent from './pages/student/Exploreevent';
 import StudentEventCalendar from './pages/student/StudentEventCalendar';
 import StudentInquiries from './pages/student/Inquiry';
+import Announcementstudent from './components/MainAnnouncement';
 
 
 
 
-import Announcement from './components/MainAnnouncement';
 //import MainMeeting from './components/MainMeeting';
 
 import Landing from "./pages/Landing"
@@ -65,6 +75,8 @@ import MemberElectionForm from './pages/member/MemberElectionForm';
 import MemberElectionFormSuccess from './pages/member/MemberElectionFormSuccess';
 import MemberVotingProcess from './pages/member/MemberVotingProcess';
 import MemberOCJoinForm from './pages/member/MemberOCJoinForm';
+import MemberNotifications from './pages/student/StudentNotifications';
+import Announcementmember from './components/MainAnnouncement';
 
 
 
@@ -80,6 +92,10 @@ import Exploreeventstudentadmin from './pages/student/Exploreevent';
 import StudentEventCalendaradmin from './pages/student/StudentEventCalendar';
 import EventRequests from './pages/admin/Requests';
 import NewUsers from './pages/admin/NewUsers';
+import AdminNotifications from './pages/student/StudentNotifications';
+import Announcementadmin from './components/MainAnnouncement';
+
+
 
 
 import StudentDashboardtreasurer from './pages/student/StudentDashboard';
@@ -91,6 +107,9 @@ import EventRegistrationtreasurer from './pages/student/EventRegistration';
 import Exploreeventstudenttreasurer from './pages/student/Exploreevent';
 import StudentEventCalendartreasurer from './pages/student/StudentEventCalendar';
 import EventRequestsNew from './pages/treasurer/Requests';
+import TreasurerNotifications from './pages/student/StudentNotifications';
+import Announcementtreasurer from './components/MainAnnouncement';
+
 
 
 
@@ -132,6 +151,8 @@ const App = () => {
         <Route path="/member-form-success" element={<MemberElectionFormSuccess />} />
         <Route path="/member-voting" element={<MemberVotingProcess />} />
         <Route path="/member-oc-form" element={<MemberOCJoinForm />} />
+        <Route path='/member/notifications' element={<MemberNotifications  />} ></Route>
+        <Route path='/member/announcement' element={<Announcementmember />}></Route> 
 
         
              
@@ -146,6 +167,7 @@ const App = () => {
         <Route path='/student/calendar' element={<StudentEventCalendar />}></Route>
         <Route path='/student' element={<StudentDashboard/>}></Route>
         <Route path='/student/inquiry' element={<StudentInquiries/>}></Route>
+        <Route path='/student/announcement' element={<Announcementstudent />}></Route> 
 
 
 
@@ -165,6 +187,9 @@ const App = () => {
         <Route path='/president' element={<Dashboard  />} ></Route>
         <Route path="/president/club/election/add" element={<NewElectionForm />} />
         <Route path="/club/new-post" element={<AddNewPostForm />} />
+        <Route path='/president/notifications' element={<PresidentNotifications  />} ></Route>
+        <Route path='/president/announcement' element={<Announcementpresident />}></Route> 
+
 
         
 
@@ -177,6 +202,10 @@ const App = () => {
         <Route path='/secretary/calendar' element={<Calendar />}></Route>
         <Route path='/secretary/club/election' element={<Election/>}></Route>
         <Route path='/secretary' element={<Dashboard  />} ></Route>
+        <Route path='/secretary/notifications' element={<SecretaryNotifications />} ></Route>
+        <Route path='/secretary/announcement' element={<Announcementsecretary />}></Route> 
+
+
 
         {/* OC ROUTES */}
         <Route exact path="/oc/club" element={<Explorecluboc />} />
@@ -190,6 +219,8 @@ const App = () => {
         <Route path='/oc' element={<Dashboardoc  />} ></Route>
         <Route path="/oc/club/election/add" element={<NewElectionForm />} />
         <Route path="/oc/new-post" element={<AddNewPostFormoc />} />
+        <Route path='/oc/notifications' element={<OcNotifications />}></Route>
+        <Route path='/oc/announcement' element={<Announcementoc />}></Route> 
 
         
 
@@ -206,6 +237,9 @@ const App = () => {
         <Route path='/admin' element={<StudentDashboardadmin/>}></Route>
         <Route path='/admin/requests' element={<EventRequests/>}></Route>
         <Route path='/admin/users' element={<NewUsers/>}></Route>
+        <Route path='/admin/notifications' element={<AdminNotifications  />} ></Route>
+        <Route path='/admin/announcement' element={<Announcementadmin />}></Route> 
+
 
         <Route path='/treasurer/club' element={<StudentAllClubstreasurer/>}></Route>
         <Route path='/treasurer/club/:name' element={<StudentClubDetailstreasurer/>}></Route>
@@ -217,6 +251,9 @@ const App = () => {
         <Route path='/treasurer/calendar' element={<StudentEventCalendartreasurer />}></Route>
         <Route path='/treasurer' element={<StudentDashboardadmin/>}></Route>
         <Route path='/treasurer/requests' element={<EventRequestsNew/>}></Route>
+        <Route path='/treasurer/notifications' element={<TreasurerNotifications  />} ></Route>
+        <Route path='/treasurer/announcement' element={<Announcementtreasurer />}></Route> 
+
 
 
         <Route path='/requests' element={<EventRequestsNew/>}></Route>
@@ -234,7 +271,6 @@ const App = () => {
 
        {/*  <Route path='/Board' element={<Board />}></Route> */}
 
-       <Route path='/student/announcement' element={<Announcement />}></Route> 
 
 
        

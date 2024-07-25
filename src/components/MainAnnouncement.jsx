@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import ieeeImage from '../assets/clubs/ieee.png';
+import isacaImage from '../assets/clubs/isaca1.png';
+import rotaractImage from '../assets/clubs/rotaract.png';
 
 const MainAnnouncement = () => {
-    const [selectedFilter, setSelectedFilter] = useState('clubAnnouncements');
+    const [selectedFilter, setSelectedFilter] = useState('allAnnouncements');
     const [selectedClub, setSelectedClub] = useState(null);
     const [viewMode, setViewMode] = useState('new');
 
@@ -11,7 +14,7 @@ const MainAnnouncement = () => {
         {
             id: 1,
             name: 'IEEE Student Group',
-            image: '../assets/clubs/ieee.png',
+            image: ieeeImage,
             totalAnnouncements: 38,
             oldAnnouncements: 30,
             newAnnouncements: 8,
@@ -29,7 +32,7 @@ const MainAnnouncement = () => {
         {
             id: 2,
             name: 'ISACA',
-            image: '../assets/clubs/isaca1.png',
+            image: isacaImage,
             totalAnnouncements: 22,
             oldAnnouncements: 20,
             newAnnouncements: 2,
@@ -45,7 +48,7 @@ const MainAnnouncement = () => {
         {
             id: 3,
             name: 'Rotract',
-            image: '../assets/clubs/rotaract',
+            image: rotaractImage,
             totalAnnouncements: 15,
             oldAnnouncements: 10,
             newAnnouncements: 5,
@@ -62,7 +65,7 @@ const MainAnnouncement = () => {
     const unionAnnouncements = [
         {
             announcements: [
-                { id: 1, title: 'Union Meeting', description: 'Monthly meeting for all union members.', type: 'Meeting', date: '2024-08-05', time: '04:00 PM', location: 'Conference Room A', postedDate: '2024-07-25', postedTime: '04:00 PM' },
+                { id: 1, title: 'Union Meeting', description: 'Monthly meeting for all university students.', type: 'Meeting', date: '2024-08-05', time: '04:00 PM', location: 'Conference Room A', postedDate: '2024-07-25', postedTime: '04:00 PM' },
                 { id: 2, title: 'Community Outreach Program', description: 'Participate in our community outreach program.', type: 'Event', date: '2024-08-12', time: '01:00 PM', location: 'Community Center', postedDate: '2024-07-26', postedTime: '01:00 PM' },
                 { id: 3, title: 'Community Outreach Program', description: 'Participate in our community outreach program.', type: 'Event', date: '2024-08-12', time: '01:00 PM', location: 'Community Center', postedDate: '2024-07-26', postedTime: '01:00 PM' },
 
@@ -70,6 +73,22 @@ const MainAnnouncement = () => {
         },
     ];
 
+    const allAnnouncements = [
+        ...clubAnnouncements.flatMap(club => club.announcements.map(announcement => ({ ...announcement, clubImage: club.image, clubName: club.name }))),
+        ...unionAnnouncements.flatMap(union => union.announcements)
+    ];
+    
+    const shuffledAnnouncements = shuffleArray(allAnnouncements);
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+        
+
+    
     const renderContent = () => {
         if (selectedFilter === 'clubAnnouncements') {
             if (selectedClub) {
@@ -104,8 +123,10 @@ const MainAnnouncement = () => {
                 return (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {clubAnnouncements.map((club) => (
-                            <div key={club.id} className="bg-dark-500 p-6 rounded-lg flex flex-col items-center relative border border-transparent hover:border-primary">
-                                <img src={club.image} alt={club.name} className="h-24 w-24 mb-4 border border-primary" />
+                            <div key={club.id} className="bg-dark-500 p-6 rounded-lg flex flex-col items-center relative border border-transparent hover:border-primary" style={{ 
+                                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                              }}          >
+                                <img src={club.image} alt={club.name} className="h-24 w-24 mb-4 rounded-lg" />
                                 <h2 className="text-xl font-medium mb-2">{club.name}</h2>
                                 <p className="text-sm text-primary mb-4">{club.totalAnnouncements} Announcements</p>
                                 <div className="flex justify-around w-full mt-4">
@@ -114,7 +135,9 @@ const MainAnnouncement = () => {
                                         onClick={() => {
                                             setSelectedClub(club.id);
                                             setViewMode('old');
-                                        }}
+                                        }} style={{ 
+                                            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                          }}          
                                     >
                                         <span className="text-[16px] font-medium mt-3 mr-12 ">Old</span>
                                         <span className="text-xl font-medium absolute right-1 top-[2px] w-10 h-10 flex items-center justify-center ">
@@ -126,7 +149,9 @@ const MainAnnouncement = () => {
                                         onClick={() => {
                                             setSelectedClub(club.id);
                                             setViewMode('new');
-                                        }}
+                                        }} style={{ 
+                                            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                          }}          
                                     >
                                         <span className="text-[16px] font-semibold mt-3 mr-12">New</span>
                                         <span className="text-xl font-medium absolute right-1 top-1 w-10 h-10 flex items-center bg-dark-500 text-primary justify-center rounded-full border border-black">
@@ -153,7 +178,9 @@ const MainAnnouncement = () => {
                             <div key={union.id} className="mb-6">
                                 <div className="grid grid-cols-1 gap-4">
                                     {union.announcements.map((announcement) => (
-                                        <div key={announcement.id} className="relative p-4 bg-dark-500 rounded-lg flex flex-col">
+                                        <div key={announcement.id} className="relative p-4 bg-dark-500 rounded-lg flex flex-col" style={{ 
+                                            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                                          }}          >
                                             <div>
                                                 <p className="text-sm text-primary font-semibold">{announcement.title}</p>
                                                 <p className="text-sm">{announcement.description} <span className='ml-5 text-primary opacity-60'>{announcement.date} | {announcement.time} | {announcement.location}</span></p>
@@ -170,8 +197,36 @@ const MainAnnouncement = () => {
                     </div>
                 </div>
             );
+        }else if (selectedFilter === 'allAnnouncements') {
+            return (
+                <div className="p-4 rounded-lg">
+                <h2 className="text-xl font-medium mb-4"></h2>
+                <div className="grid grid-cols-1 gap-4">
+                    {allAnnouncements.map((announcement) => (
+                        <div key={announcement.id} className="relative mb-4 p-4 bg-dark-400 rounded-lg flex items-center" style={{ 
+                            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                          }}          >
+                            {announcement.clubImage && (
+                                <img src={announcement.clubImage} alt={announcement.clubName} className="w-16 h-16 rounded-full mr-4" />
+                            )}
+                            <div className="flex-1">
+                                <p className="text-sm text-primary font-semibold">{announcement.title}</p>
+                                <p className="text-sm text-neutral-400">{announcement.type}</p>
+                                <p className="text-sm text-neutral-400">{announcement.description}</p>
+                                <p className="text-sm text-neutral-400">{announcement.date} - {announcement.time}</p>
+                                {announcement.location && <p className="text-sm text-neutral-400">Location: {announcement.location}</p>}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            
+            );
         }
+        return null;
     };
+
+    
 
     return (
         <div className="fixed inset-0 flex">
@@ -181,6 +236,12 @@ const MainAnnouncement = () => {
                 <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-hidden">
                     <div className="p-6 overflow-y-auto relative">
                         <div className="flex space-x-4 mb-4">
+                        <button
+                                className={`px-4 py-2 ${selectedFilter === 'allAnnouncements' ? 'text-primary border-b-2 border-primary' : 'text-white'}`}
+                                onClick={() => setSelectedFilter('allAnnouncements')}
+                            >
+                                All Announcements
+                            </button>
                             <button
                                 className={`px-4 py-2 ${selectedFilter === 'clubAnnouncements' ? 'text-primary border-b-2 border-primary' : 'text-white'}`}
                                 onClick={() => setSelectedFilter('clubAnnouncements')}
@@ -193,6 +254,7 @@ const MainAnnouncement = () => {
                             >
                                 Union Announcements
                             </button>
+                            
                         </div>
                         {renderContent()}
                     </div>
