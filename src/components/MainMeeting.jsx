@@ -49,8 +49,11 @@ const MainMeeting = () => {
     ];
 
     const handleGetQRCode = (id) => {
-        // Handle QR code generation here
         console.log('Get QR Code for meeting ID:', id);
+    };
+
+    const handleExcuse = (id) => {
+        console.log('Excuse for meeting ID:', id);
     };
 
     const renderContent = () => {
@@ -93,16 +96,35 @@ const MainMeeting = () => {
                                     <span className="block font-medium leading-loose">{announcement.title}</span>
                                     {announcement.description}
                                     <span className='block text-[20px] text-primary opacity-100 mt-6'>
-                                        {announcement.date} | {announcement.time} | {announcement.location}
+                                        <span className="flex items-center">
+                                            <svg className="w-5 h-5 text-primary mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1 1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zM12 16a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1zM12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" /></svg>
+                                            {announcement.date}
+                                        </span>
+                                        <span className="flex items-center mt-1">
+                                            <svg className="w-5 h-5 text-primary mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M5 12h14M5 6h14M5 18h14" /></svg>
+                                            {announcement.time}
+                                        </span>
+                                        <span className="flex items-center mt-1">
+                                            <svg className="w-5 h-5 text-primary mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13.5l-7-7-7 7" /></svg>
+                                            {announcement.location}
+                                        </span>
                                     </span>
                                 </p>
                             </div>
-                            <button 
-                                onClick={() => handleGetQRCode(announcement.id)} 
-                                className="px-4 py-2 bg-primary text-black rounded font-medium mb-10 "
-                            >
-                                Get QR Code
-                            </button>
+                            <div className="flex space-x-2 mb-4">
+                                <button 
+                                    onClick={() => handleGetQRCode(announcement.id)} 
+                                    className="px-4 py-2 bg-primary text-black rounded font-medium"
+                                >
+                                    Get QR Code
+                                </button>
+                                <button 
+                                    onClick={() => handleExcuse(announcement.id)} 
+                                    className="px-4 py-2 bg-red-500 text-white rounded font-medium"
+                                >
+                                    Excuse
+                                </button>
+                            </div>
                             <div className="text-xs text-gray-400 absolute bottom-2 w-full text-right">
                                 <span className="mx-0">{announcement.postedDate}</span>
                                 <span className="mx-2">{announcement.postedTime}</span>
@@ -136,7 +158,6 @@ const MainMeeting = () => {
                             </button>
                         </div>
                         {renderContent()}
-                        {/* Render meeting announcements below the meeting content */}
                         {renderMeetingAnnouncements()}
                     </div>
                 </div>
