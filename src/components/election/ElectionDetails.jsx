@@ -16,10 +16,18 @@ const ElectionDetails = ({ clubName, electionId }) => {
   const currentPath = location.pathname;
 
   // Determine the target path based on the current path
-  let targetPath = '/president/club/election';
-  if (currentPath.startsWith('/secretary')) {
-    targetPath = '/secretary/club/election';
-  }
+  let targetPath = '';
+
+if (location.pathname.startsWith('/president')) {
+  targetPath = '/president/club/election';
+} else if (location.pathname.startsWith('/member')) {
+  targetPath = '/member/club/election';
+} else if (location.pathname.startsWith('/oc')) {
+  targetPath = '/oc/club/election';
+} else if (location.pathname.startsWith('/secretary')) {
+  targetPath = '/secretary/club/election';
+}
+
 
   // Check if the current path is either '/president' or '/secretary'
   const isEditable = currentPath.startsWith('/president') || currentPath.startsWith('/secretary');
@@ -128,11 +136,12 @@ const ElectionDetails = ({ clubName, electionId }) => {
                       disabled={index === 1}
                     />
                   )}
-                  <Link to={targetPath}>
-                    <Button variant="gradient" className={`bg-[#AEC90A] rounded-full text-black p-2 inline-block`}>
-                      View Details
-                    </Button>
-                  </Link>
+                <Link to={targetPath}>
+  <Button variant="gradient" className="bg-[#AEC90A] rounded-full text-black p-2 inline-block">
+    View Details
+  </Button>
+</Link>
+
                 </div>
               </div>
             ))}

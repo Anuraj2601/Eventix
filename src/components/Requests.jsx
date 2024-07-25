@@ -144,26 +144,24 @@ const RequestTable = ({ type, onAccept, onReject }) => {
       {data[type].map((row) => (
         <div
           key={row.id}
-          className="bg-black text-[#AEC90A] rounded-2xl p-4 mb-6 flex flex-col md:flex-row items-center justify-between" style={{ 
+          className="bg-black  rounded-2xl p-4 mb-6 flex flex-col md:flex-row items-center justify-between" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}
         >
-          <div className="flex items-center mb-4 md:mb-0">
-            <img src={row.image} alt="President" className="w-24 h-24 rounded-full mr-4" />
-            <span>{row.president}</span>
+<div className="flex flex-col items-center mb-4 md:mb-0">            <img src={row.image} alt="President" className="w-24 h-24 text-white rounded-full mr-4" />
+            <span className=" text-white p-2">{row.president}</span>
           </div>
-          <div className="flex items-center mb-4 md:mb-0">
-            <img src={clubImages[row.club]} alt="Club Logo" className="w-16 h-16 rounded-md mr-4" />
-            <span>President of {row.club}</span>
+          <div className="flex flex-col items-center mb-4 md:mb-0">                   <span className=" text-[#AEC90A] p-2">President of {row.club}</span>
+     <img src={clubImages[row.club]} alt="Club Logo" className="w-16 h-16 text-[#AEC90A] rounded-md mr-4" />
           </div>
           <div className="flex flex-col items-center mb-4 md:mb-0">
-            <span>To conduct:</span>
-            <img src={getRandomEventImage(row.club)} alt="Event" className="w-32 h-16 rounded-md mb-2" />
-            <span>{row.event}</span>
+            <span className=" text-[#AEC90A]">To conduct:</span>
+            <img src={getRandomEventImage(row.club)} alt="Event" className="w-40 h-32 rounded-md mb-2" />
+            <span className=" text-white">{row.event}</span>
           </div>
           <div className="flex flex-col items-center mb-4 md:mb-0">
-            <span>Date: {row.date}</span>
-            <span>Venue: {row.venue}</span>
+            <span className=" text-white">Date: {row.date}</span>
+            <span className=" text-white" >Venue: {row.venue}</span>
           </div>
           <div className="flex items-center mb-4 md:mb-0"> <IconButton>
             <FaDownload size={20} className="text-white cursor-pointer mr-4" /></IconButton>

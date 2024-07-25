@@ -5,8 +5,8 @@ import Navbar from '../components/Navbar';
 
 // Updated random user image URLs
 const userProfiles = [
-  { image: 'https://randomuser.me/api/portraits/men/5.jpg', name: 'John Doe' },
-  { image: 'https://randomuser.me/api/portraits/women/6.jpg', name: 'Jane Smith' },
+  { image: 'https://randomuser.me/api/portraits/men/9.jpg', name: 'John Doe' },
+  { image: 'https://randomuser.me/api/portraits/women/8.jpg', name: 'Jane Smith' },
   { image: 'https://randomuser.me/api/portraits/men/3.jpg', name: 'Mike Johnson' },
   { image: 'https://randomuser.me/api/portraits/women/4.jpg', name: 'Emily Davis' }
 ];
@@ -87,7 +87,7 @@ const InquiryPage = () => {
       <div className="flex-1 flex flex-col">
         <Navbar className="sticky top-0 z-10 bg-neutral-900 text-white " />
         <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
-        <div className="w-1/4 bg-neutral-800 p-2 custom-3d-shadow rounded-2xl overflow-y-auto">
+        <div className="w-1/4  p-2 custom-3d-shadow rounded-2xl overflow-y-auto">
             <h2 className="text-xl mb-4 text-center">Messages</h2>
             <div className="flex flex-col space-y-2">
               {inquiries.slice(0, 2).map((inquiry, index) => (
