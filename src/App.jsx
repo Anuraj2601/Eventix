@@ -46,8 +46,8 @@ import StudentInquiries from './pages/student/Inquiry';
 
 
 
-import MainAnnouncement from './components/MainAnnouncement';
-import MainMeeting from './components/MainMeeting';
+import Announcement from './components/MainAnnouncement';
+//import MainMeeting from './components/MainMeeting';
 
 import Landing from "./pages/Landing"
 import Login from "./components/login"
@@ -234,6 +234,7 @@ const App = () => {
 
        {/*  <Route path='/Board' element={<Board />}></Route> */}
 
+       <Route path='/student/announcement' element={<Announcement />}></Route> 
 
 
        
