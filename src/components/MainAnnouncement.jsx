@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import ieee from '../assets/ieee.jpeg';
+import isaca from '../assets/isaca.png';
+import rotract from '../assets/rotract.jpeg';
+
 
 const MainAnnouncement = () => {
     const [selectedFilter, setSelectedFilter] = useState('clubAnnouncements');
@@ -11,7 +15,7 @@ const MainAnnouncement = () => {
         {
             id: 1,
             name: 'IEEE Student Group',
-            image: '../assets/ieee.jpeg',
+            image: ieee,
             totalAnnouncements: 38,
             oldAnnouncements: 30,
             newAnnouncements: 8,
@@ -29,7 +33,7 @@ const MainAnnouncement = () => {
         {
             id: 2,
             name: 'ISACA',
-            image: '../assets/isaca.png',
+            image: isaca,
             totalAnnouncements: 22,
             oldAnnouncements: 20,
             newAnnouncements: 2,
@@ -45,7 +49,7 @@ const MainAnnouncement = () => {
         {
             id: 3,
             name: 'Rotract',
-            image: '../assets/rotract.jpeg',
+            image: rotract,
             totalAnnouncements: 15,
             oldAnnouncements: 10,
             newAnnouncements: 5,
@@ -105,7 +109,7 @@ const MainAnnouncement = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {clubAnnouncements.map((club) => (
                             <div key={club.id} className="bg-dark-500 p-6 rounded-lg flex flex-col items-center relative border border-transparent hover:border-primary">
-                                <img src={club.image} alt={club.name} className="h-24 w-24 mb-4 border border-primary" />
+                                <img src={club.image} alt={club.name} className="h-32 w-32 mb-4 rounded-md" />
                                 <h2 className="text-xl font-medium mb-2">{club.name}</h2>
                                 <p className="text-sm text-primary mb-4">{club.totalAnnouncements} Announcements</p>
                                 <div className="flex justify-around w-full mt-4">
