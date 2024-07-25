@@ -80,7 +80,7 @@ const MainMeeting = () => {
 
     const renderMeetingAnnouncements = () => {
         return (
-            <div className="p-4 rounded-lg">
+            <div className="p-4 rounded-lg  mb-20">
                 <h2 className="text-[16px] font-medium mb-4">Upcoming Physical Meetings</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {meetingAnnouncements.map((announcement) => (
@@ -96,12 +96,22 @@ const MainMeeting = () => {
                                     </span>
                                 </p>
                             </div>
-                            <button 
-                                onClick={() => handleGetQRCode(announcement.id)} 
-                                className="px-4 py-2 bg-primary text-black rounded font-medium mb-10 "
-                            >
-                                Get QR Code
-                            </button>
+                            
+                            <div className="flex space-x-2 mb-10 w-full">
+                                <button 
+                                    onClick={() => handleGetQRCode(announcement.id)} 
+                                    className="px-4 py-2  w-1/2 bg-gray-600 text-black rounded font-medium"
+                                >
+                                    Decline
+                                </button>
+                                <button 
+                                    onClick={() => handleGetQRCode(announcement.id)} 
+                                    className="px-4 py-2 w-1/2 bg-primary text-black rounded font-medium"
+                                >
+                                    Get QR Code
+                                </button>
+                            </div>
+    
                             <div className="text-xs text-gray-400 absolute bottom-2 w-full text-right">
                                 <span className="mx-0">{announcement.postedDate}</span>
                                 <span className="mx-2">{announcement.postedTime}</span>
@@ -112,6 +122,7 @@ const MainMeeting = () => {
             </div>
         );
     };
+    
 
     return (
         <div className="fixed inset-0 flex">
