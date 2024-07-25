@@ -46,45 +46,23 @@ const Club = () => {
       sname: "pahasara",
       image: pahasaraImage,
     },
-    {
-      id: "4",
-      name: "ISACA Student Group",
-      sname: "isaca",
-      image: isacaImage,
-    },
-    {
-      id: "5",
-      name: "(IEEE WIE) IEEE Women in Engineering",
-      sname: "wie",
-      image: wieImage,
-    },
+    // {
+    //   id: "4",
+    //   name: "ISACA Student Group",
+    //   sname: "isaca",
+    //   image: isacaImage,
+    // },
+    // {
+    //   id: "5",
+    //   name: "(IEEE WIE) IEEE Women in Engineering",
+    //   sname: "wie",
+    //   image: wieImage,
+    // },
   ];
 
-  const getClubDetails = (club)  => {
-    let basePath;
-    switch (true) {
-        case location.pathname.startsWith('/student'):
-            basePath = '/student';
-            break;
-        case location.pathname.startsWith('/oc'):
-            basePath = '/oc';
-            break;
-        case location.pathname.startsWith('/admin'):
-            basePath = '/admin';
-            break;
-            case location.pathname.startsWith('/secretary'):
-            basePath = '/secretary';
-            break;
-        case location.pathname.startsWith('/member'):
-            basePath = '/member';
-            break;
-        case location.pathname.startsWith('/treasurer'):
-            basePath = '/treasurer';
-            break;
-        default:
-            basePath = ''; // Default base path or handle other cases
-    }
-    navigate(`${basePath}/club/${club.sname}`, { state: { club, image: club.image } });
+const getClubDetails = (club) => {
+  const basePath = location.pathname.startsWith("/student") ? "/student/club" : "/student/club";
+  navigate(`${basePath}/${club.sname}`, { state: { club } });
 };
 
  
