@@ -41,6 +41,7 @@ import StudentNotifications from './pages/student/StudentNotifications';
 import EventRegistration from './pages/student/EventRegistration';
 import Exploreeventstudent from './pages/student/Exploreevent';
 import StudentEventCalendar from './pages/student/StudentEventCalendar';
+import StudentInquiries from './pages/student/Inquiry';
 
 
 
@@ -143,7 +144,8 @@ const App = () => {
         <Route path='/student/club/event' element={<Exploreeventstudent />}></Route>
         <Route path='/student/calendar' element={<StudentEventCalendar />}></Route>
         <Route path='/student' element={<StudentDashboard/>}></Route>
-        
+        <Route path='/student/inquiry' element={<StudentInquiries/>}></Route>
+
 
 
 

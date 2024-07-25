@@ -63,7 +63,7 @@ const Sidebar = () => {
               <FaPeopleGroup className="inline-block w-9 h-9 mt-1 -ml-0.5" />
             </Link>
           </li>
-          {currentPath.startsWith('/admin') ? null : (
+          {(currentPath.startsWith('/admin')  || currentPath.startsWith('/treasurer'))  ? null : (
             <li className={linkClass('/meeting')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
               <Link to={`/${baseUrl}/meeting`} className="px-3">
                 <IoVideocamOutline className="inline-block w-9 h-9 mt-1 -ml-0.5" />
