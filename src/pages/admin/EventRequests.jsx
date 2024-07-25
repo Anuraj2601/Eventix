@@ -44,7 +44,7 @@ const EventRequestsTable = () => {
             <th className="w-60">Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-white"> 
           <tr className="bg-[#0B0B0B] text-center">
             <td className="p-3">
               <div className="flex items-center">
