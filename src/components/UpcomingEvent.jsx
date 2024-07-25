@@ -78,7 +78,7 @@ const UpcomingEvent = () => {
     // Function to handle button click and update active state
     const handleButtonClick = (buttonName) => {
         setActiveButton(buttonName);
-        setCurrentEventIndex(0); // Reset to the first event of the new active category
+        setCurrentEventIndex(0);
     };
 
     const handleNextClick = () => {
