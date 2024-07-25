@@ -46,7 +46,8 @@ import StudentInquiries from './pages/student/Inquiry';
 
 
 
-
+import MainAnnouncement from './components/MainAnnouncement';
+import MainMeeting from './components/MainMeeting';
 
 import Landing from "./pages/Landing"
 import Login from "./components/login"
