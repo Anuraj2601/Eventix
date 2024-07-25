@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 import Requests from '../../components/Requests';
+import Users from '../../components/Users';
+
 import { Tabs, TabsHeader, Tab } from "@material-tailwind/react";
 
+
 const ExploreClub = () => {
-    const [activeTab, setActiveTab] = useState("Event Requests");
+    const [activeTab, setActiveTab] = useState("User Requests");
 
     const mainTabs = [
         { label: "New Users", value: "New Users" },        { label: "Event Requests", value: "Event Requests" },
@@ -36,7 +39,7 @@ const ExploreClub = () => {
                                 </Tab>
                             ))}
                         </TabsHeader>
-                        <div className="flex-1 overflow-y-auto p-6">
+                        <div className=" overflow-y-auto ">
                             {activeTab === "Event Requests" && <Requests />}
                             {activeTab === "New Users" && <div>New Users content goes here</div>}
                         </div>
