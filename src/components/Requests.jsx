@@ -144,10 +144,12 @@ const RequestTable = ({ type, onAccept, onReject }) => {
       {data[type].map((row) => (
         <div
           key={row.id}
-          className="bg-black text-white rounded-2xl p-4 mb-6 flex flex-col md:flex-row items-center justify-between"
+          className="bg-black text-[#AEC90A] rounded-2xl p-4 mb-6 flex flex-col md:flex-row items-center justify-between" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}
         >
           <div className="flex items-center mb-4 md:mb-0">
-            <img src={row.image} alt="President" className="w-12 h-12 rounded-full mr-4" />
+            <img src={row.image} alt="President" className="w-24 h-24 rounded-full mr-4" />
             <span>{row.president}</span>
           </div>
           <div className="flex items-center mb-4 md:mb-0">
@@ -229,6 +231,7 @@ const Requests = () => {
       <Tabs value={activeTab} className="flex flex-col flex-1">
         <TabsHeader
             className="rounded-none bg-transparent p-0 w-1/4"
+            
             indicatorProps={{
                 className:
                     "bg-transparent shadow-none rounded-none",
@@ -239,6 +242,7 @@ const Requests = () => {
               key={value}
               value={value}
               onClick={() => setActiveTab(value)}
+              
               className={activeTab === value ? "text-[#AEC90A] bg-black rounded-full" : ""}
             >
               {label}

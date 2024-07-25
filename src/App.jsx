@@ -88,10 +88,11 @@ import StudentNotificationstreasurer from './pages/student/StudentNotifications'
 import EventRegistrationtreasurer from './pages/student/EventRegistration';
 import Exploreeventstudenttreasurer from './pages/student/Exploreevent';
 import StudentEventCalendartreasurer from './pages/student/StudentEventCalendar';
-import EventRequestsNew from './pages/treasurer/EventRequestsNew';
+import EventRequestsNew from './pages/treasurer/Requests';
 
 
 
+import Requests from './components/Requests'; 
 
 
 import EventNav from './components/EventNav'; 
@@ -203,8 +204,19 @@ const App = () => {
         <Route path='/admin/requests' element={<EventRequests/>}></Route>
         <Route path='/admin/users' element={<NewUsers/>}></Route>
 
+        <Route path='/treasurer/club' element={<StudentAllClubstreasurer/>}></Route>
+        <Route path='/treasurer/club/:name' element={<StudentClubDetailstreasurer/>}></Route>
+        <Route path='/treasurer/notifications' element={<StudentNotificationstreasurer/>}></Route>
+        <Route path='/treasurer/dashboard' element={<StudentDashboardtreasurer/>}></Route>
+        <Route path='/clubregister/:name' element={<ClubRegistrationtreasurer/>}></Route>
+        <Route path='/eventregister/:event' element={<EventRegistrationtreasurer/>}></Route>
+        <Route path='/treasurer/club/event' element={<Exploreeventstudenttreasurer />}></Route>
+        <Route path='/treasurer/calendar' element={<StudentEventCalendartreasurer />}></Route>
+        <Route path='/treasurer' element={<StudentDashboardadmin/>}></Route>
+        <Route path='/treasurer/requests' element={<EventRequestsNew/>}></Route>
 
-        <Route path='/treasurer' element={<EventRequestsNew/>}></Route>
+
+        <Route path='/requests' element={<EventRequestsNew/>}></Route>
 
 
         <Route exact path="/sectrataryclub" element={<SecretaryExploreclub />} />

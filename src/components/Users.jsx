@@ -36,7 +36,7 @@ const generateEmail = (regNumber) => `${regNumber}@ucsc.cmb.ac.lk`;
 const Dialog = ({ children, isOpen, onClose, title, primaryAction, secondaryAction, primaryActionClass, icon }) => (
   isOpen ? (
     <div className="dialog fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-black bg-opacity-70 absolute inset-0" onClick={onClose}></div>
+      <div className="bg-black bg-opacity-70 absolute inset-0"  onClick={onClose}></div>
       <div className="relative bg-black border-2 border-[#AEC90A] p-6 rounded-lg shadow-lg w-1/3">
         <div className="dialog-title flex justify-between items-center">
           {icon && <span className={`dialog-icon ${icon}`}></span>}
@@ -93,14 +93,16 @@ const RequestTable = ({ type, onAccept, onReject }) => {
   };
 
   return (
-    <div className="overflow-auto rounded-lg">
+    <div className="overflow-auto rounded-lg text-[#AEC90A]">
       {data[type].map((row) => (
         <div
           key={row.id}
-          className="bg-black text-white rounded-2xl p-4 mb-6 flex items-center justify-between"
+          className="bg-black text-[#AEC90A] rounded-2xl p-4 mb-6 flex items-center justify-between" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}
         >
           <div className="flex items-center">
-            <img src={row.image} alt="User" className="w-12 h-12 rounded-full mr-4" />
+            <img src={row.image} alt="User" className="w-24 h-24 rounded-full mr-4" />
             <div className="flex flex-col">
               <span>{`${row.firstName} ${row.lastName}`}</span>
               <span>{row.regNumber}</span>

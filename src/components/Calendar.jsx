@@ -16,6 +16,9 @@ import {
   startOfToday,
 } from "date-fns";
 import { Fragment, useState } from "react";
+import AddEvent from './AddEvent';
+import { FaPlus } from 'react-icons/fa';
+
 
 const clubColors = {
   "IEEE": "#008EDE",
@@ -91,6 +94,16 @@ function classNames(...classes) {
 }
 
 const Calendar = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+      setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+      setIsModalOpen(false);
+  };
+  
   let today = startOfToday();
   let [selectedDay, setSelectedDay] = useState(today);
   let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
@@ -274,10 +287,32 @@ const Calendar = () => {
               </ol>
             ) : (
               <div className="mt-4 space-y-1 text-sm leading-6 text-center text-gray-500">
-                <p className="text-white">No events today, stay tuned...</p>
-              </div>
+  <p className="text-white">No upcoming events at the moment. Stay tuned for exciting updates!</p>
+  <button
+    className="mt-4 p-2 bg-[#AEC90A] text-black rounded-full"
+    onClick={handleOpenModal}
+    >
+    Schedule Event
+  </button>
+</div>
+
+
             )}
           </section>
+          {isModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white rounded-lg overflow-hidden shadow-xl max-w-lg w-full">
+                        <div className="flex justify-end p-4">
+                            <button onClick={handleCloseModal} className="text-black">
+                                <FaTimes />
+                            </button>
+                        </div>
+                        <div className="p-4">
+                            <AddEvent />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
       </div>
     </div>
