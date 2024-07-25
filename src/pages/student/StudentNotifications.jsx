@@ -11,7 +11,7 @@ const StudentNotifications = () => {
         <Sidebar className="flex-shrink-0"/>
         <div className="flex flex-col flex-1">
           <Navbar className="sticky top-0 z-10 p-4"/>
-          <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-auto">
+          <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-auto p-5">
             <div className="flex items-center gap-4 m-6">
               <BsFillBellFill className='text-[#AEC90A]' size={25}/>
               <span className='text-[#AEC90A]'>notifications</span>

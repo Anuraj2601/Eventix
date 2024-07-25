@@ -53,7 +53,7 @@ const notifications = [
 
 const NotificationCard = ({ image, title, time, message }) => {
   return (
-    <div className='bg-[#1E1E1E] p-6 mx-4 my-2 rounded-2xl'>
+    <div className='bg-[#1E1E1E] p-6 mx-4 my-2 rounded-2xl'  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-center gap-4">
           <img src={image} alt="" className='w-12 h-12 rounded-full'/>
