@@ -36,6 +36,10 @@ import Announcementoc from './components/MainAnnouncement';
 import Inquiriesoc from './components/Inquiry';
 import Messagesoc from './components/Message';
 import Profileoc from './components/Profile';
+import Finalistsoc from './components/Finalists';
+import Votingoc from './components/Voting';
+
+
 
 
 import Exploreclubsecretary from './pages/secretary/Exploreclub';
@@ -180,6 +184,9 @@ const App = () => {
         <Route path='/member/inquiry' element={<Inquiriesoc/>}></Route>
         <Route path='/member/messages' element={<Messagesoc/>}></Route>
         <Route path='/member/profile' element={<Profileoc/>}></Route>
+        <Route path='/member/club/finalists' element={<Finalistsoc/>}></Route>
+        <Route path='/member/club/voting' element={<Votingoc/>}></Route>
+
 
         
              
@@ -258,6 +265,8 @@ const App = () => {
         <Route path='/oc/inquiry' element={<Inquiriesoc/>}></Route>
         <Route path='/oc/messages' element={<Messagesoc/>}></Route>
         <Route path='/oc/profile' element={<Profileoc/>}></Route>
+        <Route path='/oc/club/finalists' element={<Finalistsoc/>}></Route>
+        <Route path='/oc/club/voting' element={<Votingoc/>}></Route>
 
         
 

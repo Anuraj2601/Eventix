@@ -1,91 +1,89 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
+import Modal from "react-modal";
+import Sidebar from '../components/Sidebar';
+import Navbar from '../components/Navbar';
 
-const Votestab = () => {
+// Ensure you set the modal app element (usually the root element of your app)
+Modal.setAppElement('#root');
+
+const Voting = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [selectedCandidates, setSelectedCandidates] = useState({
+    president: null,
+    vicePresident: null,
+    treasurer: null
+  });
 
   const handleReleaseResults = () => {
     // Add your logic to release results here
     console.log("Results released to the club");
   };
 
-  // Example data for candidates
-  const presidentCandidates = [
-    {
-      id: 1,
-      votes: 75,
-      name: "John Doe",
-      image: "https://randomuser.me/api/portraits/men/1.jpg", // Example image URL
-    },
-    {
-      id: 2,
-      votes: 60,
-      name: "Jane Smith",
-      image: "https://randomuser.me/api/portraits/women/2.jpg", // Example image URL
-    },
-    {
-      id: 3,
-      votes: 45,
-      name: "Michael Brown",
-      image: "https://randomuser.me/api/portraits/men/3.jpg", // Example image URL
-    },
-  ];
+  const handleVote = (position, candidateId) => {
+    setSelectedCandidates(prev => ({
+      ...prev,
+      [position]: candidateId
+    }));
+  };
 
-  const vicePresidentCandidates = [
-    {
-      id: 4,
-      votes: 70,
-      name: "Emily Johnson",
-      image: "https://randomuser.me/api/portraits/women/10.jpg", // New image URL for Emily Johnson
-    },
-    {
-      id: 5,
-      votes: 55,
-      name: "David Lee",
-      image: "https://randomuser.me/api/portraits/men/5.jpg", // Example image URL
-    },
-    {
-      id: 6,
-      votes: 40,
-      name: "Sarah Williams",
-      image: "https://randomuser.me/api/portraits/women/11.jpg", // New image URL for Sarah Williams
-    },
-  ];
+  const handleCompleteVoting = () => {
+    if (
+      selectedCandidates.president &&
+      selectedCandidates.vicePresident &&
+      selectedCandidates.treasurer
+    ) {
+      // Logic for completing voting
+      console.log("Voting completed");
+    } else {
+      alert("Please select one candidate from each position before completing voting.");
+    }
+  };
 
-  const treasurerCandidates = [
-    {
-      id: 7,
-      votes: 65,
-      name: "Matthew Wilson",
-      image: "https://randomuser.me/api/portraits/men/7.jpg", // Example image URL
-    },
-    {
-      id: 8,
-      votes: 50,
-      name: "Jessica Garcia",
-      image: "https://randomuser.me/api/portraits/women/8.jpg", // Example image URL
-    },
-    {
-      id: 9,
-      votes: 35,
-      name: "Daniel Martinez",
-      image: "https://randomuser.me/api/portraits/men/9.jpg", // Example image URL
-    },
-  ];
+  // Example data for candidates (same as in Votestab)
+  const candidates = {
+    president: [
+      { id: 1, name: "John Doe", image: "https://randomuser.me/api/portraits/men/1.jpg" },
+      { id: 2, name: "Jane Smith", image: "https://randomuser.me/api/portraits/women/2.jpg" },
+      { id: 3, name: "Michael Brown", image: "https://randomuser.me/api/portraits/men/3.jpg" },
+    ],
+    vicePresident: [
+      { id: 4, name: "Emily Johnson", image: "https://randomuser.me/api/portraits/women/10.jpg" },
+      { id: 5, name: "David Lee", image: "https://randomuser.me/api/portraits/men/5.jpg" },
+      { id: 6, name: "Sarah Williams", image: "https://randomuser.me/api/portraits/women/11.jpg" },
+    ],
+    treasurer: [
+      { id: 7, name: "Matthew Wilson", image: "https://randomuser.me/api/portraits/men/7.jpg" },
+      { id: 8, name: "Jessica Garcia", image: "https://randomuser.me/api/portraits/women/8.jpg" },
+      { id: 9, name: "Daniel Martinez", image: "https://randomuser.me/api/portraits/men/9.jpg" },
+    ],
+  };
 
-  const showInstruction = currentPath === "/oc" || currentPath === "/member";
-  
   return (
+    <div className="flex h-screen">
+      <Sidebar className="flex-shrink-0" />
+      <div className="flex-1 flex flex-col">
+        <Navbar className="sticky top-0 z-10 bg-neutral-900 text-white " />
+        <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
     <div className="w-full flex flex-col items-center py-2 px-20 overflow-y-auto">
-      <div className="w-full flex justify-end mt-8 pr-4">
-        <button
-          onClick={handleReleaseResults}
-          className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-3 px-6 rounded-full shadow-lg transition duration-300"
-        >
-          Release Results to Club
-        </button>
-      </div>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70"
+      >
+        <div className="bg-white p-6 rounded-lg max-w-md w-full text-center">
+          <h2 className="text-2xl font-bold mb-4">Voting Instructions</h2>
+          <p className="mb-4">Click on the image of the candidate you want to vote for. You must select one candidate from each position to complete the voting process.</p>
+          <button
+            onClick={() => setIsModalOpen(false)}
+            className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+          >
+            OK
+          </button>
+        </div>
+      </Modal>
 
       {/* President Position */}
       <div className="relative mb-12 w-full p-5">
@@ -97,16 +95,12 @@ const Votestab = () => {
 
         <div className="relative w-full rounded-xl p-5 mt-8">
           <div className="flex items-center justify-around space-x-2">
-            {presidentCandidates.map((candidate, index) => (
+            {candidates.president.map((candidate, index) => (
               <div
                 key={candidate.id}
-                className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
+                onClick={() => handleVote("president", candidate.id)}
+                className={`relative flex flex-col items-center space-y-4 p-10 rounded-lg cursor-pointer ${selectedCandidates.president === candidate.id ? 'border-4 border-[#AEC90A]' : ''}`}
               >
-                {showInstruction && (
-                  <div className="absolute top-4 text-white bg-black px-3 py-1 rounded-full">
-                    Click on the image to vote
-                  </div>
-                )}
                 <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full" style={{ 
                   boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                 }}>
@@ -122,9 +116,6 @@ const Votestab = () => {
                 />
                 <div className="text-center mt-2">
                   <div className="text-white text-2xl">{candidate.name}</div>
-                  {!showInstruction && (
-                    <span className="text-[#AEC90A] font-bold text-2xl">{candidate.votes} votes</span>
-                  )}
                 </div>
               </div>
             ))}
@@ -142,16 +133,12 @@ const Votestab = () => {
 
         <div className="relative w-full rounded-xl p-5 mt-8">
           <div className="flex items-center justify-around space-x-2">
-            {vicePresidentCandidates.map((candidate, index) => (
-               <div
-               key={candidate.id}
-               className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
+            {candidates.vicePresident.map((candidate, index) => (
+              <div
+                key={candidate.id}
+                onClick={() => handleVote("vicePresident", candidate.id)}
+                className={`relative flex flex-col items-center space-y-4 p-10 rounded-lg cursor-pointer ${selectedCandidates.vicePresident === candidate.id ? 'border-4 border-[#AEC90A]' : ''}`}
               >
-                {showInstruction && (
-                  <div className="absolute top-4 text-white bg-black px-3 py-1 rounded-full">
-                    Click on the image to vote
-                  </div>
-                )}
                 <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full" style={{ 
                   boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                 }}>
@@ -167,9 +154,6 @@ const Votestab = () => {
                 />
                 <div className="text-center mt-2">
                   <div className="text-white text-2xl">{candidate.name}</div>
-                  {!showInstruction && (
-                    <span className="text-[#AEC90A] font-bold text-2xl">{candidate.votes} votes</span>
-                  )}
                 </div>
               </div>
             ))}
@@ -187,16 +171,12 @@ const Votestab = () => {
 
         <div className="relative w-full rounded-xl p-5 mt-8">
           <div className="flex items-center justify-around space-x-2">
-            {treasurerCandidates.map((candidate, index) => (
+            {candidates.treasurer.map((candidate, index) => (
               <div
                 key={candidate.id}
-                className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
+                onClick={() => handleVote("treasurer", candidate.id)}
+                className={`relative flex flex-col items-center space-y-4 p-10 rounded-lg cursor-pointer ${selectedCandidates.treasurer === candidate.id ? 'border-4 border-[#AEC90A]' : ''}`}
               >
-                {showInstruction && (
-                  <div className="absolute top-4 text-white bg-black px-3 py-1 rounded-full">
-                    Click on the image to vote
-                  </div>
-                )}
                 <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full" style={{ 
                   boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                 }}>
@@ -212,17 +192,27 @@ const Votestab = () => {
                 />
                 <div className="text-center mt-2">
                   <div className="text-white text-2xl">{candidate.name}</div>
-                  {!showInstruction && (
-                    <span className="text-[#AEC90A] font-bold text-2xl">{candidate.votes} votes</span>
-                  )}
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Action Buttons */}
+      <div className="w-full flex justify-center mb-12 space-x-6">
+        <button
+          onClick={handleCompleteVoting}
+          className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+        >
+          Complete Voting
+        </button>
+        
+      </div>
+    </div> </div>
+    </div> </div>
+    
   );
 };
 
-export default Votestab;
+export default Voting;

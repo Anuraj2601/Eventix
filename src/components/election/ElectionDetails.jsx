@@ -14,35 +14,51 @@ const ElectionDetails = ({ clubName, electionId }) => {
   const [value, setValue] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;
+  const navigate = useNavigate();
 
   // Determine the target path based on the current path
   let targetPath = '';
 
-if (location.pathname.startsWith('/president')) {
-  targetPath = '/president/club/election';
-} else if (location.pathname.startsWith('/member')) {
-  targetPath = '/member/club/election';
-} else if (location.pathname.startsWith('/oc')) {
-  targetPath = '/oc/club/election';
-} else if (location.pathname.startsWith('/secretary')) {
-  targetPath = '/secretary/club/election';
-}
+  if (currentPath.startsWith('/president')) {
+    targetPath = '/president/club/election';
+  } else if (currentPath.startsWith('/member')) {
+    targetPath = '/member/club/election';
+  } else if (currentPath.startsWith('/oc')) {
+    targetPath = '/oc/club/election';
+  } else if (currentPath.startsWith('/secretary')) {
+    targetPath = '/secretary/club/election';
+  }
 
-
-  // Check if the current path is either '/president' or '/secretary'
+  // Check if the current path is either '/oc' or '/member'
+  const isOcOrMember = currentPath.startsWith('/oc') || currentPath.startsWith('/member');
   const isEditable = currentPath.startsWith('/president') || currentPath.startsWith('/secretary');
 
-  const navigate = useNavigate();
+  const navigateToForm = (link) => {
+    let finalLink = link;
+  
+    if (currentPath.startsWith('/oc')) {
+      if (link === "/final-candidates") {
+        finalLink = "/oc/club/finalists";
+      } else if (link === "/voting") {
+        finalLink = "/oc/club/voting";
+      }
+    } else if (currentPath.startsWith('/member')) {
+      if (link === "/final-candidates") {
+        finalLink = "/member/club/finalists";
+      } else if (link === "/voting") {
+        finalLink = "/member/club/voting";
+      }
+    }
+  
+    navigate(finalLink);
+  };
+  
 
   const events = [
     {
       joinLink1: "/president/club/election/add",     
     },
   ];
-
-  const navigateToForm = (link) => {
-    navigate(link);
-  };
 
   const elections = [
     {
@@ -72,11 +88,12 @@ if (location.pathname.startsWith('/president')) {
       {isEditable && (
         <Button
           onClick={() => navigateToForm(events[0].joinLink1)}
-          className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold ml-[950px]"
+          className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold"
         >
           New Election
         </Button>
       )}
+
       <Card className="w-full bg-neutral-900 mt-4">
         <CardBody>
           <div className="grid grid-cols-6 gap-2 p-1 mb-2 text-white">
@@ -94,7 +111,7 @@ if (location.pathname.startsWith('/president')) {
             {elections.map(({ id, desc, applicationDate, votingDate }, index) => (
               <div
                 key={id}
-                className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl mb-2 ${index === 1 ? 'opacity-50' : ''}`}  
+                className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl mb-2 ${index === 1 ? 'opacity-50' : ''}`}
                 style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.8)' }}
               >
                 <div className="col-span-2 flex justify-center items-center">
@@ -128,20 +145,44 @@ if (location.pathname.startsWith('/president')) {
                     )}
                   </Typography>
                 </div>
-                <div className="col-span-6 flex justify-end items-center gap-2 p-5">
-                  {isEditable && (
-                    <EditDeleteButton
-                      onEdit={() => handleEdit(id)}
-                      onDelete={() => handleDelete(id)}
-                      disabled={index === 1}
-                    />
+                <div className="col-span-6 flex flex-col items-end gap-2 p-5">
+                  {isOcOrMember ? (
+                    <div className="flex gap-2 mb-4">
+                      <Button
+                        onClick={() => navigateToForm("/apply")}
+                        className="bg-[#AEC90A] text-gray-700 rounded-full"
+                      >
+                        Apply
+                      </Button>
+                      <Button
+                        onClick={() => navigateToForm("/final-candidates")}
+                        className="bg-gray-500 text-gray-700 rounded-full opacity-50"
+                      >
+                        View Final Candidates
+                      </Button>
+                      <Button
+                        onClick={() => navigateToForm("/voting")}
+                        className="bg-gray-500 text-gray-700 rounded-full opacity-50"
+                      >
+                        Vote
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      {isEditable && (
+                        <EditDeleteButton
+                          onEdit={() => handleEdit(id)}
+                          onDelete={() => handleDelete(id)}
+                          disabled={index === 1}
+                        />
+                      )}
+                      <Link to={targetPath}>
+                        <Button variant="gradient" className="bg-[#AEC90A] rounded-full text-black p-2 inline-block">
+                          View Details
+                        </Button>
+                      </Link>
+                    </>
                   )}
-                <Link to={targetPath}>
-  <Button variant="gradient" className="bg-[#AEC90A] rounded-full text-black p-2 inline-block">
-    View Details
-  </Button>
-</Link>
-
                 </div>
               </div>
             ))}

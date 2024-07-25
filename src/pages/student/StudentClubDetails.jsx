@@ -3,7 +3,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 import { Typography } from "@material-tailwind/react";
-import StudentMiniNav from '../../components/PresidentClubNav';
+import StudentMiniNav from '../../components/StudentMiniNav';
 import LikeButton from '../../components/LikeButton';
 import CustomSwitch from '../../components/Customswitch'; // Ensure correct import path
 import { FaCheckCircle, FaUsers } from 'react-icons/fa'; // Import icons for successful events and members
