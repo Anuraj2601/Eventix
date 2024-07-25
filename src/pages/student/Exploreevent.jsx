@@ -118,10 +118,10 @@ const ExploreEvent = () => {
                             <Card className="w-full bg-neutral-900 h-128 relative">
                                 <CardBody className="h-full relative">
                                     <div className="relative">
-                                        <img src={image} alt={name} className="w-full h-80 object-cover rounded-2xl mb-4 " style={{ 
+                                    <img src={image} alt={name} className="w-full h-80 object-cover rounded-2xl mb-4 " style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
-                                        <div className="absolute p-2 rounded-2xl top-1 right-1 flex text-white  items-center space-x-2">
+                                        <div className="absolute p-2 rounded-2xl top-1 right-1 flex items-center space-x-2 text-white">
                                             <span>Organized by</span>
                                             <img src={clubImage} alt={clubName} className="w-10 h-10 rounded-full" />
                                         </div>
