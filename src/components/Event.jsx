@@ -17,8 +17,8 @@ const Event = ({event}) => {
     }
 
   return (
-    <div className="flex items-center justify-center mt-8 mb-8">
-        <div className='bg-[#0b0b0b] p-5 w-3/4 rounded-md'  style={{ 
+    <div className="flex items-center justify-start mr-10 mt-2 mb-2 px-10">
+        <div className='bg-[#0b0b0b] p-5 w-2/4 rounded-md'  style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
             <div className="flex flex-row items-center justify-between mb-6">

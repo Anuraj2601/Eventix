@@ -112,21 +112,26 @@ const Dialog = ({ children, isOpen, onClose, title, primaryAction, secondaryActi
 );
 
 // RequestTable Component
+const generateRandomBudget = () => {
+  return Math.floor(Math.random() * (1000000 - 50000 + 1)) + 50000; // Random amount between 50,000 and 1,000,000
+};
+
+// Updated RequestTable Component
 const RequestTable = ({ type, onAccept, onReject }) => {
   const data = {
     all: [
-      { id: 1, president: "Kokul", club: "IEEE", event: "Madhack 3.0", date: "2024-09-15", venue: "Tech Park", image: "https://randomuser.me/api/portraits/men/4.jpg" },
-      { id: 2, president: "Jane", club: "Rotaract", event: "TechFest 4.0", date: "2024-10-22", venue: "Convention Center", image: "https://randomuser.me/api/portraits/women/4.jpg" },
-      { id: 3, president: "Doe", club: "IEEE", event: "Hackathon 2.0", date: "2024-11-05", venue: "Innovation Hub", image: "https://randomuser.me/api/portraits/men/5.jpg" },
-      { id: 4, president: "Alex", club: "ACM", event: "SpaceX Launch", date: "2024-12-12", venue: "Space Station", image: "https://randomuser.me/api/portraits/women/5.jpg" },
+      { id: 1, president: "Kokul", club: "IEEE", event: "Madhack 3.0", date: "2024-09-15", venue: "Tech Park", image: "https://randomuser.me/api/portraits/men/4.jpg", budget: generateRandomBudget() },
+      { id: 2, president: "Jane", club: "Rotaract", event: "TechFest 4.0", date: "2024-10-22", venue: "Convention Center", image: "https://randomuser.me/api/portraits/women/4.jpg", budget: generateRandomBudget() },
+      { id: 3, president: "Doe", club: "IEEE", event: "Hackathon 2.0", date: "2024-11-05", venue: "Innovation Hub", image: "https://randomuser.me/api/portraits/men/5.jpg", budget: generateRandomBudget() },
+      { id: 4, president: "Alex", club: "ACM", event: "SpaceX Launch", date: "2024-12-12", venue: "Space Station", image: "https://randomuser.me/api/portraits/women/5.jpg", budget: generateRandomBudget() },
     ],
     accepted: [
-      { id: 1, president: "Nina", club: "Rotaract", event: "AI Summit", date: "2024-09-30", venue: "AI Center", image: "https://randomuser.me/api/portraits/men/6.jpg" },
-      { id: 2, president: "Liam", club: "ACM", event: "Robotics Expo", date: "2024-11-15", venue: "Expo Hall", image: "https://randomuser.me/api/portraits/women/6.jpg" },
+      { id: 1, president: "Nina", club: "Rotaract", event: "AI Summit", date: "2024-09-30", venue: "AI Center", image: "https://randomuser.me/api/portraits/men/6.jpg", budget: generateRandomBudget() },
+      { id: 2, president: "Liam", club: "ACM", event: "Robotics Expo", date: "2024-11-15", venue: "Expo Hall", image: "https://randomuser.me/api/portraits/women/6.jpg", budget: generateRandomBudget() },
     ],
     rejected: [
-      { id: 1, president: "Sophia", club: "IEEE", event: "Quantum Computing", date: "2024-10-01", venue: "Quantum Lab", image: "https://randomuser.me/api/portraits/men/7.jpg" },
-      { id: 2, president: "John", club: "ACM", event: "BioTech Conference", date: "2024-11-25", venue: "BioTech Center", image: "https://randomuser.me/api/portraits/women/7.jpg" },
+      { id: 1, president: "Sophia", club: "IEEE", event: "Quantum Computing", date: "2024-10-01", venue: "Quantum Lab", image: "https://randomuser.me/api/portraits/men/7.jpg", budget: generateRandomBudget() },
+      { id: 2, president: "John", club: "ACM", event: "BioTech Conference", date: "2024-11-25", venue: "BioTech Center", image: "https://randomuser.me/api/portraits/women/7.jpg", budget: generateRandomBudget() },
     ],
   };
 
@@ -139,52 +144,75 @@ const RequestTable = ({ type, onAccept, onReject }) => {
       ? `${baseClass} text-[#AEC90A] border-[#AEC90A] border`
       : `${baseClass} text-[#D32F2F] border border-[#D32F2F]`;
   };
+
   return (
     <div className="overflow-auto rounded-lg">
-      {data[type].map((row) => (
-        <div
-          key={row.id}
-          className="bg-black  rounded-2xl p-4 mb-6 flex flex-col md:flex-row items-center justify-between" style={{ 
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-          }}
-        >
-<div className="flex flex-col items-center mb-4 md:mb-0">            <img src={row.image} alt="President" className="w-24 h-24 text-white rounded-full mr-4" />
-            <span className=" text-white p-2">{row.president}</span>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {data[type].map((row) => (
+          <div
+            key={row.id}
+            className="bg-black rounded-2xl p-4 flex flex-col items-center"
+            style={{ 
+              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+            }}
+          >
+            <div className="relative flex flex-col items-center mb-4">
+              <img
+                src={getRandomEventImage(row.club)}
+                alt="Event"
+                className="w-72 h-64 rounded-2xl mb-2 p-2"
+                style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}
+              />
+              <span className="text-white mb-2">{row.event}</span>
+            </div>
+
+            <div className="flex flex-col items-center mb-4">
+              <img
+                src={clubImages[row.club]}
+                alt="Club Logo"
+                className="w-24 h-24 rounded-full mb-4"
+              /> 
+              <img
+                src={row.image}
+                alt="President"
+                className="w-24 h-24 rounded-full mb-2"
+              /> 
+              <span className="text-white">President {row.president}</span>
+            </div>
+
+            <div className="flex flex-col items-center mb-4">
+              <span className="text-white">Date: {row.date}</span>
+              <span className="text-white">Venue: {row.venue}</span>
+              <span className="text-white">Budget: LKR {row.budget.toLocaleString()}</span>
+            </div>
+
+            <div className="flex items-center mb-4">
+              <IconButton>
+                <FaDownload size={20} className="text-white cursor-pointer mr-4" />
+              </IconButton>
+            </div>
+
+            <div className="flex flex-col space-y-2">
+              <button
+                className={getButtonClass("accept")}
+                onClick={() => onAccept(row)}
+              >
+                {type === "accepted" ? "Accepted" : "Accept"}
+              </button>
+              <button
+                className={getButtonClass("reject")}
+                onClick={() => onReject(row)}
+              >
+                {type === "rejected" ? "Rejected" : "Reject"}
+              </button>
+            </div>
           </div>
-          <div className="flex flex-col items-center mb-4 md:mb-0">                   <span className=" text-[#AEC90A] p-2">President of {row.club}</span>
-     <img src={clubImages[row.club]} alt="Club Logo" className="w-16 h-16 text-[#AEC90A] rounded-md mr-4" />
-          </div>
-          <div className="flex flex-col items-center mb-4 md:mb-0">
-            <span className=" text-[#AEC90A]">To conduct:</span>
-            <img src={getRandomEventImage(row.club)} alt="Event" className="w-40 h-32 rounded-md mb-2" />
-            <span className=" text-white">{row.event}</span>
-          </div>
-          <div className="flex flex-col items-center mb-4 md:mb-0">
-            <span className=" text-white">Date: {row.date}</span>
-            <span className=" text-white" >Venue: {row.venue}</span>
-          </div>
-          <div className="flex items-center mb-4 md:mb-0"> <IconButton>
-            <FaDownload size={20} className="text-white cursor-pointer mr-4" /></IconButton>
-          </div>
-          <div className="flex items-center space-x-2">
-            <button
-              className={getButtonClass("accept")}
-              onClick={() => onAccept(row)}
-            >
-              {type === "accepted" ? "Accepted" : "Accept"}
-            </button>
-            <button
-              className={getButtonClass("reject")}
-              onClick={() => onReject(row)}
-            >
-              {type === "rejected" ? "Rejected" : "Reject"}
-            </button>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
-  
 };
 // Main Requests Component
 const Requests = () => {

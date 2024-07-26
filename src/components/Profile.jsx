@@ -160,20 +160,11 @@ const ProfileUpdatePage = () => {
                     style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
                   />
                 </div>
-                <div className="mb-6">
-                  <label className="block text-white mb-2">Mobile Number</label>
-                  <input
-                    type="text"
-                    value={mobileNumber}
-                    onChange={(e) => setMobileNumber(e.target.value)}
-                    className="w-full p-2 bg-black rounded-lg border-none outline-none"
-                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                  />
-                </div>
+               
               </div>
             </div>
 
-            <div className=" p-6 rounded-lg overflow-y-auto lg:h-[calc(130vh)]">
+            <div className=" p-6 rounded-lg overflow-y-auto lg:h-[calc(100vh)]">
             <h2 className="text-xl font-semibold mb-4 text-center">Participated Events</h2>
             <div className="grid grid-cols-1  gap-4">
               {participatedEvents.map((event, index) => (
@@ -190,7 +181,7 @@ const ProfileUpdatePage = () => {
             </div>
           </div>
 
-          <div className="w-full bg-neutral-800 p-6 rounded-lg  mt-6" style={{ 
+          <div className="w-full  p-6 rounded-lg  mt-6" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
   <h2 className="text-xl font-semibold mb-4 text-center">Participated Clubs</h2>
