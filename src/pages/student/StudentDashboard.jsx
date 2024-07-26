@@ -6,11 +6,11 @@ import Event from '../../components/Event'
 // Import images
 import dp from '../../assets/dp.png';
 import dp1 from '../../assets/dp1.png';
-import madhack from '../../assets/events/madhack.jpg';
-import hackathon from '../../assets/events/hackathon.png';
-import reka from '../../assets/events/reka.jpg';
-import careerfair from '../../assets/events/careerfair.jpeg';
-import dhack from '../../assets/events/dhack.jpg';
+import madhackImage from '../../assets/events/madhack.jpg';
+import hackathonImage from '../../assets/events/hackathon.png';
+import rekaImage from '../../assets/events/reka.jpg';
+import careerfairImage from '../../assets/events/careerfair.jpeg';
+import dhackImage from '../../assets/events/dhack.jpg';
 
 const StudentDashboard = () => {
   const events = [
@@ -22,12 +22,12 @@ const StudentDashboard = () => {
       event: "2025 Career Fair",
       deadline: "30th of March 2025",
       description: "Join us for the annual career fair to meet potential employers and learn about job opportunities.",
-      date: "June 20 of 2025 | Friday",
-      time: "from 9 am to 4 pm",
+      date: "20.08.2025",
+      time: "@ 9 am",
       venue: "UCSC Main entrance",
       contact: "0217988234",
       email: "career25@gmail.com",
-      image: madhack,
+      image: madhackImage,
     },
     {
       id: "2",
@@ -37,12 +37,12 @@ const StudentDashboard = () => {
       event: "Tech Symposium 2025",
       deadline: "10th of April 2025",
       description: "A symposium showcasing the latest in technology and innovation.",
-      date: "April 25 of 2025 | Saturday",
-      time: "from 10 am to 6 pm",
+      date: "25.09.2025",
+      time: "@ 10 am",
       venue: "UCSC Auditorium",
       contact: "0217988235",
       email: "techsymposium@ucsc.edu",
-      image: hackathon,
+      image: hackathonImage,
     },
     {
       id: "3",
@@ -52,12 +52,12 @@ const StudentDashboard = () => {
       event: "Health and Wellness Fair",
       deadline: "15th of May 2025",
       description: "An event focused on promoting health and wellness among students.",
-      date: "May 30 of 2025 | Thursday",
-      time: "from 8 am to 2 pm",
+      date: "30.05.2025",
+      time: "@ 8 am",
       venue: "UCSC Sports Complex",
       contact: "0217988236",
       email: "wellnessfair@ucsc.edu",
-      image: reka,
+      image: rekaImage,
     },
     {
       id: "4",
@@ -67,12 +67,12 @@ const StudentDashboard = () => {
       event: "Alumni Homecoming 2025",
       deadline: "20th of June 2025",
       description: "Reconnect with fellow alumni and celebrate our university's achievements.",
-      date: "July 10 of 2025 | Friday",
-      time: "from 5 pm to 10 pm",
+      date: "30.06.2025",
+      time: "@ 8 am",
       venue: "UCSC Alumni Hall",
       contact: "0217988237",
       email: "homecoming@ucsc.edu",
-      image: careerfair,
+      image: careerfairImage,
     },
     {
       id: "5",
@@ -82,12 +82,12 @@ const StudentDashboard = () => {
       event: "Cultural Festival 2025",
       deadline: "5th of August 2025",
       description: "Celebrate the diversity of our campus with performances, food, and art from different cultures.",
-      date: "August 25 of 2025 | Tuesday",
-      time: "from 12 pm to 8 pm",
+      date: "03.05.2025",
+      time: "@ 8 am",
       venue: "UCSC Quad",
       contact: "0217988238",
       email: "culturalfest@ucsc.edu",
-      image: dhack,
+      image: dhackImage,
     }
   ];
 
