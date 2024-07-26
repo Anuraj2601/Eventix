@@ -114,7 +114,6 @@ const MainMeeting = () => {
     };
 
     const handleJoinMeeting = (id) => {
-        // Implement join meeting functionality here
         console.log('Join Meeting:', id);
     };
 
@@ -270,7 +269,7 @@ const MainMeeting = () => {
                         {renderMeetingAnnouncements()}
                         {renderUnionAnnouncements()}
                         
-                        {/* Popup Component */}
+                        
                         {showPopup && (
                             <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                                 <div className="bg-white p-6 rounded-lg w-1/2 max-w-lg relative">
