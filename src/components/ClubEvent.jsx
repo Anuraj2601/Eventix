@@ -226,7 +226,7 @@ const ClubEvent = ({ club }) => {
                 event.status === "Rejected" && setHoveredEvent(null);
                 setHoveredIndex(null);
               }}
-            >
+            > 
               <div className="relative custom-3d-shadow custom-card">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
                 <div className="absolute top-0 left-0 m-2 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
