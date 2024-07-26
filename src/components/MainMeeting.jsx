@@ -10,8 +10,8 @@ import rotract from '../assets/rotract.jpeg';
 const MainMeeting = () => {
     const [selectedFilter, setSelectedFilter] = useState('physical');
     const [showPopup, setShowPopup] = useState(false);
-    const [currentMeeting, setCurrentMeeting] = useState(null);
     const [reason, setReason] = useState('');
+    const [currentMeetingId, setCurrentMeetingId] = useState(null);
 
     const meetingAnnouncements = [
         { 
@@ -95,26 +95,24 @@ const MainMeeting = () => {
         },
     ];
 
+    const handleJoinMeeting = (id) => {
+        console.log('Join Meeting for meeting ID:', id);
+    };
+
     const handleDeclineMeeting = (id) => {
-        const meeting = meetingAnnouncements.find((announcement) => announcement.id === id);
-        setCurrentMeeting(meeting);
+        setCurrentMeetingId(id);
         setShowPopup(true);
     };
 
     const handlePopupClose = () => {
         setShowPopup(false);
         setReason('');
-        setCurrentMeeting(null);
     };
 
-    const handleFormSubmit = (event) => {
-        event.preventDefault();
-        console.log('Reason:', reason);
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        console.log('Reason for declining meeting ID', currentMeetingId, ':', reason);
         handlePopupClose();
-    };
-
-    const handleJoinMeeting = (id) => {
-        console.log('Join Meeting:', id);
     };
 
     const renderContent = () => {
@@ -157,7 +155,7 @@ const MainMeeting = () => {
                                 <div className="flex space-x-2 mb-10 w-full">
                                     <button 
                                         onClick={() => handleDeclineMeeting(announcement.id)} 
-                                        className="px-4 py-2 w-1/2 bg-dark-400 text-primary rounded font-medium hover:bg-dark-300 hover:scale-105 transition-transform duration-200"
+                                        className="px-4 py-2 w-1/2 bg-dark-400 opacity-100 text-primary rounded font-medium hover:bg-dark-400 hover:scale-105 transition-transform duration-200"
                                     >
                                         Decline
                                     </button>
@@ -268,43 +266,42 @@ const MainMeeting = () => {
                         {renderContent()}
                         {renderMeetingAnnouncements()}
                         {renderUnionAnnouncements()}
-                        
-                        
-                        {showPopup && (
-                            <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                                <div className="bg-white p-6 rounded-lg w-1/2 max-w-lg relative">
-                                    <h2 className="text-lg font-semibold mb-4 text-black">Can't Attend the Meeting</h2>
-                                    <p className="mb-4 text-black">Please provide a reason for not attending the meeting:</p>
-                                    <form onSubmit={handleFormSubmit}>
-                                        <textarea 
-                                            value={reason}
-                                            onChange={(e) => setReason(e.target.value)}
-                                            rows="4"
-                                            className="w-full p-2 border border-gray-300 rounded mb-4"
-                                            placeholder="Enter your reason here..."
-                                        />
-                                        <div className="flex justify-end space-x-2">
-                                            <button 
-                                                type="button" 
-                                                onClick={handlePopupClose} 
-                                                className="px-4 py-2 bg-dark-400 w-1/3 text-white rounded hover:bg-dark-500 hover:scale-105 transition-transform duration-200"
-                                            >
-                                                Cancel
-                                            </button>
-                                            <button 
-                                                type="submit" 
-                                                className="px-4 py-2 font-medium bg-primary text-dark-400 w-1/3 rounded hover:scale-105 transition-transform duration-200"
-                                            >
-                                                Send
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
+
+            {showPopup && (
+                <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded-lg w-1/2 max-w-lg relative">
+                        <h2 className="text-lg font-semibold mb-4 text-black">Can{"'"}t Attend the Meeting ?!</h2>
+                        <p className="mb-4 text-black">Please provide a valid reason for not attending the meeting</p>
+                        <form onSubmit={handleFormSubmit}>
+                            <textarea 
+                                value={reason}
+                                onChange={(e) => setReason(e.target.value)}
+                                rows="4"
+                                className="w-full p-2 border border-gray-300 rounded mb-4"
+                                placeholder="Enter your reason here..."
+                            />
+                            <div className="flex justify-end space-x-2">
+                                <button 
+                                    type="button" 
+                                    onClick={handlePopupClose} 
+                                    className="px-4 py-2 bg-dark-400 w-1/3 text-white rounded hover:bg-dark-500 hover:scale-105 transition-transform duration-200"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    className="px-4 py-2 font-medium bg-primary text-dark-400 w-1/3 rounded hover:scale-105 transition-transform duration-200"
+                                >
+                                    Send
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
