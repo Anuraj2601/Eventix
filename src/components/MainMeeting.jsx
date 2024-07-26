@@ -14,6 +14,7 @@ const MainMeeting = () => {
     const [currentMeetingId, setCurrentMeetingId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [declinedMeetings, setDeclinedMeetings] = useState(new Set());
+    const [showDeclinedModal, setShowDeclinedModal] = useState(false);
 
     const meetingAnnouncements = [
         {
@@ -56,7 +57,7 @@ const MainMeeting = () => {
 
     const unionAnnouncements = [
         {
-            id: 1,
+            id: 10,
             title: 'Union General Meeting',
             description: 'Annual general meeting for all union members.',
             date: '2024-09-01',
@@ -66,7 +67,7 @@ const MainMeeting = () => {
             postedTime: '10:00 AM'
         },
         {
-            id: 2,
+            id: 20,
             title: 'Union Budget Review',
             description: 'Review of the annual budget and allocation.',
             date: '2024-09-10',
@@ -76,7 +77,7 @@ const MainMeeting = () => {
             postedTime: '11:00 AM'
         },
         {
-            id: 3,
+            id: 30,
             title: 'Union Leadership Summit',
             description: 'Meeting of union leaders to discuss future strategies.',
             date: '2024-09-15',
@@ -86,7 +87,7 @@ const MainMeeting = () => {
             postedTime: '09:00 AM'
         },
         {
-            id: 4,
+            id: 40,
             title: 'Union Member Engagement Event',
             description: 'Event to engage with union members and discuss ongoing projects.',
             date: '2024-09-20',
@@ -122,20 +123,28 @@ const MainMeeting = () => {
         }, 1500);
     };
 
+    const handleReRequest = (id) => {
+        console.log('Re-request meeting ID:', id);
+    };
+
     const renderContent = () => {
-        if (selectedFilter === 'physical') {
-            return (
-                <div className="flex flex-col items-center">
-                    <img src={physicalMeeting} alt="Physical Meeting" className="w-full h-auto mb-6 shadow-lg" />
-                </div>
-            );
-        } else {
-            return (
-                <div className="flex flex-col items-center">
-                    <img src={onlineMeeting} alt="Online Meeting" className="w-full h-auto mb-6 shadow-lg" />
-                </div>
-            );
-        }
+        return (
+            <div className="relative flex flex-col items-center">
+                <img
+                    src={selectedFilter === 'physical' ? physicalMeeting : onlineMeeting}
+                    alt={selectedFilter === 'physical' ? "Physical Meeting" : "Online Meeting"}
+                    className="w-full h-auto mb-6 shadow-lg"
+                />
+                {selectedFilter === 'physical' && (
+                    <button
+                        onClick={() => setShowDeclinedModal(true)}
+                        className="absolute top-4 right-4 bg-secondary font-medium text-dark-500 px-4 py-2 rounded-md shadow-md"
+                    >
+                        Declined ({declinedMeetings.size})
+                    </button>
+                )}
+            </div>
+        );
     };
 
     const renderMeetingAnnouncements = () => {
@@ -169,7 +178,7 @@ const MainMeeting = () => {
                                     </button>
                                     <button
                                         onClick={() => handleJoinMeeting(announcement.id)}
-                                        className={`px-4 py-2 w-1/2 ${declinedMeetings.has(announcement.id) ? 'bg-dark-500 cursor-not-allowed opacity-50 text-primary border border-secondary': 'bg-primary text-sec'} rounded font-semibold hover:bg-primary-dark hover:scale-105 transition-transform duration-200 text-dark-400`}
+                                        className={`px-4 py-2 w-1/2 ${declinedMeetings.has(announcement.id) ? 'bg-dark-500 cursor-not-allowed opacity-50 text-primary border border-secondary' : 'bg-primary text-sec'} rounded font-semibold hover:bg-primary-dark hover:scale-105 transition-transform duration-200 text-dark-400`}
                                         disabled={declinedMeetings.has(announcement.id)}
                                     >
                                         {declinedMeetings.has(announcement.id) ? 'Get QR Code' : 'Get QR Code'}
@@ -225,15 +234,17 @@ const MainMeeting = () => {
                                 <>
                                     <button
                                         onClick={() => handleDeclineMeeting(announcement.id)}
-                                        className="px-4 py-2 bg-dark-400 text-primary rounded font-medium w-[150px] hover:scale-105 transition-transform duration-200"
+                                        className={`px-4 py-2 ${declinedMeetings.has(announcement.id) ? 'bg-dark-500 cursor-not-allowed border border-red-600 text-red-500 bordercursor-not-allowed' : 'bg-dark-400 text-primary'} rounded font-medium w-[150px] hover:scale-105 transition-transform duration-200`}
+                                        disabled={declinedMeetings.has(announcement.id)}
                                     >
-                                        Decline
+                                        {declinedMeetings.has(announcement.id) ? 'Declined' : 'Decline'}
                                     </button>
                                     <button
                                         onClick={() => handleJoinMeeting(announcement.id)}
-                                        className="px-4 py-2 bg-primary text-dark-500 rounded font-semibold w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                                        className={`px-4 py-2 ${declinedMeetings.has(announcement.id) ? 'bg-dark-500 cursor-not-allowed opacity-50 text-primary border border-secondary' : 'bg-primary text-sec'} rounded font-semibold w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200 text-dark-400`}
+                                        disabled={declinedMeetings.has(announcement.id)}
                                     >
-                                        Get QR Code
+                                        {declinedMeetings.has(announcement.id) ? 'Get QR Code' : 'Get QR Code'}
                                     </button>
                                 </>
                             ) : (
@@ -316,8 +327,41 @@ const MainMeeting = () => {
                     )}
                 </div>
             )}
+
+{showDeclinedModal && (
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+        <div className="bg-white p-6 rounded-lg w-1/2 max-w-lg relative">
+            <div className="absolute top-2 right-2 cursor-pointer" onClick={() => setShowDeclinedModal(false)}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-gray-600 hover:text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </div>
+            <h2 className="text-lg font-semibold mb-4 text-black">Declined Meetings</h2>
+            <ul>
+                {[...declinedMeetings].map((id) => {
+                    const meeting = [...meetingAnnouncements, ...unionAnnouncements].find((announcement) => announcement.id === id);
+                    return meeting ? (
+                        <li key={id} className="mb-5 w-[460px] rounded-md text-dark-500 font-medium h-[60px] border border-primary px-2 py-6 flex items-center justify-between">
+                            <div>
+                                <p className="font-medium">{meeting.title}</p>
+                                <p>{meeting.date} | {meeting.time} | {meeting.location}</p>
+                            </div>
+                            <button
+                                onClick={() => handleReRequest(id)}
+                                className="px-4 py-2 bg-primary text-dark-500 rounded hover:bg-primary-dark transition-transform duration-200"
+                            >
+                                Re-request
+                            </button>
+                        </li>
+                    ) : null;
+                })}
+            </ul>
+        </div>
+    </div>
+)}
+
         </div>
     );
-}
+};
 
 export default MainMeeting;
