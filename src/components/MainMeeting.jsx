@@ -12,85 +12,87 @@ const MainMeeting = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [reason, setReason] = useState('');
     const [currentMeetingId, setCurrentMeetingId] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [declinedMeetings, setDeclinedMeetings] = useState(new Set());
 
     const meetingAnnouncements = [
-        { 
-            id: 1, 
-            title: 'Monthly Strategy Meeting', 
-            description: 'Discussing next month’s strategic goals.', 
-            date: '2024-08-05', 
-            time: '10:00 AM', 
-            location: 'S104', 
-            postedDate: '2024-07-25', 
-            postedTime: '10:00 AM', 
-            clubName: 'IEEE Student Chapter', 
+        {
+            id: 1,
+            title: 'Monthly Strategy Meeting',
+            description: 'Discussing next month’s strategic goals.',
+            date: '2024-08-05',
+            time: '10:00 AM',
+            location: 'S104',
+            postedDate: '2024-07-25',
+            postedTime: '10:00 AM',
+            clubName: 'IEEE Student Chapter',
             clubImage: ieee
         },
-        { 
-            id: 2, 
-            title: 'Team Building Workshop', 
-            description: 'A workshop to enhance team collaboration.', 
-            date: '2024-08-12', 
-            time: '02:00 PM', 
-            location: 'W002', 
-            postedDate: '2024-07-26', 
-            postedTime: '11:00 AM', 
-            clubName: 'ISACA', 
+        {
+            id: 2,
+            title: 'Team Building Workshop',
+            description: 'A workshop to enhance team collaboration.',
+            date: '2024-08-12',
+            time: '02:00 PM',
+            location: 'W002',
+            postedDate: '2024-07-26',
+            postedTime: '11:00 AM',
+            clubName: 'ISACA',
             clubImage: isaca,
         },
-        { 
-            id: 3, 
-            title: 'Quarterly Review Meeting', 
-            description: 'Reviewing the company’s quarterly performance.', 
-            date: '2024-08-20', 
-            time: '09:00 AM', 
-            location: 'E104', 
-            postedDate: '2024-07-27', 
-            postedTime: '09:00 AM', 
-            clubName: 'ROTRACT', 
+        {
+            id: 3,
+            title: 'Quarterly Review Meeting',
+            description: 'Reviewing the company’s quarterly performance.',
+            date: '2024-08-20',
+            time: '09:00 AM',
+            location: 'E104',
+            postedDate: '2024-07-27',
+            postedTime: '09:00 AM',
+            clubName: 'ROTRACT',
             clubImage: rotract
         },
     ];
 
     const unionAnnouncements = [
-        { 
-            id: 1, 
-            title: 'Union General Meeting', 
-            description: 'Annual general meeting for all union members.', 
-            date: '2024-09-01', 
-            time: '03:00 PM', 
-            location: 'Main Hall', 
-            postedDate: '2024-07-25', 
+        {
+            id: 1,
+            title: 'Union General Meeting',
+            description: 'Annual general meeting for all union members.',
+            date: '2024-09-01',
+            time: '03:00 PM',
+            location: 'Main Hall',
+            postedDate: '2024-07-25',
             postedTime: '10:00 AM'
         },
-        { 
-            id: 2, 
-            title: 'Union Budget Review', 
-            description: 'Review of the annual budget and allocation.', 
-            date: '2024-09-10', 
-            time: '01:00 PM', 
-            location: 'Conference Room A', 
-            postedDate: '2024-07-26', 
+        {
+            id: 2,
+            title: 'Union Budget Review',
+            description: 'Review of the annual budget and allocation.',
+            date: '2024-09-10',
+            time: '01:00 PM',
+            location: 'Conference Room A',
+            postedDate: '2024-07-26',
             postedTime: '11:00 AM'
         },
-        { 
-            id: 3, 
-            title: 'Union Leadership Summit', 
-            description: 'Meeting of union leaders to discuss future strategies.', 
-            date: '2024-09-15', 
-            time: '09:00 AM', 
-            location: 'Main Hall', 
-            postedDate: '2024-07-27', 
+        {
+            id: 3,
+            title: 'Union Leadership Summit',
+            description: 'Meeting of union leaders to discuss future strategies.',
+            date: '2024-09-15',
+            time: '09:00 AM',
+            location: 'Main Hall',
+            postedDate: '2024-07-27',
             postedTime: '09:00 AM'
         },
-        { 
-            id: 4, 
-            title: 'Union Member Engagement Event', 
-            description: 'Event to engage with union members and discuss ongoing projects.', 
-            date: '2024-09-20', 
-            time: '02:00 PM', 
-            location: 'Event Center', 
-            postedDate: '2024-07-28', 
+        {
+            id: 4,
+            title: 'Union Member Engagement Event',
+            description: 'Event to engage with union members and discuss ongoing projects.',
+            date: '2024-09-20',
+            time: '02:00 PM',
+            location: 'Event Center',
+            postedDate: '2024-07-28',
             postedTime: '10:00 AM'
         },
     ];
@@ -111,8 +113,13 @@ const MainMeeting = () => {
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
-        console.log('Reason for declining meeting ID', currentMeetingId, ':', reason);
-        handlePopupClose();
+        setIsLoading(true);
+        setTimeout(() => {
+            console.log('Reason for declining meeting ID', currentMeetingId, ':', reason);
+            setDeclinedMeetings(prev => new Set(prev).add(currentMeetingId));
+            handlePopupClose();
+            setIsLoading(false);
+        }, 1500);
     };
 
     const renderContent = () => {
@@ -150,33 +157,35 @@ const MainMeeting = () => {
                                     </span>
                                 </p>
                             </div>
-                            
+
                             {selectedFilter === 'physical' ? (
-                                <div className="flex space-x-2 mb-10 w-full">
-                                    <button 
-                                        onClick={() => handleDeclineMeeting(announcement.id)} 
-                                        className="px-4 py-2 w-1/2 bg-dark-400 opacity-100 text-primary rounded font-medium hover:bg-dark-400 hover:scale-105 transition-transform duration-200"
+                                <div className="flex space-x-2 mb-10 w-full ">
+                                    <button
+                                        onClick={() => handleDeclineMeeting(announcement.id)}
+                                        className={`px-4 py-2 w-1/2 ${declinedMeetings.has(announcement.id) ? 'bg-dark-500 cursor-not-allowed border border-red-600 text-red-500 bordercursor-not-allowed' : 'bg-dark-400 text-primary'} rounded font-medium hover:scale-105 transition-transform duration-200`}
+                                        disabled={declinedMeetings.has(announcement.id)}
                                     >
-                                        Decline
+                                        {declinedMeetings.has(announcement.id) ? 'Declined' : 'Decline'}
                                     </button>
-                                    <button 
-                                        onClick={() => handleJoinMeeting(announcement.id)} 
-                                        className="px-4 py-2 w-1/2 bg-primary text-dark-500 rounded font-semibold hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                                    <button
+                                        onClick={() => handleJoinMeeting(announcement.id)}
+                                        className={`px-4 py-2 w-1/2 ${declinedMeetings.has(announcement.id) ? 'bg-dark-500 cursor-not-allowed opacity-50 text-primary border border-secondary': 'bg-primary text-sec'} rounded font-semibold hover:bg-primary-dark hover:scale-105 transition-transform duration-200 text-dark-400`}
+                                        disabled={declinedMeetings.has(announcement.id)}
                                     >
-                                        Get QR Code
+                                        {declinedMeetings.has(announcement.id) ? 'Get QR Code' : 'Get QR Code'}
                                     </button>
                                 </div>
                             ) : (
                                 <div className="flex space-x-2 mb-10 w-full">
-                                    <button 
-                                        onClick={() => handleJoinMeeting(announcement.id)} 
+                                    <button
+                                        onClick={() => handleJoinMeeting(announcement.id)}
                                         className="px-4 py-2 w-full bg-primary text-dark-500 rounded font-semibold hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
                                     >
                                         Join Meeting
                                     </button>
                                 </div>
                             )}
-        
+
                             <div className="text-xs text-gray-400 absolute bottom-2 w-full text-right">
                                 <span className="mx-0">{announcement.postedDate}</span>
                                 <span className="mx-2">{announcement.postedTime}</span>
@@ -214,22 +223,22 @@ const MainMeeting = () => {
                         <div className="flex-none ml-4 flex space-x-2">
                             {selectedFilter === 'physical' ? (
                                 <>
-                                    <button 
-                                        onClick={() => handleDeclineMeeting(announcement.id)} 
+                                    <button
+                                        onClick={() => handleDeclineMeeting(announcement.id)}
                                         className="px-4 py-2 bg-dark-400 text-primary rounded font-medium w-[150px] hover:scale-105 transition-transform duration-200"
                                     >
                                         Decline
                                     </button>
-                                    <button 
-                                        onClick={() => handleJoinMeeting(announcement.id)} 
+                                    <button
+                                        onClick={() => handleJoinMeeting(announcement.id)}
                                         className="px-4 py-2 bg-primary text-dark-500 rounded font-semibold w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
                                     >
                                         Get QR Code
                                     </button>
                                 </>
                             ) : (
-                                <button 
-                                    onClick={() => handleJoinMeeting(announcement.id)} 
+                                <button
+                                    onClick={() => handleJoinMeeting(announcement.id)}
                                     className="px-4 py-2 bg-primary text-dark-500 rounded font-semibold w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
                                 >
                                     Join Meeting
@@ -276,7 +285,7 @@ const MainMeeting = () => {
                         <h2 className="text-lg font-semibold mb-4 text-black">Can{"'"}t Attend the Meeting ?!</h2>
                         <p className="mb-4 text-black">Please provide a valid reason for not attending the meeting</p>
                         <form onSubmit={handleFormSubmit}>
-                            <textarea 
+                            <textarea
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)}
                                 rows="4"
@@ -284,15 +293,15 @@ const MainMeeting = () => {
                                 placeholder="Enter your reason here..."
                             />
                             <div className="flex justify-end space-x-2">
-                                <button 
-                                    type="button" 
-                                    onClick={handlePopupClose} 
+                                <button
+                                    type="button"
+                                    onClick={handlePopupClose}
                                     className="px-4 py-2 bg-dark-400 w-1/3 text-white rounded hover:bg-dark-500 hover:scale-105 transition-transform duration-200"
                                 >
                                     Cancel
                                 </button>
-                                <button 
-                                    type="submit" 
+                                <button
+                                    type="submit"
                                     className="px-4 py-2 font-medium bg-primary text-dark-400 w-1/3 rounded hover:scale-105 transition-transform duration-200"
                                 >
                                     Send
@@ -300,6 +309,11 @@ const MainMeeting = () => {
                             </div>
                         </form>
                     </div>
+                    {isLoading && (
+                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                            <div className="text-secondary text-sm font-semibold animate-pulse">Loading...</div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
