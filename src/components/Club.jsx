@@ -6,6 +6,14 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { Dialog } from "@material-tailwind/react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+// Import images
+import ieeeImage from "../assets/clubs/ieee.png";
+import rotaractImage from "../assets/clubs/rotaract.png";
+import acmImage from "../assets/clubs/acm.png";
+import pahasaraImage from "../assets/clubs/pahasara1.png";
+import isacaImage from "../assets/clubs/isaca1.png";
+import wieImage from "../assets/clubs/wie.png";
+
 const Club = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,70 +21,50 @@ const Club = () => {
 
   const handleOpen = () => setOpen((cur) => !cur);
 
-const clubs = [
+  const clubs = [
     {
-        id: "1",
-        name: "Rotaract Club of UCSC",
-        sname: "rotract",
-        image: "../src/assets/clubs/rotaract.png",
+      id: "6",
+      name: "IEEE Student Chapter",
+      sname: "ieee",
+      image: ieeeImage,
     },
     {
-        id: "2",
-        name: "ACM Student Chapter",
-        sname: "acm",
-        image: "../src/assets/clubs/acm.png",
+      id: "1",
+      name: "Rotaract Club of UCSC",
+      sname: "rotract",
+      image: rotaractImage,
     },
     {
-        id: "3",
-        name: "Pahasara Club (Innovation and Creativity)",
-        sname: "pahasara",
-        image: "../src/assets/clubs/pahasara1.png",
+      id: "2",
+      name: "ACM Student Chapter",
+      sname: "acm",
+      image: acmImage,
     },
     {
-        id: "4",
-        name: "ISACA Student Group",
-        sname: "isaca",
-        image: "../src/assets/clubs/isaca1.png",
+      id: "3",
+      name: "Pahasara Club (Innovation and Creativity)",
+      sname: "pahasara",
+      image: pahasaraImage,
     },
-    {
-        id: "5",
-        name: "(IEEE WIE) IEEE Women in Engineering",
-        sname: "wie",
-        image: "../src/assets/clubs/wie.png",
-    },
-    {
-        id: "6",
-        name: "IEEE Student Chapter",
-        sname: "ieee",
-        image: "../src/assets/clubs/ieee.png",
-    },
-    {
-        id: "7",
-        name: "Mechatronic Society Of UCSC",
-        sname: "ms",
-        image: "../src/assets/clubs/ms.png",
-    },
-    {
-        id: "8",
-        name: "Women in Cybersecurity",
-        sname: "wicys",
-        image: "../src/assets/clubs/wicys.png",
-    },
+    // {
+    //   id: "4",
+    //   name: "ISACA Student Group",
+    //   sname: "isaca",
+    //   image: isacaImage,
+    // },
+    // {
+    //   id: "5",
+    //   name: "(IEEE WIE) IEEE Women in Engineering",
+    //   sname: "wie",
+    //   image: wieImage,
+    // },
+  ];
 
-    {
-        id: "9",
-        name: "Rekha",
-        sname: "rekha",
-        image: "../src/assets/clubs/rekha.png",
-    },
-];
+const getClubDetails = (club) => {
+  const basePath = location.pathname.startsWith("/student") ? "/student/club" : "/student/club";
+  navigate(`${basePath}/${club.sname}`, { state: { club } });
+};
 
-
-  const getClubDetails = (club) => {
-    const basePath = location.pathname === "/student" ? "/student/club" : "/club";
-    navigate(`${basePath}/${club.sname}`, { state: { club } });
-
-  };
  
   
 
@@ -88,28 +76,30 @@ const clubs = [
             {clubs.map((club, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
-              >
+                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4 "style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}                            >
                 <div className="flex items-center gap-x-3">
                   <Avatar
                     size="sm"
                     src={club.image}
                     alt={club.name}
-                    className="border-2 border-white rounded-md w-10 h-10"
-                  />
+                    className=" rounded-md w-20 h-10 custom-card" style={{ 
+                      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                    }}                  />
                   <Typography color="white" className="font-medium">
                     {club.name}
                   </Typography>
                 </div>
                 <div className="flex gap-4">
                   <Button
-                    className="bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
+                    className=" custom-card bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
                     onClick={handleOpen}
                   >
                     Leave
                   </Button>
                   <Button
-                    className="bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
+                    className=" custom-card bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
                     onClick={() => getClubDetails(club)}
                   >
                     Explore

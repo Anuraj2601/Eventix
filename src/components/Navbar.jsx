@@ -1,24 +1,34 @@
-
-// src/components/Navbar.jsx
-import React, { useState} from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import { MdInfoOutline } from "react-icons/md";
 import { IoPersonCircleOutline } from "react-icons/io5";
-import { MdOutlineEmail } from "react-icons/md";
 import { BsArrowLeftCircle, BsBell } from "react-icons/bs";
+import { FiMessageSquare } from "react-icons/fi";
+import { BiHelpCircle } from "react-icons/bi";
+
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [isClicked, setIsClicked] = useState(false);
+  const getBasePath = () => {
+    const pathParts = location.pathname.split('/');
+    return pathParts.length > 1 ? `/${pathParts[1]}` : '';
+  };
 
-  const handleClick = () => {
-    setIsClicked(true);
-  }
+  const getLinkPath = (basePath, linkType) => {
+    return `${basePath}/${linkType}`;
+  };
+
+  const isSelected = (linkType) => {
+    return location.pathname.includes(linkType);
+  };
+
+  const basePath = getBasePath();
 
   return (
-    <nav className="bg-neutral-900 p-6 shadow-2xl flex items-center justify-between py-2 text-white px-4">
+    <nav className="bg-neutral-900 shadow-2xl flex items-center justify-between py-1 text-white px-4">
       {/* Left Section: Back Button */}
       <div className="flex items-center">
         <div className="mr-4 cursor-pointer" onClick={() => navigate(-1)}>
@@ -27,13 +37,13 @@ const Navbar = () => {
       </div>
 
       {/* Right Section: Image Icons and Search Box */}
-      <div className="flex items-center ">
+      <div className="flex items-center">
         {/* Centered Search Box */}
-        <div className="relative mr-4 ">
+        <div className="relative mr-4">
           <input
             type="text"
             placeholder="Search..."
-            className="w-64 h-9 bg-neutral-950 text-white rounded-full py-1 px-3 focus:ring focus:border-[#AEC90A]  border-[#AEC90A] text-center"
+            className="w-64 h-9 bg-neutral-900 text-white rounded-full py-1 px-3 focus:ring focus:border-[#AEC90A] border-[#AEC90A] text-center"
           />
           <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#AEC90A]">
             <svg
@@ -43,7 +53,7 @@ const Navbar = () => {
               strokeWidth={1.3}
               stroke="#AEC90A"
               className="size-5"
-              style={{ opacity: 0.7}}
+              style={{ opacity: 0.7 }}
             >
               <path
                 fillRule="evenodd"
@@ -55,21 +65,19 @@ const Navbar = () => {
         </div>
         {/* Image Icons */}
         <div className="flex">
-          <a href="" className="px-3">
-            <MdInfoOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
-          </a>
-          <a href="" className="px-3">
-            <MdOutlineEmail className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
-          </a>
-          <Link to='/student/notifications' className="px-3" onClick={handleClick}>
-            <BsBell className={`inline-block w-6 h-6 ${isClicked ? 'text-white' : 'text-[#AEC90A] hover:text-white'}`} />
+          <Link to={getLinkPath(basePath, 'inquiry')} className="px-3">
+            <BiHelpCircle size={32} className={`inline-block  ${isSelected('inquiry') ? 'text-black bg-[#AEC90A]  rounded-full ' : 'text-[#AEC90A] hover:text-white'}`} />
           </Link>
-          <a href="" className="px-3">
-            <IoPersonCircleOutline className="text-[#AEC90A] hover:text-white inline-block w-6 h-6" />
-          </a>
-
+          <Link to={getLinkPath(basePath, 'messages')} className="px-3">
+            <FiMessageSquare size={32} className={`inline-block  ${isSelected('message') ? 'text-black bg-[#AEC90A]  rounded-full p-1' : 'text-[#AEC90A] hover:text-white'}`} />
+          </Link>
+          <Link to={getLinkPath(basePath, 'notifications')} className="px-3">
+            <BsBell size={32} className={`inline-block  ${isSelected('notifications') ? 'text-black bg-[#AEC90A]  rounded-full p-1' : 'text-[#AEC90A] hover:text-white'}`} />
+          </Link>
+          <Link to={getLinkPath(basePath, 'profile')} className="px-3">
+            <IoPersonCircleOutline size={32} className={`inline-block  ${isSelected('profile') ? 'text-black bg-[#AEC90A]  rounded-full' : 'text-[#AEC90A] hover:text-white'}`} />
+          </Link>
         </div>
-       
       </div>
     </nav>
   );

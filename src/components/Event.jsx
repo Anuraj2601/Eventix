@@ -17,8 +17,10 @@ const Event = ({event}) => {
     }
 
   return (
-    <div className="flex items-center justify-center mt-8 mb-4">
-        <div className='bg-[#0b0b0b] p-5 w-3/4 rounded-md' >
+    <div className="flex items-center justify-center mt-8 mb-8">
+        <div className='bg-[#0b0b0b] p-5 w-3/4 rounded-md'  style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
             <div className="flex flex-row items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
                     <img src={event.publisher_img} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
@@ -35,18 +37,18 @@ const Event = ({event}) => {
                 <p>Are you ready to take the next step in your career journey? The 2025 Career Fair is the perfect  opportunity for 
                 students to explore potential career paths, network with industry professionals, and discover exciting job and 
                 internship opportunities ...</p>
-                <img src={event.image} alt="" className='border-2 border-[#AEC90A] w-full h-80 mt-3' />
+                <img src={event.image} alt="" className=' object-cover w-auto h-96 mt-3' />
             </div>
             <div className="flex gap-10 mb-8">
-                <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
+                <div className="flex items-center justify-center border-2 border-[#AEC90A] rounded-lg p-2 gap-3 w-1/3">
                     <FaCalendar className='text-[#AEC90A]' size={30}/>
                     <span>{event.date}</span>
                 </div>
-                <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
+                <div className="flex items-center justify-center border-2 border-[#AEC90A] rounded-lg p-2 gap-3 w-1/3">
                     <IoTimeOutline className='text-[#AEC90A]' size={30}/>
                     <span>{event.time}</span>
                 </div>
-                <div className="flex items-center justify-center border-2 border-[#AEC90A] p-4 gap-3 w-1/3">
+                <div className="flex items-center justify-center border-2 border-[#AEC90A] rounded-lg p-2 gap-3 w-1/3">
                     <FaLocationDot className='text-[#AEC90A]' size={30}/>
                     <span>{event.venue}</span>
                 </div>

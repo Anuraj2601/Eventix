@@ -13,6 +13,7 @@ import gold from "../../assets/gold.png"; // Importing gold image
 import platinum from "../../assets/platinum.png"; // Importing platinum image
 import silver from "../../assets/silver.png"; // Importing silver image
 
+
 const ExploreMemberEvent = () => {
     const location = useLocation();
     const { name, image, date, clubName, clubImage } = location.state;

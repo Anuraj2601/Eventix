@@ -1,17 +1,64 @@
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link, useLocation } from 'react-router-dom';
 import {
   Card,
   CardBody,
   Typography,
   Button,
 } from "@material-tailwind/react";
-import { FaPlus } from "react-icons/fa";
 import EditDeleteButton from '../EditDeleteButton';
 import Customswitch from "../Customswitch";
+import { useNavigate } from 'react-router-dom';
 
 const ElectionDetails = ({ clubName, electionId }) => {
   const [value, setValue] = useState(false);
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const navigate = useNavigate();
+
+  // Determine the target path based on the current path
+  let targetPath = '';
+
+  if (currentPath.startsWith('/president')) {
+    targetPath = '/president/club/election';
+  } else if (currentPath.startsWith('/member')) {
+    targetPath = '/member/club/election';
+  } else if (currentPath.startsWith('/oc')) {
+    targetPath = '/oc/club/election';
+  } else if (currentPath.startsWith('/secretary')) {
+    targetPath = '/secretary/club/election';
+  }
+
+  // Check if the current path is either '/oc' or '/member'
+  const isOcOrMember = currentPath.startsWith('/oc') || currentPath.startsWith('/member');
+  const isEditable = currentPath.startsWith('/president') || currentPath.startsWith('/secretary');
+
+  const navigateToForm = (link) => {
+    let finalLink = link;
+  
+    if (currentPath.startsWith('/oc')) {
+      if (link === "/final-candidates") {
+        finalLink = "/oc/club/finalists";
+      } else if (link === "/voting") {
+        finalLink = "/oc/club/voting";
+      }
+    } else if (currentPath.startsWith('/member')) {
+      if (link === "/final-candidates") {
+        finalLink = "/member/club/finalists";
+      } else if (link === "/voting") {
+        finalLink = "/member/club/voting";
+      }
+    }
+  
+    navigate(finalLink);
+  };
+  
+
+  const events = [
+    {
+      joinLink1: "/president/club/election/add",     
+    },
+  ];
 
   const elections = [
     {
@@ -38,13 +85,15 @@ const ElectionDetails = ({ clubName, electionId }) => {
 
   return (
     <>
-      <Button
-        className="flex items-center gap-2 bg-[#AEC90A] h-10 ml-auto mt-0 pt-0 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
-        variant="gradient"
-      >
-        <FaPlus />
-        New Election
-      </Button>
+      {isEditable && (
+        <Button
+          onClick={() => navigateToForm(events[0].joinLink1)}
+          className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold"
+        >
+          New Election
+        </Button>
+      )}
+
       <Card className="w-full bg-neutral-900 mt-4">
         <CardBody>
           <div className="grid grid-cols-6 gap-2 p-1 mb-2 text-white">
@@ -57,13 +106,13 @@ const ElectionDetails = ({ clubName, electionId }) => {
             <div className="col-span-1 flex justify-center items-center">
               Votings open
             </div>
-            
           </div>
           <div>
             {elections.map(({ id, desc, applicationDate, votingDate }, index) => (
               <div
                 key={id}
                 className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl mb-2 ${index === 1 ? 'opacity-50' : ''}`}
+                style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.8)' }}
               >
                 <div className="col-span-2 flex justify-center items-center">
                   <Typography color={index === 1 ? "gray" : "white"} variant="h6">
@@ -73,37 +122,67 @@ const ElectionDetails = ({ clubName, electionId }) => {
                 <div className="col-span-2 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
                     {applicationDate}
-                    <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
-                      <div className="whitespace-nowrap">Applications</div>
-                      <div>
-                        <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
+                    {isEditable && (
+                      <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
+                        <div className="whitespace-nowrap">Applications</div>
+                        <div>
+                          <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </Typography>
                 </div>
                 <div className="col-span-1 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
                     {votingDate}
-                    <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
-                      <div className="whitespace-nowrap">Votings</div>
-                      <div>
-                        <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
+                    {isEditable && (
+                      <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
+                        <div className="whitespace-nowrap">Votings</div>
+                        <div>
+                          <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </Typography>
                 </div>
-               
-                <div className="col-span-6 flex justify-end items-center gap-2 p-5">
-                  <EditDeleteButton
-                    onEdit={() => handleEdit(id)}
-                    onDelete={() => handleDelete(id)}
-                    disabled={index === 1}
-                  />
-                  <Link to={`/club/election`}>
-                    <Button variant="gradient" className={`bg-[#AEC90A] text-black p-2 inline-block ${index === 1 ? 'opacity-50 pointer-events-none' : ''}`}>
-                      View Details
-                    </Button>
-                  </Link>
+                <div className="col-span-6 flex flex-col items-end gap-2 p-5">
+                  {isOcOrMember ? (
+                    <div className="flex gap-2 mb-4">
+                      <Button
+                        onClick={() => navigateToForm("/apply")}
+                        className="bg-[#AEC90A] text-gray-700 rounded-full"
+                      >
+                        Apply
+                      </Button>
+                      <Button
+                        onClick={() => navigateToForm("/final-candidates")}
+                        className="bg-gray-500 text-gray-700 rounded-full opacity-50"
+                      >
+                        View Final Candidates
+                      </Button>
+                      <Button
+                        onClick={() => navigateToForm("/voting")}
+                        className="bg-gray-500 text-gray-700 rounded-full opacity-50"
+                      >
+                        Vote
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      {isEditable && (
+                        <EditDeleteButton
+                          onEdit={() => handleEdit(id)}
+                          onDelete={() => handleDelete(id)}
+                          disabled={index === 1}
+                        />
+                      )}
+                      <Link to={targetPath}>
+                        <Button variant="gradient" className="bg-[#AEC90A] rounded-full text-black p-2 inline-block">
+                          View Details
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             ))}

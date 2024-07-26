@@ -3,33 +3,33 @@ import {
   Card,
   CardBody,
   Typography,
-  Avatar,
   Textarea,
-  Badge,
+  Button,
+  Dialog,
 } from "@material-tailwind/react";
-import { Button } from "@material-tailwind/react";
 import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
-// import LeaveModal from './LeaveModal';
-import { Dialog, Input } from "@material-tailwind/react";
-import {Chip} from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
-import { FaPlus } from "react-icons/fa6";
+import { useNavigate, useLocation } from "react-router-dom";
 import EditDeleteButton from './EditDeleteButton';
-
+import { FaEye } from "react-icons/fa";
 
 const Announcement = () => {
-  const navigator = useNavigate();
-
   const [open, setOpen] = useState(false);
+  const navigator = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  // Check if the current path is either '/president' or '/secretary'
+  const isEditable = currentPath.startsWith('/president') || currentPath.startsWith('/secretary');
+
   const handleOpen = () => setOpen((cur) => !cur);
 
-  const getClubDetails = (sname) => {
-    navigator(`/club/${sname}`);
+  const handleEdit = (id) => {
+    // Add your edit handling logic here
+  };
 
-    /* history.push(`/club/${sname}`, { name, image }); */
-
-    //console.log(name);
+  const handleDelete = (id) => {
+    // Add your delete handling logic here
   };
 
   const meetings = [
@@ -37,85 +37,82 @@ const Announcement = () => {
       id: "1",
       desc: "The Board elections of term 24/25 will be commenced from period 05.06.2024 - 09.06.2024. All the club members are invited to participate in the voting.",
       date: "05.06.2024",
+      to: "Club Members",
     },
     {
       id: "2",
       desc: "Join us for our annual club picnic on 12.08.2024 at Central Park. Don't miss out on the fun activities and delicious food!",
       date: "12.08.2024",
+      to: "Everyone",
     },
     {
       id: "3",
       desc: "Attention members: Our next club meeting will be held on 18.07.2024. Please mark your calendars and be on time!",
       date: "18.07.2024",
+      to: "Board",
     },
     {
       id: "4",
       desc: "Exciting news! We're launching a new mentorship program. Stay tuned for more details on how you can participate.",
       date: "Coming soon",
+      to: "Club Members",
     },
-    
   ];
 
   return (
     <>
-    <Button
-        className="flex items-center gap-2 bg-[#AEC90A] h-10 mr-0 mt-2 ml-[950px] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm" variant="gradient"
-        
-      >
-        <FaPlus />
-        New Announcement
-      </Button>
+      {isEditable && (
+        <Button
+          className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold ml-[950px]"
+          onClick={handleOpen}
+        >
+          New Announcement
+        </Button>
+      )}
       <Card className="w-full bg-neutral-900">
         <CardBody>
-          <div className="">
-            {meetings.map(({ desc, date }, index) => (
+          <div>
+            {meetings.map(({ desc, date, to, id }, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
+                style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.6), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}
               >
-                <div className="flex items-center gap-x-40">
-                  {/* <Avatar size="sm" src={image} alt={name} className='border-2 border-white rounded-md w-10 h-10'/> */}
-                  <div>
+                <div className="flex flex-col w-full">
+                  <div className="flex flex-col mb-2">
                     <Typography color="white" variant="h6">
-                      {desc}
+                      {desc.split('\n').map((line, i) => (
+                        <React.Fragment key={i}>
+                          {line}
+                          <br />
+                        </React.Fragment>
+                      ))}
                     </Typography>
                   </div>
-                  <div>
+                  <div className="flex items-center justify-between">
                     <Typography className="text-[#AEC90A]" variant="h6">
                       {date}
                     </Typography>
-                  </div>
-                 
-                </div>
-                <div className="flex flex-row gap-4">
-                 {/*  <Button
-                    className="bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
-                    onClick={handleOpen}
-                  >
-                    Leave
-                  </Button> */}
-                 {/*  <Button
-                    className="bg-[#AEC90A] pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
-                    onClick={() => getClubDetails(sname)}
-                  >
-                    {status == 'Online' ? 'Join' : 'GetQR' }
-                  </Button> */}
+                    {isEditable && (
+  <div className="flex items-center">
+    <FaEye className="text-[#AEC90A] mr-2" />
+    <Typography className="text-white">{to}</Typography>
+  </div>
+)}
 
-                  {/* {console.log(isModalOpen)} */}
-                </div>
-                <div className="flex flex-row gap-4">
-                  <EditDeleteButton
-                    onEdit={() => handleEdit(id)}
-                    onDelete={() => handleDelete(id)}
-                  />
+                    {isEditable && (
+                      <EditDeleteButton
+                        onEdit={() => handleEdit(id)}
+                        onDelete={() => handleDelete(id)}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-          {/* {open && <LeaveModal open={open} handleOpen={handleOpen}/>} */}
-          {/* <LeaveModal open={open} handleOpen={handleOpen}>
-                  fancy modal
-                </LeaveModal> */}
         </CardBody>
       </Card>
 
@@ -136,21 +133,17 @@ const Announcement = () => {
               variant="paragraph"
               color="gray"
             >
-              Why are you Leaving, Let us know your problem ?
+              Why are you Leaving? Let us know your problem.
             </Typography>
-
             <div className="relative">
               <Textarea
                 size="lg"
                 className="h-16 border-2 bg-slate-100"
                 placeholder="Type your reason"
-                /* variant="label-hidden" */ required
+                required
               />
               <MdSend className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer" />
             </div>
-
-            {/* <Input label="Type your reason" size="lg" className='relative'/>
-              <MdSend className='absolute '/> */}
           </CardBody>
         </Card>
       </Dialog>

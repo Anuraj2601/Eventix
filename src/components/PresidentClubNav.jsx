@@ -6,7 +6,7 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import Meeting from "./Meeting";
 import Announcement from "./Announcement";
@@ -14,9 +14,16 @@ import Member from "./Member";
 import ElectionDetails from "./election/ElectionDetails";
 import ClubEvent from "./ClubEvent";
 import Board from "./Board";
+import ClubReport from "./ClubReport";
+import ClubPosts from "./ClubPosts";
+import Recruitment from "./Recruitment";
 
 const PresidentClubNav = ({ club }) => {
-  const [activeTab, setActiveTab] = React.useState("Event");
+  const [activeTab, setActiveTab] = React.useState("Events");
+  const location = useLocation();
+
+  const authorizedPaths = ['/president', '/treasurer', '/secretary'];
+  const showRestrictedTabs = authorizedPaths.some(path => location.pathname.startsWith(path));
 
   const data = [
     {
@@ -25,8 +32,13 @@ const PresidentClubNav = ({ club }) => {
       desc: <Board />,
     },
     {
-      label: "Event",
-      value: "Event",
+      label: "Posts",
+      value: "Posts",
+      desc: <ClubPosts />,
+    },
+    {
+      label: "Events",
+      value: "Events",
       desc: <ClubEvent club={club} />,
     },
     {
@@ -49,11 +61,18 @@ const PresidentClubNav = ({ club }) => {
       value: "Announcement",
       desc: <Announcement />,
     },
-    {
-      label: "Recruitment",
-      value: "Recruitment",
-      desc: "Recruitment",
-    },
+    ...(showRestrictedTabs ? [
+      {
+        label: "Event Reports",
+        value: "Event Reports",
+        desc: <ClubReport />,
+      },
+      {
+        label: "Recruitment",
+        value: "Recruitment",
+        desc: <Recruitment />,
+      }
+    ] : []),
   ];
 
   return (
@@ -78,7 +97,7 @@ const PresidentClubNav = ({ club }) => {
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody className="h-[500px] overflow-y-auto"> {/* Adjust height as needed */}
+      <TabsBody className="h-[800px] overflow-y-auto"> {/* Adjust height as needed */}
         {data.map(({ value, desc }) => (
           <TabPanel key={value} value={value}>
             {desc}

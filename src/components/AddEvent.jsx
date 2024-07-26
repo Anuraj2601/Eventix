@@ -1,195 +1,237 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Typography } from "@material-tailwind/react";
+import { FaUpload } from 'react-icons/fa';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
-import { Button } from '@material-tailwind/react';
 
 const AddEvent = () => {
-  return (
+    const [formFields, setFormFields] = useState({
+        name: '',
+        venue: '',
+        date: '',
+        budget: '',
+        purpose: '',
+        benefits: '',
+        sponsors: Array(5).fill({ name: '', type: 'Gold', amount: '' }),
+        iudApproval: 'not-approved',
+        proofOfApproval: null,
+        eventImage: null // New field for the event image
+    });
+    const [isFormValid, setIsFormValid] = useState(false);
 
-    <div className="fixed inset-0 flex">
-    <Sidebar className="flex-shrink-0" />
-    <div className="flex flex-col flex-1">
-      <Navbar className="sticky top-0 z-10 p-4" />
-      <div className="bg-neutral-900 flex-1 text-white flex flex-col overflow-hidden">
-       
-      
+    useEffect(() => {
+        validateForm();
+    }, [formFields]);
 
-     <form>
-      <div className="flex justify-center items-center flex-col ml-20 mr-20 mt-10 border-2 rounded-3xl border-lime-400 space-y-12">
-        
-      <Button
-        className="flex justify-center items-center gap-2 w-96 bg-[#AEC90A] h-10 mr-0 mt-2 ml-[30px]  pl-5 pr-5 rounded-2xl text-black font-medium text-sm" variant="gradient"
-      >
-        
-        Create New Event
-      </Button>
-        <div className="border-b border-gray-900/10 w-full pl-4 pr-4">
-         {/*  <h2 className="text-base font-semibold leading-7 text-gray-900">Personal Information</h2>
-          <p className="mt-1 text-sm leading-6 text-gray-600">Use a permanent address where you can receive mail.</p> */}
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormFields(prevFields => ({
+            ...prevFields,
+            [name]: value
+        }));
+    };
 
-          <div className="mt-4 grid  gap-x-8 gap-y-8 md:grid-cols-9">
-            <div className="sm:col-span-4">
-              <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-white">
-                Name of the Event
-              </label>
-              <div className="mt-2">
-                <input
-                  id="first-name"
-                  name="first-name"
-                  type="text"
-                  autoComplete="given-name"
-                  placeholder='Enter Event Name'
-                  className="block w-full rounded-md border-2 border-[#AEC90A] py-1.5 bg-[#171717] text-white shadow-sm ring-1 ring-inset placeholder:text-[#414141] focus:ring-2 focus:ring-inset focus:ring-lime-500 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
+    const handleSponsorChange = (index, field, value) => {
+        const updatedSponsors = [...formFields.sponsors];
+        updatedSponsors[index] = { ...updatedSponsors[index], [field]: value };
+        setFormFields(prevFields => ({
+            ...prevFields,
+            sponsors: updatedSponsors
+        }));
+    };
 
-            <div className="sm:col-span-5">
-              <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-white">
-                Budget
-              </label>
-              <div className="mt-2">
-                <input
-                  id="last-name"
-                  name="last-name"
-                  type="text"
-                  autoComplete="family-name"
-                  placeholder='000,000'
-                  className="block w-full rounded-md border-2 border-[#AEC90A] bg-[#171717] py-1.5 text-white shadow-sm ring-1 ring-inset placeholder:text-[#414141] focus:ring-2 focus:ring-inset focus:ring-lime-500 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
+    const handleApprovalChange = (value) => {
+        setFormFields(prevFields => ({
+            ...prevFields,
+            iudApproval: value,
+            proofOfApproval: value === 'approved' ? prevFields.proofOfApproval : null
+        }));
+        validateForm();
+    };
 
-            <div className="sm:col-span-4">
-              <label htmlFor="date" className="block text-sm font-medium leading-6 text-white">
-                Tentative Date
-              </label>
-              <div className="mt-2">
-                <input
-                  id="date"
-                  name="date"
-                  type="datetime-local"
-                  autoComplete="date"
-                  className="block w-auto rounded-md border-2 border-[#AEC90A] py-1.5 bg-[#171717] text-white shadow-sm ring-1 ring-inset placeholder:text-[#414141] focus:ring-2 focus:ring-inset focus:ring-lime-500 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (e.target.name === 'proofOfApproval') {
+            setFormFields(prevFields => ({
+                ...prevFields,
+                proofOfApproval: file
+            }));
+        } else if (e.target.name === 'eventImage') {
+            setFormFields(prevFields => ({
+                ...prevFields,
+                eventImage: file
+            }));
+        }
+    };
 
-            <div class="col-span-full">
-          <label for="about" class="block text-sm font-medium leading-6 text-white">Description</label>
-          <div class="mt-2">
-            <textarea id="about" name="about" placeholder='Description of Event' rows="3" className="block w-full rounded-md  border-2 border-[#AEC90A] bg-[#171717] py-1.5 text-white shadow-sm ring-1 ring-inset  placeholder:text-[#414141] focus:ring-2 focus:ring-inset focus:ring-lime-500 sm:text-sm sm:leading-6"></textarea>
-          </div>
-         
-        </div>
+    const validateForm = () => {
+        const { name, venue, date, budget, purpose, benefits, sponsors, iudApproval, proofOfApproval, eventImage } = formFields;
+        const isSponsorFilled = sponsors.some(sponsor => sponsor.name.trim() !== '');
+        const isProofRequired = iudApproval === 'approved' && !proofOfApproval;
+        const isImageRequired = !eventImage;
+        const isValid = name.trim() !== '' && venue.trim() !== '' && date.trim() !== '' &&
+                        budget.trim() !== '' && purpose.trim() !== '' && benefits.trim() !== '' &&
+                        isSponsorFilled && !isProofRequired && !isImageRequired;
+        setIsFormValid(isValid);
+    };
 
-           {/*  <div className="sm:col-span-3">
-              <label htmlFor="country" className="block text-sm font-medium leading-6 text-white">
-                Country
-              </label>
-              <div className="mt-2">
-                <select
-                  id="country"
-                  name="country"
-                  autoComplete="country-name"
-                  className="block w-full rounded-md border-2 border-[#AEC90A] py-1.5 bg-[#171717] text-white shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-lime-500 sm:max-w-xs sm:text-sm sm:leading-6"
-                >
-                  <option>United States</option>
-                  <option>Canada</option>
-                  <option>Mexico</option>
-                </select>
-              </div>
-            </div> */}
+    const handleSubmit = () => {
+        // Implement your form submission logic here
+        console.log('Form submitted', formFields);
+    };
 
-           
+    return (
+        <div className="fixed inset-0 flex">
+            <Sidebar className="flex-shrink-0"/>
+            <div className="flex flex-col flex-1">
+                <Navbar className="sticky top-0 z-10 p-4"/>
+                <div className="bg-black bg-opacity-90 text-white flex-col p-8 md:p-20 overflow-y-auto">
+                    <Typography variant="h3" className="mb-4 text-center">Proposal Form</Typography>
 
-            {/* <div className="sm:col-span-2 sm:col-start-1">
-              <label htmlFor="city" className="block text-sm font-medium leading-6 text-white">
-                City
-              </label>
-              <div className="mt-2">
-                <input
-                  id="city"
-                  name="city"
-                  type="text"
-                  autoComplete="address-level2"
-                  className="block w-full rounded-md border-2 border-[#AEC90A] py-1.5 bg-[#171717] text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-lime-500 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div> */}
+                    <div className="grid grid-cols-1 gap-4">
+                        {/* Event Image Upload */}
+                        <div className="mb-4">
+                            <label className="block mb-2">Event Image:</label>
+                            <div className="flex flex-col items-center">
+                                <input
+                                    type="file"
+                                    name="eventImage"
+                                    onChange={handleFileChange}
+                                    className="w-full h-12 bg-black text-white p-2 rounded-2xl"
+                                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                                />
+                                <FaUpload className="text-white mt-2" />
+                            </div>
+                        </div>
 
-            {/* <div className="sm:col-span-2">
-              <label htmlFor="region" className="block text-sm font-medium leading-6 text-white">
-                State / Province
-              </label>
-              <div className="mt-2">
-                <input
-                  id="region"
-                  name="region"
-                  type="text"
-                  autoComplete="address-level1"
-                  className="block w-full rounded-md border-2 border-[#AEC90A] bg-[#171717] py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-lime-500 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div> */}
-
-            {/* <div className="sm:col-span-2">
-              <label htmlFor="postal-code" className="block text-sm font-medium leading-6 text-white">
-                ZIP / Postal code
-              </label>
-              <div className="mt-2">
-                <input
-                  id="postal-code"
-                  name="postal-code"
-                  type="text"
-                  autoComplete="postal-code"
-                  className="block w-full rounded-md border-2 border-[#AEC90A] py-1.5 bg-[#171717] text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-lime-500 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div> */}
-          </div>
-        </div>
-
-        <div className="flex justify-center gap-8 items-center mb-4 m:col-span-2 sm:col-start-1 pb-4">
-        <Button type="button" className="text-sm h-10 pl-5 pr-5 rounded-2xl font-medium leading-6 text-white bg-[#171717] border-2 border-[#AEC90A]">
-          Cancel
-        </Button>
-        <Button
-        className="flex items-center bg-[#AEC90A] h-10 pl-5 pr-5 rounded-2xl text-black font-medium text-sm" variant="gradient"
-       
-      >
-        
-        Create
-      </Button>
-      </div>
-
-        </div>
-
-      
-    </form> 
-
-    
+                        {/* First Set of Fields */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div>
+                                <label className="block mb-2">Name of the Event:</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formFields.name}
+                                    onChange={handleInputChange}
+                                    className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                                />
+                            </div>
+                            <div>
+                                <label className="block mb-2">Venue of the Event:</label>
+                                <input
+                                    type="text"
+                                    name="venue"
+                                    value={formFields.venue}
+                                    onChange={handleInputChange}
+                                    className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                                />
+                            </div>
+                            <div>
+    <label className="block mb-2">Tentative Date of the Event:</label>
+    <input
+        type="date"
+        name="date"
+        value={formFields.date}
+        onChange={handleInputChange}
+        className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+        style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+    />
 </div>
-    </div>
-  </div>
-  
-  )
-}
+
+                            <div>
+                                <label className="block mb-2">Budget of the Event:</label>
+                                <input
+                                    type="text"
+                                    name="budget"
+                                    value={formFields.budget}
+                                    onChange={handleInputChange}
+                                    className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Second Set of Fields */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block mb-2">Purpose of the Event:</label>
+                                <textarea
+                                    name="purpose"
+                                    value={formFields.purpose}
+                                    onChange={handleInputChange}
+                                    className="w-full h-32 bg-black text-white p-2 rounded-2xl"
+                                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                                />
+                            </div>
+                            <div>
+                                <label className="block mb-2">Benefits to UCSC:</label>
+                                <textarea
+                                    name="benefits"
+                                    value={formFields.benefits}
+                                    onChange={handleInputChange}
+                                    className="w-full h-32 bg-black text-white p-2 rounded-2xl"
+                                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* IUD Approval Status */}
+                        <div className="mt-4">
+                            <label className="block mb-2">IUD Approval Status:</label>
+                            <div className="flex space-x-4">
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        value="approved"
+                                        checked={formFields.iudApproval === 'approved'}
+                                        onChange={() => handleApprovalChange('approved')}
+                                    />
+                                    <span>Already Approved</span>
+                                </label>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        value="not-approved"
+                                        checked={formFields.iudApproval === 'not-approved'}
+                                        onChange={() => handleApprovalChange('not-approved')}
+                                    />
+                                    <span>Not Approved</span>
+                                </label>
+                            </div>
+                            {formFields.iudApproval === 'approved' && (
+                                <div className="mt-4">
+                                    <label className="block mb-2">Proof of IUD Approval:</label>
+                                    <input
+                                        type="file"
+                                        name="proofOfApproval"
+                                        onChange={handleFileChange}
+                                        className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                        style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                        
+                        {/* Sponsors */}
+                       
+                    </div>
+                    <div className="flex justify-center mt-4">
+    <button
+        onClick={handleSubmit}
+        disabled={!isFormValid}
+        className={`p-2 rounded-2xl ${isFormValid ? 'bg-green-500' : 'bg-gray-500'} text-white`}
+        style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+    >
+        Create Event 
+    </button>
+</div>
+
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export default AddEvent;
-

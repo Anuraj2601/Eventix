@@ -1,0 +1,24 @@
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* src/index.css */
+@layer components {
+  .custom-3d-shadow {
+    position: relative;
+  }
+  .custom-3d-shadow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit; /* Maintain the card's border-radius */
+    box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.2), 0px -4px 4px rgba(0, 0, 0, 0.2), 0px 4px 4px rgba(0, 0, 0, 0.2), 4px 0px 4px rgba(0, 0, 0, 0.2);
+    z-index: -1; /* Place behind the card */
+  }
+}

@@ -1,8 +1,17 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 const Votestab = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const handleReleaseResults = () => {
+    // Add your logic to release results here
+    console.log("Results released to the club");
+  };
+
   // Example data for candidates
-  const candidates = [
+  const presidentCandidates = [
     {
       id: 1,
       votes: 75,
@@ -21,7 +30,9 @@ const Votestab = () => {
       name: "Michael Brown",
       image: "https://randomuser.me/api/portraits/men/3.jpg", // Example image URL
     },
-    // Vice President candidates
+  ];
+
+  const vicePresidentCandidates = [
     {
       id: 4,
       votes: 70,
@@ -40,7 +51,9 @@ const Votestab = () => {
       name: "Sarah Williams",
       image: "https://randomuser.me/api/portraits/women/11.jpg", // New image URL for Sarah Williams
     },
-    // Treasurer candidates
+  ];
+
+  const treasurerCandidates = [
     {
       id: 7,
       votes: 65,
@@ -61,41 +74,57 @@ const Votestab = () => {
     },
   ];
 
-  // Filter candidates for each position
-  const presidentCandidates = candidates.slice(0, 3);
-  const vicePresidentCandidates = candidates.slice(3, 6);
-  const treasurerCandidates = candidates.slice(6, 9);
-
+  const showInstruction = currentPath === "/oc" || currentPath === "/member";
+  
   return (
-    <div className="w-full flex flex-col items-center p-5">
-      {/* President Position */}
-      <div className="relative mb-12 w-full">
-       <div className="absolute top-0 left-0 z-10 w-full flex justify-center">
-  <div className="bg-black py-2 px-4 rounded-lg">
-    <h2 className="text-3xl text-[#AEC90A] text-center">President Position</h2>
-  </div>
-</div>
+    <div className="w-full flex flex-col items-center py-2 px-20 overflow-y-auto">
+      <div className="w-full flex justify-end mt-8 pr-4">
+        <button
+          onClick={handleReleaseResults}
+          className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-3 px-6 rounded-full shadow-lg transition duration-300"
+        >
+          Release Results to Club
+        </button>
+      </div>
 
-        <div className="relative w-full border border-[#AEC90A] rounded-xl p-10 mt-8">
-          <div className="flex items-center justify-around space-x-16">
+      {/* President Position */}
+      <div className="relative mb-12 w-full p-5">
+        <div className="absolute left-0 z-10 w-full flex justify-center ">
+          <div className="py-2 px-4 rounded-lg ">
+            <h2 className="text-3xl text-center">President Position</h2>
+          </div>
+        </div>
+
+        <div className="relative w-full rounded-xl p-5 mt-8">
+          <div className="flex items-center justify-around space-x-2">
             {presidentCandidates.map((candidate, index) => (
               <div
                 key={candidate.id}
-                className="relative flex flex-col items-center space-y-4"
+                className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
               >
-                <span className="text-[#AEC90A] text-2xl font-bold absolute -top-4 left-4 bg-black px-3 py-1 rounded-full">
+                {showInstruction && (
+                  <div className="absolute top-4 text-white bg-black px-3 py-1 rounded-full">
+                    Click on the image to vote
+                  </div>
+                )}
+                <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full" style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}>
                   {index + 1}
                 </span>
                 <img
-                  src={candidate.image} // Use candidate's image URL
+                  src={candidate.image}
                   alt={`Candidate ${candidate.id}`}
-                  className="w-48 h-48 rounded-full object-cover border-[#AEC90A] border-4 p-1"
+                  className="w-56 h-56 rounded-full object-cover border-black border-4 custom-card"
+                  style={{ 
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                  }}
                 />
                 <div className="text-center mt-2">
-                  <div className="text-white">{candidate.name}</div>
-                  <span className="text-[#AEC90A] font-bold">
-                    {candidate.votes} votes
-                  </span>
+                  <div className="text-white text-2xl">{candidate.name}</div>
+                  {!showInstruction && (
+                    <span className="text-[#AEC90A] font-bold text-2xl">{candidate.votes} votes</span>
+                  )}
                 </div>
               </div>
             ))}
@@ -104,33 +133,43 @@ const Votestab = () => {
       </div>
 
       {/* Vice President Position */}
-      <div className="relative mb-12 w-full ">
-      <div className="absolute top-0 left-0 z-10 w-full flex justify-center">
-  <div className="bg-black py-2 px-4 rounded-lg">
-    <h2 className="text-3xl text-[#AEC90A] text-center">Vice President Position</h2>
-  </div>
-</div>
+      <div className="relative mb-12 w-full p-5">
+        <div className="absolute left-0 z-10 w-full flex justify-center ">
+          <div className="py-2 px-4 rounded-lg ">
+            <h2 className="text-3xl text-center">Vice President Position</h2>
+          </div>
+        </div>
 
-        <div className="relative w-full border border-[#AEC90A] rounded-xl p-10 mt-8">
-          <div className="flex items-center justify-around space-x-16">
+        <div className="relative w-full rounded-xl p-5 mt-8">
+          <div className="flex items-center justify-around space-x-2">
             {vicePresidentCandidates.map((candidate, index) => (
-              <div
-                key={candidate.id}
-                className="relative flex flex-col items-center space-y-4"
+               <div
+               key={candidate.id}
+               className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
               >
-                <span className="text-[#AEC90A] text-2xl font-bold absolute -top-4 left-4 bg-black px-3 py-1 rounded-full">
+                {showInstruction && (
+                  <div className="absolute top-4 text-white bg-black px-3 py-1 rounded-full">
+                    Click on the image to vote
+                  </div>
+                )}
+                <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full" style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}>
                   {index + 1}
                 </span>
                 <img
-                  src={candidate.image} // Use candidate's image URL
+                  src={candidate.image}
                   alt={`Candidate ${candidate.id}`}
-                  className="w-48 h-48 rounded-full object-cover border-[#AEC90A] border-4 p-1"
+                  className="w-56 h-56 rounded-full object-cover border-black border-4 custom-card"
+                  style={{ 
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                  }}
                 />
                 <div className="text-center mt-2">
-                  <div className="text-white">{candidate.name}</div>
-                  <span className="text-[#AEC90A] font-bold">
-                    {candidate.votes} votes
-                  </span>
+                  <div className="text-white text-2xl">{candidate.name}</div>
+                  {!showInstruction && (
+                    <span className="text-[#AEC90A] font-bold text-2xl">{candidate.votes} votes</span>
+                  )}
                 </div>
               </div>
             ))}
@@ -139,33 +178,43 @@ const Votestab = () => {
       </div>
 
       {/* Treasurer Position */}
-      <div className="relative mb-12 w-full">
-      <div className="absolute top-0 left-0 z-10 w-full flex justify-center">
-  <div className="bg-black py-2 px-4 rounded-lg">
-    <h2 className="text-3xl text-[#AEC90A] text-center">Treasurer Position</h2>
-  </div>
-</div>
+      <div className="relative mb-28 w-full p-5">
+        <div className="absolute left-0 z-10 w-full flex justify-center ">
+          <div className="py-2 px-4 rounded-lg ">
+            <h2 className="text-3xl text-center">Treasurer Position</h2>
+          </div>
+        </div>
 
-        <div className="relative w-full border border-[#AEC90A] rounded-xl p-10 mt-8">
-          <div className="flex items-center justify-around space-x-16">
+        <div className="relative w-full rounded-xl p-5 mt-8">
+          <div className="flex items-center justify-around space-x-2">
             {treasurerCandidates.map((candidate, index) => (
               <div
                 key={candidate.id}
-                className="relative flex flex-col items-center space-y-4"
+                className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
               >
-                <span className="text-[#AEC90A] text-2xl font-bold absolute -top-4 left-4 bg-black px-3 py-1 rounded-full">
+                {showInstruction && (
+                  <div className="absolute top-4 text-white bg-black px-3 py-1 rounded-full">
+                    Click on the image to vote
+                  </div>
+                )}
+                <span className="text-[#AEC90A] text-2xl font-bold absolute top-14 left-6 bg-black px-3 py-1 rounded-full" style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}>
                   {index + 1}
                 </span>
                 <img
-                  src={candidate.image} // Use candidate's image URL
+                  src={candidate.image}
                   alt={`Candidate ${candidate.id}`}
-                  className="w-48 h-48 rounded-full object-cover border-[#AEC90A] border-4 p-5"
+                  className="w-56 h-56 rounded-full object-cover border-black border-4 custom-card"
+                  style={{ 
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                  }}
                 />
                 <div className="text-center mt-2">
-                  <div className="text-white">{candidate.name}</div>
-                  <span className="text-[#AEC90A] font-bold">
-                    {candidate.votes} votes
-                  </span>
+                  <div className="text-white text-2xl">{candidate.name}</div>
+                  {!showInstruction && (
+                    <span className="text-[#AEC90A] font-bold text-2xl">{candidate.votes} votes</span>
+                  )}
                 </div>
               </div>
             ))}
