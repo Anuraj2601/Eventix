@@ -18,6 +18,8 @@ import { FaTimes } from 'react-icons/fa';
 import { FaUpload } from 'react-icons/fa'; // Import the upload icon
 import EditButton from '../../components/EditButton'; // Import the EditButton component
 import SponsorsService from '../../service/SponsorsService';
+import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 
 
 ReactModal.setAppElement('#root'); // For accessibility
@@ -217,7 +219,22 @@ View Details</button>
 
         <CardBody className="h-full relative">
             <div className="absolute top-2 right-2">
-                <EditButton />
+            <Link
+      to="/president/AddSponsor"
+      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
+    >
+      <AiOutlinePlus size={24} />
+    </Link>
+    <Link
+      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
+    >
+      <AiOutlineEdit size={24} />
+    </Link>
+    <Link
+      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
+    >
+      <AiOutlineDelete size={24} />
+    </Link>
             </div>
             <div className="relative h-full flex flex-col justify-center">
                 <Typography color="white" variant="h3" className="mb-2 text-center p-5">
