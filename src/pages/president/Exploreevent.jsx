@@ -17,11 +17,12 @@ import { FaHeart } from "react-icons/fa";
 import { FaTimes } from 'react-icons/fa';
 import { FaUpload } from 'react-icons/fa'; // Import the upload icon
 import EditButton from '../../components/EditButton'; // Import the EditButton component
+import SponsorsService from '../../service/SponsorsService';
 
 
 ReactModal.setAppElement('#root'); // For accessibility
 
-const ExploreEvent = () => {
+const Exploreevent = () => {
     const location = useLocation();
     const { name, image, date, clubName, clubImage, venue } = location.state;
     const [likes, setLikes] = useState(0);
@@ -34,11 +35,45 @@ const ExploreEvent = () => {
         sponsors: Array(5).fill({ name: '', type: 'Gold', amount: '' }), // Initialize sponsor fields
         iudApproval: 'not-approved',
         proofOfApproval: '',
-        budget: "1000 USD",  // Dummy budget value
-        purpose: "To enhance the skills of students through practical workshops.",  // Dummy purpose value
-        benefits: "Increased engagement in club activities and better preparation for industry challenges."  // Dummy benefits value
+        /* budget: "1000 USD", */  // Dummy budget value
+        /* purpose: "To enhance the skills of students through practical workshops.", */  // Dummy purpose value
+        /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */  // Dummy benefits value
      
     });
+
+    const [eventSponsor,setEventSponsonsors] = useState([]);
+
+    useEffect(() => {
+        fetchSponsors();
+    }, []);
+
+    const fetchSponsors = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await SponsorsService.getAllSponsors(token);
+            const sponsorsArray = response.content || [];
+            //console.log('Sponsors response:', response);
+            setEventSponsonsors(sponsorsArray);
+
+        } catch(error) {
+            console.error('Error  fetching users:', error);
+        }
+    };
+
+    /* const deleteSponsor = aync (sponsorId) => {
+        try {
+           const confirmDelete = window.confirm('Are you sure you want to delete this Sponsor?');
+
+           const token = localStorage.getItem('token');
+           if(confirmDelete) {
+            await SponsorsService.deleteSponsor(sponsorId, token);
+
+            fetchSponsors();
+           }
+        } catch(error) {
+            console.error('Error fetching users:', error);
+        }
+    }; */
   
     const [isFormValid, setIsFormValid] = useState(false);
 
@@ -178,6 +213,8 @@ View Details</button>
     <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} >
+
+
         <CardBody className="h-full relative">
             <div className="absolute top-2 right-2">
                 <EditButton />
@@ -187,49 +224,52 @@ View Details</button>
                     Sponsors
                 </Typography>
                 <div className="flex justify-between mb-4">
-                <div className="flex flex-col items-center ">
-                        <img src={platinum} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow" style={{ 
+                { (eventSponsor || []).map(eventS => (
+                <div className="flex flex-col items-center " key={eventS.sponsor_id}>
+                    
+                        <img src={eventS.company_logo} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
-                            Platinum Sponsor
+                            {eventS.sponsorType} Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> ))}
+                   {/*  <div className="flex flex-col items-center">
                         <img src={platinum1} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Platinum Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> */}
+                    {/* <div className="flex flex-col items-center">
                         <img src={gold} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Gold Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> */}
+                   {/*  <div className="flex flex-col items-center">
                         <img src={gold1} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Gold Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> */}
+                   {/*  <div className="flex flex-col items-center">
                         <img src={silver} alt="Silver Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Silver Sponsor
                         </Typography>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </CardBody>
+       
     </Card>
 </div>
 
@@ -384,4 +424,4 @@ Download Proposal                    </button>
     );
 };
 
-export default ExploreEvent;
+export default Exploreevent;
