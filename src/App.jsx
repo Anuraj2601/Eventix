@@ -229,7 +229,7 @@ const App = () => {
         <Route path='/president/inquiry' element={<Inquiriespresident/>}></Route>
         <Route path='/president/messages' element={<Messagespresident/>}></Route>
         <Route path='/president/profile' element={<Profilepresident/>}></Route>MainMeetingPresident
-        <Route path='/president/announcement' element={<MainMeetingPresident />}></Route> 
+        <Route path='/president/meeting' element={<MainMeetingPresident />}></Route> 
 
 
         
