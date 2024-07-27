@@ -25,18 +25,18 @@ const AddNewAnnouncementForm = () => {
                         
                         <form action="">
                         <div className="flex flex-col w-full">
-                            <div className="flex flex-col gap-3 w-96">
+                            <div className="flex flex-col gap-3 w-96 mt-4">
                             <label htmlFor="">Title</label>
                             <input type="text" placeholder='General Meeting' className='block p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'/>
                             </div>
-                            <div className="flex flex-col gap-3  w-96">
+                            <div className="flex flex-col gap-3  w-96 mt-4">
                             <label htmlFor="">Content</label>
                             <input type="text" placeholder='A meeting will be held...' className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'/>
                             </div>
-                            <div className="flex flex-col gap-3  w-96">
+                            <div className="flex flex-col gap-3  w-96 mt-4">
                             <label htmlFor="">Announcement Type</label>
-                            <div className="flex gap-10">
-                                <Radio name="type" label="Public" className="checked:bg-primary checked:border-primary" defaultChecked/>
+                            <div className="flex gap-10 text-white">
+                                <Radio name="type" label="Public" className="checked:bg-primary checked:border-primary " defaultChecked/>
                                 <Radio name="type" label="Only Members" className='checked:bg-primary checked:border-primary'  />
                             </div>
                             </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardBody,
@@ -12,6 +12,8 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import EditDeleteButton from './EditDeleteButton';
 import { FaEye } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa6";
+import AnnouncementService from '../service/AnnouncementService';
 
 const Announcement = () => {
   const [open, setOpen] = useState(false);
@@ -35,6 +37,32 @@ const Announcement = () => {
   const openAnnouncementForm = () => {
     navigate(`/preident/club/announcement/add`);
   }
+
+  const [announcements,setAnnouncements] = useState([]);
+
+  useEffect(() => {
+      fetchAnnouncements();
+  }, []);
+
+  const fetchAnnouncements = async () => {
+      try {
+          const token = localStorage.getItem('token');
+          const response = await AnnouncementService.getAllAnnouncements(token);
+          const announcementsArray = response.content || [];
+          //console.log('Sponsors response:', response);
+          setAnnouncements(announcementsArray);
+
+      } catch(error) {
+          console.error('Error fetching announcements:', error);
+      }
+  };
+
+  const parseCustomDate = (dateString) => {
+    if (dateString.length < 7) return 'Invalid date'; 
+    //console.log(dateString);
+  
+    return `${dateString[0]}-${dateString[1]}-${dateString[2]}`;
+  };
 
   const meetings = [
     {
@@ -63,6 +91,10 @@ const Announcement = () => {
     },
   ];
 
+
+
+  
+
   return (
     <>
       {isEditable && (
@@ -70,15 +102,15 @@ const Announcement = () => {
           className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold ml-[950px]"
           onClick={openAnnouncementForm}
         >
-          New Announcement
+          <FaPlus size={18} />New Announcement
         </Button>
       )}
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div>
-            {meetings.map(({ desc, date, to, id }, index) => (
+            {(announcements || []).map(announcement => (
               <div
-                key={index}
+                key={announcement.announcement_id}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
                 style={{ 
                   boxShadow: '0 8px 16px rgba(0, 0, 0, 0.6), 0 0 8px rgba(255, 255, 255, 0.1)' 
@@ -87,7 +119,7 @@ const Announcement = () => {
                 <div className="flex flex-col w-full">
                   <div className="flex flex-col mb-2">
                     <Typography color="white" variant="h6">
-                      {desc.split('\n').map((line, i) => (
+                      {announcement.content.split('\n').map((line, i) => (
                         <React.Fragment key={i}>
                           {line}
                           <br />
@@ -97,14 +129,14 @@ const Announcement = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <Typography className="text-[#AEC90A]" variant="h6">
-                      {date}
+                      {parseCustomDate(announcement.date_posted)}
                     </Typography>
                     {isEditable && (
-  <div className="flex items-center">
-    <FaEye className="text-[#AEC90A] mr-2" />
-    <Typography className="text-white">{to}</Typography>
-  </div>
-)}
+                      <div className="flex items-center">
+                        <FaEye className="text-[#AEC90A] mr-2" />
+                        <Typography className="text-white">{announcement.type}</Typography>
+                      </div>
+                    )}
 
                     {isEditable && (
                       <EditDeleteButton
