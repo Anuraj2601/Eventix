@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 import Sidebar from './Sidebar';  // Ensure you import Sidebar
 import Navbar from './Navbar';    // Ensure you import Navbar
+import SponsorsService from '../service/SponsorsService';
 
 const AddSponsor = () => {
+  const navigate = useNavigate();
+
   const [sponsorName, setSponsorName] = useState('');
   const [sponsorDescription, setSponsorDescription] = useState('');
   const [sponsorType, setSponsorType] = useState('');
@@ -12,23 +15,58 @@ const AddSponsor = () => {
   const [contactPerson, setContactPerson] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [proofFile, setProofFile] = useState(null);
+  const [errors, setErrors] = useState('');
 
   const handleFileChange = (e) => {
     setProofFile(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log({
+
+    const token = localStorage.getItem('token'); 
+    const formData = new FormData();
+
+    formData.append('data', new Blob([JSON.stringify({
       sponsorName,
       sponsorDescription,
       sponsorType,
       amount,
       contactPerson,
-      contactEmail,
-      proofFile,
-    });
+      contactEmail
+    })], { type: 'application/json' }));
+
+    if (proofFile) {
+      formData.append('file', proofFile);
+    }
+
+
+    try {
+      const response = await SponsorsService.addSponsor(
+        sponsorName,
+        sponsorDescription,
+        sponsorType,
+        amount,
+        contactPerson,
+        contactEmail,
+        proofFile,
+        token
+      );
+
+     
+      alert('Sponsor added successfully');
+      console.log('Sponsor added:', response);
+      navigate('/');
+
+    } catch(error) {
+      console.error("Error Adding Sponsor:", error);
+      
+      const errorMessages = error.response ? error.response.data.errors : { global: error.message };
+      setErrors(errorMessages);
+      setTimeout(() => setErrors({}), 5000);
+    }
+    
+   
   };
 
   return (
@@ -50,6 +88,28 @@ const AddSponsor = () => {
                 placeholder="Enter sponsor name"
                 required
               />
+            </div>
+
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="proofFile" className="text-lg font-semibold">Company Logo</label>
+              <input
+                type="file"
+                id="proofFile"
+                accept="image/*" // Accept only image files
+                onChange={handleFileChange}
+                className="p-2 bg-black text-white rounded"
+                required
+            />
+            {proofFile && (
+                <div className="mt-2">
+                    <p className="text-white">Selected file: {proofFile.name}</p>
+                    <img 
+                        src={URL.createObjectURL(proofFile)} 
+                        alt="Preview" 
+                        className="mt-2 w-32 h-32 object-cover rounded" 
+                    />
+                </div>
+            )}
             </div>
             
             <div className="flex flex-col space-y-2">
@@ -74,9 +134,9 @@ const AddSponsor = () => {
                 required
               >
                 <option value="">Select sponsor type</option>
-                <option value="Platinum">Platinum</option>
-                <option value="Gold">Gold</option>
-                <option value="Silver">Silver</option>
+                <option value="PLATINUM">Platinum</option>
+                <option value="GOLD">Gold</option>
+                <option value="SILVER">Silver</option>
               </select>
             </div>
 
