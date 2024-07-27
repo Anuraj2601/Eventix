@@ -10,7 +10,9 @@ class UsersService{
             return response.data;
 
         }catch(err){
-            throw err;
+            if (err.response && err.response.data) {
+            throw new Error(err.response.data.message);
+            }
         }
     }
 
