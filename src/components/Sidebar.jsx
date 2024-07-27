@@ -63,7 +63,7 @@ const Sidebar = () => {
               <FaPeopleGroup className="inline-block w-9 h-9 mt-1 -ml-0.5" />
             </Link>
           </li>
-          {currentPath.startsWith('/admin') ? null : (
+          {(currentPath.startsWith('/admin')  || currentPath.startsWith('/treasurer'))  ? null : (
             <li className={linkClass('/meeting')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
               <Link to={`/${baseUrl}/meeting`} className="px-3">
                 <IoVideocamOutline className="inline-block w-9 h-9 mt-1 -ml-0.5" />
@@ -84,7 +84,7 @@ const Sidebar = () => {
         <li className="w-28 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2">
           <a className="px-3">
             <Link to="/" onClick={handleLogout}>
-              <span className="text-[#AEC90A] hover:text-black mr-2 mt-6">Logout</span>
+              <span className=" hover:bg-[#AEC90A] hover:text-black mr-2 mt-6">Logout</span>
               <IoExitOutline className="inline-block w-6 h-6 mt-0" />
             </Link>
           </a>

@@ -57,7 +57,7 @@ const UpcomingEvent = () => {
             {
                 name: 'Gavel Event 1',
                 image: gavel,
-                deadline: "15 'th of Aug 2024",
+                deadline: "15.08.2024",
                 eventDate: "25 'th of Aug 2024",
                 time: "From 9 am to 4 pm",
                 location: "UCSC Main Hall"

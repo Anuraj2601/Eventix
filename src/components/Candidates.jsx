@@ -183,13 +183,21 @@ const Candidates = ({ activeTab }) => {
 
   return (
     <div className="w-full bg-neutral-900">
-      <Card className="w-full bg-neutral-900" >
-        <CardBody>
-          {Object.keys(displayMembers).map((position) =>
-            renderMembers(displayMembers[position], position)
-          )}
-        </CardBody>
-      </Card>
+     <Card className="w-full bg-neutral-900">
+  <CardBody>
+    {activeTab === "Selected" && (
+      <div className="flex justify-end mb-4">
+        <button className="px-4 py-2 bg-[#AEC90A] text-black font-bold rounded-full shadow-md hover:bg-[#8f9b1d] transition-colors">
+          Announce Final Candidates
+        </button>
+      </div>
+    )}
+    {Object.keys(displayMembers).map((position) =>
+      renderMembers(displayMembers[position], position)
+    )}
+  </CardBody>
+</Card>
+
     </div>
   );
 };

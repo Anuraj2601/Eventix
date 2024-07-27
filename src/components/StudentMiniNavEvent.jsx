@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IconButton } from '@material-tailwind/react';
 import { FaArrowRight, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { HiDocumentText } from "react-icons/hi2";
+import ReactModal from 'react-modal';
+
  
 //upcoming events of ieee
 import ieee1 from "../assets/events/madhack.png";
@@ -37,11 +40,16 @@ import acm6 from "../assets/events/reid2.jpg";
 import LikeButton from './LikeButton';
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
 
+ReactModal.setAppElement('#root');
+
+
 const ClubEvent = ({ club }) => {
   const [hoveredEvent, setHoveredEvent] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   
   // Check if the current path matches the specified routes
   const isAuthorizedUser = () => {
@@ -50,9 +58,33 @@ const ClubEvent = ({ club }) => {
            location.pathname.startsWith('/treasurer');
   };
 
+  const getButtonStyles = (status) => {
+    if (status === "Approved") {
+      return "";
+    } else {
+      return "bg-gray-400 text-white cursor-not-allowed";
+    }
+  };
+  
+  const getButtonDisabled = (status) => {
+    return status !== "Approved";
+  };
+   
   const handleEvent = () => {
     navigate(`/club/${club.club_name}/add-event`);
   };
+
+
+  const handleViewEvent = (event) => {
+    setSelectedEvent(event);
+    setModalIsOpen(true);
+  };
+
+  // Function to close the modal
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedEvent(null);
+  };  
 
   const handleExploreEvent = (event) => {
     let basePath;
@@ -61,6 +93,9 @@ const ClubEvent = ({ club }) => {
       case location.pathname.startsWith('/president'):
         basePath = '/president/club/event';
         break;
+        case location.pathname.startsWith('/student'):
+          basePath = '/student/club/event';
+          break;
       case location.pathname.startsWith('/secretary'):
         basePath = '/secretary/club/event';
         break;
@@ -73,9 +108,6 @@ const ClubEvent = ({ club }) => {
       case location.pathname.startsWith('/treasurer'):
         basePath = '/treasurer/club/event';
         break;
-        case location.pathname.startsWith('/student'):
-          basePath = '/student/club/event';
-          break;
       default:
         basePath = '/oc/club/event';
         break;
@@ -104,7 +136,7 @@ const ClubEvent = ({ club }) => {
       return {
         upcoming: [
           { name: "MadHack 3.0", image: ieee1, date: "25.08.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-          { name: "ReidExtreme 3.0", image: ieee2, date: "09.09.2024", venue: "S104 Hall", status: "Pending", link: "https://example.com/join-oc" },
+          { name: "ReidExtreme 3.0", image: ieee2, date: "09.09.2024", venue: "S104 Hall", status: "Approved", link: "https://example.com/join-oc" },
           { name: "Introductory Session", image: ieee3, date: "19.09.2024", venue: "S104 Hall", status: "Rejected", reason: "Budget not approved", link: "https://example.com/join-oc" },
           { name: "Revolux 3.0", image: ieee5, date: "29.09.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
         ],
@@ -147,18 +179,19 @@ const ClubEvent = ({ club }) => {
     }
   };
 
+
   const { upcoming, past } = getEvents();
 
   const getStatusIcon = (status) => {
     switch (status) {
       case "Approved":
-        return <FaCheckCircle className="text-green-500 text-4xl" />;
+        return <FaCheckCircle className="text-[#AEC90A] text-4xl" />;
       case "Rejected":
         return <FaTimesCircle className="text-red-500 text-4xl" />;
       case "Pending":
         return null;
       case "Completed":
-        return <FaCheckCircle className="text-[#AEC90A] text-4xl" />;
+        return <FaCheckCircle className="text-green-500 text-4xl" />;
       default:
         return null;
     }
@@ -207,22 +240,33 @@ const ClubEvent = ({ club }) => {
                     )}
                   </div>
                 </div>
-                <div className="w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center custom-card" style={{ backgroundColor: '#AEC90A', color: '#000' }}>
-                  <IconButton
-                    className="font-extrabold text-lg text-black"
-                    onClick={() => handleExploreEvent(event)}
-                  >
-                    <FaArrowRight />
-                  </IconButton>
-                </div>
+                {event.status === "Approved" && (
+  <div
+    className={`w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center ${getButtonStyles(event.status)}`}
+    style={{ backgroundColor: '#AEC90A', color: '#000' }}
+  >
+    <IconButton
+      onClick={() => handleExploreEvent(event)}
+      className="p-1"
+      disabled={getButtonDisabled(event.status)}
+    >
+      <FaArrowRight className="text-lg text-black" />
+    </IconButton>
+  </div>
+)}
+
+
                 {isAuthorizedUser() && hoveredIndex === index && (
                   <div className="absolute top-2 right-2 flex space-x-2">
-                    <IconButton className="text-white" onClick={() => handleEditEvent(event)}>
+                    <IconButton className="text-white bg-black" onClick={() => handleEditEvent(event)}>
                       <MdEdit size={20} />
                     </IconButton>
-                    <IconButton className="text-white" onClick={() => handleDeleteEvent(event)}>
+                    <IconButton className="text-white bg-black" onClick={() => handleDeleteEvent(event)}>
                       <MdDelete size={20} />
                     </IconButton>
+                    <IconButton className="text-white bg-black p-5" onClick={() => handleViewEvent(event)}>
+                    <HiDocumentText size={20} />                 </IconButton>
+                    
                   </div>
                 )}
               </div>
@@ -269,6 +313,33 @@ const ClubEvent = ({ club }) => {
           ))}
         </div>
       </div>
+
+      <ReactModal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Event Details"
+        className="modal"
+        overlayClassName="modal-overlay"
+      >
+        <div className="modal-content bg-neutral-900 text-white p-4 rounded-lg shadow-md">
+          {selectedEvent && (
+            <>
+              <h2 className="text-2xl font-semibold mb-4">{selectedEvent.name}</h2>
+              <img src={selectedEvent.image} alt={selectedEvent.name} className="w-full h-40 object-cover rounded-md mb-2" />
+              <p className="text-gray-300 mb-2">Date: {selectedEvent.date}</p>
+              <p className="text-gray-300 mb-2">Venue: {selectedEvent.venue}</p>
+              <p className="text-gray-300 mb-2">Status: {selectedEvent.status}</p>
+              {selectedEvent.reason && <p className="text-red-300 mb-2">Reason: {selectedEvent.reason}</p>}
+              <button
+                className="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg shadow-md mt-4"
+                onClick={closeModal}
+              >
+                Close
+              </button>
+            </>
+          )}
+        </div>
+      </ReactModal>
     </div>
   );
 };

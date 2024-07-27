@@ -15,7 +15,12 @@ import speakerImage from '../assets/speaker.jpg'; // Adjust path if needed
 
 const Posts = ({ post }) => {
     const location = useLocation();
-    const isStudentPage = location.pathname.startsWith('/student'); // Check if path starts with /student
+    const isStudentPage = [
+        '/admin', 
+        '/treasurer', 
+        '/student', 
+        '/member'
+      ].some(path => location.pathname.startsWith(path));
 
     return (
         <div className="flex items-center justify-center mb-8 p-8 -mt-10">
@@ -51,13 +56,19 @@ const Posts = ({ post }) => {
 };
 
 const NewsFeed = ({ posts }) => {
-
+    const location = useLocation();
+    const isStudentPage = [
+        '/admin', 
+        '/treasurer', 
+        '/student', 
+        '/member'
+      ].some(path => location.pathname.startsWith(path));
     
 
     return (
         <div className="bg-neutral-900 text-white min-h-screen relative">
             <div className='relative'>
-                {!window.location.pathname.startsWith('/student') && (
+            {!isStudentPage && (
                     <div className='flex justify-end mb-2'>
                         <button
                            

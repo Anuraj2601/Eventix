@@ -2,10 +2,81 @@ import React, { useState } from "react";
 import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
 import { Tabs, TabsHeader, TabsBody, Tab, TabPanel } from "@material-tailwind/react";
+import { FaDownload } from "react-icons/fa";
+import { IconButton } from '@material-tailwind/react';
+
+import { HiDocumentText } from "react-icons/hi2";
+
 import ieee1 from "../assets/events/madhack.png";
 import ieee2 from "../assets/events/reid.jpg";
 import ieee3 from "../assets/events/intro.jpg";
 import ieee4 from "../assets/events/ieeeday.jpg";
+import ieee5 from "../assets/events/revol.jpg";
+import ieee6 from "../assets/events/reid2.jpg";
+
+import rac1 from "../assets/events/trail.jpg";
+import rac2 from "../assets/events/snap.jpg";
+import rac3 from "../assets/events/dev.jpg";
+import rac4 from "../assets/events/sport.jpg";
+import rac5 from "../assets/events/gtech.jpg";
+import rac6 from "../assets/events/training.jpg";
+
+import acm1 from "../assets/events/8.jpg";
+import acm2 from "../assets/events/hour.jpg";
+import acm3 from "../assets/events/ballet.jpg";
+import acm4 from "../assets/events/discussion.jpg";
+import acm5 from "../assets/events/creative.jpg";
+import acm6 from "../assets/events/reid2.jpg";
+
+import p1 from "../assets/events/8.jpg";
+import p2 from "../assets/events/hour.jpg";
+import p3 from "../assets/events/ballet.jpg";
+import p4 from "../assets/events/discussion.jpg";
+import p5 from "../assets/events/creative.jpg";
+import p6 from "../assets/events/reid2.jpg";
+
+import ieeeImage from '../assets/clubs/ieee.png';
+import rotaractImage from '../assets/clubs/rotaract.png';
+import acmImage from '../assets/clubs/acm.png';
+import pahasaraImage from '../assets/clubs/pahasara1.png';
+import isacaImage from '../assets/clubs/isaca1.png';
+import wieImage from '../assets/clubs/wie.png';
+import msImage from '../assets/clubs/ms.png';
+import wicysImage from '../assets/clubs/wicys.png';
+import rekhaImage from '../assets/clubs/rekha.png';
+
+const eventImages = {
+  IEEE: [ieee1, ieee2, ieee3, ieee4, ieee5, ieee6],
+  Rotaract: [rac1, rac2, rac3, rac4, rac5, rac6],
+  ACM: [acm1, acm2, acm3, acm4, acm5, acm6],
+  
+
+  
+
+};
+
+// Club Images
+const clubImages = {
+  IEEE: ieeeImage,
+  Rotaract: rotaractImage,
+  ACM: acmImage,
+  Pahasara: pahasaraImage,
+  ISACA: isacaImage,
+  WIE: wieImage,
+  MS: msImage,
+  WICYS: wicysImage,
+  Rekha: rekhaImage,
+};
+
+// Function to get random event image
+// Function to get a random event image within a specified range
+const getRandomEventImage = (club, start = 0, end = 5) => {
+  const images = eventImages[club] || [];
+  // Ensure the end index does not exceed the length of the images array
+  const validEnd = Math.min(end, images.length - 1);
+  const range = images.slice(start, validEnd + 1);
+  return range[Math.floor(Math.random() * range.length)];
+};
 
 // Dialog Component
 const Dialog = ({ children, isOpen, onClose, title, primaryAction, secondaryAction, primaryActionClass, icon }) => (
@@ -41,78 +112,108 @@ const Dialog = ({ children, isOpen, onClose, title, primaryAction, secondaryActi
 );
 
 // RequestTable Component
+const generateRandomBudget = () => {
+  return Math.floor(Math.random() * (1000000 - 50000 + 1)) + 50000; // Random amount between 50,000 and 1,000,000
+};
+
+// Updated RequestTable Component
 const RequestTable = ({ type, onAccept, onReject }) => {
   const data = {
     all: [
-      { id: 1, president: "Kokul", club: "IEEE", event: "Madhack 3.0", date: "2024-09-15", venue: "Tech Park", image: "https://randomuser.me/api/portraits/men/4.jpg" },
-      { id: 2, president: "Jane", club: "CSI", event: "TechFest 4.0", date: "2024-10-22", venue: "Convention Center", image: "https://randomuser.me/api/portraits/women/4.jpg" },
-      { id: 3, president: "Doe", club: "IEEE", event: "Hackathon 2.0", date: "2024-11-05", venue: "Innovation Hub", image: "https://randomuser.me/api/portraits/men/5.jpg" },
-      { id: 4, president: "Alex", club: "Pahasara", event: "SpaceX Launch", date: "2024-12-12", venue: "Space Station", image: "https://randomuser.me/api/portraits/women/5.jpg" },
+      { id: 1, president: "Kokul", club: "IEEE", event: "Madhack 3.0", date: "2024-09-15", venue: "Tech Park", image: "https://randomuser.me/api/portraits/men/4.jpg", budget: generateRandomBudget() },
+      { id: 2, president: "Jane", club: "Rotaract", event: "TechFest 4.0", date: "2024-10-22", venue: "Convention Center", image: "https://randomuser.me/api/portraits/women/4.jpg", budget: generateRandomBudget() },
+      { id: 3, president: "Doe", club: "IEEE", event: "Hackathon 2.0", date: "2024-11-05", venue: "Innovation Hub", image: "https://randomuser.me/api/portraits/men/5.jpg", budget: generateRandomBudget() },
+      { id: 4, president: "Alex", club: "ACM", event: "SpaceX Launch", date: "2024-12-12", venue: "Space Station", image: "https://randomuser.me/api/portraits/women/5.jpg", budget: generateRandomBudget() },
     ],
     accepted: [
-      { id: 1, president: "Nina", club: "Rotaract", event: "AI Summit", date: "2024-09-30", venue: "AI Center", image: "https://randomuser.me/api/portraits/men/6.jpg" },
-      { id: 2, president: "Liam", club: "Rekha", event: "Robotics Expo", date: "2024-11-15", venue: "Expo Hall", image: "https://randomuser.me/api/portraits/women/6.jpg" },
+      { id: 1, president: "Nina", club: "Rotaract", event: "AI Summit", date: "2024-09-30", venue: "AI Center", image: "https://randomuser.me/api/portraits/men/6.jpg", budget: generateRandomBudget() },
+      { id: 2, president: "Liam", club: "ACM", event: "Robotics Expo", date: "2024-11-15", venue: "Expo Hall", image: "https://randomuser.me/api/portraits/women/6.jpg", budget: generateRandomBudget() },
     ],
     rejected: [
-      { id: 1, president: "Sophia", club: "Wie of IEEE", event: "Quantum Computing", date: "2024-10-01", venue: "Quantum Lab", image: "https://randomuser.me/api/portraits/men/7.jpg" },
-      { id: 2, president: "John", club: "ACM", event: "BioTech Conference", date: "2024-11-25", venue: "BioTech Center", image: "https://randomuser.me/api/portraits/women/7.jpg" },
+      { id: 1, president: "Sophia", club: "IEEE", event: "Quantum Computing", date: "2024-10-01", venue: "Quantum Lab", image: "https://randomuser.me/api/portraits/men/7.jpg", budget: generateRandomBudget() },
+      { id: 2, president: "John", club: "ACM", event: "BioTech Conference", date: "2024-11-25", venue: "BioTech Center", image: "https://randomuser.me/api/portraits/women/7.jpg", budget: generateRandomBudget() },
     ],
   };
 
+  const getButtonClass = (actionType, rowStatus) => {
+    const baseClass = "px-3 py-1 rounded-full";
+    if (rowStatus === actionType) {
+      return `${baseClass} text-white border border-transparent cursor-not-allowed`; // Disabled button style
+    }
+    return actionType === "accept"
+      ? `${baseClass} text-[#AEC90A] border-[#AEC90A] border`
+      : `${baseClass} text-[#D32F2F] border border-[#D32F2F]`;
+  };
+
   return (
-    <div className="bg-black rounded-xl p-3 h-full overflow-auto text-white">
-      <table className="w-full">
-       
-        <tbody>
-          {data[type].map((row) => (
-            <tr key={row.id} className="  text-center">
-              <td className="p-3">
-                <div className="flex items-center">
-                  <img
-                    src={row.image}
-                    alt="President"
-                    className="w-12 h-12 rounded-full mr-3"
-                  />
-                  <span >{row.president}<br /></span>
-                  <span>president of {row.club}</span>
-                </div>
-              </td>
-              
-              
-               
-             
-              <td className="p-3 "> for <img
-                  src={ieee1} // Placeholder club image
-                  alt="Club Logo"
-                  className="w-40 h-20 rounded-md"
-                />{row.event}</td>
-              <td className="p-3">{row.date}</td>
-              <td className="p-3">{row.venue}</td>
-              <td className="p-3">
-                <a href="#" className="underline">View Proposal</a>
-              </td>
-              <td className="flex justify-between items-center p-3 space-x-4 m-3">
-                <button
-                  className="text-[#AEC90A] border-[#AEC90A]  border px-3 py-1 rounded-full"
-                  onClick={() => onAccept(row)}
-                >
-                  Accept
-                </button>
-                <button
-                  className="text-[#D32F2F] border border-[#D32F2F] px-3 py-1 rounded-full"
-                  onClick={() => onReject(row)}
-                >
-                  Reject
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="overflow-auto rounded-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {data[type].map((row) => (
+          <div
+            key={row.id}
+            className="bg-black rounded-2xl p-4 flex flex-col items-center"
+            style={{ 
+              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+            }}
+          >
+            <div className="relative flex flex-col items-center mb-4">
+              <img
+                src={getRandomEventImage(row.club)}
+                alt="Event"
+                className="w-72 h-64 rounded-2xl mb-2 p-2"
+                style={{ 
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                }}
+              />
+              <span className="text-white mb-2">{row.event}</span>
+            </div>
+
+            <div className="flex flex-col items-center mb-4">
+              <img
+                src={clubImages[row.club]}
+                alt="Club Logo"
+                className="w-24 h-24 rounded-full mb-4"
+              /> 
+              <img
+                src={row.image}
+                alt="President"
+                className="w-24 h-24 rounded-full mb-2"
+              /> 
+              <span className="text-white">President {row.president}</span>
+            </div>
+
+            <div className="flex flex-col items-center mb-4">
+              <span className="text-white">Date: {row.date}</span>
+              <span className="text-white">Venue: {row.venue}</span>
+              <span className="text-white">Budget: LKR {row.budget.toLocaleString()}</span>
+            </div>
+
+            <div className="flex items-center mb-4">
+              <IconButton>
+                <FaDownload size={20} className="text-white cursor-pointer mr-4" />
+              </IconButton>
+            </div>
+
+            <div className="flex flex-col space-y-2">
+              <button
+                className={getButtonClass("accept")}
+                onClick={() => onAccept(row)}
+              >
+                {type === "accepted" ? "Accepted" : "Accept"}
+              </button>
+              <button
+                className={getButtonClass("reject")}
+                onClick={() => onReject(row)}
+              >
+                {type === "rejected" ? "Rejected" : "Reject"}
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
-
 // Main Requests Component
 const Requests = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -152,10 +253,11 @@ const Requests = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col  mt-6">
       <Tabs value={activeTab} className="flex flex-col flex-1">
         <TabsHeader
             className="rounded-none bg-transparent p-0 w-1/4"
+            
             indicatorProps={{
                 className:
                     "bg-transparent shadow-none rounded-none",
@@ -166,6 +268,7 @@ const Requests = () => {
               key={value}
               value={value}
               onClick={() => setActiveTab(value)}
+              
               className={activeTab === value ? "text-[#AEC90A] bg-black rounded-full" : ""}
             >
               {label}

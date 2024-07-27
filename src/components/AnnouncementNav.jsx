@@ -14,7 +14,7 @@ const AnnouncementNav = () => {
   const location = useLocation(); // Get the current path
 
   // Check if the path starts with one of the specified routes
-  const isEditablePage = ['/treasurer', '/secretary', '/president'].some(path => location.pathname.startsWith(path));
+  const isEditablePage = [ '/secretary', '/president'].some(path => location.pathname.startsWith(path));
 
   const data = [
     {
@@ -23,13 +23,13 @@ const AnnouncementNav = () => {
       desc: "The Event registration link will be available soon.",
       editable: isEditablePage, // Set editable based on the page
     },
-    ...(!isEditablePage
+    ...(isEditablePage
       ? [
           {
             label: "Meetings",
             value: "Meeting",
             desc: "There will be a meeting for all the OC members on 24th August 2024",
-            editable: true,
+            editable: isEditablePage,
           },
         ]
       : []),
@@ -38,8 +38,9 @@ const AnnouncementNav = () => {
   return (
     <Tabs value={activeTab}>
       <TabsHeader
-        className={`rounded-none bg-transparent p-0 ${isEditablePage ? 'grid grid-cols-1' : 'grid grid-cols-3'}`}
-        indicatorProps={{
+ className={`rounded-none bg-transparent p-0 ${
+  data.length === 1 ? 'justify-center' : 'flex'
+}`}        indicatorProps={{
           className:
             "mt-8 absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 rounded-full transition-opacity bg-transparent border-b-[8px] border-[#AEC90A] shadow-none",
         }}
@@ -57,7 +58,7 @@ const AnnouncementNav = () => {
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody className="overflow-y-auto text-white">
+      <TabsBody className="overflow-y-auto text-white p-2">
         {data.map(({ value, desc, editable }) => (
           <TabPanel
             key={value}
