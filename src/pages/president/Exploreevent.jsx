@@ -79,7 +79,11 @@ const Exploreevent = () => {
   
     const [isFormValid, setIsFormValid] = useState(false);
 
-    const [budget, setBudget] = useState('1000 USD');
+    const [budget, setBudget] = useState('100000 Rupees');
+    const [purpose, setPurpose] = useState('To enhance the skills of students through practical workshops.');
+    const [benefits, setBenefits] = useState('Increased engagement in club activities and better preparation for industry challenges.');
+
+
 
     useEffect(() => {
         const initialLikes = Math.floor(Math.random() * 100) + 1;
@@ -218,7 +222,7 @@ View Details</button>
 
 
         <CardBody className="h-full relative">
-            <div className="absolute top-2 right-2">
+            <div className="absolute top-2 right-2  space-2">
             <Link
       to="/president/AddSponsor"
       className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
@@ -383,7 +387,7 @@ View Details</button>
         <input
           type="text"
           name="purpose"
-          value={formFields.purpose}
+          value={purpose}
           onChange={handleInputChange}
           className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
         />
@@ -393,41 +397,12 @@ View Details</button>
         <input
           type="text"
           name="benefits"
-          value={formFields.benefits}
+          value={benefits}
           onChange={handleInputChange}
           className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
         />
       </div>
-                <div className="mb-4 text-center">
-                    <label className="block mb-2 text-center">Sponsors:</label>
-                    {formFields.sponsors.map((sponsor, index) => (
-                        <div key={index} className="mb-2">
-                            <input
-                                type="text"
-                                value={sponsor.name}
-                                onChange={(e) => handleSponsorChange(index, 'name', e.target.value)}
-                                placeholder={`Sponsor ${index + 1} Name`}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded-full mb-2 text-center"
-                            />
-                            <select
-                                value={sponsor.type}
-                                onChange={(e) => handleSponsorChange(index, 'type', e.target.value)}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded-full mb-2 text-center"
-                            >
-                                <option value="Gold">Gold</option>
-                                <option value="Silver">Silver</option>
-                                <option value="Platinum">Platinum</option>
-                            </select>
-                            <input
-                                type="number"
-                                value={sponsor.amount}
-                                onChange={(e) => handleSponsorChange(index, 'amount', e.target.value)}
-                                placeholder={`Amount for Sponsor ${index + 1}`}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded-full text-center"
-                            />
-                        </div>
-                    ))}
-                </div></div>
+                </div>
                 <div className="flex justify-center">
                     <button
                         onClick={() => {/* Handle send request for approval */}}

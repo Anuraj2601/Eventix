@@ -99,16 +99,25 @@ const Dashboard = () => {
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
         <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto">
-          <div className="w-2/4 px-4 ml-4 overflow-y-auto">
-            {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
-            {events.length > 0 && events.map(event => <Event event={event} key={event.id} />)}
-          </div>
-          <div className="w-2/4 p-2 overflow-y-auto">
-            <Upcoming />
-          </div>
+  <div className="w-2/4 px-2 ml-2 overflow-y-auto">
+    {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
+    {events.length > 0 && events.map(event => <Event event={event} key={event.id} />)}
+  </div>
+  <div className="w-2/4 flex flex-col py-1 h-full">
+    <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl ">
+      <Upcoming />
+    </div>
+    <div className="flex-1 p-6 overflow-y-auto rounded-2xl mb-4" style={{ 
+      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
+      minHeight: '200px' // Adjust if needed
+    }}>
+      <h2 className="text-[#AEC90A] text-lg font-bold">Additional Content</h2>
+    </div>
+  </div>
+</div>
+
         </div>
       </div>
-    </div>
   );
 }
 
