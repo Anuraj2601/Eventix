@@ -19,6 +19,7 @@ import Announcementpresident from './components/MainAnnouncement';
 import Inquiriespresident from './components/Inquiry';
 import Messagespresident from './components/Message';
 import Profilepresident from './components/Profile';
+import MainMeetingPresident from './components/MainMeeting';
 
 
 
@@ -227,7 +228,8 @@ const App = () => {
         <Route path='/president/announcement' element={<Announcementpresident />}></Route> 
         <Route path='/president/inquiry' element={<Inquiriespresident/>}></Route>
         <Route path='/president/messages' element={<Messagespresident/>}></Route>
-        <Route path='/president/profile' element={<Profilepresident/>}></Route>
+        <Route path='/president/profile' element={<Profilepresident/>}></Route>MainMeetingPresident
+        <Route path='/president/announcement' element={<MainMeetingPresident />}></Route> 
 
 
         
