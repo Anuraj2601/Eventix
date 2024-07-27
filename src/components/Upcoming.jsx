@@ -53,7 +53,7 @@ const Upcoming = () => {
 
   return (
     <div className=" p-2 rounded-md relative">
-      <h2 className="text-[#AEC90A] text-sm font-bold">Upcoming </h2>
+      <h2 className="text-white text-sm font-bold -mt-2">Upcoming </h2>
       <div className="flex flex-wrap overflow-y-auto -mx-2">
         {upcomingItems.map(item => (
           <div 
@@ -67,7 +67,7 @@ const Upcoming = () => {
                 <img 
                   src={item.image} 
                   alt={item.name} 
-                  className="w-full h-60  object-cover" 
+                  className="w-full h-60  object-cover  custom-3d-shadow " 
                   style={{ 
                     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                   }}
