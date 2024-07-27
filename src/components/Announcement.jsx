@@ -35,7 +35,7 @@ const Announcement = () => {
   };
 
   const openAnnouncementForm = () => {
-    navigate(`/preident/club/announcement/add`);
+    navigate(`/president/club/announcement/add`);
   }
 
   const [announcements,setAnnouncements] = useState([]);
