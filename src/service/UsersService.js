@@ -10,18 +10,17 @@ class UsersService{
             return response.data;
 
         }catch(err){
-            throw err;
+            if (err.response && err.response.data) {
+            throw new Error(err.response.data.message);
+            }
         }
     }
 
-    static async register(userData, token) {
+    static async register(firstname,lastname,email,password,regNo,role) {
         try{
 
-            const response = await axios.post(`${UsersService.BASE_URL}/auth/register`, userData,
-                {
-                    headers: {Authorization: `Bearer ${token}`}
-                }
-            )
+            const response = await axios.post(`${UsersService.BASE_URL}/auth/register`, {firstname, lastname, email, password, regNo, role})
+            console.log("data passed")
             return response.data;
             
         }catch(err){

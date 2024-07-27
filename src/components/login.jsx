@@ -12,7 +12,10 @@ const Login = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [errors, setErrors] = useState({
+        email: '',
+        password:''
+    });
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -42,16 +45,17 @@ const Login = () => {
         if (!password) newErrors.password = "Password is required";
         else if (!passwordRegex.test(password)) newErrors.password = "Password must be at least 8 characters long and contain both letters and numbers";
 
-        return newErrors;
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validationErrors = validate();
-        if (Object.keys(validationErrors).length > 0) {
-            setError(Object.values(validationErrors).join(', '));
+       /*  const validationErrors = */ if(validate()) {
+        /* if (Object.keys(validationErrors).length > 0) {
+            setErrors(Object.values(validationErrors).join(', '));
             return;
-        }
+        } */
 
         try {
 
@@ -74,15 +78,19 @@ const Login = () => {
                 }
 
             } else {
-                setError(userData.message);
+                /* setError(userData.message); */
+                setErrors({ ...errors, global: userData.message });
             }
         } catch (error) {
             console.log(error);
-            setError(error.message);
+            /* setError(error.message); */
+            setErrors({ ...errors, global: error.message });
             setTimeout(() => {
-                setError('');
+                /* setError(''); */
+                setErrors({ ...errors, global: '' });
             }, 5000);
         }
+    }
     };
 
     return (
@@ -99,7 +107,7 @@ const Login = () => {
             {/* Right Side */}
             <div className="w-1/2 bg-dark-background flex flex-col justify-center px-10 border-t border-r border-b border-white border-opacity-30">
                 <form onSubmit={handleSubmit} className="space-y-6 mx-auto w-[60%]">
-                    {error && <p className='error-message text-red-700'>{error}</p>}
+                    {errors.global && <p className='error-message text-red-700'>{errors.global}</p>}
                     <div>
                         <label htmlFor="username" className="block text-white text-sm mb-4">User Name</label>
                         <input
@@ -111,7 +119,7 @@ const Login = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        {error && error.includes('Email') && <p className='text-red-500 text-sm'>{error}</p>}
+                        {errors.email /* && error.includes('Email') */ && <p className='text-red-500 text-sm'>{errors.email}</p>}
                     </div>
 
                     <div>
@@ -130,7 +138,7 @@ const Login = () => {
                                 {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </span>
                         </div>
-                        {error && error.includes('Password') && <p className='text-red-500 text-sm'>{error}</p>}
+                        {errors.password /* && error.includes('Password') */ && <p className='text-red-500 text-sm'>{errors.password}</p>}
                     </div>
 
                     <div className='mt-10'>

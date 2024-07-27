@@ -54,158 +54,152 @@ const ProfileUpdatePage = () => {
   return (
     <div className="fixed inset-0 flex">
       <Sidebar className="flex-shrink-0" />
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 overflow-hidden">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="flex-1 p-6 h-screen bg-neutral-900 text-white overflow-y-auto">
+        <div className="w-full p-6 h-screen bg-neutral-900 text-white overflow-y-auto">
           <h1 className="text-3xl font-bold mb-6 text-center">Your Profile</h1>
-          <div className="bg-neutral-900 p-6 rounded-lg shadow-md">
-            <div className="flex items-center mb-6">
-              <div className="relative w-40 h-40 ml-8 items-center">
-                <img
-                  src={profileImage || 'https://randomuser.me/api/portraits/men/73.jpg'}
-                  alt="Profile"
-                  className="w-full h-full rounded-full object-cover"
-                  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                />
-                <label
-                  htmlFor="profileImage"
-                  className="absolute bottom-0 right-0 bg-black text-white p-2 rounded-full cursor-pointer"
-                >
-                  <FaUpload />
-                  <input
-                    id="profileImage"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleProfileImageChange}
-                    className="hidden"
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-neutral-900 rounded-lg shadow-md">
+              <div className="flex items-center mb-6">
+                <div className="relative w-40 h-40 ml-8 items-center">
+                  <img
+                    src={profileImage || 'https://randomuser.me/api/portraits/men/73.jpg'}
+                    alt="Profile"
+                    className="w-full h-full rounded-full object-cover"
+                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
                   />
-                </label>
-              </div>
-              <div className="ml-8">
-                <h2 className="text-xl font-semibold">{`${firstName} ${lastName}`}</h2>
-                <p className="text-white">{yearOfStudy}</p>
-              </div>
-            </div>
-            <div className="ml-8 mb-6">
-              <label className="block text-white mb-2">Bio</label>
-              <textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                placeholder="Tell us about yourself..."
-                className="w-full h-32 p-2 bg-black rounded-lg border-none outline-none"
-                style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-              />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 ml-8">
-              <div className="mb-6">
-                <label className="block text-white mb-2">First Name</label>
-                <input
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full p-2 bg-black rounded-lg border-none outline-none"
-                  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-white mb-2">Last Name</label>
-                <input
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="w-full p-2 bg-black rounded-lg border-none outline-none"
-                  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-white mb-2">Mobile Number</label>
-                <input
-                  type="text"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
-                  className="w-full p-2 bg-black rounded-lg border-none outline-none"
-                  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-white mb-2">Student Email</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-2 bg-black rounded-lg border-none outline-none"
-                  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-white mb-2">Registration Number</label>
-                <input
-                  type="text"
-                  value={regNo}
-                  onChange={(e) => setRegNo(e.target.value)}
-                  className="w-full p-2 bg-black rounded-lg border-none outline-none"
-                  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-white mb-2">Year of Study</label>
-                <input
-                  type="text"
-                  value={yearOfStudy}
-                  onChange={(e) => setYearOfStudy(e.target.value)}
-                  className="w-full p-2 bg-black rounded-lg border-none outline-none"
-                  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-white mb-2">Hobby</label>
-                <input
-                  type="text"
-                  value={hobby}
-                  onChange={(e) => setHobby(e.target.value)}
-                  className="w-full p-2 bg-black rounded-lg border-none outline-none"
-                  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                />
-              </div>
-            </div>
-            
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold text-center mb-4">Participated Clubs</h2>
-              <div className="flex flex-wrap justify-center gap-4">
-                {participatedClubs.map((club, index) => (
-                  <div key={index} className="w-40 h-40  rounded-lg p-4 text-center">
-                    <img
-                      src={club.image}
-                      alt={club.name}
-                      className="w-32 h-32 object-cover rounded-full mb-2"
-                      style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                  <label
+                    htmlFor="profileImage"
+                    className="absolute bottom-0 right-0 bg-black text-white p-2 rounded-full cursor-pointer"
+                  >
+                    <FaUpload />
+                    <input
+                      id="profileImage"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProfileImageChange}
+                      className="hidden"
                     />
-                    <h3 className="text-white text-lg mb-1">{club.name}</h3>
-                    <p className="text-white">{club.position}</p>
-                  </div>
-                ))}
+                  </label>
+                </div>
+                <div className="ml-8">
+                  <h2 className="text-xl font-semibold">{`${firstName} ${lastName}`}</h2>
+                  <p className="text-white">{yearOfStudy}</p>
+                </div>
+              </div>
+              <div className="ml-8 mb-6">
+                <label className="block text-white mb-2">Bio</label>
+                <textarea
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="Tell us about yourself..."
+                  className="w-full h-32 p-2 bg-black rounded-lg border-none outline-none"
+                  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 ml-8">
+                <div className="mb-6">
+                  <label className="block text-white mb-2">First Name</label>
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full p-2 bg-black rounded-lg border-none outline-none"
+                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                  />
+                </div>
+                <div className="mb-6">
+                  <label className="block text-white mb-2">Last Name</label>
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="w-full p-2 bg-black rounded-lg border-none outline-none"
+                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                  />
+                </div>
+                
+                <div className="mb-6">
+                  <label className="block text-white mb-2">Student Email</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full p-2 bg-black rounded-lg border-none outline-none"
+                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                  />
+                </div>
+                <div className="mb-6">
+                  <label className="block text-white mb-2">Registration Number</label>
+                  <input
+                    type="text"
+                    value={regNo}
+                    onChange={(e) => setRegNo(e.target.value)}
+                    className="w-full p-2 bg-black rounded-lg border-none outline-none"
+                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                  />
+                </div>
+                <div className="mb-6">
+                  <label className="block text-white mb-2">Year of Study</label>
+                  <input
+                    type="text"
+                    value={yearOfStudy}
+                    onChange={(e) => setYearOfStudy(e.target.value)}
+                    className="w-full p-2 bg-black rounded-lg border-none outline-none"
+                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                  />
+                </div>
+                <div className="mb-6">
+                  <label className="block text-white mb-2">Hobby</label>
+                  <input
+                    type="text"
+                    value={hobby}
+                    onChange={(e) => setHobby(e.target.value)}
+                    className="w-full p-2 bg-black rounded-lg border-none outline-none"
+                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                  />
+                </div>
+               
               </div>
             </div>
-            
-            <div className="mb-6 mt-28">
-              <h2 className="text-xl font-semibold text-center mb-4">Participated Events</h2>
-              <div className="flex flex-wrap justify-center gap-4">
-                {participatedEvents.map((event, index) => (
-                  <div key={index} className="w-96  rounded-lg p-4 text-center">
-                    <img
-                      src={event.image}
-                      alt={event.eventName}
-                      className="w-full h-64 object-cover rounded-lg mb-2"
-                      style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                    />
-                    <h3 className="text-white text-lg mb-1">{event.eventName}</h3>
-                    <p className="text-white">{event.team}</p>
-                  </div>
-                ))}
-              </div>
+
+            <div className=" p-6 rounded-lg overflow-y-auto lg:h-[calc(100vh)]">
+            <h2 className="text-xl font-semibold mb-4 text-center">Participated Events</h2>
+            <div className="grid grid-cols-1  gap-4">
+              {participatedEvents.map((event, index) => (
+                <div key={index} className=" p-4 rounded-lg shadow-md">
+                  <img src={event.image} alt={event.eventName}  className="w-full h-72 object-cover custom-3d-shadow rounded-lg mb-2"  style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }} />
+                  <h3 className="text-lg font-semibold">{event.eventName}</h3>
+                  <p className="text-white">Team {event.team}</p>
+                </div>
+              ))}
+            </div>
+             
             </div>
           </div>
+
+          <div className="w-full  p-6 rounded-lg  mt-6" style={{ 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+          }}>
+  <h2 className="text-xl font-semibold mb-4 text-center">Participated Clubs</h2>
+  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 items-center">
+    {participatedClubs.map((club, index) => (
+      <div key={index} className="p-4 rounded-lg flex flex-col items-center">
+        <img src={club.image} alt={club.name} className="w-40 h-40 object-cover custom-card rounded-full mb-2" 
+        style={{ 
+          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+        }}/>
+        <h3 className="text-lg font-semibold text-center">{club.name}</h3>
+        <p className="text-white text-center">{club.position}</p>
+      </div>
+    ))}
+  </div>
+</div>
+
+
         </div>
       </div>
     </div>

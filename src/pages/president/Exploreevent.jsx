@@ -17,11 +17,14 @@ import { FaHeart } from "react-icons/fa";
 import { FaTimes } from 'react-icons/fa';
 import { FaUpload } from 'react-icons/fa'; // Import the upload icon
 import EditButton from '../../components/EditButton'; // Import the EditButton component
+import SponsorsService from '../../service/SponsorsService';
+import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 
 
 ReactModal.setAppElement('#root'); // For accessibility
 
-const ExploreEvent = () => {
+const Exploreevent = () => {
     const location = useLocation();
     const { name, image, date, clubName, clubImage, venue } = location.state;
     const [likes, setLikes] = useState(0);
@@ -34,15 +37,53 @@ const ExploreEvent = () => {
         sponsors: Array(5).fill({ name: '', type: 'Gold', amount: '' }), // Initialize sponsor fields
         iudApproval: 'not-approved',
         proofOfApproval: '',
-        budget: "1000 USD",  // Dummy budget value
-        purpose: "To enhance the skills of students through practical workshops.",  // Dummy purpose value
-        benefits: "Increased engagement in club activities and better preparation for industry challenges."  // Dummy benefits value
+        /* budget: "1000 USD", */  // Dummy budget value
+        /* purpose: "To enhance the skills of students through practical workshops.", */  // Dummy purpose value
+        /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */  // Dummy benefits value
      
     });
+
+    const [eventSponsor,setEventSponsonsors] = useState([]);
+
+    useEffect(() => {
+        fetchSponsors();
+    }, []);
+
+    const fetchSponsors = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await SponsorsService.getAllSponsors(token);
+            const sponsorsArray = response.content || [];
+            //console.log('Sponsors response:', response);
+            setEventSponsonsors(sponsorsArray);
+
+        } catch(error) {
+            console.error('Error  fetching users:', error);
+        }
+    };
+
+    /* const deleteSponsor = aync (sponsorId) => {
+        try {
+           const confirmDelete = window.confirm('Are you sure you want to delete this Sponsor?');
+
+           const token = localStorage.getItem('token');
+           if(confirmDelete) {
+            await SponsorsService.deleteSponsor(sponsorId, token);
+
+            fetchSponsors();
+           }
+        } catch(error) {
+            console.error('Error fetching users:', error);
+        }
+    }; */
   
     const [isFormValid, setIsFormValid] = useState(false);
 
-    const [budget, setBudget] = useState('1000 USD');
+    const [budget, setBudget] = useState('100000 Rupees');
+    const [purpose, setPurpose] = useState('To enhance the skills of students through practical workshops.');
+    const [benefits, setBenefits] = useState('Increased engagement in club activities and better preparation for industry challenges.');
+
+
 
     useEffect(() => {
         const initialLikes = Math.floor(Math.random() * 100) + 1;
@@ -178,58 +219,78 @@ View Details</button>
     <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} >
+
+
         <CardBody className="h-full relative">
-            <div className="absolute top-2 right-2">
-                <EditButton />
+            <div className="absolute top-2 right-2  space-2">
+            <Link
+      to="/president/AddSponsor"
+      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
+    >
+      <AiOutlinePlus size={24} />
+    </Link>
+    <Link
+      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
+    >
+      <AiOutlineEdit size={24} />
+    </Link>
+    <Link
+      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
+    >
+      <AiOutlineDelete size={24} />
+    </Link>
             </div>
             <div className="relative h-full flex flex-col justify-center">
                 <Typography color="white" variant="h3" className="mb-2 text-center p-5">
                     Sponsors
                 </Typography>
                 <div className="flex justify-between mb-4">
-                <div className="flex flex-col items-center ">
-                        <img src={platinum} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow" style={{ 
+                { (eventSponsor || []).map(eventS => (
+                <div className="flex flex-col items-center " key={eventS.sponsor_id}>
+                    
+                        <img src={eventS.company_logo} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
-                            Platinum Sponsor
+                            {eventS.sponsorType} Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> ))}
+                   {/*  <div className="flex flex-col items-center">
                         <img src={platinum1} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Platinum Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> */}
+                    {/* <div className="flex flex-col items-center">
                         <img src={gold} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Gold Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> */}
+                   {/*  <div className="flex flex-col items-center">
                         <img src={gold1} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Gold Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> */}
+                   {/*  <div className="flex flex-col items-center">
                         <img src={silver} alt="Silver Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Silver Sponsor
                         </Typography>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </CardBody>
+       
     </Card>
 </div>
 
@@ -326,7 +387,7 @@ View Details</button>
         <input
           type="text"
           name="purpose"
-          value={formFields.purpose}
+          value={purpose}
           onChange={handleInputChange}
           className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
         />
@@ -336,41 +397,12 @@ View Details</button>
         <input
           type="text"
           name="benefits"
-          value={formFields.benefits}
+          value={benefits}
           onChange={handleInputChange}
           className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
         />
       </div>
-                <div className="mb-4 text-center">
-                    <label className="block mb-2 text-center">Sponsors:</label>
-                    {formFields.sponsors.map((sponsor, index) => (
-                        <div key={index} className="mb-2">
-                            <input
-                                type="text"
-                                value={sponsor.name}
-                                onChange={(e) => handleSponsorChange(index, 'name', e.target.value)}
-                                placeholder={`Sponsor ${index + 1} Name`}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded-full mb-2 text-center"
-                            />
-                            <select
-                                value={sponsor.type}
-                                onChange={(e) => handleSponsorChange(index, 'type', e.target.value)}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded-full mb-2 text-center"
-                            >
-                                <option value="Gold">Gold</option>
-                                <option value="Silver">Silver</option>
-                                <option value="Platinum">Platinum</option>
-                            </select>
-                            <input
-                                type="number"
-                                value={sponsor.amount}
-                                onChange={(e) => handleSponsorChange(index, 'amount', e.target.value)}
-                                placeholder={`Amount for Sponsor ${index + 1}`}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded-full text-center"
-                            />
-                        </div>
-                    ))}
-                </div></div>
+                </div>
                 <div className="flex justify-center">
                     <button
                         onClick={() => {/* Handle send request for approval */}}
@@ -384,4 +416,4 @@ Download Proposal                    </button>
     );
 };
 
-export default ExploreEvent;
+export default Exploreevent;

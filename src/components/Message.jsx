@@ -87,7 +87,7 @@ const InquiryPage = () => {
       <div className="flex-1 flex flex-col">
         <Navbar className="sticky top-0 z-10 bg-neutral-900 text-white " />
         <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
-        <div className="w-1/4  p-2 custom-3d-shadow rounded-2xl overflow-y-auto">
+        <div className="w-1/6   p-2 custom-3d-shadow rounded-2xl overflow-y-auto">
             <h2 className="text-xl mb-4 text-center">Messages</h2>
             <div className="flex flex-col space-y-2">
               {inquiries.slice(0, 2).map((inquiry, index) => (
