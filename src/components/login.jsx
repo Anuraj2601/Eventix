@@ -76,15 +76,33 @@ const Login = () => {
                 {
                     navigate('/president/dashboard')
                 }
+                if(userData.role == 'member')
+                {
+                    navigate('/member/dashboard')
+                }
+                if(userData.role == 'oc')
+                {
+                    navigate('/oc/dashboard')
+                }
 
             } else {
                 /* setError(userData.message); */
+                alert("Bad Credentials");
                 setErrors({ ...errors, global: userData.message });
             }
         } catch (error) {
-            console.log(error);
-            /* setError(error.message); */
-            setErrors({ ...errors, global: error.message });
+            console.error("Error processing User:", error);
+
+            // Extract the error message
+            const errorMessage = error.response
+              ? (error.response.data.message || error.response.data.errors || error.message)
+              : error.message;
+      
+            // Display error message using alert
+            alert(`Error: ${errorMessage}`);
+      
+            // Update state with error messages
+            setErrors({ ...errors, global: errorMessage });
             setTimeout(() => {
                 /* setError(''); */
                 setErrors({ ...errors, global: '' });
@@ -107,7 +125,7 @@ const Login = () => {
             {/* Right Side */}
             <div className="w-1/2 bg-dark-background flex flex-col justify-center px-10 border-t border-r border-b border-white border-opacity-30">
                 <form onSubmit={handleSubmit} className="space-y-6 mx-auto w-[60%]">
-                    {errors.global && <p className='error-message text-red-700'>{errors.global}</p>}
+                    {errors.global && <p className='text-red-700 text-sm'>{errors.global}</p>}
                     <div>
                         <label htmlFor="username" className="block text-white text-sm mb-4">User Name</label>
                         <input
