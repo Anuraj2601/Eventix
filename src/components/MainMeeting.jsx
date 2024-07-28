@@ -188,7 +188,7 @@ const MainMeeting = () => {
                                 <div className="flex space-x-2 mb-10 w-full">
                                     <button
                                         onClick={() => handleJoinMeeting(announcement.id)}
-                                        className="px-4 py-2 w-full bg-primary text-dark-500 rounded font-semibold hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                                        className="px-4 py-2 w-full cursor-not-allowed text-white opacity-50 rounded font-medium bg-dark-400 hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
                                     >
                                         Join Meeting
                                     </button>
@@ -250,7 +250,7 @@ const MainMeeting = () => {
                             ) : (
                                 <button
                                     onClick={() => handleJoinMeeting(announcement.id)}
-                                    className="px-4 py-2 bg-primary text-dark-500 rounded font-semibold w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                                    className="px-4 py-2 bg-dark-400 cursor-not-allowed text-white opacity-50 rounded font-medium w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
                                 >
                                     Join Meeting
                                 </button>
