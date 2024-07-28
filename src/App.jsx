@@ -240,6 +240,7 @@ const App = () => {
         <Route path='/president/EditSponsor/:id' element={<AddSponsor />}></Route>
 
         <Route path="/president/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
+        <Route path="/president/club/announcement/edit/:id" element={<AddNewAnnouncementForm/>}></Route>
         <Route path="/president/club/meeting/add" element={<AddNewMeetingForm/>}></Route>
 
 

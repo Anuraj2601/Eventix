@@ -65,6 +65,10 @@ const Announcement = () => {
     return `${dateString[0]}-${dateString[1]}-${dateString[2]}`;
   };
 
+  function updateAnnouncement(announcementId){
+    navigate(`/president/club/announcement/edit/${announcementId}`);
+  }
+
  /*  const meetings = [
     {
       id: "1",
@@ -142,7 +146,7 @@ const Announcement = () => {
 
                     {isEditable && (
                       <EditDeleteButton
-                        onEdit={() => handleEdit(id)}
+                        onEdit={() => updateAnnouncement(announcement.announcement_id)}
                         onDelete={() => handleDelete(id)}
                       />
                     )}

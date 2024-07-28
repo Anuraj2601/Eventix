@@ -52,6 +52,78 @@ class AnnouncementService{
         }
     }
 
+    static async getAnnouncementById(announcement_id,token) {
+        try{
+    
+            const response1 = await axios.get(`${AnnouncementService.BASE_URL}/president/getAnnouncement/${announcement_id}`,
+                {
+                    headers: {Authorization: `Bearer ${token}`}
+                }
+            )
+            return response1.data;
+            
+        }catch(err){
+            throw err;
+        }
+    }
+
+
+    static async updateAnnouncement(announcement_id ,title, content, type, token){
+
+        try{
+
+            const data = {
+                announcement_id,
+                title,
+                content,
+                type
+            };
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+        
+              
+            const response1 = await axios.put(`${AnnouncementService.BASE_URL}/president/updateAnnouncement/${announcement_id}`, data, { headers });
+        
+        
+            return response1.data;
+
+
+
+        }catch(err){
+            throw err;
+        }
+
+    }
+
+    static async deleteAnnouncement(announcement_id, token){
+        try {
+            const response1 = await axios.delete(`${AnnouncementService.BASE_URL}/president/deleteAnnouncement/${announcement_id}`,
+              {
+                headers: { Authorization: `Bearer ${token}` }
+              }
+            );
+
+            return response1.data;
+
+        } catch (err) {
+            throw err;
+        }
+
+    }
+
+    static logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+      }
+    
+      static isAuthenticated() {
+        const token = localStorage.getItem("token");
+        return !!token;
+      }
+
 
 
 }
