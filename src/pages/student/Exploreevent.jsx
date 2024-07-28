@@ -16,6 +16,7 @@ import RegisterNav from '../../components/RegisterNav';
 import { FaHeart } from "react-icons/fa";
 import { FaTimes } from 'react-icons/fa';
 import { FaUpload } from 'react-icons/fa'; // Import the upload icon
+import EditButton from '../../components/EditButton'; // Import the EditButton component
 
 
 ReactModal.setAppElement('#root'); // For accessibility
@@ -32,9 +33,16 @@ const ExploreEvent = () => {
         benefits: '',
         sponsors: Array(5).fill({ name: '', type: 'Gold', amount: '' }), // Initialize sponsor fields
         iudApproval: 'not-approved',
-        proofOfApproval: ''
+        proofOfApproval: '',
+        budget: "30000",  // Dummy budget value
+        purpose: "To enhance the skills of students through practical workshops.",  // Dummy purpose value
+        benefits: "Increased engagement in club activities and better preparation for industry challenges."  // Dummy benefits value
+     
     });
+  
     const [isFormValid, setIsFormValid] = useState(false);
+
+    const [budget, setBudget] = useState('1000 USD');
 
     useEffect(() => {
         const initialLikes = Math.floor(Math.random() * 100) + 1;
@@ -108,14 +116,14 @@ const ExploreEvent = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 w-full h-full">
                         <div className="order-1 md:order-1 flex justify-center items-center">
                             <Card className="w-full bg-neutral-900 h-128 relative">
-                                <CardBody className="h-full relative ">
+                                <CardBody className="h-full relative">
                                     <div className="relative">
-                                        <img src={image} alt={name} className="w-full h-80 object-cover rounded-2xl mb-4  custom-3d-shadow  "  style={{ 
+                                    <img src={image} alt={name} className="w-full h-80 object-cover rounded-2xl mb-4 " style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
-                                        <div className="absolute p-2 rounded-2xl top-1 right-1 flex items-center space-x-2 ">
+                                        <div className="absolute p-2 rounded-2xl top-1 right-1 flex items-center space-x-2 text-white">
                                             <span>Organized by</span>
-                                            <img src={clubImage} alt={clubName} className="w-10 h-10 rounded-full custom-3d-shadow  custom-card" />
+                                            <img src={clubImage} alt={clubName} className="w-10 h-10 rounded-full" />
                                         </div>
 
                                         <div className="flex items-center justify-between mb-2  ">

@@ -10,19 +10,19 @@ const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick, showAddButto
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl text-white">{title}</h2>
                 {showAddButton && (
-                    <Button className="bg-[#AEC90A] text-black rounded-full  custom-card" onClick={onAddNewClick}>
+                    <Button className="bg-[#AEC90A] text-black rounded-full custom-card" onClick={onAddNewClick}>
                         Add member
                     </Button>
                 )}
             </div>
             <div className="grid grid-cols-4 gap-4 overflow-auto">
                 {teamMembers.map((member, index) => (
-                    <div key={index} className="flex flex-col items-center  custom-card">
+                    <div key={index} className="flex flex-col items-center custom-card">
                         <img src={member.userImage} alt={member.userName} className='w-30 h-30 rounded-full p-2' />
                         <p className="text-white">{member.userName}</p>
                         {showAddButton && (
                             <Button
-                                className="text-red-500 mt-2  custom-card"
+                                className="text-red-500 mt-2 custom-card"
                                 onClick={() => onRemove(index, title)}
                             >
                                 Remove
@@ -104,7 +104,12 @@ const App = () => {
     const [availableMembers, setAvailableMembers] = useState([]);
 
     const location = useLocation(); // Get the current path
-    const isStudentPage = location.pathname.startsWith('/student'); // Check if the path starts with /student
+
+    // Function to check if the path starts with one of the specified paths
+    const isMatchingPage = () => {
+        const paths = ['/president', '/secretary'];
+        return paths.some(path => location.pathname.startsWith(path));
+    };
 
     const handleRemove = (index, teamName) => {
         const newTeams = { ...teams };
@@ -134,15 +139,17 @@ const App = () => {
 
     return (
         <div className="bg-neutral-900 text-white p-2 w-full">
-            <div className="w-full bg-[#0b0b0b] p-5 rounded-md overflow-auto">
-                {Object.keys(teams).map((teamName) => (
+            <div className="w-full bg-[#1A1A1A] rounded-md p-2"                   style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+>
+                <h2 className="text-2xl font-bold mb-4"></h2>
+                {Object.keys(teams).map((teamName, index) => (
                     <TeamSection
-                        key={teamName}
+                        key={index}
                         title={teamName}
                         teamMembers={teams[teamName]}
                         onRemove={handleRemove}
                         onAddNewClick={() => handleAddNewClick(teamName)}
-                        showAddButton={!isStudentPage} // Show or hide button based on path
+                        showAddButton={isMatchingPage()} // Show button based on URL path
                     />
                 ))}
             </div>
@@ -204,6 +211,7 @@ const App = () => {
     
     
 </Modal>
+
         </div>
     );
 };

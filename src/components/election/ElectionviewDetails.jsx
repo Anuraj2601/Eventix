@@ -3,9 +3,14 @@ import { Card, CardBody, Typography } from "@material-tailwind/react";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import Customswitch from "../Customswitch";
 import EditDeleteButton from "../EditDeleteButton";
+import { useLocation } from "react-router-dom"; // Import useLocation
 
 const ElectionviewDetails = ({ clubName, electionId }) => {
   const [value, setValue] = useState(false);
+  const location = useLocation(); // Get the current path
+
+  // Determine if the current path is one of the specified paths
+  const isEditablePage = ['/president', '/secretary'].some(path => location.pathname.startsWith(path));
 
   const elections = [
     {
@@ -26,7 +31,7 @@ const ElectionviewDetails = ({ clubName, electionId }) => {
 
   return (
     <div className="flex justify-center items-center w-full mt-4">
-      <Card className="w-156 bg-[#1E1E1E] "style={{ 
+      <Card className="w-156 bg-[#1E1E1E]" style={{ 
                   boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                 }}>
         <CardBody>
@@ -35,36 +40,42 @@ const ElectionviewDetails = ({ clubName, electionId }) => {
               <Typography className="text-center text-[#AEC90A] p-5" variant="h5">
                 {desc}
               </Typography>
-              <div className="flex items-center justify-between mt-4 " >
+              <div className="flex items-center justify-between mt-4">
                 <Typography className="text-[#AEC90A] p-5" variant="h6">
                   Application Open Duration:
                 </Typography>
                 <Typography className="text-white p-5" variant="h6">
                   {applicationDate}
                 </Typography>
-                <Customswitch
-                  isOn={value}
-                  handleToggle={() => setValue(!value)}
-                />
+                {isEditablePage && (
+                  <Customswitch
+                    isOn={value}
+                    handleToggle={() => setValue(!value)}
+                  />
+                )}
               </div>
-              <div className="flex items-center justify-between mt-4 ">
+              <div className="flex items-center justify-between mt-4">
                 <Typography className="text-[#AEC90A] p-5" variant="h6">
                   Voting Open Duration:
                 </Typography>
                 <Typography className="text-white p-5" variant="h6">
                   {votingDate}
                 </Typography>
-                <Customswitch
-                  isOn={value}
-                  handleToggle={() => setValue(!value)}
-                />
+                {isEditablePage && (
+                  <Customswitch
+                    isOn={value}
+                    handleToggle={() => setValue(!value)}
+                  />
+                )}
               </div>
-              <div className="flex items-center justify-end mt-4 gap-4">
-                <EditDeleteButton
-                  onEdit={() => handleEdit(id)}
-                  onDelete={() => handleDelete(id)}
-                />
-              </div>
+              {isEditablePage && (
+                <div className="flex items-center justify-end mt-4 gap-4">
+                  <EditDeleteButton
+                    onEdit={() => handleEdit(id)}
+                    onDelete={() => handleDelete(id)}
+                  />
+                </div>
+              )}
             </div>
           ))}
         </CardBody>

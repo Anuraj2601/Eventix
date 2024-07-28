@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import ReactModal from 'react-modal';
-import Sidebar from '../../components/Sidebar';
-import Navbar from '../../components/Navbar';
-import { Card, CardBody, Typography } from "@material-tailwind/react";
-import { useLocation } from 'react-router-dom';
-import EventNav from '../../components/EventNav';
-import AnnouncementNav from '../../components/AnnouncementNav';
+
+import React, { useState, useEffect } from "react";
+import ReactModal from "react-modal";
+import Sidebar from "../../components/Sidebar";
+import Navbar from "../../components/Navbar";
+import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import EventNav from "../../components/EventNav";
+import AnnouncementNav from "../../components/AnnouncementNav";
+
 import gold from "../../assets/gold.png";
 import gold1 from "../../assets/gold1.png";
 import platinum from "../../assets/platinum.png";
@@ -17,25 +19,83 @@ import { FaHeart } from "react-icons/fa";
 import { FaTimes } from 'react-icons/fa';
 import { FaUpload } from 'react-icons/fa'; // Import the upload icon
 import EditButton from '../../components/EditButton'; // Import the EditButton component
+import SponsorsService from '../../service/SponsorsService';
+import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 
 
 ReactModal.setAppElement('#root'); // For accessibility
 
-const ExploreEvent = () => {
-    const location = useLocation();
-    const { name, image, date, clubName, clubImage, venue } = location.state;
-    const [likes, setLikes] = useState(0);
-    const [liked, setLiked] = useState(false);
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [formFields, setFormFields] = useState({
-        budget: '',
-        purpose: '',
-        benefits: '',
-        sponsors: Array(5).fill({ name: '', type: 'Gold', amount: '' }), // Initialize sponsor fields
-        iudApproval: 'not-approved',
-        proofOfApproval: ''
-    });
+const Exploreevent = () => {
+
+  const location = useLocation();
+  console.log(location);
+  const { name, image, date, clubName, clubImage, venue } = location.state;
+  const [likes, setLikes] = useState(0);
+  const [liked, setLiked] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [formFields, setFormFields] = useState({
+    budget: "",
+    purpose: "",
+    benefits: "",
+    sponsors: Array(5).fill({ name: "", type: "Gold", amount: "" }), // Initialize sponsor fields
+    iudApproval: "not-approved",
+    proofOfApproval: "",
+    /* budget: "1000 USD", */ // Dummy budget value
+    /* purpose: "To enhance the skills of students through practical workshops.", */ // Dummy purpose value
+    /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */ // Dummy benefits value
+  });
+
+  const navigate = useNavigate();
+
+  const [eventSponsor, setEventSponsonsors] = useState([]);
+
+  useEffect(() => {
+    fetchSponsors();
+  }, []);
+
+  const fetchSponsors = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await SponsorsService.getAllSponsors(token);
+      const sponsorsArray = response.content || [];
+      //console.log('Sponsors response:', response);
+      setEventSponsonsors(sponsorsArray);
+    } catch (error) {
+      console.error("Error  fetching users:", error);
+    }
+  };
+
+  function updateSponsor(id) {
+    navigate(`/president/EditSponsor/${id}`);
+  }
+
+   const handleDeleteSponsor = async (sponsorId) => {
+
+        try {
+           const confirmDelete = window.confirm('Are you sure you want to delete this Sponsor?');
+
+           const token = localStorage.getItem('token');
+           if(confirmDelete) {
+            await SponsorsService.deleteSponsor(sponsorId, token);
+
+            navigate('/president/club');
+           }
+        } catch(error) {
+            console.error('Error fetching users:', error);
+        }
+
+    }; 
+
+  
     const [isFormValid, setIsFormValid] = useState(false);
+
+
+    const [budget, setBudget] = useState('100000 Rupees');
+    const [purpose, setPurpose] = useState('To enhance the skills of students through practical workshops.');
+    const [benefits, setBenefits] = useState('Increased engagement in club activities and better preparation for industry challenges.');
+
+
 
     useEffect(() => {
         const initialLikes = Math.floor(Math.random() * 100) + 1;
@@ -114,7 +174,7 @@ const ExploreEvent = () => {
                                         <img src={image} alt={name} className="w-full h-80 object-cover rounded-2xl mb-4 " style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
-                                        <div className="absolute p-2 rounded-2xl top-1 right-1 flex items-center space-x-2">
+                                        <div className="absolute p-2 rounded-2xl top-1 right-1 flex items-center space-x-2 text-white">
                                             <span>Organized by</span>
                                             <img src={clubImage} alt={clubName} className="w-10 h-10 rounded-full" />
                                         </div>
@@ -129,7 +189,7 @@ const ExploreEvent = () => {
                                                     className={`cursor-pointer mr-2 ${liked ? 'text-red-500' : 'text-white'}`}
                                                     size={24}
                                                 />
-                                                <Typography color="white " variant="subtitle1">
+                                                <Typography color="white" variant="subtitle1">
                                                     {likes}
                                                 </Typography>
                                             </div>
@@ -147,8 +207,7 @@ const ExploreEvent = () => {
     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
   }} 
 >
-  Request approval
-</button>
+View Details</button>
 
                                         </div>
                                         <Typography color="white" variant="body1" className="mb-4">
@@ -168,65 +227,103 @@ const ExploreEvent = () => {
                         </div>
                     </div>
 
+                    
+
                     <div className="flex justify-center items-center p-10">
-    <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]" style={{ 
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-          }} >
-        <CardBody className="h-full relative">
-            <div className="absolute top-2 right-2">
-                <EditButton />
-            </div>
-            <div className="relative h-full flex flex-col justify-center">
-                <Typography color="white" variant="h3" className="mb-2 text-center p-5">
+            <Card
+              className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]"
+              style={{
+                boxShadow:
+                  "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+              }}
+            >
+              <CardBody className="h-full relative">
+                <div className="absolute top-2 right-2">
+                  <Link
+                    to="/president/AddSponsor"
+                    className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
+                  >
+                    <AiOutlinePlus size={24} />
+                  </Link>
+                </div>
+                <div className="relative h-full flex flex-col justify-center">
+                  <Typography
+                    color="white"
+                    variant="h3"
+                    className="mb-2 text-center p-5"
+                  >
                     Sponsors
-                </Typography>
-                <div className="flex justify-between mb-4">
-                <div className="flex flex-col items-center ">
-                        <img src={platinum} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow" style={{ 
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-          }} />
+                  </Typography>
+                  <div className="flex justify-between mb-4">
+                    {(eventSponsor || []).map((eventS) => (
+                      <div
+                        className="flex flex-col items-center "
+                        key={eventS.sponsor_id}
+                      >
+                        <div className="flex flex-row gap-1 top-1">
+                          <Button onClick={() => updateSponsor(eventS.sponsor_id)}>
+                        <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                          <AiOutlineEdit size={24} />
+                        </Link>
+                        </Button>
+                        <button onClick={() => handleDeleteSponsor(eventS.sponsor_id)}>
+                        <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                          <AiOutlineDelete size={24} />
+                        </Link>
+                        </button>
+                        </div>
+                        <img
+                          src={eventS.company_logo}
+                          alt="Platinum Sponsor"
+                          className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow"
+                          style={{
+                            boxShadow:
+                              "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                          }}
+                        />
+
                         <Typography color="white" variant="subtitle1">
-                            Platinum Sponsor
+                            {eventS.sponsorType} Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> ))}
+                   {/*  <div className="flex flex-col items-center">
                         <img src={platinum1} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Platinum Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> */}
+                    {/* <div className="flex flex-col items-center">
                         <img src={gold} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Gold Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> */}
+                   {/*  <div className="flex flex-col items-center">
                         <img src={gold1} alt="Gold Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Gold Sponsor
                         </Typography>
-                    </div>
-                    <div className="flex flex-col items-center">
+                    </div> */}
+                   {/*  <div className="flex flex-col items-center">
                         <img src={silver} alt="Silver Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
                         <Typography color="white" variant="subtitle1">
                             Silver Sponsor
                         </Typography>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </CardBody>
+       
     </Card>
 </div>
-
                     <div className="w-full p-10">
                         <RegisterNav className="w-full h-96" />
                     </div>
@@ -305,116 +402,48 @@ const ExploreEvent = () => {
                          </div>
                      </div>
  
-                <div className="mb-4 text-center">
-                    <label className="block mb-2">Budget of the Event:</label>
-                    <input
-                        type="text"
-                        name="budget"
-                        value={formFields.budget}
-                        onChange={handleInputChange}
-                        className="w-2/4  bg-neutral-900 text-white p-2 rounded-full text-center"
-                    />
+                     <div className="mb-4 text-center">
+        <label className="block mb-2">Budget of the Event:</label>
+        <input
+          type="text"
+          name="budget"
+          value={budget}
+          onChange={handleInputChange}
+          className="w-2/4 bg-neutral-900 text-white p-2 rounded-full text-center"
+        />
+      </div>
+      <div className="mb-4 text-center">
+        <label className="block mb-2">Purpose of the Event:</label>
+        <input
+          type="text"
+          name="purpose"
+          value={purpose}
+          onChange={handleInputChange}
+          className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
+        />
+      </div>
+      <div className="mb-4 text-center">
+        <label className="block mb-2">Benefits to UCSC:</label>
+        <input
+          type="text"
+          name="benefits"
+          value={benefits}
+          onChange={handleInputChange}
+          className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
+        />
+      </div>
                 </div>
-                <div className="mb-4 text-center">
-                    <label className="block mb-2">Purpose of the Event:</label>
-                    <input
-                        type="text"
-                        name="purpose"
-                        value={formFields.purpose}
-                        onChange={handleInputChange}
-                        className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
-                    />
-                </div>
-                <div className="mb-4 text-center">
-                    <label className="block mb-2">Benefits to UCSC:</label>
-                    <input
-                        type="text"
-                        name="benefits"
-                        value={formFields.benefits}
-                        onChange={handleInputChange}
-                        className="w-full h-40 bg-neutral-900 text-white p-2 rounded-lg text-center"
-                    />
-                </div>
-                <div className="mb-4 text-center p-5">
-    <label className="block mb-2 p-5">IUD Approval Status:</label>
-    <div className="flex justify-center space-x-4 items-center">
-        <label className="flex items-center space-x-2">
-            <input 
-                type="radio"
-                value="approved"
-                checked={formFields.iudApproval === 'approved'}
-                onChange={() => handleApprovalChange('approved')}
-            />
-            <span>Already Approved</span>
-        </label>
-        <label className="flex items-center space-x-2">
-            <input
-                type="radio"
-                value="not-approved"
-                checked={formFields.iudApproval === 'not-approved'}
-                onChange={() => handleApprovalChange('not-approved')}
-            />
-            <span>Requires Approval</span>
-        </label>
-    </div>
-</div>
-
-{formFields.iudApproval === 'approved' && (
-    <div className="mb-4 text-center">
-        <label className="block mb-2 flex items-center justify-center p-5">
-            <span className="mr-2">Proof of IUD Approval:</span>
-            <input
-                type="file"
-                onChange={handleFileChange}
-                className="ml-2"
-            />
-            <FaUpload className="ml-2" />
-        </label>
-    </div>
-)}
-
-                <div className="mb-4 text-center">
-                    <label className="block mb-2 text-center">Sponsors:</label>
-                    {formFields.sponsors.map((sponsor, index) => (
-                        <div key={index} className="mb-2">
-                            <input
-                                type="text"
-                                value={sponsor.name}
-                                onChange={(e) => handleSponsorChange(index, 'name', e.target.value)}
-                                placeholder={`Sponsor ${index + 1} Name`}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded-full mb-2 text-center"
-                            />
-                            <select
-                                value={sponsor.type}
-                                onChange={(e) => handleSponsorChange(index, 'type', e.target.value)}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded-full mb-2 text-center"
-                            >
-                                <option value="Gold">Gold</option>
-                                <option value="Silver">Silver</option>
-                                <option value="Platinum">Platinum</option>
-                            </select>
-                            <input
-                                type="number"
-                                value={sponsor.amount}
-                                onChange={(e) => handleSponsorChange(index, 'amount', e.target.value)}
-                                placeholder={`Amount for Sponsor ${index + 1}`}
-                                className="w-72 bg-neutral-900 text-white p-2 rounded-full text-center"
-                            />
-                        </div>
-                    ))}
-                </div></div>
                 <div className="flex justify-center">
                     <button
                         onClick={() => {/* Handle send request for approval */}}
                         className={`px-4 py-2 rounded-full ${isFormValid ? 'bg-[#AEC90A]' : 'bg-gray-500 cursor-not-allowed'}`}
                         disabled={!isFormValid}
                     >
-                        Send Request for Approval
-                    </button>
+Download Proposal                    </button>
                 </div>
             </ReactModal>
         </div>
     );
 };
 
-export default ExploreEvent;
+export default Exploreevent;
