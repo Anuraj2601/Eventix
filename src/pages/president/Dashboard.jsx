@@ -3,15 +3,23 @@ import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 import Event from '../../components/Event';
 import Upcoming from '../../components/Upcoming';
+import Feedback from '../../components/Feedback';
 
 // Import images
-import dp from '../../assets/dp.png';
-import dp1 from '../../assets/dp1.png';
+import dp from '../../assets/clubs/ieee.png';
+import dp1 from '../../assets/clubs/rotaract.png';
 import madhackImage from '../../assets/events/flix.jpg';
 import hackathonImage from '../../assets/events/rainbow.jpg';
 import rekaImage from '../../assets/events/journey.jpg';
 import careerfairImage from '../../assets/events/session.jpg';
 import dhackImage from '../../assets/events/install.jpg';
+
+import vesakImage from "../../assets/vesak.jpg";
+import eidImage from "../../assets/farewell.jpg";
+import farewellImage from "../../assets/farewell.jpg";
+import esalaImage from "../../assets/esala.jpg";
+import posonImage from "../../assets/poson.jpg";
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
 
@@ -29,7 +37,8 @@ const Dashboard = () => {
       venue: "UCSC Mini Auditorium",
       contact: "0217988234",
       email: "career25@gmail.com",
-      image: madhackImage,
+      image: eidImage,
+      
     },
     {
       id: "2",
@@ -99,16 +108,22 @@ const Dashboard = () => {
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
         <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto">
-          <div className="w-2/4 px-4 ml-4 overflow-y-auto">
-            {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
-            {events.length > 0 && events.map(event => <Event event={event} key={event.id} />)}
-          </div>
-          <div className="w-2/4 p-2 overflow-y-auto">
-            <Upcoming />
-          </div>
+  <div className="w-2/4 px-2 ml-2 overflow-y-auto">
+    {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
+    {events.length > 0 && events.map(event => <Event event={event} key={event.id} />)}
+  </div>
+  <div className="w-2/4 flex flex-col py-1 h-full">
+    <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl ">
+      <Upcoming />
+    </div>
+    <div className="flex-1  overflow-y-auto  mb-4" >      <Feedback />
+
+    </div>
+  </div>
+</div>
+
         </div>
       </div>
-    </div>
   );
 }
 

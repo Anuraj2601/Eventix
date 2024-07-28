@@ -35,19 +35,23 @@ const ElectionDetails = ({ clubName, electionId }) => {
 
   const navigateToForm = (link) => {
     let finalLink = link;
-  
+
     if (currentPath.startsWith('/oc')) {
-      if (link === "/final-candidates") {
-        finalLink = "/oc/club/finalists";
-      } else if (link === "/voting") {
-        finalLink = "/oc/club/voting";
-      }
+        if (link === "/final-candidates") {
+            finalLink = "/oc/club/finalists";
+        } else if (link === "/voting") {
+            finalLink = "/oc/club/voting";
+        } else if (link === "/apply") {
+            finalLink = "/oc/election/apply";
+        }
     } else if (currentPath.startsWith('/member')) {
-      if (link === "/final-candidates") {
-        finalLink = "/member/club/finalists";
-      } else if (link === "/voting") {
-        finalLink = "/member/club/voting";
-      }
+        if (link === "/final-candidates") {
+            finalLink = "/member/club/finalists";
+        } else if (link === "/voting") {
+            finalLink = "/member/club/voting";
+        } else if (link === "/apply") {
+            finalLink = "/member/election/apply";
+        }
     }
   
     navigate(finalLink);
