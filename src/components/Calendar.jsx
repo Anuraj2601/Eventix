@@ -18,6 +18,8 @@ import {
 import { Fragment, useState } from "react";
 import AddEvent from './AddEvent';
 import { FaPlus } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
+
 
 
 const clubColors = {
@@ -95,6 +97,7 @@ function classNames(...classes) {
 
 const Calendar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const location = useLocation();
 
   const handleOpenModal = () => {
       setIsModalOpen(true);
@@ -287,15 +290,16 @@ const Calendar = () => {
               </ol>
             ) : (
               <div className="mt-4 space-y-1 text-sm leading-6 text-center text-gray-500">
-  <p className="text-white">No upcoming events at the moment. Stay tuned for exciting updates!</p>
-  <button
-    className="mt-4 p-2 bg-[#AEC90A] text-black rounded-full"
-    onClick={handleOpenModal}
-    >
-    Schedule Event
-  </button>
-</div>
-
+              <p className="text-white">No upcoming events at the moment. Stay tuned for exciting updates!</p>
+              {(location.pathname.startsWith('/president') || location.pathname.startsWith('/secretary')) && (
+                <button
+                  className="mt-4 p-2 bg-[#AEC90A] text-black rounded-full"
+                  onClick={handleOpenModal}
+                >
+                  Schedule Event
+                </button>
+              )}
+            </div>
 
             )}
           </section>
