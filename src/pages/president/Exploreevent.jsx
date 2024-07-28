@@ -200,6 +200,7 @@ const Exploreevent = () => {
                       />
                     </div>
 
+
                     <div className="flex items-center justify-between mb-2">
                       <Typography color="white" variant="h3">
                         {name}
@@ -261,7 +262,8 @@ const Exploreevent = () => {
             </div>
           </div>
 
-          <div className="flex justify-center items-center p-10">
+
+                    <div className="flex justify-center items-center p-10">
             <Card
               className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]"
               style={{
@@ -369,6 +371,7 @@ const Exploreevent = () => {
                 className="w-10 h-10 rounded-full"
               />
             </div>
+
           </div>
 
           <div className="mb-4 text-center">
@@ -383,6 +386,7 @@ const Exploreevent = () => {
                 readOnly
                 className="w-2/4 bg-neutral-900 text-white p-2 rounded-full text-center"
               />
+
             </div>
           </div>
 

@@ -8,9 +8,16 @@ import launchImage from '../assets/launch.jpg';
 import reid3Image from '../assets/reid3.jpg';
 import speakerImage from '../assets/speaker.jpg';
 
-const Posts = ({ post, isPresidentPage }) => {
-    const location = useLocation();
-    const isMemberPage = location.pathname.startsWith('/oc');
+const Posts = ({ post, isPresidentOrSecretaryPage }) => {
+    const [status, setStatus] = useState(post.status);
+
+    const handleApprove = () => {
+        setStatus('approved');
+    };
+
+    const handleReject = () => {
+        setStatus('rejected');
+    };
 
     return (
         <div className="flex items-center justify-center mb-8 p-8 -mt-10">
@@ -25,10 +32,20 @@ const Posts = ({ post, isPresidentPage }) => {
                             <p className="text-[#AEC90A]">{post.position}</p>
                         </div>
                     </div>
-                    {isPresidentPage && (
+                    {isPresidentOrSecretaryPage && status === 'pending' && (
                         <div className="flex items-center gap-4">
-                            {post.status === 'approved' && <FaCheck className='text-[#AEC90A] custom-card' size={30} />}
-                            {post.status === 'rejected' && <FaTimes className='text-red-500 custom-card' size={30} />}
+                            <button onClick={handleApprove} className={`text-[#AEC90A] custom-card ${status === 'approved' ? 'clicked-transition' : ''}`}><FaCheck size={30} /></button>
+                            <button onClick={handleReject} className={`text-red-500 custom-card ${status === 'rejected' ? 'clicked-transition' : ''}`}><FaTimes size={30} /></button>
+                        </div>
+                    )}
+                    {!isPresidentOrSecretaryPage && status === 'pending' && (
+                        <div className="flex items-center gap-4">
+                        </div>
+                    )}
+                    {isPresidentOrSecretaryPage && status !== 'pending' && (
+                        <div className="flex items-center gap-4">
+                            {status === 'approved' && <FaCheck className='text-[#AEC90A] custom-card' size={30} />}
+                            {status === 'rejected' && <FaTimes className='text-red-500 custom-card' size={30} />}
                         </div>
                     )}
                 </div>
@@ -37,7 +54,6 @@ const Posts = ({ post, isPresidentPage }) => {
                         {post.caption}
                         {post.link && <a href={post.link} className='text-[#AEC90A] underline custom-card' target="_blank" rel="noopener noreferrer">{post.link}</a>}
                     </p>                  
-
                     {post.image && <img src={post.image} alt="" className='border-1 border-[#AEC90A] w-full h-88 object-cover mt-3' />}
                 </div>
             </div>
@@ -47,8 +63,9 @@ const Posts = ({ post, isPresidentPage }) => {
 
 const NewsFeed = ({ posts }) => {
     const location = useLocation();
-    const isPresidentPage = location.pathname.startsWith('/president');
-    const isMemberPage = location.pathname.startsWith('/oc');
+    const isPresidentOrSecretaryPage = location.pathname.startsWith('/president') || location.pathname.startsWith('/secretary');
+    const isOcPage = location.pathname.startsWith('/oc');
+    const isMemberPage = location.pathname.startsWith('/member') || !(isPresidentOrSecretaryPage || isOcPage);
 
     const pendingPosts = posts.filter(post => post.status === 'pending');
     const approvedPosts = posts.filter(post => post.status === 'approved');
@@ -57,7 +74,7 @@ const NewsFeed = ({ posts }) => {
     return (
         <div className="bg-neutral-900 text-white min-h-screen relative">
             <div className='relative'>
-                {isMemberPage && (
+                {isOcPage && (
                     <div className='flex justify-end mb-2'>
                         <button
                             className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-3 right-8 z-10 custom-card"
@@ -66,17 +83,28 @@ const NewsFeed = ({ posts }) => {
                         </button>
                     </div>
                 )}
-                <h2 className="text-2xl font-bold mb-4">Pending Posts</h2>
-                {pendingPosts.map((post, index) => (
-                    <Posts key={index} post={post} isPresidentPage={isPresidentPage} />
-                ))}
-                <h2 className="text-2xl font-bold mb-4">Approved Posts</h2>
-                {approvedPosts.map((post, index) => (
-                    <Posts key={index} post={post} isPresidentPage={isPresidentPage} />
-                ))}
-                <h2 className="text-2xl font-bold mb-4">Rejected Posts</h2>
-                {rejectedPosts.map((post, index) => (
-                    <Posts key={index} post={post} isPresidentPage={isPresidentPage} />
+                {(isPresidentOrSecretaryPage || isOcPage) && (
+                    <>
+                        <h2 className="text-2xl font-bold mb-4">Pending Posts</h2>
+                        {pendingPosts.map((post, index) => (
+                            <Posts key={index} post={post} isPresidentOrSecretaryPage={isPresidentOrSecretaryPage} />
+                        ))}
+                    </>
+                )}
+                {(isPresidentOrSecretaryPage || isOcPage) && (
+                    <>
+                        <h2 className="text-2xl font-bold mb-4">Approved Posts</h2>
+                        {approvedPosts.map((post, index) => (
+                            <Posts key={index} post={post} isPresidentOrSecretaryPage={isPresidentOrSecretaryPage} />
+                        ))}
+                        <h2 className="text-2xl font-bold mb-4">Rejected Posts</h2>
+                        {rejectedPosts.map((post, index) => (
+                            <Posts key={index} post={post} isPresidentOrSecretaryPage={isPresidentOrSecretaryPage} />
+                        ))}
+                    </>
+                )}
+                {isMemberPage && posts.map((post, index) => (
+                    <Posts key={index} post={post} isPresidentOrSecretaryPage={isPresidentOrSecretaryPage} />
                 ))}
             </div>
         </div>
