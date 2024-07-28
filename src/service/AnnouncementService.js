@@ -26,10 +26,10 @@ class AnnouncementService{
             };
         
               
-            const response = await axios.post(`${AnnouncementService.BASE_URL}/president/saveAnnouncement`, data, { headers });
+            const response1 = await axios.post(`${AnnouncementService.BASE_URL}/president/saveAnnouncement`, data, { headers });
         
         
-            return response.data;
+            return response1.data;
 
         }catch(err){
             throw err;
@@ -40,12 +40,12 @@ class AnnouncementService{
     static async getAllAnnouncements(token) {
         try{
 
-            const response = await axios.get(`${AnnouncementService.BASE_URL}/president/getAllAnnouncements`,
+            const response1 = await axios.get(`${AnnouncementService.BASE_URL}/president/getAllAnnouncements`,
                 {
                     headers: {Authorization: `Bearer ${token}`}
                 }
             )
-            return response.data;
+            return response1.data;
             
         }catch(err){
             throw err;

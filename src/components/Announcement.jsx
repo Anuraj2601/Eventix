@@ -41,14 +41,15 @@ const Announcement = () => {
   const [announcements,setAnnouncements] = useState([]);
 
   useEffect(() => {
+    console.log("Fetching Announcements....");
       fetchAnnouncements();
   }, []);
 
   const fetchAnnouncements = async () => {
       try {
           const token = localStorage.getItem('token');
-          const response = await AnnouncementService.getAllAnnouncements(token);
-          const announcementsArray = response.content || [];
+          const response1 = await AnnouncementService.getAllAnnouncements(token);
+          const announcementsArray = response1.content || [];
           //console.log('Sponsors response:', response);
           setAnnouncements(announcementsArray);
 
@@ -64,7 +65,7 @@ const Announcement = () => {
     return `${dateString[0]}-${dateString[1]}-${dateString[2]}`;
   };
 
-  const meetings = [
+ /*  const meetings = [
     {
       id: "1",
       desc: "The Board elections of term 24/25 will be commenced from period 05.06.2024 - 09.06.2024. All the club members are invited to participate in the voting.",
@@ -89,7 +90,7 @@ const Announcement = () => {
       date: "Coming soon",
       to: "Club Members",
     },
-  ];
+  ]; */
 
 
 
@@ -130,7 +131,7 @@ const Announcement = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <Typography className="text-[#AEC90A]" variant="h6">
-                      {parseCustomDate(announcement.date_posted)}
+                      {announcement.date_posted}
                     </Typography>
                     {isEditable && (
                       <div className="flex items-center">
