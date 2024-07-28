@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import { Card, CardBody, Typography, Chip, Button } from "@material-tailwind/react";
 import EditDeleteButton from './EditDeleteButton';
 import { FaEye } from 'react-icons/fa'; // Import view icon
+import { FaPlus } from "react-icons/fa6";
+import MeetingService from '../service/MeetingService';
 
 const Meeting = () => {
   const [open, setOpen] = useState(false);
@@ -12,7 +14,33 @@ const Meeting = () => {
   // Check if the current path is either '/president' or '/secretary'
   const isEditable = currentPath.startsWith('/president') || currentPath.startsWith('/secretary');
 
-  const meetings = [
+  const [meetings,setMeetings] = useState([]);
+
+  useEffect(() => {
+      fetchMeetings();
+  }, []);
+
+  const fetchMeetings = async () => {
+      try {
+          const token = localStorage.getItem('token');
+          const response = await MeetingService.getAllMeetings(token);
+          const meetingsArray = response.content || [];
+          //console.log('Sponsors response:', response);
+          setMeetings(meetingsArray);
+
+      } catch(error) {
+          console.error('Error fetching meetings:', error);
+      }
+  };
+
+  const formatDate = (dateString) => {
+    if (dateString.length < 3) return 'Invalid date'; 
+    console.log(dateString);
+  
+    return `${dateString[0]}-${dateString[1]}-${dateString[2]}`;
+  };
+
+  const meetings1 = [
     {
       id: "1",
       desc: "Regarding next club board election",
@@ -53,38 +81,39 @@ const Meeting = () => {
         <Button
           className="flex items-center gap-2 bg-[#AEC90A] mr-0 mt-2 font-bold rounded-full text-black ml-[950px]"
         >
-          New Meeting
+          <FaPlus size={18} />New Meeting
         </Button>
       )}
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div className="">
-            {meetings.map(({ id, desc, date, time, status, audience }) => (
+            {(meetings || []).map(meeting => (
+             
               <div
-                key={id}
+                key={meeting.meeting_id}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
                 style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)' }}
               >
                 <div className="flex flex-col w-1/4">
                   <Typography className="text-white font-normal" variant="h6">
-                    {desc}
+                    {meeting.meeting_name}
                   </Typography>
                   <div className="flex items-center gap-4 mt-2">
                     <Typography className="text-[#AEC90A] font-normal" variant="h6">
-                      Date: {date}
+                      Date: {formatDate(meeting.date)}
                     </Typography>
                     <Typography className="text-[#AEC90A] font-normal" variant="h6">
-                      Time: {time}
+                      Time: {meeting.time}
                     </Typography>
                   </div>
                 </div>
                 <div className="flex flex-col w-1/4 items-center">
-                  {status === "Online" ? (
+                  {meeting.meeting_type === "ONLINE" ? (
                     <Chip
                       variant="ghost"
                       color="green"
                       size="sm"
-                      className="font-normal mb-2"
+                      className="font-normal mb-2 text-white"
                       value="Online"
                       icon={
                         <span className="mx-auto mt-2 block h-2 w-2 rounded-full bg-[#00DE3E] content-['']" />
@@ -95,7 +124,7 @@ const Meeting = () => {
                       variant="ghost"
                       color="red"
                       size="sm"
-                      className="font-normal mb-2"
+                      className="font-normal mb-2 text-white"
                       value="Physical"
                       icon={
                         <span className="mx-auto mt-2 block h-2 w-2 rounded-full bg-[#FF0000] content-['']" />
@@ -108,7 +137,7 @@ const Meeting = () => {
                     <div className="flex items-center gap-2">
                       <FaEye className="text-[#AEC90A]" />
                       <Typography className="text-white font-normal">
-                        {audience}
+                        {meeting.participant_type}
                       </Typography>
                     </div>
                   )}
@@ -123,8 +152,8 @@ const Meeting = () => {
                   {isEditable && (
                     <div className="flex items-center gap-4">
                       <EditDeleteButton
-                        onEdit={() => handleEdit(id)}
-                        onDelete={() => handleDelete(id)}
+                        onEdit={() => handleEdit(meeting.meeting_id)}
+                        onDelete={() => handleDelete(meeting.meeting_id)}
                       />
                     </div>
                   )}

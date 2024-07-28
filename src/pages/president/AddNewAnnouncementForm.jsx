@@ -58,7 +58,7 @@ const AddNewAnnouncementForm = () => {
   };
 
   const handleCancel = () => {
-    navigate(`/president/club/announcement/add`);
+    navigate(-1);
 
   }
    

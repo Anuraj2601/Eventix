@@ -119,12 +119,13 @@ const Announcement = () => {
                 <div className="flex flex-col w-full">
                   <div className="flex flex-col mb-2">
                     <Typography color="white" variant="h6">
-                      {announcement.content.split('\n').map((line, i) => (
+                      {/* {announcement.content.split('\n').map((line, i) => (
                         <React.Fragment key={i}>
                           {line}
                           <br />
                         </React.Fragment>
-                      ))}
+                      ))} */}
+                      {announcement.content}
                     </Typography>
                   </div>
                   <div className="flex items-center justify-between">
