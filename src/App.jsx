@@ -40,6 +40,7 @@ import Messagesoc from './components/Message';
 import Profileoc from './components/Profile';
 import Finalistsoc from './components/Finalists';
 import Votingoc from './components/Voting';
+import Apply from './components/Apply';
 
 
 
@@ -189,6 +190,7 @@ const App = () => {
         <Route path='/member/profile' element={<Profileoc/>}></Route>
         <Route path='/member/club/finalists' element={<Finalistsoc/>}></Route>
         <Route path='/member/club/voting' element={<Votingoc/>}></Route>
+        <Route path='/member/election/Apply' element={<Apply/>}></Route>
 
 
         
@@ -276,6 +278,7 @@ const App = () => {
         <Route path='/oc/profile' element={<Profileoc/>}></Route>
         <Route path='/oc/club/finalists' element={<Finalistsoc/>}></Route>
         <Route path='/oc/club/voting' element={<Votingoc/>}></Route>
+        <Route path='/oc/election/Apply' element={<Apply/>}></Route>
 
         
 

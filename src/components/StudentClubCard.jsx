@@ -2,7 +2,8 @@ import React from 'react';
 import { Button } from "@material-tailwind/react";
 import { RiOpenArmLine } from "react-icons/ri";
 import { IoMdBookmark } from "react-icons/io";
-import { useNavigate } from 'react-router-dom';
+import { FaPlus } from "react-icons/fa"; // Import the plus icon
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Import images
 import ieeeImg from '../assets/clubs/ieee.png';
@@ -17,6 +18,8 @@ import pahasaraImg from '../assets/clubs/pahasara1.png';
 
 const StudentClubCard = () => {
     const navigate = useNavigate();
+    const location = useLocation(); // Get the current location
+
     const clubs = [
         {
             id: "6",
@@ -92,10 +95,9 @@ const StudentClubCard = () => {
         }
     ];
 
-
     const handleRegisterClick = (club) => {
         navigate(`/clubregister/${club.name}`);
-    }
+    };
 
     const handleExploreClick = (club) => {
         let basePath;
@@ -106,9 +108,9 @@ const StudentClubCard = () => {
             case location.pathname.startsWith('/oc'):
                 basePath = '/oc';
                 break;
-                case location.pathname.startsWith('/secretary'):
-                    basePath = '/secretary';
-                    break;
+            case location.pathname.startsWith('/secretary'):
+                basePath = '/secretary';
+                break;
             case location.pathname.startsWith('/admin'):
                 basePath = '/admin';
                 break;
@@ -125,59 +127,72 @@ const StudentClubCard = () => {
     };
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {clubs.map((club) => (
-                <div key={club.id} className='bg-[#0B0B0B] w-full h-[28rem] rounded-2xl overflow-hidden flex flex-col shadow-lg mb-4 mt-4 custom-3d-shadow custom-card' style={{ 
-                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-                  }}>
-                    <div className="h-2/5 overflow-hidden">
-                        <img src={club.image} alt={club.name} className='w-full h-full object-cover' />
-                    </div>
-                    <div className="p-4 flex flex-col justify-between flex-1">
-                        <div>
-                            <div className="flex items-center justify-between mb-2">
-                                <div className='flex gap-4'>
-                                    <div className="reg">
-                                        <p className='mb-2 tracking-wide text-white'>{club.name}</p>
-                                        <div className='flex gap-3'>
-                                            {
-                                                club.reg_status === 'yes' ? (
-                                                    <>
-                                                        <RiOpenArmLine className='text-[#AEC90A]' size={20} />
-                                                        <span className='text-[#AEC90A]'>Registrations are Open</span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <RiOpenArmLine className='text-[#5C690A]' size={20} />
-                                                        <span className='text-[#5C690A]'>Registrations are Closed</span>
-                                                    </>
-                                                )
-                                            }
+        <div className="flex flex-col">
+            {location.pathname.startsWith('/admin') && (
+                <div className="flex justify-end mb-4">
+                    <Button
+                        className="bg-[#AEC90A] text-[#0B0B0B] px-4 py-2 rounded-full font-medium flex items-center"
+                        onClick={() => navigate('/admin/addclub')}
+                    >
+                        <FaPlus className="mr-2" />
+                        Add New Club
+                    </Button>
+                </div>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {clubs.map((club) => (
+                    <div key={club.id} className='bg-[#0B0B0B] w-full h-[28rem] rounded-2xl overflow-hidden flex flex-col shadow-lg mb-4 mt-4 custom-3d-shadow custom-card' style={{ 
+                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                    }}>
+                        <div className="h-2/5 overflow-hidden">
+                            <img src={club.image} alt={club.name} className='w-full h-full object-cover' />
+                        </div>
+                        <div className="p-4 flex flex-col justify-between flex-1">
+                            <div>
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className='flex gap-4'>
+                                        <div className="reg">
+                                            <p className='mb-2 tracking-wide text-white'>{club.name}</p>
+                                            <div className='flex gap-3'>
+                                                {
+                                                    club.reg_status === 'yes' ? (
+                                                        <>
+                                                            <RiOpenArmLine className='text-[#AEC90A]' size={20} />
+                                                            <span className='text-[#AEC90A]'>Registrations are Open</span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <RiOpenArmLine className='text-[#5C690A]' size={20} />
+                                                            <span className='text-[#5C690A]'>Registrations are Closed</span>
+                                                        </>
+                                                    )
+                                                }
+                                            </div>
                                         </div>
                                     </div>
+                                    <IoMdBookmark className='text-[#AEC90A] custom-card' size={30} />
                                 </div>
-                                <IoMdBookmark className='text-[#AEC90A] custom-card' size={30} />
+                                <div className="mb-4">
+                                    <p className='text-[#F5F5F5]'>{club.description}</p>
+                                </div>
                             </div>
-                            <div className="mb-4">
-                                <p className='text-[#F5F5F5]'>{club.description}</p>
+                            <div className="flex items-center justify-end gap-4">
+                                <Button className="bg-white text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card">Ignore</Button>
+                                <Button
+                                    className={`text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card ${club.reg_status === "yes" ? 'bg-[#AEC90A]' : 'bg-[#AEC90A80] cursor-not-allowed'}`}
+                                    onClick={() => handleRegisterClick(club)}
+                                    disabled={club.reg_status !== "yes"}
+                                >
+                                    Register
+                                </Button>
+                                <Button className="bg-[#AEC90A] text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card" onClick={() => handleExploreClick(club)}>Explore</Button>
                             </div>
-                        </div>
-                        <div className="flex items-center justify-end gap-4">
-                            <Button className="bg-white text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card">Ignore</Button>
-                            <Button
-                                className={`text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card ${club.reg_status === "yes" ? 'bg-[#AEC90A]' : 'bg-[#AEC90A80] cursor-not-allowed'}`}
-                                onClick={() => handleRegisterClick(club)}
-                                disabled={club.reg_status !== "yes"}
-                            >
-                                Register
-                            </Button>
-                            <Button className="bg-[#AEC90A] text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card" onClick={() => handleExploreClick(club)}>Explore</Button>
                         </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     );
-}
+};
 
 export default StudentClubCard;
