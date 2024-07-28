@@ -4,24 +4,24 @@ class SponsorsService {
   static BASE_URL = "http://localhost:8080";
 
   static async addSponsor(
-    sponsorName,
-    sponsorDescription,
+    sponsor_name,
+    sponsor_description,
     sponsorType,
     amount,
-    contactPerson,
-    contactEmail,
+    contact_person,
+    contact_email,
     proofFile,
     token
   ) {
     try {
         const formData = new FormData();
         formData.append('data', new Blob([JSON.stringify({
-            sponsorName,
-            sponsorDescription,
+            sponsor_name,
+            sponsor_description,
             sponsorType,
             amount,
-            contactPerson,
-            contactEmail
+            contact_person,
+            contact_email
           })], { type: 'application/json' }));
         formData.append('file', proofFile);
 
@@ -54,10 +54,25 @@ class SponsorsService {
     }
   }
 
-  static async deleteSponsor(token) {
+  static async getSponsorById(sponsor_id,token) {
+    try{
+
+        const response = await axios.get(`${SponsorsService.BASE_URL}/president/getSponsor/${sponsor_id}`,
+            {
+                headers: {Authorization: `Bearer ${token}`}
+            }
+        )
+        return response.data;
+        
+    }catch(err){
+        throw err;
+    }
+}
+
+  static async deleteSponsor(sponsor_id,token) {
     try {
       const response = await axios.delete(
-        `${UsersService.BASE_URL}/president/delete/${userId}`,
+        `${SponsorsService.BASE_URL}/president/deleteSponsor/${sponsor_id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -68,14 +83,38 @@ class SponsorsService {
     }
   }
 
-  static async updateSponsor(userData, token) {
+  static async updateSponsor(sponsor_id, sponsor_name,
+    sponsor_description,
+    sponsorType,
+    amount,
+    contact_person,
+    contact_email,
+    proofFile, token) {
     try {
+      const formData = new FormData();
+      formData.append('data', new Blob([JSON.stringify({
+          sponsor_name,
+          sponsor_description,
+          sponsorType,
+          amount,
+          contact_person,
+          contact_email
+        })], { type: 'application/json' }));
+      formData.append('file', proofFile);
+
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}`
+    };
+
+
       const response = await axios.put(
-        `${UsersService.BASE_URL}/president/updateSponsor`,
-        userData,
+        `${SponsorsService.BASE_URL}/president/updateSponsor/${sponsor_id}`,
+        formData,
         {
-          headers: { Authorization: `Bearer${token}` },
-        }
+          headers
+         }
+      
       );
       return response.data;
     } catch (err) {
