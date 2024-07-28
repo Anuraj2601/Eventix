@@ -3,15 +3,23 @@ import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 import Event from '../../components/Event';
 import Upcoming from '../../components/Upcoming';
+import Feedback from '../../components/Feedback';
 
 // Import images
-import dp from '../../assets/dp.png';
-import dp1 from '../../assets/dp1.png';
+import dp from '../../assets/clubs/ieee.png';
+import dp1 from '../../assets/clubs/rotaract.png';
 import madhackImage from '../../assets/events/flix.jpg';
 import hackathonImage from '../../assets/events/rainbow.jpg';
 import rekaImage from '../../assets/events/journey.jpg';
 import careerfairImage from '../../assets/events/session.jpg';
 import dhackImage from '../../assets/events/install.jpg';
+
+import vesakImage from "../../assets/vesak.jpg";
+import eidImage from "../../assets/farewell.jpg";
+import farewellImage from "../../assets/farewell.jpg";
+import esalaImage from "../../assets/esala.jpg";
+import posonImage from "../../assets/poson.jpg";
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
 
@@ -29,7 +37,8 @@ const Dashboard = () => {
       venue: "UCSC Mini Auditorium",
       contact: "0217988234",
       email: "career25@gmail.com",
-      image: madhackImage,
+      image: eidImage,
+      
     },
     {
       id: "2",
@@ -107,11 +116,8 @@ const Dashboard = () => {
     <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl ">
       <Upcoming />
     </div>
-    <div className="flex-1 p-6 overflow-y-auto rounded-2xl mb-4" style={{ 
-      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
-      minHeight: '200px' // Adjust if needed
-    }}>
-      <h2 className="text-[#AEC90A] text-lg font-bold">Additional Content</h2>
+    <div className="flex-1  overflow-y-auto  mb-4" >      <Feedback />
+
     </div>
   </div>
 </div>

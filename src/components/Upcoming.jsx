@@ -27,7 +27,7 @@ import rac5 from "../assets/events/gtech.jpg";
 import rac6 from "../assets/events/training.jpg";
 
 // upcoming events of acm
-import acm1 from "../assets/events/8.jpg";
+import acm1 from "../assets/farewell.jpg";
 import acm2 from "../assets/events/hour.jpg";
 import acm3 from "../assets/events/ballet.jpg";
 import acm4 from "../assets/events/discussion.jpg";
@@ -40,7 +40,7 @@ import LikeButton from './LikeButton'; // Adjust path as necessary
 const upcomingItems = [
   { id: 1, name: "IEEE Event 1", image: ieee1, details: "IEEE Club Board Election for Term 24/25", date: "2024-08-15", venue: "Main Auditorium", time: "10:00 AM", organizedBy: "IEEE", clubImage: ieeeImg, likes: Math.floor(Math.random() * 100) },
   { id: 2, name: "Rotaract Meeting", image: rac1, details: "Monthly Rotaract Meeting", date: "2024-08-20", venue: "Conference Room A", time: "2:00 PM", organizedBy: "Rotaract", clubImage: rotaractImg, likes: Math.floor(Math.random() * 100) },
-  { id: 3, name: "ACM Hackathon", image: acm1, details: "Annual ACM Hackathon", date: "2024-09-01", venue: "Tech Park", time: "9:00 AM", organizedBy: "ACM", clubImage: acmImg, likes: Math.floor(Math.random() * 100) },
+  { id: 3, name: "IEEE Board Election of term 24/25", image: acm1, details: "Annual ACM Hackathon", date: "2024-09-01", venue: "Tech Park", time: "9:00 AM", organizedBy: "ACM", clubImage: ieeeImg, likes: Math.floor(Math.random() * 100) },
   { id: 4, name: "ISACA Seminar", image: ieee2, details: "ISACA Seminar on Cybersecurity", date: "2024-09-10", venue: "Hall B", time: "11:00 AM", organizedBy: "ISACA", clubImage: isacaImg, likes: Math.floor(Math.random() * 100) },
   { id: 5, name: "WIE Conference", image: ieee3, details: "WIE Annual Conference", date: "2024-09-20", venue: "Main Hall", time: "10:00 AM", organizedBy: "WIE", clubImage: wieImg, likes: Math.floor(Math.random() * 100) },
   { id: 6, name: "Microsoft Workshop", image: ieee4, details: "Microsoft Azure Workshop", date: "2024-09-25", venue: "Room 101", time: "1:00 PM", organizedBy: "Microsoft", clubImage: msImg, likes: Math.floor(Math.random() * 100) },
@@ -53,7 +53,7 @@ const Upcoming = () => {
 
   return (
     <div className=" p-2 rounded-md relative">
-      <h2 className="text-[#AEC90A] text-sm font-bold">Upcoming </h2>
+      <h2 className="text-white text-sm font-bold -mt-2">Upcoming </h2>
       <div className="flex flex-wrap overflow-y-auto -mx-2">
         {upcomingItems.map(item => (
           <div 
@@ -67,7 +67,7 @@ const Upcoming = () => {
                 <img 
                   src={item.image} 
                   alt={item.name} 
-                  className="w-full h-60  object-cover" 
+                  className="w-full h-60  object-cover  custom-3d-shadow " 
                   style={{ 
                     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                   }}

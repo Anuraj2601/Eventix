@@ -91,7 +91,7 @@ const Votestab = () => {
       <div className="relative mb-12 w-full p-5">
         <div className="absolute left-0 z-10 w-full flex justify-center ">
           <div className="py-2 px-4 rounded-lg ">
-            <h2 className="text-3xl text-center">President Position</h2>
+            <h2 className="text-3xl text-center text-white">President Position</h2>
           </div>
         </div>
 
@@ -136,7 +136,7 @@ const Votestab = () => {
       <div className="relative mb-12 w-full p-5">
         <div className="absolute left-0 z-10 w-full flex justify-center ">
           <div className="py-2 px-4 rounded-lg ">
-            <h2 className="text-3xl text-center">Vice President Position</h2>
+            <h2 className="text-3xl text-center text-white">Vice President Position</h2>
           </div>
         </div>
 
@@ -181,7 +181,7 @@ const Votestab = () => {
       <div className="relative mb-28 w-full p-5">
         <div className="absolute left-0 z-10 w-full flex justify-center ">
           <div className="py-2 px-4 rounded-lg ">
-            <h2 className="text-3xl text-center">Treasurer Position</h2>
+            <h2 className="text-3xl text-center text-white">Treasurer Position</h2>
           </div>
         </div>
 
