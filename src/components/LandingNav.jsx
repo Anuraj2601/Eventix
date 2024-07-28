@@ -45,7 +45,7 @@ const LandingNav = () => {
             </a>
             <a
               href={SignUp}
-              className="bg-gradient-to-r from-primary to-secondary w-24 h-10 rounded-md flex items-center justify-center text-gray-900 text-[14px] font-semibold"
+              className="bg-gradient-to-r from-primary to-[#DBFF00] w-24 h-10 rounded-md flex items-center justify-center text-gray-900 text-[14px] font-semibold"
             ><Link to="/Signup">SignUp</Link>
             </a>
           </div>
@@ -72,7 +72,7 @@ const LandingNav = () => {
                 Login
               </a>
               <a
-                href="#" className="py-2 px-3 rounded-md bg-gradient-to-r from-primary to-secondary w-22 h-10" style={{ 
+                href="#" className="py-2 px-3 rounded-md bg-gradient-to-r from-primary to-[#DBFF00] w-22 h-10" style={{ 
                   boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                 }}>
                 SignUp

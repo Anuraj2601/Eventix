@@ -17,7 +17,14 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
   const [role, setRole] = useState("student");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({
+    firstname:'',
+    lastname:'',
+    regNo:'',
+    email:'',
+    password:'',
+    confirmpassword:''
+  });
   /*  const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -49,7 +56,7 @@ const Signup = () => {
   const validate = () => {
     const newErrors = {};
     const emailRegex = /^[a-zA-Z0-9._%+-]+@stu\.ucsc\.cmb\.ac\.lk$/;
-    const regNoRegex = /^(\d{4}cs\d{3}) || (\d{4}cs\d{3})$/;
+    const regNoRegex = /^(\d{4}cs\d{3}) || (\d{4}is\d{3})$/;
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
     /* if (!formData.firstname) newErrors.firstname = "First Name is required";
@@ -72,11 +79,10 @@ const Signup = () => {
     if (!firstname) newErrors.firstname = "First Name is required";
     if (!lastname) newErrors.lastname = "Last Name is required";
     if (!regNo) newErrors.regNo = "Registration Number is required";
-    else if (!regNoRegex.test(regNo))
-      newErrors.regNo = "Invalid Registration Number format";
+    else if(!regNoRegex.test(regNo)) newErrors.regNo = "Invalid Registration Number format";
 
     if(!email) newErrors.email = "Student Email is  required";
-    else if(!emailRegex.test(email)) newErrors.email = "invalid Email format";
+    else if(!emailRegex.test(email)) newErrors.email = "Invalid Email format";
 
     if(!password) newErrors.password = "Password is required";
     else if(!passwordRegex.test(password)) newErrors.password = "Password must be at least 8 characters long and contain both letters and numbers";
@@ -84,16 +90,20 @@ const Signup = () => {
     if (!confirmpassword)
         newErrors.confirmpassword = "Confirm Password is required"; 
 
-    return newErrors;
+    if(password !== confirmpassword) newErrors.confirmpassword = "Passwords do not match";
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setError(Object.values(validationErrors).join(","));
-      return;
-    }
+    if (validate()) {
+      
+      
+    
 
     try {
      /*  const token = localStorage.getItem("token"); */
@@ -119,11 +129,12 @@ const Signup = () => {
     } catch (error) {
       console.error("Error registering user:", error);
       alert("An error occurred while registering user");
-      setError(error.message);
+      setErrors({ ...errors, global: error.message });
       setTimeout(() => {
-        setError('');
+        setErrors({ ...errors, global:''});
       }, 5000)
     }
+  }
   };
 
   /* const handleChange = (e) => {
@@ -178,8 +189,8 @@ const Signup = () => {
                 value={firstname}
                 onChange={(e) => setFirstname(e.target.value)}
               />
-              {error && error.includes('Firstname') && (
-                <p className="text-red-500 text-sm mt-1">{error}</p>
+              {errors.firstname /* && error.includes('Firstname') */ && (
+                <p className="text-red-500 text-sm mt-1">{errors.firstname}</p>
               )}
             </div>
             <div className="w-1/2">
@@ -198,8 +209,9 @@ const Signup = () => {
                 value={lastname}
                 onChange={(e) => setLastname(e.target.value)}
               />
-              {error && error.includes('Lastname') && (
-                <p className="text-red-500 text-sm mt-1">{error}</p>
+              {errors.lastname
+               /* && error.includes('Lastname') */ && (
+                <p className="text-red-500 text-sm mt-1">{errors.lastname}</p>
               )}
             </div>
           </div>
@@ -216,8 +228,8 @@ const Signup = () => {
               value={regNo}
               onChange={(e) => setRegNo(e.target.value)}
             />
-            {error && error.includes('RegNo') && (
-              <p className="text-red-500 text-sm mt-1">{error}</p>
+            {errors.regNo /* && error.includes('RegNo') */ && (
+              <p className="text-red-500 text-sm mt-1">{errors.regNo}</p>
             )}
           </div>
           <div>
@@ -233,8 +245,8 @@ const Signup = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            {error && error.includes('Email') && (
-              <p className="text-red-500 text-sm mt-1">{error}</p>
+            {errors.email/*  && error.includes('Email') */ && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
           </div>
           <div>
@@ -258,8 +270,8 @@ const Signup = () => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            {error && error.includes('Password') && (
-              <p className="text-red-500 text-sm mt-1">{error}</p>
+            {errors.password /* && error.includes('Password') */ && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}
           </div>
           <div>
@@ -286,9 +298,9 @@ const Signup = () => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            {error && error.includes('ConfirmPassword') && (
+            {errors.confirmpassword /* && error.includes('ConfirmPassword') */ && (
               <p className="text-red-500 text-sm mt-1">
-                {error}
+                {errors.confirmpassword}
               </p>
             )}
           </div>

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import ReactModal from "react-modal";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
-import { Card, CardBody, Typography } from "@material-tailwind/react";
-import { useLocation } from "react-router-dom";
+import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import EventNav from "../../components/EventNav";
 import AnnouncementNav from "../../components/AnnouncementNav";
 import gold from "../../assets/gold.png";
@@ -25,6 +25,7 @@ ReactModal.setAppElement("#root"); // For accessibility
 
 const Exploreevent = () => {
   const location = useLocation();
+  console.log(location);
   const { name, image, date, clubName, clubImage, venue } = location.state;
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
@@ -40,6 +41,8 @@ const Exploreevent = () => {
     /* purpose: "To enhance the skills of students through practical workshops.", */ // Dummy purpose value
     /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */ // Dummy benefits value
   });
+
+  const navigate = useNavigate();
 
   const [eventSponsor, setEventSponsonsors] = useState([]);
 
@@ -59,7 +62,11 @@ const Exploreevent = () => {
     }
   };
 
-  /* const deleteSponsor = aync (sponsorId) => {
+  function updateSponsor(id) {
+    navigate(`/president/EditSponsor/${id}`);
+  }
+
+   const handleDeleteSponsor = async (sponsorId) => {
         try {
            const confirmDelete = window.confirm('Are you sure you want to delete this Sponsor?');
 
@@ -67,12 +74,12 @@ const Exploreevent = () => {
            if(confirmDelete) {
             await SponsorsService.deleteSponsor(sponsorId, token);
 
-            fetchSponsors();
+            navigate('/president/club');
            }
         } catch(error) {
             console.error('Error fetching users:', error);
         }
-    }; */
+    }; 
 
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -261,12 +268,6 @@ const Exploreevent = () => {
                   >
                     <AiOutlinePlus size={24} />
                   </Link>
-                  <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
-                    <AiOutlineEdit size={24} />
-                  </Link>
-                  <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
-                    <AiOutlineDelete size={24} />
-                  </Link>
                 </div>
                 <div className="relative h-full flex flex-col justify-center">
                   <Typography
@@ -282,6 +283,18 @@ const Exploreevent = () => {
                         className="flex flex-col items-center "
                         key={eventS.sponsor_id}
                       >
+                        <div className="flex flex-row gap-1 top-1">
+                          <Button onClick={() => updateSponsor(eventS.sponsor_id)}>
+                        <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                          <AiOutlineEdit size={24} />
+                        </Link>
+                        </Button>
+                        <button onClick={() => handleDeleteSponsor(eventS.sponsor_id)}>
+                        <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                          <AiOutlineDelete size={24} />
+                        </Link>
+                        </button>
+                        </div>
                         <img
                           src={eventS.company_logo}
                           alt="Platinum Sponsor"
