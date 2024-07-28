@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import ReactModal from 'react-modal';
-import Sidebar from '../../components/Sidebar';
-import Navbar from '../../components/Navbar';
-import { Card, CardBody, Typography } from "@material-tailwind/react";
-import { useLocation } from 'react-router-dom';
-import EventNav from '../../components/EventNav';
-import AnnouncementNav from '../../components/AnnouncementNav';
+
+import React, { useState, useEffect } from "react";
+import ReactModal from "react-modal";
+import Sidebar from "../../components/Sidebar";
+import Navbar from "../../components/Navbar";
+import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import EventNav from "../../components/EventNav";
+import AnnouncementNav from "../../components/AnnouncementNav";
+
 import gold from "../../assets/gold.png";
 import gold1 from "../../assets/gold1.png";
 import platinum from "../../assets/platinum.png";
@@ -25,44 +27,51 @@ import { Link } from 'react-router-dom';
 ReactModal.setAppElement('#root'); // For accessibility
 
 const Exploreevent = () => {
-    const location = useLocation();
-    const { name, image, date, clubName, clubImage, venue } = location.state;
-    const [likes, setLikes] = useState(0);
-    const [liked, setLiked] = useState(false);
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [formFields, setFormFields] = useState({
-        budget: '',
-        purpose: '',
-        benefits: '',
-        sponsors: Array(5).fill({ name: '', type: 'Gold', amount: '' }), // Initialize sponsor fields
-        iudApproval: 'not-approved',
-        proofOfApproval: '',
-        /* budget: "1000 USD", */  // Dummy budget value
-        /* purpose: "To enhance the skills of students through practical workshops.", */  // Dummy purpose value
-        /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */  // Dummy benefits value
-     
-    });
 
-    const [eventSponsor,setEventSponsonsors] = useState([]);
+  const location = useLocation();
+  console.log(location);
+  const { name, image, date, clubName, clubImage, venue } = location.state;
+  const [likes, setLikes] = useState(0);
+  const [liked, setLiked] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [formFields, setFormFields] = useState({
+    budget: "",
+    purpose: "",
+    benefits: "",
+    sponsors: Array(5).fill({ name: "", type: "Gold", amount: "" }), // Initialize sponsor fields
+    iudApproval: "not-approved",
+    proofOfApproval: "",
+    /* budget: "1000 USD", */ // Dummy budget value
+    /* purpose: "To enhance the skills of students through practical workshops.", */ // Dummy purpose value
+    /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */ // Dummy benefits value
+  });
 
-    useEffect(() => {
-        fetchSponsors();
-    }, []);
+  const navigate = useNavigate();
 
-    const fetchSponsors = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await SponsorsService.getAllSponsors(token);
-            const sponsorsArray = response.content || [];
-            //console.log('Sponsors response:', response);
-            setEventSponsonsors(sponsorsArray);
+  const [eventSponsor, setEventSponsonsors] = useState([]);
 
-        } catch(error) {
-            console.error('Error  fetching users:', error);
-        }
-    };
+  useEffect(() => {
+    fetchSponsors();
+  }, []);
 
-    /* const deleteSponsor = aync (sponsorId) => {
+  const fetchSponsors = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await SponsorsService.getAllSponsors(token);
+      const sponsorsArray = response.content || [];
+      //console.log('Sponsors response:', response);
+      setEventSponsonsors(sponsorsArray);
+    } catch (error) {
+      console.error("Error  fetching users:", error);
+    }
+  };
+
+  function updateSponsor(id) {
+    navigate(`/president/EditSponsor/${id}`);
+  }
+
+   const handleDeleteSponsor = async (sponsorId) => {
+
         try {
            const confirmDelete = window.confirm('Are you sure you want to delete this Sponsor?');
 
@@ -70,14 +79,17 @@ const Exploreevent = () => {
            if(confirmDelete) {
             await SponsorsService.deleteSponsor(sponsorId, token);
 
-            fetchSponsors();
+            navigate('/president/club');
            }
         } catch(error) {
             console.error('Error fetching users:', error);
         }
-    }; */
+
+    }; 
+
   
     const [isFormValid, setIsFormValid] = useState(false);
+
 
     const [budget, setBudget] = useState('100000 Rupees');
     const [purpose, setPurpose] = useState('To enhance the skills of students through practical workshops.');
@@ -162,7 +174,7 @@ const Exploreevent = () => {
                                         <img src={image} alt={name} className="w-full h-80 object-cover rounded-2xl mb-4 " style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
-                                        <div className="absolute p-2 rounded-2xl top-1 right-1 flex items-center space-x-2">
+                                        <div className="absolute p-2 rounded-2xl top-1 right-1 flex items-center space-x-2 text-white">
                                             <span>Organized by</span>
                                             <img src={clubImage} alt={clubName} className="w-10 h-10 rounded-full" />
                                         </div>
@@ -215,42 +227,61 @@ View Details</button>
                         </div>
                     </div>
 
-                    <div className="flex justify-center items-center p-10">
-    <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]" style={{ 
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-          }} >
-
-
-        <CardBody className="h-full relative">
-            <div className="absolute top-2 right-2  space-2">
-            <Link
-      to="/president/AddSponsor"
-      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
-    >
-      <AiOutlinePlus size={24} />
-    </Link>
-    <Link
-      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
-    >
-      <AiOutlineEdit size={24} />
-    </Link>
-    <Link
-      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
-    >
-      <AiOutlineDelete size={24} />
-    </Link>
-            </div>
-            <div className="relative h-full flex flex-col justify-center">
-                <Typography color="white" variant="h3" className="mb-2 text-center p-5">
-                    Sponsors
-                </Typography>
-                <div className="flex justify-between mb-4">
-                { (eventSponsor || []).map(eventS => (
-                <div className="flex flex-col items-center " key={eventS.sponsor_id}>
                     
-                        <img src={eventS.company_logo} alt="Platinum Sponsor" className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow" style={{ 
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-          }} />
+
+                    <div className="flex justify-center items-center p-10">
+            <Card
+              className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]"
+              style={{
+                boxShadow:
+                  "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+              }}
+            >
+              <CardBody className="h-full relative">
+                <div className="absolute top-2 right-2">
+                  <Link
+                    to="/president/AddSponsor"
+                    className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
+                  >
+                    <AiOutlinePlus size={24} />
+                  </Link>
+                </div>
+                <div className="relative h-full flex flex-col justify-center">
+                  <Typography
+                    color="white"
+                    variant="h3"
+                    className="mb-2 text-center p-5"
+                  >
+                    Sponsors
+                  </Typography>
+                  <div className="flex justify-between mb-4">
+                    {(eventSponsor || []).map((eventS) => (
+                      <div
+                        className="flex flex-col items-center "
+                        key={eventS.sponsor_id}
+                      >
+                        <div className="flex flex-row gap-1 top-1">
+                          <Button onClick={() => updateSponsor(eventS.sponsor_id)}>
+                        <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                          <AiOutlineEdit size={24} />
+                        </Link>
+                        </Button>
+                        <button onClick={() => handleDeleteSponsor(eventS.sponsor_id)}>
+                        <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                          <AiOutlineDelete size={24} />
+                        </Link>
+                        </button>
+                        </div>
+                        <img
+                          src={eventS.company_logo}
+                          alt="Platinum Sponsor"
+                          className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow"
+                          style={{
+                            boxShadow:
+                              "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                          }}
+                        />
+
                         <Typography color="white" variant="subtitle1">
                             {eventS.sponsorType} Sponsor
                         </Typography>
@@ -293,7 +324,6 @@ View Details</button>
        
     </Card>
 </div>
-
                     <div className="w-full p-10">
                         <RegisterNav className="w-full h-96" />
                     </div>
