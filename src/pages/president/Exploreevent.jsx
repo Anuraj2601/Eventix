@@ -28,23 +28,24 @@ ReactModal.setAppElement('#root'); // For accessibility
 
 const Exploreevent = () => {
 
-  const location = useLocation();
-  console.log(location);
-  const { name, image, date, clubName, clubImage, venue } = location.state;
-  const [likes, setLikes] = useState(0);
-  const [liked, setLiked] = useState(false);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [formFields, setFormFields] = useState({
-    budget: "",
-    purpose: "",
-    benefits: "",
-    sponsors: Array(5).fill({ name: "", type: "Gold", amount: "" }), // Initialize sponsor fields
-    iudApproval: "not-approved",
-    proofOfApproval: "",
-    /* budget: "1000 USD", */ // Dummy budget value
-    /* purpose: "To enhance the skills of students through practical workshops.", */ // Dummy purpose value
-    /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */ // Dummy benefits value
-  });
+  
+    const location = useLocation();
+    console.log(location);
+    const { name, image, date, clubName, clubImage, venue } = location.state;
+    const [likes, setLikes] = useState(0);
+    const [liked, setLiked] = useState(false);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [formFields, setFormFields] = useState({
+      budget: "",
+      purpose: "",
+      benefits: "",
+      sponsors: Array(5).fill({ name: "", type: "Gold", amount: "" }), // Initialize sponsor fields
+      iudApproval: "not-approved",
+      proofOfApproval: "",
+      /* budget: "1000 USD", */ // Dummy budget value
+      /* purpose: "To enhance the skills of students through practical workshops.", */ // Dummy purpose value
+      /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */ // Dummy benefits value
+    });
 
   const navigate = useNavigate();
 
@@ -160,6 +161,7 @@ const Exploreevent = () => {
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
 
+
     return (
         <div className="fixed inset-0 flex">
             <Sidebar className="flex-shrink-0" />
@@ -227,35 +229,9 @@ View Details</button>
                         </div>
                     </div>
 
+                    
+
                     <div className="flex justify-center items-center p-10">
-    <Card className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]" style={{ 
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-          }} >
-
-
-        <CardBody className="h-full relative">
-            <div className="absolute top-2 right-2  space-2">
-            <Link
-      to="/president/AddSponsor"
-      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
-    >
-      <AiOutlinePlus size={24} />
-    </Link>
-    <Link
-      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
-    >
-      <AiOutlineEdit size={24} />
-    </Link>
-    <Link
-      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
-    >
-      <AiOutlineDelete size={24} />
-    </Link>
-            </div>
-
-          </div>
-
-          <div className="flex justify-center items-center p-10">
             <Card
               className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]"
               style={{
@@ -350,7 +326,6 @@ View Details</button>
        
     </Card>
 </div>
-
                     <div className="w-full p-10">
                         <RegisterNav className="w-full h-96" />
                     </div>
