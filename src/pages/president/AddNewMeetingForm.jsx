@@ -3,6 +3,7 @@ import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import { Link, useNavigate } from 'react-router-dom';
 import MeetingService from '../../service/MeetingService';
+import { Button } from "@material-tailwind/react";
 
 const AddNewMeetingForm = () => {
 
@@ -83,7 +84,7 @@ const AddNewMeetingForm = () => {
                             
                             <form onSubmit={handleSubmit} >
                             <div className="flex flex-col w-full">
-                                <div className="flex flex-col gap-3 w-96 mt-4">
+                                <div className="flex flex-col gap-3 w-96 ">
                                 <label htmlFor="title">Title</label>
                                 <input type="text" placeholder='General Meeting' className='block p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'
                                     id='title'
@@ -149,7 +150,7 @@ const AddNewMeetingForm = () => {
                                     id="participantType"
                                     value={participantType}
                                     onChange={(e) => setParticipantType(e.target.value)}
-                                    className="p-2 bg-black text-white rounded"
+                                    className=" text-white rounded p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] "
                                 /*  required */
                                 >
                                     <option value="">Select participant type</option>
@@ -164,7 +165,7 @@ const AddNewMeetingForm = () => {
                             
                             <div className="flex items-center justify-center mt-6 gap-4">
                                 <Button onClick={handleCancel} className='border-2 border-[#AEC90A] px-4 py-2 rounded-3xl font-medium text-[#AEC90A]'>Cancel</Button>
-                                <Button type='submit' className='bg-[#AEC90A] px-4 py-2 rounded-3xl font-medium text-[#0B0B0B]'>Add</Button>
+                                <Button type='submit' className='bg-[#AEC90A] px-4 py-2 rounded-3xl font-medium text-[#0B0B0B]'>Create</Button>
                             </div>
     
                             </form>

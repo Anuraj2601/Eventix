@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardBody, Typography, Chip, Button } from "@material-tailwind/react";
 import EditDeleteButton from './EditDeleteButton';
 import { FaEye } from 'react-icons/fa'; // Import view icon
@@ -12,6 +12,7 @@ import MeetingService from "../service/MeetingService";
 const Meeting = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
 
   // Check if the current path is either '/president' or '/secretary'
@@ -90,11 +91,16 @@ const Meeting = () => {
     // Add your delete handling logic here
   };
 
+  const openMeetingForm = () =>{
+    navigate(`/president/club/meeting/add`);
+  }
+
   return (
     <>
       {isEditable && (
         <Button
           className="flex items-center gap-2 bg-[#AEC90A] mr-0 mt-2 font-bold rounded-full text-black ml-[950px]"
+          onClick={openMeetingForm}
         >
           <FaPlus size={18} />New Meeting
         </Button>

@@ -151,6 +151,7 @@ import AddEvent from './components/AddEvent';
 
 import { ClubMemberNav } from './components/ClubMemberNav';
 import AddNewAnnouncementForm from './pages/president/AddNewAnnouncementForm';
+import AddNewMeetingForm from './pages/president/AddNewMeetingForm';
 
 
 // Import other pages if necessary
@@ -239,6 +240,7 @@ const App = () => {
         <Route path='/president/EditSponsor/:id' element={<AddSponsor />}></Route>
 
         <Route path="/president/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
+        <Route path="/president/club/meeting/add" element={<AddNewMeetingForm/>}></Route>
 
 
         

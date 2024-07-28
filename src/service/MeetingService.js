@@ -4,7 +4,7 @@ class MeetingService{
 
     static BASE_URL = "http://localhost:8080";
 
-    static async saveMeeting(meeting_name, date, time, meeting_type, participant_type ){
+    static async saveMeeting(meeting_name, date, time, meeting_type, participant_type, token ){
         try{
 
             const data = {
