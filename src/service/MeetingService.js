@@ -37,7 +37,10 @@ class MeetingService{
 
             const response = await axios.get(`${MeetingService.BASE_URL}/president/getAllMeetings`,
                 {
-                    headers: { Authorization: `Bearer ${token}`}
+                    headers : {Authorization: `Bearer ${token}`,
+                    "Content-Type": 'application/json'
+                } 
+
                 }
             )
 

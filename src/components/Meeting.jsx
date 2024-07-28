@@ -20,8 +20,20 @@ const Meeting = () => {
   const [meetings,setMeetings] = useState([]);
 
   useEffect(() => {
-      fetchMeetings();
-  }, []);
+    console.log("meetings:", meetings);
+    fetchMeetings();
+  }, [meetings]);
+
+  useEffect(() => {
+    if (meetings.length === 0) {
+      console.log("No meetings to check.");
+    } else {
+      const ids = meetings.map(meeting => meeting.meeting_id);
+      const uniqueIds = new Set(ids);
+      console.log(`Meetings length: ${meetings.length}`);
+      console.log(ids.length === uniqueIds.size ? 'All IDs are unique' : 'There are duplicate IDs');
+    }
+  }, [meetings]);
 
   const fetchMeetings = async () => {
       try {
@@ -43,7 +55,7 @@ const Meeting = () => {
     return `${dateString[0]}-${dateString[1]}-${dateString[2]}`;
   };
 
-  const meetings1 = [
+  /* const meetings1 = [
     {
       id: "1",
       desc: "Regarding next club board election",
@@ -68,7 +80,7 @@ const Meeting = () => {
       status: "Online",
       audience: "Club Board"
     },
-  ];
+  ]; */
 
   const handleEdit = (id) => {
     // Add your edit handling logic here
