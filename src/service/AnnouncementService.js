@@ -45,6 +45,7 @@ class AnnouncementService{
                     headers: {Authorization: `Bearer ${token}`}
                 }
             )
+            console.log('Announcements response:', response.data);
             return response.data;
             
         }catch(err){

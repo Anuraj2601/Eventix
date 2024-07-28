@@ -4,7 +4,10 @@ import { Card, CardBody, Typography, Chip, Button } from "@material-tailwind/rea
 import EditDeleteButton from './EditDeleteButton';
 import { FaEye } from 'react-icons/fa'; // Import view icon
 import { FaPlus } from "react-icons/fa6";
-import MeetingService from '../service/MeetingService';
+import MeetingService from "../service/MeetingService";
+
+
+
 
 const Meeting = () => {
   const [open, setOpen] = useState(false);
@@ -25,7 +28,7 @@ const Meeting = () => {
           const token = localStorage.getItem('token');
           const response = await MeetingService.getAllMeetings(token);
           const meetingsArray = response.content || [];
-          //console.log('Sponsors response:', response);
+          console.log('meeting response in fetchMeetings:', response);
           setMeetings(meetingsArray);
 
       } catch(error) {
@@ -100,7 +103,7 @@ const Meeting = () => {
                   </Typography>
                   <div className="flex items-center gap-4 mt-2">
                     <Typography className="text-[#AEC90A] font-normal" variant="h6">
-                      Date: {formatDate(meeting.date)}
+                      Date: {meeting.date}
                     </Typography>
                     <Typography className="text-[#AEC90A] font-normal" variant="h6">
                       Time: {meeting.time}
