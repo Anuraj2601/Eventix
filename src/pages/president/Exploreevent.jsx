@@ -28,24 +28,23 @@ ReactModal.setAppElement('#root'); // For accessibility
 
 const Exploreevent = () => {
 
-  
-    const location = useLocation();
-    console.log(location);
-    const { name, image, date, clubName, clubImage, venue } = location.state;
-    const [likes, setLikes] = useState(0);
-    const [liked, setLiked] = useState(false);
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [formFields, setFormFields] = useState({
-      budget: "",
-      purpose: "",
-      benefits: "",
-      sponsors: Array(5).fill({ name: "", type: "Gold", amount: "" }), // Initialize sponsor fields
-      iudApproval: "not-approved",
-      proofOfApproval: "",
-      /* budget: "1000 USD", */ // Dummy budget value
-      /* purpose: "To enhance the skills of students through practical workshops.", */ // Dummy purpose value
-      /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */ // Dummy benefits value
-    });
+  const location = useLocation();
+  console.log(location);
+  const { name, image, date, clubName, clubImage, venue } = location.state;
+  const [likes, setLikes] = useState(0);
+  const [liked, setLiked] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [formFields, setFormFields] = useState({
+    budget: "",
+    purpose: "",
+    benefits: "",
+    sponsors: Array(5).fill({ name: "", type: "Gold", amount: "" }), // Initialize sponsor fields
+    iudApproval: "not-approved",
+    proofOfApproval: "",
+    /* budget: "1000 USD", */ // Dummy budget value
+    /* purpose: "To enhance the skills of students through practical workshops.", */ // Dummy purpose value
+    /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */ // Dummy benefits value
+  });
 
   const navigate = useNavigate();
 
@@ -160,7 +159,6 @@ const Exploreevent = () => {
 
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
-
 
     return (
         <div className="fixed inset-0 flex">
