@@ -24,4 +24,4 @@ class MeetingService{
 
 }
 
-export default MeetingService
+export default MeetingService;

@@ -33,12 +33,12 @@ const Meeting = () => {
       }
   };
 
-  const formatDate = (dateString) => {
+ /*  const formatDate = (dateString) => {
     if (dateString.length < 3) return 'Invalid date'; 
     console.log(dateString);
   
     return `${dateString[0]}-${dateString[1]}-${dateString[2]}`;
-  };
+  }; */
 
   const meetings1 = [
     {
@@ -100,7 +100,7 @@ const Meeting = () => {
                   </Typography>
                   <div className="flex items-center gap-4 mt-2">
                     <Typography className="text-[#AEC90A] font-normal" variant="h6">
-                      Date: {formatDate(meeting.date)}
+                      Date: {meeting.date}
                     </Typography>
                     <Typography className="text-[#AEC90A] font-normal" variant="h6">
                       Time: {meeting.time}
