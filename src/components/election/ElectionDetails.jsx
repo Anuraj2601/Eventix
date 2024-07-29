@@ -30,8 +30,8 @@ const ElectionDetails = ({ clubName, electionId }) => {
   }
 
   // Check if the current path is either '/oc' or '/member'
-  const isOcOrMember = currentPath.startsWith('/oc') || currentPath.startsWith('/member');
-  const isEditable = currentPath.startsWith('/president') || currentPath.startsWith('/secretary');
+  const isOcOrMember = currentPath.startsWith('/oc') || currentPath.startsWith('/member') || currentPath.startsWith('/secretary');
+  const isEditable = currentPath.startsWith('/president') ;
 
   const navigateToForm = (link) => {
     let finalLink = link;

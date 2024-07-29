@@ -60,10 +60,23 @@ const Club = () => {
     // },
   ];
 
-const getClubDetails = (club) => {
-  const basePath = location.pathname.startsWith("/student") ? "/student/club" : "/student/club";
-  navigate(`${basePath}/${club.sname}`, { state: { club } });
-};
+  const getClubDetails = (club) => {
+    let basePath;
+  
+    if (location.pathname.startsWith("/student")) {
+      basePath = "/student/club";
+    } else if (location.pathname.startsWith("/treasurer")) {
+      basePath = "/treasurer/club";
+    } else if (location.pathname.startsWith("/admin")) {
+      basePath = "/admin/club";
+    } else {
+      // You can define a fallback path or handle unexpected cases here
+      basePath = "/default/club";
+    }
+  
+    navigate(`${basePath}/${club.sname}`, { state: { club } });
+  };
+  
 
  
   
