@@ -236,6 +236,10 @@ const Login = () => {
         navigate('/');
     };
 
+    const handleSignup = () => {
+        navigate('/Signup')
+    }
+
     const validateEmail = (email) => {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@stu\.ucsc\.cmb\.ac\.lk$/;
         if (!email) return "Email is required";
@@ -375,7 +379,7 @@ const Login = () => {
                     <div className='mt-10'>
                         <button type="submit" className="w-full bg-primary text-black py-2 h-[50px] rounded font-bold hover:bg-secondary rounded-full">LOGIN</button>
                         <div className="flex justify-center mt-5">
-                            <button className="w-full border border-white py-2 h-[50px] rounded font-base text-white text-[14px] rounded-full">Signup</button>
+                            <button className="w-full border border-white py-2 h-[50px] rounded font-base text-white text-[14px] rounded-full" onClick={handleSignup} >Signup</button>
                         </div>
 
                         <div className="text-right mt-4">
