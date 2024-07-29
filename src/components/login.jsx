@@ -84,6 +84,14 @@ const Login = () => {
                 {
                     navigate('/oc/dashboard')
                 }
+                if(userData.role == 'treasurer')
+                {
+                    navigate('/treasurer/dashboard')
+                }
+                if(userData.role == 'secretary')
+                {
+                    navigate('/secretary/dashboard')
+                }
 
             } else {
                 /* setError(userData.message); */
