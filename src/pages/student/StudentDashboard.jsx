@@ -6,32 +6,24 @@ import Upcoming from '../../components/Upcoming';
 import Feedback from '../../components/Feedback';
 
 // Import images
-import dp from '../../assets/dp.png';
-import dp1 from '../../assets/dp1.png';
+import dp from '../../assets/clubs/ieee.png';
+import dp1 from '../../assets/clubs/rotaract.png';
 import madhackImage from '../../assets/events/flix.jpg';
 import hackathonImage from '../../assets/events/rainbow.jpg';
 import rekaImage from '../../assets/events/journey.jpg';
 import careerfairImage from '../../assets/events/session.jpg';
 import dhackImage from '../../assets/events/install.jpg';
 
+import vesakImage from "../../assets/vesak.jpg";
+import eidImage from "../../assets/farewell.jpg";
+import farewellImage from "../../assets/farewell.jpg";
+import esalaImage from "../../assets/esala.jpg";
+import posonImage from "../../assets/poson.jpg";
+import { useNavigate } from 'react-router-dom';
+
 const Dashboard = () => {
 
   const events = [
-    {
-      id: "1",
-      publisher_name: "Lori Kletzer",
-      publisher_position: "President of Club Rotaract",
-      publisher_img: dp,
-      event: "2025 Career Fair",
-      deadline: "30th of March 2025",
-      description: "Join us for the annual career fair to meet potential employers and learn about job opportunities.",
-      date: "20.08.2025",
-      time: "9 am",
-      venue: "UCSC Mini Auditorium",
-      contact: "0217988234",
-      email: "career25@gmail.com",
-      image: madhackImage,
-    },
     {
       id: "2",
       publisher_name: "John Doe",
@@ -47,6 +39,23 @@ const Dashboard = () => {
       email: "techsymposium@ucsc.edu",
       image: hackathonImage,
     },
+    {
+      id: "1",
+      publisher_name: "Lori Kletzer",
+      publisher_position: "President of Club Rotaract",
+      publisher_img: dp,
+      event: "2025 Career Fair",
+      deadline: "30th of March 2025",
+      description: "Join us for the annual career fair to meet potential employers and learn about job opportunities.",
+      date: "20.08.2025",
+      time: "9 am",
+      venue: "UCSC Mini Auditorium",
+      contact: "0217988234",
+      email: "career25@gmail.com",
+      image: eidImage,
+      
+    },
+   
     {
       id: "3",
       publisher_name: "Jane Smith",

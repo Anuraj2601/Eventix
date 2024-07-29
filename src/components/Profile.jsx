@@ -165,7 +165,7 @@ const ProfileUpdatePage = () => {
             </div>
 
             <div className=" p-6 rounded-lg overflow-y-auto lg:h-[calc(100vh)]">
-            <h2 className="text-xl font-semibold mb-4 text-center">Participated Events</h2>
+            <h2 className="text-xl font-semibold mb-4 text-center">Participated Event OCs</h2>
             <div className="grid grid-cols-1  gap-4">
               {participatedEvents.map((event, index) => (
                 <div key={index} className=" p-4 rounded-lg shadow-md">
