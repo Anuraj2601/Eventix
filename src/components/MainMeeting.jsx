@@ -19,6 +19,7 @@ const MainMeeting = () => {
     const [disabledButtons, setDisabledButtons] = useState(new Set());
     
 
+
     const meetingAnnouncements = [
         {
             id: 1,
@@ -100,14 +101,6 @@ const MainMeeting = () => {
             postedTime: '10:00 AM'
         },
     ];
-    const handleGetQRCode = (id) => {
-        setPopupVisible(id);
-        setTimeout(() => {
-            setPopupVisible(null);
-            setDisabledButtons((prev) => new Set(prev).add(id));
-        }, 5000);
-    };
-
     const handleJoinMeeting = (id) => {
         console.log('Join Meeting for meeting ID:', id);
     };
@@ -136,7 +129,6 @@ const MainMeeting = () => {
     const handleReRequest = (id) => {
         console.log('Re-request meeting ID:', id);
     };
-
     const renderContent = () => {
         return (
             <div className="relative flex flex-col items-center">
@@ -146,57 +138,69 @@ const MainMeeting = () => {
                     className="w-full h-auto mb-6 shadow-lg"
                 />
                 {selectedFilter === 'physical' && (
-                    <>
-                        <button
-                            onClick={() => setShowDeclinedModal(true)}
-                            className="absolute top-4 right-4 bg-[#DDFF00] font-medium text-dark-500 px-4 py-2 rounded-md shadow-md"
-                        >
-                            Declined ({declinedMeetings.size})
-                        </button>
-
-                        <div className="absolute left-4 top-16 bg-black bg-opacity-75 p-6 rounded-lg text-white w-1/3 h-[400px]">
-                            <h2 className="text-lg font-semibold mb-4">Create Meeting</h2>
-                            <form className="space-y-4">
-                                <div>
-                                    <label className="block text-sm mb-2">Topic</label>
-                                    <input
-                                        type="text"
-                                        className="w-full p-4 rounded-md bg-dark-500 border border-gray-600 text-white text-lg"
-                                        placeholder="Enter meeting topic"
-                                    />
-                                </div>
-                                <div className="flex space-x-4">
-                                    <div className="flex-1">
-                                        <label className="block text-sm mb-2">Date</label>
-                                        <input
-                                            type="date"
-                                            className="w-full p-2 rounded-md bg-dark-500 border border-gray-600 text-white"
-                                            style={{ color: 'white', caretColor: 'white' }}
-                                        />
-                                    </div>
-                                    <div className="flex-1">
-                                        <label className="block text-sm mb-2">Time</label>
-                                        <input
-                                            type="time"
-                                            className="w-full p-2 rounded-md bg-dark-500 border border-gray-600 text-white"
-                                            style={{ color: 'white', caretColor: 'white' }}
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-sm mb-2">For who</label>
-                                    <select className="w-full p-2 rounded-md bg-dark-500 border border-gray-600 text-white">
-                                        <option>Board</option>
-                                        <option>OC</option>
-                                        <option>Club Members</option>
-                                    </select>
-                                </div>
-                                <button type="submit" className="w-full bg-[#DDFF00] text-dark-500 font-medium py-2 rounded-md">Create Meeting</button>
-                            </form>
-                        </div>
-                    </>
+                    <button
+                        onClick={() => setShowDeclinedModal(true)}
+                        className="absolute top-4 right-4 bg-[#DDFF00] font-medium text-dark-500 px-4 py-2 rounded-md shadow-md"
+                    >
+                        Declined ({declinedMeetings.size})
+                    </button>
                 )}
 
+                {(selectedFilter === 'physical' || selectedFilter === 'online') && (
+                    <div
+                        className={`absolute left-10 top-7 bg-black bg-opacity-75 p-6 rounded-lg text-white w-[600px] mt-3 ${selectedFilter === 'online' ? 'h-[400px]' : 'h-[500px]'
+                            }`}
+                    >
+                        <h2 className="text-lg font-semibold mb-4">Create Meeting</h2>
+                        <form className="space-y-4">
+                            <div>
+                                <label className="block text-sm mb-2">Topic</label>
+                                <input
+                                    type="text"
+                                    className="w-full p-4 rounded-md h-12 bg-dark-500 border border-gray-600 text-white text-sm"
+                                    placeholder="Enter meeting topic"
+                                />
+                            </div>
+                            <div className="flex space-x-4">
+                                <div className="flex-1">
+                                    <label className="block text-sm mb-2">Date</label>
+                                    <input
+                                        type="date"
+                                        className="w-full p-2 text-sm h-10 rounded-md bg-dark-500 border border-gray-600 text-white"
+                                        style={{ color: 'white', caretColor: 'white' }}
+                                    />
+                                </div>
+                                <div className="flex-1">
+                                    <label className="block text-sm mb-2">Time</label>
+                                    <input
+                                        type="time"
+                                        className="w-full text-sm h-10 p-2 rounded-md bg-dark-500 border border-gray-600 text-white"
+                                        style={{ color: 'white', caretColor: 'white' }}
+                                    />
+                                </div>
+                            </div>
+                            {selectedFilter === 'physical' && (
+                                <div>
+                                    <label className="block text-sm mb-2">Venue</label>
+                                    <input
+                                        type="text"
+                                        className="w-full p-4 rounded-md bg-dark-500 border h-12 border-gray-600 text-white text-sm"
+                                        placeholder="Enter Meeting Venue"
+                                    />
+                                </div>
+                            )}
+                            <div>
+                                <label className="block text-sm mb-2">For who</label>
+                                <select className="w-full p-2 rounded-md bg-dark-500 border border-gray-600 text-white">
+                                    <option>Board</option>
+                                    <option>OC</option>
+                                    <option>Club Members</option>
+                                </select>
+                            </div>
+                            <button type="submit" className="w-full bg-[#DDFF00] text-dark-500 font-medium py-2 rounded-md">Create Meeting</button>
+                        </form>
+                    </div>
+                )}
             </div>
         );
     };
@@ -204,8 +208,6 @@ const MainMeeting = () => {
 
 
     const renderMeetingAnnouncements = () => {
-       
-
         const handleGetQRCode = (id) => {
             setPopupVisible(id);
             setTimeout(() => {
@@ -305,85 +307,85 @@ const MainMeeting = () => {
 
 
 
-    const renderUnionAnnouncements = () => {
-        const handleGetQRCode = (id) => {
-            setPopupVisible(id);
-            setTimeout(() => {
-                setPopupVisible(null);
-            }, 5000);
-        };
-
-        const handleCancelPopup = (id) => {
+const renderUnionAnnouncements = () => {
+    const handleGetQRCode = (id) => {
+        setPopupVisible(id);
+        setTimeout(() => {
             setPopupVisible(null);
-        };
+        }, 5000);
+    };
 
-        const announcementsToShow = selectedFilter === 'online' ? unionAnnouncements.slice(0, 3) : unionAnnouncements;
+    const handleCancelPopup = () => {
+        setPopupVisible(null);
+    };
 
-        return (
-            <div className="p-4 rounded-lg mb-10 mx-4">
-                <h2 className="text-[16px] font-medium mb-4">Upcoming UNION Meetings</h2>
-                {announcementsToShow.map((announcement) => (
-                    <div key={announcement.id} className="relative bg-dark-500 rounded-lg flex items-center p-4 mb-4 w-full h-[100px]">
-                        <div className="flex flex-col justify-between flex-grow">
-                            <div>
-                                <p className="text-sm mt-2">
-                                    <span className="block font-medium text-[14px] leading-loose">
-                                        {announcement.title} | <span className="font-normal text-[14px] leading-loose text-white opacity-50">{announcement.description}</span>
-                                    </span>
-                                    <span className='block text-[15px] text-primary opacity-100 mt-1'>
-                                        {announcement.date} | {announcement.time} | {announcement.location}
-                                    </span>
-                                </p>
-                            </div>
-                            <div className="text-xs text-white opacity-50 mt-2">
-                                <span>{announcement.postedDate}</span>
-                                <span className="mx-2">{announcement.postedTime}</span>
-                            </div>
+    const announcementsToShow = selectedFilter === 'online' ? unionAnnouncements.slice(0, 3) : unionAnnouncements;
+
+    return (
+        <div className="p-4 rounded-lg mb-10 mx-4">
+            <h2 className="text-[16px] font-medium mb-4">Upcoming UNION Meetings</h2>
+            {announcementsToShow.map((announcement) => (
+                <div key={announcement.id} className="relative bg-dark-500 rounded-lg flex items-center p-4 mb-4 w-full h-[100px]">
+                    <div className="flex flex-col justify-between flex-grow">
+                        <div>
+                            <p className="text-sm mt-2">
+                                <span className="block font-medium text-[14px] leading-loose">
+                                    {announcement.title} | <span className="font-normal text-[14px] leading-loose text-white opacity-50">{announcement.description}</span>
+                                </span>
+                                <span className='block text-[15px] text-primary opacity-100 mt-1'>
+                                    {announcement.date} | {announcement.time} | {announcement.location}
+                                </span>
+                            </p>
                         </div>
-                        <div className="flex-none ml-4 flex space-x-2">
-                            {selectedFilter === 'physical' ? (
-                                <>
-                                    <button
-                                        onClick={() => handleDeclineMeeting(announcement.id)}
-                                        className={`px-4 py-2 ${declinedMeetings.has(announcement.id) ? 'bg-dark-500 cursor-not-allowed border border-red-600 text-red-500' : 'bg-dark-400 text-primary'} rounded font-medium w-[150px] hover:scale-105 transition-transform duration-200`}
-                                        disabled={declinedMeetings.has(announcement.id)}
-                                    >
-                                        {declinedMeetings.has(announcement.id) ? 'Declined' : 'Decline'}
-                                    </button>
-                                    <button
-                                        onClick={() => handleGetQRCode(announcement.id)}
-                                        className={`px-4 py-2 ${popupVisible === announcement.id ? 'bg-dark-500 cursor-not-allowed opacity-50 text-primary border border-secondary' : 'bg-primary text-sec'} rounded font-semibold w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200 text-dark-400`}
-                                        disabled={popupVisible === announcement.id}
-                                    >
-                                        {popupVisible === announcement.id ? 'QR Code Sent' : 'Get QR Code'}
-                                    </button>
-                                </>
-                            ) : (
+                        <div className="text-xs text-white opacity-50 mt-2">
+                            <span>{announcement.postedDate}</span>
+                            <span className="mx-2">{announcement.postedTime}</span>
+                        </div>
+                    </div>
+                    <div className="flex-none ml-4 flex space-x-2">
+                        {selectedFilter === 'physical' ? (
+                            <>
                                 <button
-                                    onClick={() => handleJoinMeeting(announcement.id)}
-                                    className="px-4 py-2 bg-dark-400 cursor-not-allowed text-white opacity-50 rounded font-medium w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                                    onClick={() => handleDeclineMeeting(announcement.id)}
+                                    className={`px-4 py-2 ${declinedMeetings.has(announcement.id) ? 'bg-dark-500 cursor-not-allowed border border-red-600 text-red-500' : 'bg-dark-400 text-primary'} rounded font-medium w-[150px] hover:scale-105 transition-transform duration-200`}
+                                    disabled={declinedMeetings.has(announcement.id)}
                                 >
-                                    Join Meeting
+                                    {declinedMeetings.has(announcement.id) ? 'Declined' : 'Decline'}
                                 </button>
-                            )}
-                        </div>
-                        {popupVisible === announcement.id && (
-                            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                                <div className="bg-white p-6 rounded-lg w-[450px] h-[200px] flex flex-col items-center justify-center">
-                                    <p className="text-dark-400 mb-4 font-medium">Wait a minute, your QR code will be sent to you as a notification.</p>
-
-                                    <button onClick={() => handleCancelPopup(announcement.id)} className="bg-dark-400 text-white px-4 py-2 w-[400px] rounded">
-                                        No need
-                                    </button>
-                                    <div className="mb-4 text-primary font-medium animate-blink mt-6">Loading...</div>
-                                </div>
-                            </div>
+                                <button
+                                    onClick={() => handleGetQRCode(announcement.id)}
+                                    className={`px-4 py-2 ${popupVisible === announcement.id ? 'bg-dark-500 cursor-not-allowed opacity-50 text-primary border border-secondary' : 'bg-primary text-sec'} rounded font-semibold w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200 text-dark-400`}
+                                    disabled={popupVisible === announcement.id}
+                                >
+                                    {popupVisible === announcement.id ? 'QR Code Sent' : 'Get QR Code'}
+                                </button>
+                            </>
+                        ) : (
+                            <button
+                                onClick={() => handleJoinMeeting(announcement.id)}
+                                className="px-4 py-2 bg-dark-400 cursor-not-allowed text-white opacity-50 rounded font-medium w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                            >
+                                Join Meeting
+                            </button>
                         )}
                     </div>
-                ))}
-            </div>
-        );
-    };
+                    {popupVisible === announcement.id && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <div className="bg-white p-6 rounded-lg w-[450px] h-[200px] flex flex-col items-center justify-center">
+                                <p className="text-dark-400 mb-4 font-medium">Wait a minute, your QR code will be sent to you as a notification.</p>
+
+                                <button onClick={handleCancelPopup} className="bg-dark-400 text-white px-4 py-2 w-[400px] rounded">
+                                    No need
+                                </button>
+                                <div className="mb-4 text-primary font-medium animate-blink mt-6">Loading...</div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            ))}
+        </div>
+    );
+};
 
 
 
@@ -466,7 +468,7 @@ const MainMeeting = () => {
                             {[...declinedMeetings].map((id) => {
                                 const meeting = [...meetingAnnouncements, ...unionAnnouncements].find((announcement) => announcement.id === id);
                                 return meeting ? (
-                                    <li key={id} className="mb-5 w-[460px] rounded-md text-dark-500 font-medium h-[60px] px-2 py-6 flex items-center justify-between">
+                                    <li key={id} className="mb-5 w-[460px] border border-primary rounded-md text-dark-500 font-medium h-[60px] px-2 py-6 flex items-center justify-between">
                                         <div>
                                             <p className="font-medium">{meeting.title}</p>
                                             <p>{meeting.date} | {meeting.time} | {meeting.location}</p>
