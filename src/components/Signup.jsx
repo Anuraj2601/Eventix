@@ -501,7 +501,7 @@ const Signup = () => {
         >
           <IoArrowBackCircleOutline />
         </span>
-        <img src={signupMan} alt="signup" className="w-[700px] mt-32 h-auto" />
+        <img src={signupMan} alt="signup" className="w-[700px] mt-[156px] h-auto" />
       </div>
 
       {/* Right Side */}

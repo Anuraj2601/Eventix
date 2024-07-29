@@ -23,7 +23,7 @@ const HeroSection = () => {
                         { Icon: HiSpeakerphone, label: "Announcements" }
                     ].map(({ Icon, label }) => (
                         <div key={label} className="flex flex-col items-center">
-                            <div className="bg-dark-400 shadow-md rounded-2xl p-6 hover:bg-primary transition-colors group" style={{ 
+                            <div className="bg-dark-400 shadow-md rounded-md p-6 hover:bg-primary transition-colors group" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
                                 <Icon className="w-12 h-12 text-primary transition-colors group-hover:text-black"  />

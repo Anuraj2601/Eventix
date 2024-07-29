@@ -97,15 +97,15 @@ const UpcomingEvent = () => {
     return (
         <div className="flex flex-col items-center mt-3">
             <div className="flex items-center bg-dark-background p-4 rounded-lg">
-                <BsCalendar2EventFill className="text-secondary w-9 h-9 shadow-lg" />
-                <span className="text-lg font-normal pl-3 text-white uppercase">Upcoming events</span>
+                <BsCalendar2EventFill className="text-[#AEC90A]  w-9 h-9 shadow-lg" />
+                <span className="text-lg font-normal pl-3 text-[#AEC90A] uppercase">Upcoming events</span>
             </div>
 
-            <div className="bg-dark-400 w-[82vw] h-[76vh] mt-2 rounded-lg flex items-center relative p-10 mb-20" style={{ 
+            <div className="bg-dark-400 w-[82vw] h-[73vh] mt-2 rounded-lg flex items-center relative p-10 mb-20" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
                 <div className={`w-full h-full rounded-md p-0 flex items-start ${animationClass}`}>
-                    <div className="w-[300px] h-[300px] mt-10">
+                    <div className="w-[500px] h-[400px] mt-10">
                         <img src={activeEvent.image} alt={activeEvent.name} className="h-full rounded-xl border-4 border-white object-cover"  style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}/>
@@ -131,13 +131,13 @@ const UpcomingEvent = () => {
                             </div>
                         </div>
                         <div className="mt-10 ml-0 flex justify-center items-center gap-4" >
-                            <div className="text-[15px] text-white font-normal bg-dark-background w-1/2 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary" style={{ 
+                            <div className="text-[15px] text-white font-normal bg-dark-background w-1/2 h-12 p-2 rounded-md flex items-center justify-center hover:border border-[#DDFF00]" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
                                 Deadline : <span className="ml-2 text-[15px] font-normal text-primary">{activeEvent.deadline}</span>
                             </div>
 
-                            <div className="text-[15px] font-normal text-white bg-dark-background w-1/2 ml-0 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary" style={{ 
+                            <div className="text-[15px] font-normal text-white bg-dark-background w-1/2 ml-0 h-12 p-2 rounded-md flex items-center justify-center hover:border border-[#DDFF00]" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
                                 Event Date : <span className="ml-2 text-[15px] font-normal text-primary">{activeEvent.eventDate}</span>
@@ -163,7 +163,7 @@ const UpcomingEvent = () => {
                                         <span className="mr-8 text-[14px] font-normal">{activeEvent.time}</span>
                                         <MdLocationOn className="mr-2 w-6 h-7 text-primary" />
                                         <span className="mr-8 text-[14px] font-normal">{activeEvent.location}</span>
-                                        <button className="bg-dark-400 text-white text-[14px] font-normal hover:font-semibold hover:bg-primary hover:text-dark-400 tracking-wide px-5 py-1 ml-10 rounded-full" style={{ 
+                                        <button className="bg-primary text-dark-400 text-[14px] font-medium   hover:text-dark-400 tracking-wide px-5 py-1 ml-10 rounded-full" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
                                             Go with post
@@ -173,7 +173,7 @@ const UpcomingEvent = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="absolute bottom-4 right-[2px] mr-10 flex space-x-4">
+                    <div className="absolute bottom-4 right-[20px] mr-10 flex space-x-4">
                         <button className="bg-primary text-dark-400 text-[14px] font-base w-28 h-10 rounded-md">
                             Register
                         </button>
