@@ -87,8 +87,22 @@ const Meeting = () => {
     navigate(`/president/club/meeting/edit/${id}`);
   }
 
-  const handleDelete = (id) => {
-    // Add your delete handling logic here
+  const handleDelete = async (id) => {
+    try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this Meeting?"
+      );
+
+      const token = localStorage.getItem("token");
+      if (confirmDelete) {
+        await MeetingService.deleteMeeting(id, token);
+
+        navigate(-1);
+      }
+    } catch (error) {
+      console.error("Error fetching meetings:", error);
+    }
+    
   };
 
   const openMeetingForm = () =>{
