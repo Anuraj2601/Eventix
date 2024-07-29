@@ -69,6 +69,23 @@ const Announcement = () => {
     navigate(`/president/club/announcement/edit/${announcementId}`);
   }
 
+  const handleDeleteAnnouncement = async (announcementId) => {
+    try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this Announcement?"
+      );
+
+      const token = localStorage.getItem("token");
+      if (confirmDelete) {
+        await AnnouncementService.deleteAnnouncement(announcementId, token);
+
+        navigate(-1);
+      }
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+    }
+  };
+
  /*  const meetings = [
     {
       id: "1",
@@ -147,7 +164,7 @@ const Announcement = () => {
                     {isEditable && (
                       <EditDeleteButton
                         onEdit={() => updateAnnouncement(announcement.announcement_id)}
-                        onDelete={() => handleDelete(id)}
+                        onDelete={() => handleDeleteAnnouncement(announcement.announcement_id)}
                       />
                     )}
                   </div>
