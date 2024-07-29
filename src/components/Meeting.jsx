@@ -83,9 +83,9 @@ const Meeting = () => {
     },
   ]; */
 
-  const handleEdit = (id) => {
-    // Add your edit handling logic here
-  };
+  const handleUpdate = (id) => {
+    navigate(`/president/club/meeting/edit/${id}`);
+  }
 
   const handleDelete = (id) => {
     // Add your delete handling logic here
@@ -173,7 +173,7 @@ const Meeting = () => {
                   {isEditable && (
                     <div className="flex items-center gap-4">
                       <EditDeleteButton
-                        onEdit={() => handleEdit(meeting.meeting_id)}
+                        onEdit={() => handleUpdate(meeting.meeting_id)}
                         onDelete={() => handleDelete(meeting.meeting_id)}
                       />
                     </div>

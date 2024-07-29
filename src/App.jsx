@@ -250,6 +250,7 @@ const App = () => {
         <Route path="/president/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
         <Route path="/president/club/announcement/edit/:id" element={<AddNewAnnouncementForm/>}></Route>
         <Route path="/president/club/meeting/add" element={<AddNewMeetingForm/>}></Route>
+        <Route path="/president/club/meeting/edit/:id" element={<AddNewMeetingForm/>}></Route>
 
 
         

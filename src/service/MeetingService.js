@@ -73,6 +73,7 @@ class MeetingService{
         try{
 
             const data = {
+                meeting_id,
                 meeting_name,
                 date,
                 time,
