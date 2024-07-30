@@ -151,8 +151,11 @@ const MainMeeting = () => {
                         className={`absolute left-10 top-7 bg-black bg-opacity-75 p-6 rounded-lg text-white w-[600px] mt-3 ${selectedFilter === 'online' ? 'h-[400px]' : 'h-[500px]'
                             }`}
                     >
-                        
-                        <h2 className="text-lg font-semibold mb-4">Create Meeting</h2>
+                        {selectedFilter === 'physical' && (
+                        <h2 className="text-lg font-semibold mb-4">Create New Physical Meeting</h2>)}
+
+{selectedFilter === 'online' && (
+                        <h2 className="text-lg font-semibold mb-4">Create New Online Meeting</h2>)}
                         <form className="space-y-4">
                             <div>
                                 <label className="block text-sm mb-2">Topic</label>

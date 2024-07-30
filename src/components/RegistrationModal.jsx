@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaTimes } from 'react-icons/fa'; // Import the white cross icon
 
 const RegistrationModal = ({ event, isOpen, onClose }) => {
   const [mobile, setMobile] = useState('');
@@ -27,8 +28,19 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-black p-6 rounded-md shadow-md border-[#AEC90A] w-96">
+      <div className="relative w-full h-full">
+  <button
+    type="button"
+    className="absolute top-0 right-2 px-4 py-2 text-white  rounded-md"
+    onClick={onClose}
+  >
+    <FaTimes size={20} />
+  </button>
+</div>
         <h2 className="text-xl font-bold mb-4">{`Register for ${event.name}`}</h2>
         <form onSubmit={handleSubmit}>
+       
+
           <div className="mb-4">
             <label className="block text-white text-sm font-bold mb-2">
               Name
@@ -78,16 +90,10 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
             />
           </div>
           <div className="flex justify-end">
-            <button
-              type="button"
-              className="mr-4 px-4 py-2 text-black bg-white rounded-md"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
+            
             <button
               type="submit"
-              className="px-4 py-2 bg-[#AEC90A] text-black rounded-md"
+              className="px-4 py-2    bg-[#AEC90A] text-black rounded-md"
             >
               Register
             </button>

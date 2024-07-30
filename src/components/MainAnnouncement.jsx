@@ -4,11 +4,13 @@ import Navbar from './Navbar';
 import ieeeImage from '../assets/clubs/ieee.png';
 import isacaImage from '../assets/clubs/isaca1.png';
 import rotaractImage from '../assets/clubs/rotaract.png';
+import { useLocation } from 'react-router-dom';
 
 const MainAnnouncement = () => {
     const [selectedFilter, setSelectedFilter] = useState('allAnnouncements');
     const [selectedClub, setSelectedClub] = useState(null);
     const [viewMode, setViewMode] = useState('new');
+    const isAdminPath = location.pathname.startsWith('/admin');
 
     const clubAnnouncements = [
         {
@@ -167,20 +169,29 @@ const MainAnnouncement = () => {
         } else if (selectedFilter === 'unionAnnouncements') {
             return (
                 <div className="relative p-4 rounded-lg h-[70vh]">
-                    <button
-                        onClick={() => setSelectedFilter('clubAnnouncements')}
-                        className="absolute top-[200px] right-5 px-4 py-2 bg-primary text-black rounded font-medium"
-                    >
-                        Go Back
-                    </button>
+                   
                     <div className="grid grid-cols-1 gap-4">
+                    {isAdminPath && (
+
+                    <div className="flex space-x-4 absolute top-2 right-4">
+        <button
+            onClick={() => setShowModal(true)}
+            className="px-4 py-2 bg-primary text-black rounded font-medium"
+        >
+            Add New
+        </button>
+       
+    </div> )}
                         {unionAnnouncements.map((union) => (
                             <div key={union.id} className="mb-6">
-                                <div className="grid grid-cols-1 gap-4">
+                                <div className="grid grid-cols-1 gap-4 mt-12">
+                               
                                     {union.announcements.map((announcement) => (
+                                         
                                         <div key={announcement.id} className="relative p-4 bg-dark-500 rounded-lg flex flex-col" style={{ 
                                             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                                           }}          >
+                                            
                                             <div>
                                                 <p className="text-sm text-primary font-semibold">{announcement.title}</p>
                                                 <p className="text-sm">{announcement.description} <span className='ml-5 text-primary opacity-60'>{announcement.date} | {announcement.time} | {announcement.location}</span></p>
