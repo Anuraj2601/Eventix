@@ -7,7 +7,7 @@ import landingCover from "../assets/landingCover.png";
 const HeroSection = () => {
     return (
         <div className="relative w-full h-full -mt-40 flex flex-col items-center justify-center">
-            <img src={landingCover} alt="Landing Cover" className="w-full h-full object-cover z-0" />
+            <img src={landingCover} alt="Landing Cover" className="w-full h-full mt-9 object-cover z-0" />
             <div className="relative  text-center mt-800">
                 <h2 className="mt-5 px-3 py-2 font-medium text-4xl text-primary uppercase">WE GIVE,</h2>
                 <span className="font-normal text-[15px] tracking-wide subpixel-antialiased leading-4 text-white">

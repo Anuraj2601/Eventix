@@ -446,6 +446,7 @@ const Signup = () => {
       case 'email':
         if (!value) error = "Student Email is required";
         else if (!emailRegex.test(value)) error = "Invalid Email format";
+        else if (!value.startsWith(regNo)) error = "Email must start with the Registration Number";
         break;
       case 'password':
         if (!value) error = "Password is required";

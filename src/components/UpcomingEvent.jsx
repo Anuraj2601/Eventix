@@ -101,11 +101,11 @@ const UpcomingEvent = () => {
                 <span className="text-lg font-normal pl-3 text-[#AEC90A] uppercase">Upcoming events</span>
             </div>
 
-            <div className="bg-dark-400 w-[82vw] h-[73vh] mt-2 rounded-lg flex items-center relative p-10 mb-20" style={{ 
+            <div className="bg-dark-400 w-[82vw] h-[70vh] mt-2 rounded-lg flex items-center relative p-10 mb-20" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
                 <div className={`w-full h-full rounded-md p-0 flex items-start ${animationClass}`}>
-                    <div className="w-[500px] h-[400px] mt-10">
+                    <div className="w-[500px] h-[400px] mt-1 ml-2">
                         <img src={activeEvent.image} alt={activeEvent.name} className="h-full rounded-xl border-4 border-white object-cover"  style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}/>
@@ -116,7 +116,7 @@ const UpcomingEvent = () => {
                                 {Object.keys(contentData).map((buttonName) => (
                                     <button
                                         key={buttonName}
-                                        className={`relative text-[14px] font-normal w-24 h-12 p-1 rounded-md ${activeButton === buttonName ? 'text-primary after:content-[""] after:absolute after:bottom-[-5px] after:left-1/2 after:transform after:-translate-x-1/2 after:w-2 after:h-2 after:bg-secondary after:rounded-full' : 'text-white'}`}
+                                        className={`relative text-[14px] font-normal w-24 h-12 p-1 rounded-md ${activeButton === buttonName ? 'text-primary after:content-[""] after:absolute after:bottom-[-5px] after:left-1/2 after:transform after:-translate-x-1/2 after:w-2 after:h-2 after:bg-[#AEC90A] after:rounded-full' : 'text-white'}`}
                                         onClick={() => handleButtonClick(buttonName)}
                                     >
                                         {buttonName}
@@ -124,7 +124,7 @@ const UpcomingEvent = () => {
                                 ))}
                                 <a
                                     href="#"
-                                    className="text-secondary text-[15px] mt-[8px] ml-6 font-normal opacity-50 hover:opacity-100"
+                                    className="text-secondary text-[15px] mt-[8px] ml-6 font-normal opacity-50 hover:opacity-100 hover:text-[#AEC90A]"
                                 >
                                     See all
                                 </a>
@@ -173,7 +173,7 @@ const UpcomingEvent = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="absolute bottom-4 right-[20px] mr-10 flex space-x-4">
+                    <div className="absolute bottom-8 right-0 mr-10 flex space-x-4">
                         <button className="bg-primary text-dark-400 text-[14px] font-base w-28 h-10 rounded-md">
                             Register
                         </button>
@@ -181,7 +181,7 @@ const UpcomingEvent = () => {
                             className="bg-dark-500 text-white text-[14px] font-normal w-28 h-10 rounded-md flex items-center justify-center pl-4"
                             onClick={handleNextClick}
                         >
-                            Next <GrFormNext className="ml-1 mt-[2px] text-secondary" size={20}></GrFormNext>
+                            Next <GrFormNext className="ml-1 mt-[2px] text-[#AEC90A]" size={20}></GrFormNext>
                         </button>
                     </div>
                 </div>

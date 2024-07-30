@@ -16,11 +16,11 @@ const LandingNav = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80 font-medium">
+    <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80 font-medium ">
       <div className="container px-4 mx-auto relative lg:text-sm">
         <div className="flex justify-between items-center">
           <div className="flex items-center flex-shrink-0">
-            <img className="h-auto w-[130px] mr-2" src={Logo} alt="Logo" />
+            <img className="h-auto w-[130px] ml-28" src={Logo} alt="Logo" />
           </div>
           <ul className="hidden lg:flex ml-14 space-x-12 font-normal tracking-wider">
             {navItems.map((item, index) => (
@@ -35,13 +35,13 @@ const LandingNav = () => {
               </li>
             ))}
           </ul>
-          <div className="hidden lg:flex justify-center space-x-5 items-center font-light">
+          <div className="hidden lg:flex justify-center space-x-5 items-center font-light mr-[120px]">
             <a
               href={Login}
-              className="relative overflow-hidden w-24 h-10 flex items-center justify-center text-secondary border border-primary rounded-md font-medium transition duration-500 ease-in-out group"
+              className="relative overflow-hidden w-24 h-10  flex items-center justify-center text-[#AEC90A] border border-primary rounded-md font-medium transition duration-500 ease-in-out group"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-primary to-[#DDFF00] w-full h-full transform -translate-x-full transition-transform duration-300 ease-in-out group-hover:translate-x-0"></span>
-              <span className="relative z-10 group-hover:text-gray-900 text-[14px] font-semibold"><Link to="/login">Login</Link></span>
+              <span className="absolute inset-0 bg-gradient-to-r  from-primary to-[#DDFF00] w-full h-full transform -translate-x-full transition-transform duration-300 ease-in-out group-hover:translate-x-0"></span>
+              <span className="relative z-10 group-hover:text-gray-900 text-[14px] font-semibold "><Link to="/login">Login</Link></span>
             </a>
             <a
               href={SignUp}
