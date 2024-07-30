@@ -42,9 +42,12 @@ class AnnouncementService{
 
             const response1 = await axios.get(`${AnnouncementService.BASE_URL}/president/getAllAnnouncements`,
                 {
-                    headers: {Authorization: `Bearer ${token}`}
+                    headers: {Authorization: `Bearer ${token}`,
+                 "Content-Type": 'application/json'
+                }
                 }
             )
+            console.log("Announcement response",response1.data);
             return response1.data;
             
         }catch(err){

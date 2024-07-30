@@ -20,10 +20,10 @@ const Meeting = () => {
 
   const [meetings,setMeetings] = useState([]);
 
-  useEffect(() => {
-    console.log("meetings:", meetings);
+  /* useEffect(() => {
+    //console.log("meetings:", meetings);
     fetchMeetings();
-  }, [meetings]);
+  }, []);
 
   useEffect(() => {
     if (meetings.length === 0) {
@@ -47,7 +47,22 @@ const Meeting = () => {
       } catch(error) {
           console.error('Error fetching meetings:', error);
       }
-  };
+  }; */
+
+  useEffect(() => {
+    const fetchMeetings = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await MeetingService.getAllMeetings(token);
+        const meetingsArray = response.content || [];
+        setMeetings(meetingsArray);
+      } catch (error) {
+        console.error('Error fetching meetings:', error);
+      }
+    };
+
+    fetchMeetings();
+  }, []);
 
   const formatDate = (dateString) => {
     if (dateString.length < 3) return 'Invalid date'; 

@@ -14,6 +14,7 @@ import EditDeleteButton from './EditDeleteButton';
 import { FaEye } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import AnnouncementService from '../service/AnnouncementService';
+import { Token } from "@mui/icons-material";
 
 const Announcement = () => {
   const [open, setOpen] = useState(false);
@@ -40,23 +41,50 @@ const Announcement = () => {
 
   const [announcements,setAnnouncements] = useState([]);
 
-  useEffect(() => {
+ /*  useEffect(() => {
     console.log("Fetching Announcements....");
       fetchAnnouncements();
   }, []);
 
+  useEffect(() => {
+    if (announcements.length === 0) {
+      console.log("No Announcements to check.");
+    } else {
+      const ids = announcements.map(announcement => announcement.meeting_id);
+       const uniqueIds = new Set(ids);
+      console.log(`Announcements length: ${announcements.length}`);
+      console.log(ids.length === uniqueIds.size ? 'All IDs are unique' : 'There are duplicate IDs'); 
+    }
+  }, [announcements]);
+
   const fetchAnnouncements = async () => {
       try {
+        
           const token = localStorage.getItem('token');
           const response1 = await AnnouncementService.getAllAnnouncements(token);
           const announcementsArray = response1.content || [];
-          //console.log('Sponsors response:', response);
+          console.log('Announcement response:', response1);
           setAnnouncements(announcementsArray);
 
       } catch(error) {
           console.error('Error fetching announcements:', error);
       }
-  };
+  }; */
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await AnnouncementService.getAllAnnouncements(token);
+        const announcementsArray = response.content || [];
+        setAnnouncements(announcementsArray);
+      } catch (error) {
+        console.error('Error fetching announcements:', error);
+      }
+    };
+
+    fetchAnnouncements();
+  }, []);
 
   const parseCustomDate = (dateString) => {
     if (dateString.length < 7) return 'Invalid date'; 
