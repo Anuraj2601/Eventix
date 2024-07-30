@@ -286,7 +286,16 @@ const Calendar = () => {
                   </button>
                 </li>
                 
-                ))}
+                ))} <div className="mt-4 space-y-1 text-sm leading-6 text-center text-gray-500">
+                {(location.pathname.startsWith('/president') || location.pathname.startsWith('/secretary')) && (
+                  <button
+                    className="mt-4 p-2 bg-[#AEC90A] text-black rounded-full"
+                    onClick={handleOpenModal}
+                  >
+                    Schedule Event
+                  </button>
+                )}
+              </div>
               </ol>
             ) : (
               <div className="mt-4 space-y-1 text-sm leading-6 text-center text-gray-500">
