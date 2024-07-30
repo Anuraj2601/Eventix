@@ -6,7 +6,7 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import { FaEye, FaEdit, FaTrash } from "react-icons/fa"; // Import icons
+import { FaEye, FaEdit, FaTrash, FaPlus } from "react-icons/fa"; // Import icons
 import { useLocation } from "react-router-dom"; // Import useLocation hook
 
 const AnnouncementNav = () => {
@@ -38,9 +38,10 @@ const AnnouncementNav = () => {
   return (
     <Tabs value={activeTab}>
       <TabsHeader
- className={`rounded-none bg-transparent p-0 ${
-  data.length === 1 ? 'justify-center' : 'flex'
-}`}        indicatorProps={{
+        className={`rounded-none bg-transparent p-0 ${
+          data.length === 1 ? 'justify-center' : 'flex'
+        }`}
+        indicatorProps={{
           className:
             "mt-8 absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 rounded-full transition-opacity bg-transparent border-b-[8px] border-[#AEC90A] shadow-none",
         }}
@@ -85,6 +86,14 @@ const AnnouncementNav = () => {
                     </button>
                   </div>
                 </div>
+              )}
+              {editable && (
+                <button
+                  className="absolute -top-6 -left-6 text-[#AEC90A] hover:text-white p-2 rounded-full bg-black transition-colors"
+                  style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)' }}
+                >
+                  <FaPlus size={10} />
+                </button>
               )}
             </div>
           </TabPanel>

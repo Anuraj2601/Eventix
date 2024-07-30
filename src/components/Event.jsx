@@ -4,18 +4,22 @@ import { IoMdClose } from "react-icons/io";
 import { FaCalendar, FaLocationDot } from "react-icons/fa6";
 import { IoTimeOutline } from "react-icons/io5";
 import { Button } from "@material-tailwind/react";
-import { useNavigate } from 'react-router-dom';
+import RegistrationModal from './RegistrationModal'; // Ensure correct path
 
 const Event = ({ event }) => {
-    const navigate = useNavigate();
     const [showFullDescription, setShowFullDescription] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleRegister = () => {
-        navigate(`/eventregister/${event.event}`);
+        setIsModalOpen(true);
     };
 
     const handleToggleDescription = () => {
         setShowFullDescription(!showFullDescription);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
     };
 
     return (
@@ -24,15 +28,14 @@ const Event = ({ event }) => {
                 boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
             }}>
                 <div className="flex flex-row items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-    <img src={event.publisher_img} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
-    <div>
-        <span>{event.publisher_position}</span>
-        <br />
-        <b>{event.publisher_name}</b>
-    </div>
-</div>
-
+                    <div className="flex items-center gap-3">
+                        <img src={event.publisher_img} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
+                        <div>
+                            <span>{event.publisher_position}</span>
+                            <br />
+                            <b>{event.publisher_name}</b>
+                        </div>
+                    </div>
                     <div className="flex items-center gap-4">
                         <HiOutlineDotsVertical className='text-[#AEC90A]' size={30} />
                         <IoMdClose className='text-[#AEC90A]' size={30} />
@@ -58,8 +61,7 @@ const Event = ({ event }) => {
                     </div>
                 </div>
                 <div className="flex flex-col gap-5 mt-1">
-                    
-                    <p className={`overflow-hidden ${showFullDescription ? 'whitespace-normal' : 'whitespace-nowrap overflow-ellipsis'}`}>
+                    <p className={`overflow-hidden ${showFullDescription ? 'whitespace-normal' : 'line-clamp-1'}`}>
                         {event.description}
                     </p>
                     {event.description.length > 100 && !showFullDescription && (
@@ -70,7 +72,7 @@ const Event = ({ event }) => {
                 </div>
                 <div className="flex items-center justify-end mt-3">
                     <Button className="flex justify-end bg-[#AEC90A] py-2 px-4 rounded-3xl font-bold text-[#0b0b0b]" onClick={handleRegister}>
-                        Register{" "}
+                        Register
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -88,6 +90,12 @@ const Event = ({ event }) => {
                     </Button>
                 </div>
             </div>
+
+            <RegistrationModal
+                event={event}
+                isOpen={isModalOpen}
+                onClose={closeModal}
+            />
         </div>
     );
 };

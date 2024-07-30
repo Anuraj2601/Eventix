@@ -21,6 +21,8 @@ import EditButton from "../../components/EditButton"; // Import the EditButton c
 import SponsorsService from "../../service/SponsorsService";
 import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import AddSponsorModal from "../../components/AddSponsorModal"; // Import your modal
+
 
 ReactModal.setAppElement("#root"); // For accessibility
 
@@ -453,13 +455,11 @@ const Exploreevent = () => {
         </div>
         <div className="flex justify-center">
           <button
-            onClick={() => {
-              /* Handle send request for approval */
-            }}
-            className={`px-4 py-2 rounded-full ${
-              isFormValid ? "bg-[#AEC90A]" : "bg-gray-500 cursor-not-allowed"
-            }`}
-            disabled={!isFormValid}
+           
+            className="px-4 py-2 rounded-full 
+              isFormValid  bg-[#AEC90A]  
+              "
+           
           >
             Download Proposal{" "}
           </button>
