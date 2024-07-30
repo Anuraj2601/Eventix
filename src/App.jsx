@@ -40,6 +40,8 @@ import Messagesoc from './components/Message';
 import Profileoc from './components/Profile';
 import Finalistsoc from './components/Finalists';
 import Votingoc from './components/Voting';
+import Apply from './components/Apply';
+import MainMeetingoc from './components/MainMeeting';
 
 
 
@@ -55,6 +57,7 @@ import Announcementsecretary from './components/MainAnnouncement';
 import Inquiriessecretary from './components/Inquiry';
 import Messagessecretary from './components/Message';
 import Profilesecretary from './components/Profile';
+import MainMeetingsecretary from './components/MainMeeting';
 
 
 
@@ -71,6 +74,7 @@ import Inquiriesstudent from './pages/student/Inquiry';
 import Announcementstudent from './components/MainAnnouncement';
 import Messagesstudent from './components/Message';
 import Profilestudent from './components/Profile';
+import MainMeetingstudent from './components/MainMeeting';
 
 
 
@@ -98,6 +102,7 @@ import Announcementmember from './components/MainAnnouncement';
 import Inquiriesmember from './components/Inquiry';
 import Messagesmember from './components/Message';
 import Profilemember from './components/Profile';
+import MainMeetingmember from './components/MainMeeting';
 
 
 
@@ -118,6 +123,7 @@ import Announcementadmin from './components/MainAnnouncement';
 import Inquiriesadmin from './pages/student/Inquiry';
 import Messagesadmin from './components/Message';
 import Profileadmin from './components/Profile';
+import MainMeetingadmin from './components/MainMeeting';
 
 
 
@@ -136,6 +142,7 @@ import Announcementtreasurer from './components/MainAnnouncement';
 import Inquiriestreasurer  from './pages/student/Inquiry';
 import Messagestreasurer from './components/Message';
 import Profiletreasurer from './components/Profile';
+import MainMeetingtreasurer from './components/MainMeeting';
 
 
 
@@ -189,6 +196,8 @@ const App = () => {
         <Route path='/member/profile' element={<Profileoc/>}></Route>
         <Route path='/member/club/finalists' element={<Finalistsoc/>}></Route>
         <Route path='/member/club/voting' element={<Votingoc/>}></Route>
+        <Route path='/member/election/Apply' element={<Apply/>}></Route>
+        <Route path='/member/meeting' element={<MainMeetingmember />}></Route> 
 
 
         
@@ -207,6 +216,7 @@ const App = () => {
         <Route path='/student/announcement' element={<Announcementstudent />}></Route> 
         <Route path='/student/messages' element={<Messagesstudent/>}></Route>
         <Route path='/student/profile' element={<Profilestudent/>}></Route>
+        <Route path='/student/meeting' element={<MainMeetingstudent />}></Route> 
 
 
 
@@ -234,7 +244,7 @@ const App = () => {
         <Route path='/president/profile' element={<Profilepresident/>}></Route>MainMeetingPresident
         <Route path='/president/meeting' element={<MainMeetingPresident />}></Route> 
         <Route path='/president/AddSponsor' element={<AddSponsor />}></Route> 
-
+        <Route path='/president/EditSponsor/:id' element={<AddSponsor />}></Route>
 
         <Route path="/preident/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
 
@@ -255,6 +265,7 @@ const App = () => {
         <Route path='/secretary/inquiry' element={<Inquiriessecretary/>}></Route>
         <Route path='/secretary/messages' element={<Messagessecretary/>}></Route>
         <Route path='/secretary/profile' element={<Profilesecretary/>}></Route>
+        <Route path='/secretary/meeting' element={<MainMeetingsecretary />}></Route> 
 
 
 
@@ -276,6 +287,8 @@ const App = () => {
         <Route path='/oc/profile' element={<Profileoc/>}></Route>
         <Route path='/oc/club/finalists' element={<Finalistsoc/>}></Route>
         <Route path='/oc/club/voting' element={<Votingoc/>}></Route>
+        <Route path='/oc/election/Apply' element={<Apply/>}></Route>
+        <Route path='/oc/meeting' element={<MainMeetingoc />}></Route> 
 
         
 
@@ -297,6 +310,7 @@ const App = () => {
         <Route path='/admin/inquiry' element={<Inquiriesadmin/>}></Route>
         <Route path='/admin/messages' element={<Messagesadmin/>}></Route>
         <Route path='/admin/profile' element={<Profileadmin/>}></Route>
+        <Route path='/admin/meeting' element={<MainMeetingadmin />}></Route> 
 
 
         <Route path='/treasurer/club' element={<StudentAllClubstreasurer/>}></Route>
@@ -314,6 +328,7 @@ const App = () => {
         <Route path='/treasurer/inquiry' element={<Inquiriestreasurer/>}></Route>
         <Route path='/treasurer/messages' element={<Messagestreasurer/>}></Route>
         <Route path='/treasurer/profile' element={<Profiletreasurer/>}></Route>
+        <Route path='/treasurer/meeting' element={<MainMeetingtreasurer />}></Route> 
 
 
 

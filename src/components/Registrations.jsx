@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardBody, Typography, Avatar } from "@material-tailwind/react";
 import { FaCheck } from "react-icons/fa";
 import CustomSwitch from "./Customswitch"; // Updated import path
-import EditButton from "./EditButton"; // Import your EditDeleteButton component
+import EditButton from "./EditButton"; // Import your EditButton component
 
 // Predefined teams and events
 const teams = ["Content", "Design", "Marketing", "Finance"];
@@ -56,6 +56,7 @@ const Registrations = () => {
       return acc;
     }, {})
   );
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleSwitchChange = () => {
     setIsOpen(!isOpen);
@@ -68,12 +69,34 @@ const Registrations = () => {
     }));
   };
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Filter members based on search term
+  const filteredMembers = members.filter((member) =>
+    member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    member.registrationNumber.includes(searchTerm)
+  );
+
   return (
     <Card className="w-full bg-neutral-900">
       <CardBody>
+        {/* Search Bar */}
+        <div className="mb-4 flex justify-end">
+  <input
+    type="text"
+    placeholder="Search by name or reg. number"
+    value={searchTerm}
+    onChange={handleSearchChange}
+    className="w-1/2 p-2 border border-gray-300 bg-black rounded-full text-white"
+  />
+</div>
+
+        
         {/* Custom Switch and Duration Section */}
         <div>
-          <div className="flex  items-center  mr-50">
+          <div className="flex items-center mb-4">
             <Typography color="white" variant="h6" className="mr-10">
               Open Registrations
             </Typography>
@@ -87,11 +110,15 @@ const Registrations = () => {
             <EditButton className="ml-4" /> {/* Display only the delete button */}
           </div>
         </div>
+        
         {/* Registered Members Section */}
-        {members.map((member) => (
+        {filteredMembers.map((member) => (
           <div
             key={member.id}
             className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-xl"
+            style={{ 
+              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+            }}
           >
             <div className="flex items-center gap-4 w-1/3">
               <Avatar

@@ -30,24 +30,28 @@ const ElectionDetails = ({ clubName, electionId }) => {
   }
 
   // Check if the current path is either '/oc' or '/member'
-  const isOcOrMember = currentPath.startsWith('/oc') || currentPath.startsWith('/member');
-  const isEditable = currentPath.startsWith('/president') || currentPath.startsWith('/secretary');
+  const isOcOrMember = currentPath.startsWith('/oc') || currentPath.startsWith('/member') || currentPath.startsWith('/secretary');
+  const isEditable = currentPath.startsWith('/president') ;
 
   const navigateToForm = (link) => {
     let finalLink = link;
-  
+
     if (currentPath.startsWith('/oc')) {
-      if (link === "/final-candidates") {
-        finalLink = "/oc/club/finalists";
-      } else if (link === "/voting") {
-        finalLink = "/oc/club/voting";
-      }
+        if (link === "/final-candidates") {
+            finalLink = "/oc/club/finalists";
+        } else if (link === "/voting") {
+            finalLink = "/oc/club/voting";
+        } else if (link === "/apply") {
+            finalLink = "/oc/election/apply";
+        }
     } else if (currentPath.startsWith('/member')) {
-      if (link === "/final-candidates") {
-        finalLink = "/member/club/finalists";
-      } else if (link === "/voting") {
-        finalLink = "/member/club/voting";
-      }
+        if (link === "/final-candidates") {
+            finalLink = "/member/club/finalists";
+        } else if (link === "/voting") {
+            finalLink = "/member/club/voting";
+        } else if (link === "/apply") {
+            finalLink = "/member/election/apply";
+        }
     }
   
     navigate(finalLink);
