@@ -34,15 +34,18 @@ const ExploreEvent = () => {
         sponsors: Array(5).fill({ name: '', type: 'Gold', amount: '' }), // Initialize sponsor fields
         iudApproval: 'not-approved',
         proofOfApproval: '',
-        budget: "1000 USD",  // Dummy budget value
-        purpose: "To enhance the skills of students through practical workshops.",  // Dummy purpose value
-        benefits: "Increased engagement in club activities and better preparation for industry challenges."  // Dummy benefits value
      
     });
   
     const [isFormValid, setIsFormValid] = useState(false);
 
-    const [budget, setBudget] = useState('1000 USD');
+    const [budget, setBudget] = useState("100000 Rupees");
+    const [purpose, setPurpose] = useState(
+      "To enhance the skills of students through practical workshops."
+    );
+    const [benefits, setBenefits] = useState(
+      "Increased engagement in club activities and better preparation for industry challenges."
+    );
 
     useEffect(() => {
         const initialLikes = Math.floor(Math.random() * 100) + 1;
