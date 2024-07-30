@@ -7,22 +7,18 @@ const MainCarousel = () => {
     const carouselRef = useRef(null);
 
     useEffect(() => {
-        const scrollInterval = setInterval(() => {
+        const scrollStep = () => {
             if (carouselRef.current) {
                 const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-
-                if (scrollLeft + clientWidth >= scrollWidth - 3) {
-                    carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+                if (scrollLeft <= 0) {
+                    carouselRef.current.scrollTo({ left: scrollWidth });
                 } else {
-                    carouselRef.current.scrollBy({
-                        left: 300,
-                        behavior: 'smooth',
-                    });
+                    carouselRef.current.scrollBy({ left: -1 });
                 }
+                requestAnimationFrame(scrollStep);
             }
-        }, 100);
-
-        return () => clearInterval(scrollInterval);
+        };
+        requestAnimationFrame(scrollStep);
     }, []);
 
     return (
@@ -30,8 +26,9 @@ const MainCarousel = () => {
             <div 
                 ref={carouselRef} 
                 className="flex space-x-10 overflow-x-scroll scrollbar-hide"
+                style={{ whiteSpace: 'nowrap' }}
             >
-                {images.map((image, index) => (
+                {images.concat(images).map((image, index) => (
                     <img
                         key={index}
                         src={image}
