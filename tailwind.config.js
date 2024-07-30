@@ -19,12 +19,24 @@ export default {
         'custom': '0 4px 6px rgba(219, 255, 0, 0.5)', 
       },
       height: {
-        '256': '64rem', // Adding custom height class
+        '256': '64rem',
       },
     },
   },
   darkMode: 'class',
   plugins: [
     require('@tailwindcss/forms'),
+    function ({ addUtilities }) {
+      addUtilities({
+        '.scrollbar-hide': {
+          '-webkit-overflow-scrolling': 'touch',
+          '-ms-overflow-style': 'none',
+          'scrollbar-width': 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none'
+          }
+        }
+      });
+    }
   ],
 }
