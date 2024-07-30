@@ -37,7 +37,9 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
     <FaTimes size={20} />
   </button>
 </div>
-        <h2 className="text-xl font-bold mb-4">{`Register for ${event.name}`}</h2>
+<h2 className="text-xl font-bold mb-4">
+    {event.name ? `Register for ${event.name}` : 'Register Now!'}
+</h2>
         <form onSubmit={handleSubmit}>
        
 
