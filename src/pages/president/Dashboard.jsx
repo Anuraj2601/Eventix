@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 import Event from '../../components/Event';
 import Upcoming from '../../components/Upcoming';
 import Feedback from '../../components/Feedback';
+import RegistrationModal from '../../components/RegistrationModal';
 
 // Import images
 import dp from '../../assets/clubs/ieee.png';
@@ -19,9 +20,15 @@ import eidImage from "../../assets/farewell.jpg";
 import farewellImage from "../../assets/farewell.jpg";
 import esalaImage from "../../assets/esala.jpg";
 import posonImage from "../../assets/poson.jpg";
-import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleRegister = (event) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+  };
 
   const events = [
     {
@@ -38,7 +45,6 @@ const Dashboard = () => {
       contact: "0217988234",
       email: "career25@gmail.com",
       image: eidImage,
-      
     },
     {
       id: "2",
@@ -108,22 +114,28 @@ const Dashboard = () => {
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
         <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto">
-  <div className="w-2/4 px-2 ml-2 overflow-y-auto">
-    {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
-    {events.length > 0 && events.map(event => <Event event={event} key={event.id} />)}
-  </div>
-  <div className="w-2/4 flex flex-col py-1 h-full">
-    <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl ">
-      <Upcoming />
-    </div>
-    <div className="flex-1  overflow-y-auto  mb-4" >      <Feedback />
-
-    </div>
-  </div>
-</div>
-
+          <div className="w-2/4 px-2 ml-2 overflow-y-auto">
+            {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
+            {events.length > 0 && events.map(event => (
+              <Event event={event} key={event.id} onRegister={() => handleRegister(event)} />
+            ))}
+          </div>
+          <div className="w-2/4 flex flex-col py-1 h-full">
+            <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl ">
+              <Upcoming />
+            </div>
+            <div className="flex-1  overflow-y-auto  mb-4">
+              <Feedback />
+            </div>
+          </div>
         </div>
       </div>
+      <RegistrationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        event={selectedEvent} 
+      />
+    </div>
   );
 }
 
