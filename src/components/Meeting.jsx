@@ -66,10 +66,29 @@ const Meeting = () => {
 
   const formatDate = (dateString) => {
     if (dateString.length < 3) return 'Invalid date'; 
-    console.log(dateString);
+    //console.log(dateString);
   
-    return `${dateString[0]}-${dateString[1]}-${dateString[2]}`;
+    return `${dateString[0]}-${String(dateString[1]).padStart(2, '0')}-${String(dateString[2]).padStart(2, '0')}`;
   };
+
+  const formatTime = (timeArray) => {
+    if (timeArray.length < 2) return 'Invalid time';
+  
+    const [hour, minute] = timeArray;
+  
+    if (hour === 0) {
+      return `12:${String(minute).padStart(2, '0')} AM`;
+    } else if (hour === 12) {
+      return `12:${String(minute).padStart(2, '0')} PM`;
+    } else if (hour > 12) {
+      return `${hour - 12}:${String(minute).padStart(2, '0')} PM`;
+    } else {
+      return `${hour}:${String(minute).padStart(2, '0')} AM`;
+    }
+  };
+  
+
+
 
   /* const meetings1 = [
     {
@@ -150,10 +169,10 @@ const Meeting = () => {
                   </Typography>
                   <div className="flex items-center gap-4 mt-2">
                     <Typography className="text-[#AEC90A] font-normal" variant="h6">
-                      Date: {meeting.date}
+                      Date: {formatDate(meeting.date)}
                     </Typography>
                     <Typography className="text-[#AEC90A] font-normal" variant="h6">
-                      Time: {meeting.time}
+                      Time: {formatTime(meeting.time)}
                     </Typography>
                   </div>
                 </div>
