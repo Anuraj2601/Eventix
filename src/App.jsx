@@ -246,7 +246,7 @@ const App = () => {
         <Route path='/president/AddSponsor' element={<AddSponsor />}></Route> 
         <Route path='/president/EditSponsor/:id' element={<AddSponsor />}></Route>
 
-        <Route path="/preident/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
+        <Route path="/president/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
 
 
         
