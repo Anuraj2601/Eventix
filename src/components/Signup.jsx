@@ -446,6 +446,7 @@ const Signup = () => {
       case 'email':
         if (!value) error = "Student Email is required";
         else if (!emailRegex.test(value)) error = "Invalid Email format";
+        else if (!value.startsWith(regNo)) error = "Email must start with the Registration Number";
         break;
       case 'password':
         if (!value) error = "Password is required";
@@ -501,7 +502,7 @@ const Signup = () => {
         >
           <IoArrowBackCircleOutline />
         </span>
-        <img src={signupMan} alt="signup" className="w-[700px] mt-32 h-auto" />
+        <img src={signupMan} alt="signup" className="w-[700px] mt-[156px] h-auto" />
       </div>
 
       {/* Right Side */}
