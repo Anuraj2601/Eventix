@@ -254,7 +254,7 @@ const AddNewMeetingForm = () => {
                                         id='title'
                                         value={title}
                                         onChange={(e) => setTitle(e.target.value)}
-                                        required/>
+                                        />
                                     {isSubmitted && errors.title && <div className="text-red-500">{errors.title}</div>}
                                 </div>
                                 <div className="flex flex-col gap-3  w-96 mt-4">
@@ -280,7 +280,7 @@ const AddNewMeetingForm = () => {
                                         id='time'
                                         value={time}
                                         onChange={(e) => setTime(e.target.value)}
-                                        required/>
+                                        />
                                     {isSubmitted && errors.time && <div className="text-red-500">{errors.time}</div>}
                                 </div>
                                 <div className="flex flex-col gap-3  w-96 mt-4">
