@@ -3,7 +3,7 @@ import Clubsforu from "../components/Clubsforu"
 import Footer from "../components/Footer"
 import HeroSection from "../components/HeroSection"
 import LandingNav from "../components/LandingNav"
-import MainCarousel from "../components/MainCarousel"
+// import MainCarousel from "../components/MainCarousel"
 import UpcomingEvent from "../components/UpcomingEvent"
 
 const Landing = () => {
@@ -15,7 +15,7 @@ const Landing = () => {
           <HeroSection />
           <Clubsforu />
           <UpcomingEvent />
-          <MainCarousel />
+          {/* <MainCarousel /> */}
           <Footer />
         </div>
       </h1>
