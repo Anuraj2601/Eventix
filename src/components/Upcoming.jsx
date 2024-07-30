@@ -18,6 +18,7 @@ import rac1 from "../assets/events/trail.jpg";
 import acm1 from "../assets/farewell.jpg";
 import rac2 from "../assets/events/snap.jpg";
 import LikeButton from './LikeButton'; // Adjust path as necessary
+import RegistrationModal from './RegistrationModal'; // Adjust path as necessary
 
 const upcomingItems = [
   { id: 1, name: "Madhack", image: ieee1, details: "IEEE Club Board Election for Term 24/25", date: "2024-08-15", venue: "Main Auditorium", time: "10:00 AM", organizedBy: "IEEE", clubImage: ieeeImg, likes: Math.floor(Math.random() * 100) },
@@ -31,11 +32,18 @@ const upcomingItems = [
 ];
 
 const Upcoming = () => {
-  const navigate = useNavigate();
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleRegister = (eventId, eventName) => {
-    navigate(`/eventregister/${eventId}`, { state: { eventName } });
+  const openModal = (event) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
   };
 
   return (
@@ -70,13 +78,25 @@ const Upcoming = () => {
                 <img src={item.clubImage} alt="Club" className="w-12 h-12 rounded-full mb-2" />
                 <div className="flex justify-center items-center mt-2">
                   <LikeButton likes={item.likes} />
-                  <button className="button-register ml-4" onClick={() => handleRegister(item.id, item.name)}>Register</button>
+                  <button 
+                    className="button-register ml-4" 
+                    onClick={() => openModal(item)}
+                  >
+                    Register
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         ))}
       </div>
+      {selectedEvent && (
+        <RegistrationModal
+          event={selectedEvent}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 };

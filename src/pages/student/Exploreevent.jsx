@@ -17,6 +17,7 @@ import { FaHeart } from "react-icons/fa";
 import { FaTimes } from 'react-icons/fa';
 import { FaUpload } from 'react-icons/fa'; // Import the upload icon
 import EditButton from '../../components/EditButton'; // Import the EditButton component
+import RegistrationModal from '../../components/RegistrationModal'; // Ensure correct path
 
 
 ReactModal.setAppElement('#root'); // For accessibility
@@ -107,8 +108,20 @@ const ExploreEvent = () => {
         setIsFormValid(isValid);
     };
 
-    const openModal = () => setModalIsOpen(true);
-    const closeModal = () => setModalIsOpen(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleRegister = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleToggleDescription = () => {
+        setShowFullDescription(!showFullDescription);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
 
     return (
         <div className="fixed inset-0 flex">
@@ -154,7 +167,7 @@ const ExploreEvent = () => {
                                             <Typography color="white" variant="subtitle1" className="text-[#AEC90A]  custom-card">
                                                 Venue - {venue}
                                             </Typography>
-                                            <button
+                                            <button onClick={handleRegister}
                                                 className="  custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90  px-2 py-2 rounded-full"  style={{ 
                                                     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                                                   }}
@@ -239,7 +252,11 @@ const ExploreEvent = () => {
                 </div>
             </div>
 
-                                   
+            <RegistrationModal
+                event={event}
+                isOpen={isModalOpen}
+                onClose={closeModal}
+            />                   
         </div>
     );
 };

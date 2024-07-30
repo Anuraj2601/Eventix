@@ -7,7 +7,7 @@ const EventRegistrationForm = () => {
   const { eventName } = location.state || { eventName: "Event" };
 
   return (
-    <div className="flex-1 overflow-y-auto p-10 ml-10 mr-20">
+    <div className="flex-1 overflow-y-auto  ">
       <div className="flex flex-col items-center justify-center  rounded-xl w-full ">
         <h2 className="text-white text-2xl mb-6">Register Now for the {eventName}</h2>
         <form action="">
@@ -19,7 +19,7 @@ const EventRegistrationForm = () => {
             </div>
             <div className="flex flex-col space-y-2">
               <label htmlFor="Name" className="text-lg font-semibold">Email Address</label>
-              <input type="text" placeholder='kokularajh32@gmail.com'   className="p-2 bg-black text-white rounded"/>
+              <input type="text" placeholder='2021is013@stu.ucsc.cmb.ac.lk'   className="p-2 bg-black text-white font-bold"/>
             </div>
             <div className="flex flex-col gap-3 w-full">
               <label htmlFor="">Register No</label>
@@ -27,7 +27,7 @@ const EventRegistrationForm = () => {
             </div>
             <div className="flex flex-col gap-3 w-full">
               <label htmlFor="">Mobile Number</label>
-              <input type="text" placeholder='0712345416'   className="p-2 bg-black text-white rounded"/>
+              <input type="number" placeholder='0712345416'   className="p-2 bg-black text-white rounded"/>
             </div>
           </div>
           <div className="flex flex-col items-center mt-9 gap-3">

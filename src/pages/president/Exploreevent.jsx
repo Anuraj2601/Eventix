@@ -21,6 +21,8 @@ import EditButton from "../../components/EditButton"; // Import the EditButton c
 import SponsorsService from "../../service/SponsorsService";
 import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import AddSponsorModal from "../../components/AddSponsorModal"; // Import your modal
+
 
 ReactModal.setAppElement("#root"); // For accessibility
 
