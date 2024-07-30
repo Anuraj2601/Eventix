@@ -455,13 +455,11 @@ const Exploreevent = () => {
         </div>
         <div className="flex justify-center">
           <button
-            onClick={() => {
-              /* Handle send request for approval */
-            }}
-            className={`px-4 py-2 rounded-full ${
-              isFormValid ? "bg-[#AEC90A]" : "bg-gray-500 cursor-not-allowed"
-            }`}
-            disabled={!isFormValid}
+           
+            className="px-4 py-2 rounded-full 
+              isFormValid  bg-[#AEC90A]  
+              "
+           
           >
             Download Proposal{" "}
           </button>
