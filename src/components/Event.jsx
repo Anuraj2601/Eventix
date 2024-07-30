@@ -70,7 +70,7 @@ const Event = ({ event }) => {
                 </div>
                 <div className="flex items-center justify-end mt-3">
                     <Button className="flex justify-end bg-[#AEC90A] py-2 px-4 rounded-3xl font-bold text-[#0b0b0b]" onClick={handleRegister}>
-                        Register{" "}
+                        Register
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
