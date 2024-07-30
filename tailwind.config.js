@@ -26,17 +26,17 @@ export default {
   darkMode: 'class',
   plugins: [
     require('@tailwindcss/forms'),
-    function ({ addUtilities }) {
-      addUtilities({
-        '.scrollbar-hide': {
-          '-webkit-overflow-scrolling': 'touch',
-          '-ms-overflow-style': 'none',
-          'scrollbar-width': 'none',
-          '&::-webkit-scrollbar': {
-            display: 'none'
-          }
-        }
-      });
-    }
+    // function ({ addUtilities }) {
+    //   addUtilities({
+    //     '.scrollbar-hide': {
+    //       '-webkit-overflow-scrolling': 'touch',
+    //       '-ms-overflow-style': 'none',
+    //       'scrollbar-width': 'none',
+    //       '&::-webkit-scrollbar': {
+    //         display: 'none'
+    //       }
+    //     }
+    //   });
+    // }
   ],
 }
