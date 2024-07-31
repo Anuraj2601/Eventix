@@ -90,7 +90,7 @@ const Announcement = () => {
     if (dateString.length < 7) return 'Invalid date'; 
     //console.log(dateString);
   
-    return `${dateString[0]}-${dateString[1]}-${dateString[2]}`;
+    return `${dateString[0]}-${String(dateString[1]).padStart(2, '0')}-${String(dateString[2]).padStart(2, '0')}`;
   };
 
   function updateAnnouncement(announcementId){
@@ -107,7 +107,9 @@ const Announcement = () => {
       if (confirmDelete) {
         await AnnouncementService.deleteAnnouncement(announcementId, token);
 
-        navigate(-1);
+        //navigate(currentPath, {replace: true});
+        //navigate(-1);
+        setAnnouncements(prevAnnouncements => prevAnnouncements.filter(announcement => announcement.announcement_id !== announcementId));
       }
     } catch (error) {
       console.error("Error fetching announcements:", error);
@@ -180,7 +182,7 @@ const Announcement = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <Typography className="text-[#AEC90A]" variant="h6">
-                      {announcement.date_posted}
+                      {parseCustomDate(announcement.date_posted)}
                     </Typography>
                     {isEditable && (
                       <div className="flex items-center">
