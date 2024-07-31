@@ -29,7 +29,7 @@ ReactModal.setAppElement("#root"); // For accessibility
 const Exploreevent = () => {
   const location = useLocation();
   console.log(location);
-  const { name, image, date, clubName, clubImage, venue } = location.state;
+  const { name, image, date, clubName, clubImage, venue } = location.state || {} ;
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -79,8 +79,10 @@ const Exploreevent = () => {
         const token = localStorage.getItem("token");
         await SponsorsService.deleteSponsor(sponsorId, token);
 
+
         // Remove the deleted sponsor from the state
         setEventSponsors(prevSponsors => prevSponsors.filter(sponsor => sponsor.id !== sponsorId));
+
       }
     } catch (error) {
       console.error("Error deleting sponsor:", error);
