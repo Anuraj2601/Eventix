@@ -319,7 +319,7 @@ const AddNewMeetingForm = () => {
                                     {isSubmitted && errors.meetingType && <div className="text-red-500">{errors.meetingType}</div>}
                                 </div>
                                 <div className="flex flex-col gap-3  w-96 mt-4">
-                                    <label htmlFor="participantType" className="text-lg font-semibold">
+                                    <label htmlFor="participantType" >
                                         Participant Type
                                     </label>
                                     <select
