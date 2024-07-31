@@ -107,7 +107,9 @@ const Announcement = () => {
       if (confirmDelete) {
         await AnnouncementService.deleteAnnouncement(announcementId, token);
 
-        navigate(-1);
+        //navigate(currentPath, {replace: true});
+        //navigate(-1);
+        setAnnouncements(prevAnnouncements => prevAnnouncements.filter(announcement => announcement.announcement_id !== announcementId));
       }
     } catch (error) {
       console.error("Error fetching announcements:", error);

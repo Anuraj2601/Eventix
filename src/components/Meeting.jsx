@@ -131,7 +131,9 @@ const Meeting = () => {
       if (confirmDelete) {
         await MeetingService.deleteMeeting(id, token);
 
-        navigate(-1);
+        //navigate(-1);
+        setMeetings(prevMeetings => prevMeetings.filter(meeting => meeting.meeting_id !== id));
+
       }
     } catch (error) {
       console.error("Error fetching meetings:", error);
