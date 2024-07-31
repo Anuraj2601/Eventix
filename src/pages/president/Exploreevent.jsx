@@ -75,17 +75,20 @@ const Exploreevent = () => {
         "Are you sure you want to delete this Sponsor?"
       );
 
-      const token = localStorage.getItem("token");
       if (confirmDelete) {
+        const token = localStorage.getItem("token");
         await SponsorsService.deleteSponsor(sponsorId, token);
-        /* navigate("/president") */
-        fetchSponsors();
-        
+
+
+        // Remove the deleted sponsor from the state
+        setEventSponsors(prevSponsors => prevSponsors.filter(sponsor => sponsor.id !== sponsorId));
+
       }
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error deleting sponsor:", error);
     }
   };
+
 
   const [isFormValid, setIsFormValid] = useState(false);
 
