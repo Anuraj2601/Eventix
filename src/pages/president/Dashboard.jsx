@@ -32,6 +32,22 @@ const Dashboard = () => {
 
   const events = [
     {
+      id: "5",
+      publisher_name: "John Doe",
+      publisher_position: "President of Club IEEE",
+      publisher_img: dp,
+      event: "Cultural Festival 2025",
+      deadline: "5th of August 2025",
+      description: "Celebrate the diversity of our campus with performances, food, and art from different cultures.",
+      date: "03.05.2025",
+      time: "8 am",
+      venue: "UCSC Mini Auditorium",
+      contact: "0217988238",
+      email: "culturalfest@ucsc.edu",
+      image: dhackImage,
+    },
+    {
+      
       id: "1",
       publisher_name: "Lori Kletzer",
       publisher_position: "President of Club Rotaract",
@@ -91,21 +107,7 @@ const Dashboard = () => {
       email: "homecoming@ucsc.edu",
       image: careerfairImage,
     },
-    {
-      id: "5",
-      publisher_name: "John Doe",
-      publisher_position: "President of Club IEEE",
-      publisher_img: dp,
-      event: "Cultural Festival 2025",
-      deadline: "5th of August 2025",
-      description: "Celebrate the diversity of our campus with performances, food, and art from different cultures.",
-      date: "03.05.2025",
-      time: "8 am",
-      venue: "UCSC Mini Auditorium",
-      contact: "0217988238",
-      email: "culturalfest@ucsc.edu",
-      image: dhackImage,
-    }
+   
   ];
 
   return (
