@@ -79,9 +79,9 @@ const Exploreevent = () => {
         const token = localStorage.getItem("token");
         await SponsorsService.deleteSponsor(sponsorId, token);
 
-
+        //navigate("/president/club")
         // Remove the deleted sponsor from the state
-        setEventSponsors(prevSponsors => prevSponsors.filter(sponsor => sponsor.id !== sponsorId));
+        //setEventSponsonsors(prevSponsors => prevSponsors.filter(sponsor => sponsor.id !== sponsorId));
 
       }
     } catch (error) {
