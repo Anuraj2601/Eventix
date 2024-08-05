@@ -171,7 +171,7 @@ const AddNewAnnouncementForm = () => {
                                     id='title'
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    required/>
+                                    />
                                 {errors.title && <div className="text-red-500">{errors.title}</div>}
                             </div>
                             <div className="flex flex-col gap-3  w-96 mt-4">
@@ -180,7 +180,7 @@ const AddNewAnnouncementForm = () => {
                                     id='content'
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
-                                    required/>
+                                    />
                                 {errors.content && <div className="text-red-500">{errors.content}</div>}
                             </div>
                             <div className="flex flex-col gap-3  w-96 mt-4">
