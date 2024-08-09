@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from 'react-router-dom';
 import {
   Card,
@@ -9,6 +9,8 @@ import {
 import EditDeleteButton from '../EditDeleteButton';
 import Customswitch from "../Customswitch";
 import { useNavigate } from 'react-router-dom';
+import { FaPlus } from "react-icons/fa6";
+import ElectionService from "../../service/ElectionService";
 
 const ElectionDetails = ({ clubName, electionId }) => {
   const [value, setValue] = useState(false);
@@ -64,7 +66,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
     },
   ];
 
-  const elections = [
+  const elections1 = [
     {
       id: "1",
       desc: "Club Board of 24/25",
@@ -79,12 +81,40 @@ const ElectionDetails = ({ clubName, electionId }) => {
     },
   ];
 
+  const [ elections, setElections] = useState([]);
+
   const handleEdit = (id) => {
     // Add your edit handling logic here
   };
 
   const handleDelete = (id) => {
     // Add your delete handling logic here
+  };
+
+  useEffect(() => {
+    const fetchElections = async () => {
+      try{
+        const token = localStorage.getItem('token');
+        const response = await ElectionService.getAllElections(token);
+        const electionsArray = response.content || [];
+        setElections(electionsArray);
+
+
+      }catch(error){
+        console.error('Error fetching elections:', error);
+      }
+    };
+
+    fetchElections();
+
+
+  }, []);
+
+  const parseCustomDate = (dateString) => {
+    if (dateString.length < 6) return 'Invalid date'; 
+    //console.log(dateString);
+  
+    return `${dateString[0]}-${String(dateString[1]).padStart(2, '0')}-${String(dateString[2]).padStart(2, '0')}`;
   };
 
   return (
@@ -94,7 +124,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
           onClick={() => navigateToForm(events[0].joinLink1)}
           className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold"
         >
-          New Election
+          <FaPlus size={18} /> New Election
         </Button>
       )}
 
@@ -112,20 +142,20 @@ const ElectionDetails = ({ clubName, electionId }) => {
             </div>
           </div>
           <div>
-            {elections.map(({ id, desc, applicationDate, votingDate }, index) => (
+            {(elections || []).map((election, index) => (
               <div
-                key={id}
+                key={election.election_id}
                 className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl mb-2 ${index === 1 ? 'opacity-50' : ''}`}
                 style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.8)' }}
               >
                 <div className="col-span-2 flex justify-center items-center">
                   <Typography color={index === 1 ? "gray" : "white"} variant="h6">
-                    {desc}
+                    {election.election_name}
                   </Typography>
                 </div>
                 <div className="col-span-2 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
-                    {applicationDate}
+                    {parseCustomDate(election.appOpens)} - {parseCustomDate(election.appCloses)}
                     {isEditable && (
                       <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
                         <div className="whitespace-nowrap">Applications</div>
@@ -138,7 +168,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
                 </div>
                 <div className="col-span-1 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
-                    {votingDate}
+                    {parseCustomDate(election.votingOpens)} - {parseCustomDate(election.votingCloses)}
                     {isEditable && (
                       <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
                         <div className="whitespace-nowrap">Votings</div>
