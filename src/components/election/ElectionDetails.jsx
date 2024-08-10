@@ -58,6 +58,10 @@ const ElectionDetails = ({ clubName, electionId }) => {
   
     navigate(finalLink);
   };
+
+  const openElectionForm = () => {
+    navigate("/president/club/election/add");
+  }
   
 
   const events = [
@@ -84,11 +88,26 @@ const ElectionDetails = ({ clubName, electionId }) => {
   const [ elections, setElections] = useState([]);
 
   const handleEdit = (id) => {
-    // Add your edit handling logic here
+    navigate(`/president/club/election/edit/${id}`);
   };
 
-  const handleDelete = (id) => {
-    // Add your delete handling logic here
+  const handleDelete = async (id) => {
+    try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this Election?"
+      );
+
+      const token = localStorage.getItem("token");
+      if (confirmDelete) {
+        await ElectionService.deleteElection(id, token);
+
+        //navigate(currentPath, {replace: true});
+        //navigate(-1);
+        setElections(prevElections => prevElections.filter(election => election.election_id !== id));
+      }
+    } catch (error) {
+      console.error("Error fetching elections:", error);
+    }
   };
 
   useEffect(() => {
@@ -121,7 +140,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
     <>
       {isEditable && (
         <Button
-          onClick={() => navigateToForm(events[0].joinLink1)}
+          onClick={openElectionForm}
           className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold"
         >
           <FaPlus size={18} /> New Election
