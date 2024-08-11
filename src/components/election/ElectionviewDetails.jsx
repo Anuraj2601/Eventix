@@ -3,7 +3,7 @@ import { Card, CardBody, Typography } from "@material-tailwind/react";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import Customswitch from "../Customswitch";
 import EditDeleteButton from "../EditDeleteButton";
-import { useLocation, useParams } from "react-router-dom"; // Import useLocation
+import { useLocation, useNavigate, useParams } from "react-router-dom"; // Import useLocation
 import ElectionService from '../../service/ElectionService';
 
 
@@ -21,7 +21,7 @@ const ElectionviewDetails = ({  electionId }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState('');
 
-  
+  const navigate = useNavigate();
 
   // Determine if the current path is one of the specified paths
   const isEditablePage = ['/president', '/secretary'].some(path => location.pathname.startsWith(path));
@@ -36,11 +36,26 @@ const ElectionviewDetails = ({  electionId }) => {
   ];
 
   const handleEdit = (id) => {
-    // Handle edit logic here
+    navigate(`/president/club/election/edit/${id}`);
   };
 
-  const handleDelete = (id) => {
-    // Handle delete logic here
+  const handleDelete = async (id) => {
+    try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this Election?"
+      );
+
+      const token = localStorage.getItem("token");
+      if (confirmDelete) {
+        await ElectionService.deleteElection(id, token);
+
+        //navigate(currentPath, {replace: true});
+        navigate(-1);
+        
+      }
+    } catch (error) {
+      console.error("Error fetching elections:", error);
+    }
   };
 
   const formatDateToYMD = (date) => {
@@ -134,12 +149,12 @@ const ElectionviewDetails = ({  electionId }) => {
                 <Typography className="text-white p-5" variant="h6">
                   {appOpens} - {appCloses}
                 </Typography>
-                {isEditablePage && (
+                {/* {isEditablePage && (
                   <Customswitch
                     isOn={value}
                     handleToggle={() => setValue(!value)}
                   />
-                )}
+                )} */}
               </div>
               <div className="flex items-center justify-between mt-4">
                 <Typography className="text-[#AEC90A] p-5" variant="h6">
@@ -148,12 +163,12 @@ const ElectionviewDetails = ({  electionId }) => {
                 <Typography className="text-white p-5" variant="h6">
                   {votingOpens} - {votingCloses}
                 </Typography>
-                {isEditablePage && (
+                {/* {isEditablePage && (
                   <Customswitch
                     isOn={value}
                     handleToggle={() => setValue(!value)}
                   />
-                )}
+                )} */}
               </div>
               {isEditablePage && (
                 <div className="flex items-center justify-end mt-4 gap-4">
