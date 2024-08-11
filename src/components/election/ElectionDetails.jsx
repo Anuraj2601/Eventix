@@ -130,10 +130,31 @@ const ElectionDetails = ({ clubName, electionId }) => {
   }, []);
 
   const parseCustomDate = (dateString) => {
-    if (dateString.length < 6) return 'Invalid date'; 
+    if (dateString === null) return 'null date';
+    if (dateString.length < 5) return 'Invalid date'; 
     //console.log(dateString);
   
     return `${dateString[0]}-${String(dateString[1]).padStart(2, '0')}-${String(dateString[2]).padStart(2, '0')}`;
+  };
+
+  const formatDateToYMD = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  };
+
+  const fromUTC = (dateArray) => {
+    const date = new Date(Date.UTC(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]));
+    //const date = new Date(Date.UTC(...dateArray));
+    const offset = date.getTimezoneOffset() * 60000;
+  
+    const localDate = new Date(date.getTime() - offset);
+
+    // Format the localDate to a readable string
+    //return localDate.toLocaleDateString();
+    return formatDateToYMD(localDate);
   };
 
   return (
@@ -174,7 +195,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
                 </div>
                 <div className="col-span-2 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
-                    {parseCustomDate(election.appOpens)} - {parseCustomDate(election.appCloses)}
+                    { fromUTC(election.appOpens) } - {fromUTC(election.appCloses)}
                     {isEditable && (
                       <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
                         <div className="whitespace-nowrap">Applications</div>
@@ -187,7 +208,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
                 </div>
                 <div className="col-span-1 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
-                    {parseCustomDate(election.votingOpens)} - {parseCustomDate(election.votingCloses)}
+                    {fromUTC(election.votingOpens)} - {fromUTC(election.votingCloses)}
                     {isEditable && (
                       <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
                         <div className="whitespace-nowrap">Votings</div>
@@ -224,8 +245,8 @@ const ElectionDetails = ({ clubName, electionId }) => {
                     <>
                       {isEditable && (
                         <EditDeleteButton
-                          onEdit={() => handleEdit(id)}
-                          onDelete={() => handleDelete(id)}
+                          onEdit={() => handleEdit(election.election_id)}
+                          onDelete={() => handleDelete(election.election_id)}
                           disabled={index === 1}
                         />
                       )}
