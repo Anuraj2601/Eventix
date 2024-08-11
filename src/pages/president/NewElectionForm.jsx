@@ -338,7 +338,7 @@ useEffect(() => {
                       <DatePicker
                           selected={appCloses}
                           onChange={e => setAppCloses(e)}
-                          minDate={new Date()}
+                          minDate={appOpens? appOpens : new Date()}
                           showTimeSelect
                           timeFormat="hh:mm"
                           dateFormat="Pp"
@@ -363,7 +363,7 @@ useEffect(() => {
                       <DatePicker
                           selected={votingOpens}
                           onChange={e => setVotingOpens(e)}
-                          minDate={new Date()}
+                          minDate={appCloses? appCloses: new Date()}
                           showTimeSelect
                           timeFormat="hh:mm"
                           dateFormat="Pp"
@@ -382,7 +382,7 @@ useEffect(() => {
                       <DatePicker
                           selected={votingCloses}
                           onChange={e => setVotingCloses(e)}
-                          minDate={new Date()}
+                          minDate={votingOpens? votingOpens: new Date()}
                           showTimeSelect
                           timeFormat="hh:mm"
                           dateFormat="Pp"
