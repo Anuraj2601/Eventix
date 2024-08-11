@@ -18,18 +18,25 @@ const ElectionDetails = ({ clubName, electionId }) => {
   const currentPath = location.pathname;
   const navigate = useNavigate();
 
-  // Determine the target path based on the current path
-  let targetPath = '';
+  const handleViewDetails = (election_id) => {
+    // Determine the target path based on the current path
+    let targetPath = '';
 
-  if (currentPath.startsWith('/president')) {
-    targetPath = '/president/club/election';
-  } else if (currentPath.startsWith('/member')) {
-    targetPath = '/member/club/election';
-  } else if (currentPath.startsWith('/oc')) {
-    targetPath = '/oc/club/election';
-  } else if (currentPath.startsWith('/secretary')) {
-    targetPath = '/secretary/club/election';
+    if (currentPath.startsWith('/president')) {
+      targetPath = `/president/club/election/${election_id}`;
+    } else if (currentPath.startsWith('/member')) {
+      targetPath = '/member/club/election';
+    } else if (currentPath.startsWith('/oc')) {
+      targetPath = '/oc/club/election';
+    } else if (currentPath.startsWith('/secretary')) {
+      targetPath = '/secretary/club/election';
+    }
+
+    navigate(targetPath);
+
   }
+
+  
 
   // Check if the current path is either '/oc' or '/member'
   const isOcOrMember = currentPath.startsWith('/oc') || currentPath.startsWith('/member') || currentPath.startsWith('/secretary');
@@ -196,27 +203,27 @@ const ElectionDetails = ({ clubName, electionId }) => {
                 <div className="col-span-2 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
                     { fromUTC(election.appOpens) } - {fromUTC(election.appCloses)}
-                    {isEditable && (
+                    {/* {isEditable && (
                       <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
                         <div className="whitespace-nowrap">Applications</div>
                         <div>
                           <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
                         </div>
                       </div>
-                    )}
+                    )} */}
                   </Typography>
                 </div>
                 <div className="col-span-1 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
                     {fromUTC(election.votingOpens)} - {fromUTC(election.votingCloses)}
-                    {isEditable && (
+                    {/* {isEditable && (
                       <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
                         <div className="whitespace-nowrap">Votings</div>
                         <div>
                           <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
                         </div>
                       </div>
-                    )}
+                    )} */}
                   </Typography>
                 </div>
                 <div className="col-span-6 flex flex-col items-end gap-2 p-5">
@@ -250,11 +257,11 @@ const ElectionDetails = ({ clubName, electionId }) => {
                           disabled={index === 1}
                         />
                       )}
-                      <Link to={targetPath}>
-                        <Button variant="gradient" className="bg-[#AEC90A] rounded-full text-black p-2 inline-block">
+                      {/* <Link to={targetPath}> */}
+                        <Button onClick={() => handleViewDetails(election.election_id)} variant="gradient" className="bg-[#AEC90A] rounded-full text-black p-2 inline-block">
                           View Details
                         </Button>
-                      </Link>
+                      {/* </Link> */}
                     </>
                   )}
                 </div>

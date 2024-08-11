@@ -233,7 +233,7 @@ const App = () => {
         <Route path='/president/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
         <Route path='/president/calendar' element={<Calendar />}></Route>
-        <Route path='/president/club/election' element={<Election/>}></Route>
+        <Route path='/president/club/election/:id' element={<Election/>}></Route>
         <Route path='/president' element={<Dashboard  />} ></Route>
         <Route path="/president/club/election/add" element={<NewElectionForm />} />
         <Route path="/president/club/election/edit/:id" element={<NewElectionForm />} />
