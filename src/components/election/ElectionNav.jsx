@@ -11,7 +11,8 @@ import ElectionviewDetails from "./ElectionviewDetails";
 import Votestab from "./Votestab";
 import CandidatesNav from "../CandidatesNav";
 
-const ElectionNav = ({ clubName, electionId }) => {
+//const ElectionNav = ({ clubName, electionId }) => {}
+const ElectionNav = ({  electionId }) => {
   const location = useLocation(); // Get the current path
   const [activeTab, setActiveTab] = React.useState("Details");
 
@@ -23,7 +24,8 @@ const ElectionNav = ({ clubName, electionId }) => {
     {
       label: "Details",
       value: "Details",
-      desc: <ElectionviewDetails clubName={clubName} electionId={electionId} />,
+      // desc: <ElectionviewDetails clubName={clubName} electionId={electionId} />,
+      desc: <ElectionviewDetails electionId={electionId} />
     },
     {
       label: "Candidates",
