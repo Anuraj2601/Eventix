@@ -302,7 +302,7 @@ const App = () => {
 
        
         <Route path='/admin/club' element={<StudentAllClubsadmin/>}></Route>
-        <Route path='/admin/club/:name' element={<StudentClubDetailsadmin/>}></Route>
+        <Route path='/admin/club/:id' element={<StudentClubDetailsadmin/>}></Route>
         <Route path='/admin/notifications' element={<StudentNotificationsadmin/>}></Route>
         <Route path='/admin/dashboard' element={<StudentDashboardadmin/>}></Route>
         <Route path='/clubregister/:name' element={<ClubRegistrationadmin/>}></Route>
