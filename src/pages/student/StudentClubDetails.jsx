@@ -88,6 +88,7 @@ import ClubsService from '../../service/ClubsService';
 
 
 const ClubDetails = () => {
+  
   const { id } = useParams();
   const location = useLocation();
   const { club } = location.state || {};
