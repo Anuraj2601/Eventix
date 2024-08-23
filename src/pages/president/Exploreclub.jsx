@@ -12,6 +12,7 @@ import PresidentClubCard from '../../components/PresidentClubCard';
 import ClubPresident from '../../components/ClubPresident'; // Corrected import
 
 import { useNavigate } from 'react-router-dom';
+import StudentClubCard from '../../components/StudentClubCard';
 
 const ExploreClub = () => {
     const [activeTab, setActiveTab] = React.useState("allClubs");
@@ -21,7 +22,8 @@ const ExploreClub = () => {
         {
             label: "All Clubs",
             value: "allClubs",
-            desc: <PresidentClubCard />,
+            desc: <StudentClubCard/>
+            //desc: <PresidentClubCard />,
         },
         {
             label: "Your Clubs",

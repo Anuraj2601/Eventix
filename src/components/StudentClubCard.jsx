@@ -5,6 +5,7 @@ import { IoMdBookmark } from "react-icons/io";
 import { FaPlus } from "react-icons/fa"; // Import the plus icon
 import { useNavigate, useLocation } from 'react-router-dom';
 
+
 // Import images
 import ieeeImg from '../assets/clubs/ieee.png';
 import rotaractImg from '../assets/clubs/rotaract.png';
@@ -46,6 +47,9 @@ const StudentClubCard = () => {
     const handleExploreClick = (club) => {
         let basePath;
         switch (true) {
+            case location.pathname.startsWith('/president'):
+                basePath = '/president';
+                break;
             case location.pathname.startsWith('/student'):
                 basePath = '/student';
                 break;
@@ -68,6 +72,7 @@ const StudentClubCard = () => {
                 basePath = ''; // Default base path or handle other cases
         }
         navigate(`${basePath}/club/${club.club_id}`, { state: { club, image: club.club_image } });
+        
     };
 
     return (

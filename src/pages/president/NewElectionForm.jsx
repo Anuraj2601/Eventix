@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import { Button } from "@material-tailwind/react";
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import DateTimePicker from 'react-datetime-picker';
 import "../../css/DateTimePicker.css";
 import DatePicker from "react-datepicker";
@@ -12,7 +12,8 @@ const NewElectionForm = () => {
 
   const navigate = useNavigate();
 
-  const { id } = useParams();
+  const { id } = useParams(); //election ID
+  const location = useLocation();
 
   const [electionName, setElectionName] = useState('');
   const [appOpens, setAppOpens] = useState(null);
@@ -23,7 +24,8 @@ const NewElectionForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState('');
 
- 
+  const { club } = location.state || {};
+  //console.log('club in election form', club);
 
   // const toUTC = (date) => {
   //   // Get the local time zone offset in milliseconds
@@ -228,6 +230,7 @@ useEffect(() => {
                         formattedAppCloses,
                         formattedVotingOpens,
                         formattedVotingCloses,
+                        club.club_id,
                         token
                     );
         
@@ -244,6 +247,7 @@ useEffect(() => {
                         formattedAppCloses,
                         formattedVotingOpens,
                         formattedVotingCloses,
+                        club.club_id,
                         token
                     );
         

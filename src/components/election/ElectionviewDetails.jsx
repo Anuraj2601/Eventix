@@ -11,6 +11,8 @@ import ElectionService from '../../service/ElectionService';
 const ElectionviewDetails = ({  electionId }) => {
   const [value, setValue] = useState(false);
   const location = useLocation(); // Get the current path
+  const { club } = location.state || {};
+  //console.log('club in election view', club);
 
   const [electionName, setElectionName] = useState('');
   const [appOpens, setAppOpens] = useState(null);
@@ -36,7 +38,7 @@ const ElectionviewDetails = ({  electionId }) => {
   ];
 
   const handleEdit = (id) => {
-    navigate(`/president/club/election/edit/${id}`);
+    navigate(`/president/club/election/edit/${id}`, { state: { club } });
   };
 
   const handleDelete = async (id) => {

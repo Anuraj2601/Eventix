@@ -5,7 +5,7 @@ class ElectionService{
     static BASE_URL = "http://localhost:8080"
 
 
-    static async saveElection(election_name, appOpens, appCloses, votingOpens, votingCloses, token ){
+    static async saveElection(election_name, appOpens, appCloses, votingOpens, votingCloses, club_id, token ){
         try{
 
             const data = {
@@ -13,7 +13,8 @@ class ElectionService{
                 appOpens,
                 appCloses,
                 votingOpens,
-                votingCloses
+                votingCloses,
+                club_id
             };
 
             const headers = {
@@ -67,7 +68,7 @@ class ElectionService{
     }
 
 
-    static async updateElection(election_id ,election_name, appOpens, appCloses, votingOpens, votingCloses, token ){
+    static async updateElection(election_id ,election_name, appOpens, appCloses, votingOpens, votingCloses, club_id, token ){
 
         try{
 
@@ -77,7 +78,8 @@ class ElectionService{
                 appOpens,
                 appCloses,
                 votingOpens,
-                votingCloses
+                votingCloses,
+                club_id
             };
 
             const headers = {
