@@ -34,7 +34,7 @@ const ElectionDetails = ({ club }) => {
       targetPath = '/secretary/club/election';
     }
 
-    navigate(targetPath);
+    navigate(targetPath, { state: { club } });
 
   }
 
@@ -124,7 +124,8 @@ const ElectionDetails = ({ club }) => {
       try{
         const token = localStorage.getItem('token');
         const response = await ElectionService.getAllElections(token);
-        const electionsArray = response.content || [];
+        //const electionsArray = response.content || [];
+        const electionsArray = response.content.filter(election => election.club_id === club.club_id) || [];
         setElections(electionsArray);
 
 
