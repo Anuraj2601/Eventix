@@ -91,6 +91,7 @@ const ClubDetails = () => {
   const { id } = useParams();
   const location = useLocation();
   const { club } = location.state || {};
+  
 
   const [clubDetails, setClubDetails] = useState(null);
   const [loading, setLoading] = useState(true);

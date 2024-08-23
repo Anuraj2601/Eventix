@@ -72,6 +72,7 @@ const StudentClubCard = () => {
                 basePath = ''; // Default base path or handle other cases
         }
         navigate(`${basePath}/club/${club.club_id}`, { state: { club, image: club.club_image } });
+        
     };
 
     return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import {
   Card,
   CardBody,
@@ -12,11 +12,13 @@ import { useNavigate } from 'react-router-dom';
 import { FaPlus } from "react-icons/fa6";
 import ElectionService from "../../service/ElectionService";
 
-const ElectionDetails = ({ clubName, electionId }) => {
+const ElectionDetails = ({ club }) => {
   const [value, setValue] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;
   const navigate = useNavigate();
+
+  const { id } = useParams();
 
   const handleViewDetails = (election_id) => {
     // Determine the target path based on the current path
@@ -67,7 +69,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
   };
 
   const openElectionForm = () => {
-    navigate("/president/club/election/add");
+    navigate("/president/club/election/add", { state: { club } });
   }
   
 
@@ -95,7 +97,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
   const [ elections, setElections] = useState([]);
 
   const handleEdit = (id) => {
-    navigate(`/president/club/election/edit/${id}`);
+    navigate(`/president/club/election/edit/${id}`, { state: { club } });
   };
 
   const handleDelete = async (id) => {
