@@ -8,6 +8,11 @@ import isacaImage from "../../assets/clubs/isaca1.png";
 import wieImage from "../../assets/clubs/wie.png";
 import Sidebar from '../../components/Sidebar'
 import Navbar from '../../components/Navbar'
+import msImage from '../../assets/clubs/ms.png';
+import wicysImage from '../../assets/clubs/wicys.png';
+import rekhaImage from '../../assets/clubs/rekha.png';
+
+
 
 const clubImages = {
   ieee: ieeeImage,
@@ -16,52 +21,99 @@ const clubImages = {
   pahasara: pahasaraImage,
   isaca: isacaImage,
   wie: wieImage,
+  ms: msImage,
+  wicys: wicysImage,
+  rekha: rekhaImage,
+
 };
 
 const inquiries = [
-    {
-      id: 1,
-      club: 'ieee',
-      messages: [
-        { type: 'inquiry', text: 'Can you provide more details about the IEEE event Madhack 3.0?', time: '10:00 AM' },
-        { type: 'reply', text: 'Sure! The event is focused on recent advancements in electrical engineering. It will take place on 25th August.', time: '10:05 AM' }
+  {
+    id: 1,
+    club: 'ieee',
+    messages: [
+      { type: 'inquiry', text: 'Can you provide more details about the IEEE event Madhack 3.0?', time: '10:00 AM' },
+      { type: 'reply', text: 'Sure! The event is focused on recent advancements in electrical engineering. It will take place on 25th August.', time: '10:05 AM' }
+    ],
+    hasNewMessage: false
+  },
+  {
+    id: 2,
+    club: 'rotaract',
+    messages: [
+      { type: 'inquiry', text: 'When is the next recruitment of your club scheduled?', time: '11:00 AM' },
+      { type: 'reply', text: 'The next recruitment of our club is scheduled for 30th August at 3 PM.', time: '11:10 AM' }
+    ],
+    hasNewMessage: true
+  },
+  {
+    id: 3,
+    club: 'acm',
+    messages: [
+      { type: 'inquiry', text: 'What topics will be covered in the ACM conference?', time: '12:00 PM' },
+      { type: 'reply', text: 'The conference will cover AI, machine learning, and data science.', time: '12:20 PM' }
+    ],
+    hasNewMessage: true
+  },
+  {
+    id: 4,
+    club: 'pahasara',
+    messages: [
+      { type: 'inquiry', text: 'Can you tell me more about the Pahasara project?', time: '1:00 PM' },
+      { type: 'reply', text: 'The Pahasara project focuses on community development and environmental conservation.', time: '1:15 PM' },
+      { type: 'inquiry', text: 'How can I get involved with Pahasara?', time: '1:30 PM' }
+    ],
+    hasNewMessage: false
+  },
+  {
+    id: 5,
+    club: 'isaca',
+    messages: [
+        { type: 'inquiry', text: 'Can you tell me more about the ISACA project?', time: '1:00 PM' },
       ],
-      hasNewMessage: false
-    },
-    {
-      id: 2,
-      club: 'rotaract',
-      messages: [
-        { type: 'inquiry', text: 'When is the next recruitment of your club scheduled?', time: '11:00 AM' },
-        { type: 'reply', text: 'The next recruitment of our club is scheduled for 30th August at 3 PM.', time: '11:10 AM' }
-      ],
-      hasNewMessage: true
-    },
-    {
-      id: 3,
-      club: 'acm',
-      messages: [
-        { type: 'inquiry', text: 'What topics will be covered in the ACM conference?', time: '12:00 PM' },
-        { type: 'reply', text: 'The conference will cover AI, machine learning, and data science.', time: '12:20 PM' }
-      ],
-      hasNewMessage: true
-    },
-    {
-      id: 4,
-      club: 'pahasara',
-      messages: [
-        { type: 'inquiry', text: 'Can you tell me more about the Pahasara project?', time: '1:00 PM' },
-        { type: 'reply', text: 'The Pahasara project focuses on community development and environmental conservation.', time: '1:15 PM' },
-        { type: 'inquiry', text: 'How can I get involved with Pahasara?', time: '1:30 PM' }
-      ],
-      hasNewMessage: false
-    },
-   
-   
-   
-    
-  ];
-  
+    hasNewMessage: false
+  },
+  {
+    id: 6,
+    club: 'wie',
+    messages: [
+      { type: 'inquiry', text: 'Can you tell me more about the Pahasara project?', time: '1:00 PM' },
+      { type: 'reply', text: 'The Pahasara project focuses on community development and environmental conservation.', time: '1:15 PM' },
+      { type: 'inquiry', text: 'How can I get involved with Pahasara?', time: '1:30 PM' }
+    ],
+    hasNewMessage: false
+  },
+  {
+    id: 7,
+    club: 'ms',
+    messages: [
+      { type: 'inquiry', text: 'Can you tell me more about the Pahasara project?', time: '1:00 PM' },
+      { type: 'reply', text: 'The Pahasara project focuses on community development and environmental conservation.', time: '1:15 PM' },
+      { type: 'inquiry', text: 'How can I get involved with Pahasara?', time: '1:30 PM' }
+    ],
+    hasNewMessage: false
+  },
+  {
+    id: 8,
+    club: 'wicys',
+    messages: [
+      { type: 'inquiry', text: 'Can you tell me more about the Pahasara project?', time: '1:00 PM' },
+      { type: 'reply', text: 'The Pahasara project focuses on community development and environmental conservation.', time: '1:15 PM' },
+      { type: 'inquiry', text: 'How can I get involved with Pahasara?', time: '1:30 PM' }
+    ],
+    hasNewMessage: false
+  },
+  {
+    id: 9,
+    club: 'rekha',
+    messages: [
+      { type: 'inquiry', text: 'Can you tell me more about the Pahasara project?', time: '1:00 PM' },
+      { type: 'reply', text: 'The Pahasara project focuses on community development and environmental conservation.', time: '1:15 PM' },
+      { type: 'inquiry', text: 'How can I get involved with Pahasara?', time: '1:30 PM' }
+    ],
+    hasNewMessage: false
+  },
+];
 
 const InquiryPage = () => {
   const [currentInquiry, setCurrentInquiry] = useState(null);
@@ -110,9 +162,9 @@ const InquiryPage = () => {
         <Sidebar className="flex-shrink-0"/>
         <div className="flex flex-col flex-1">
           <Navbar className="sticky top-0 z-10 p-4"/>
-          <div className="flex h-screen bg-neutral-900 p-1 text-white">
-            <div className="w-1/4 bg-neutral-900 p-2 custom-3d-shadow rounded-2xl" style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
-              <h2 className="text-xl mb-4 text-center">Inquiry Inbox</h2>
+          <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
+        <div className="w-1/6   p-2 custom-3d-shadow rounded-2xl">
+            <h2 className="text-xl mb-4 text-center">Inquire Any Club</h2>
               <div className="flex flex-col space-y-2">
                 {inquiries.map(inquiry => (
                   <div
@@ -123,7 +175,7 @@ const InquiryPage = () => {
                   >
                     <img src={clubImages[inquiry.club]} alt="" className='w-10 h-10 rounded-full mr-3' />
                     {inquiry.hasNewMessage && (
-                      <span className="absolute top-0 right-0 w-3 h-3 bg-[#AEC90A] rounded-full border-2 border-neutral-900"></span>
+                      <span className="absolute top-5 right-5 w-4 h-4 bg-[#AEC90A] rounded-full border-2 border-neutral-900"></span>
                     )}
                     <span className="text-lg">{inquiry.club.toUpperCase()}</span>
                     <div className="ml-auto text-sm text-white">
@@ -147,7 +199,8 @@ const InquiryPage = () => {
                   <div>
                     {currentInquiry.messages.map((message, index) => (
                       <div key={index} className={`flex ${message.type === 'inquiry' ? 'justify-end' : 'justify-start'} mb-4`}>
-                        <div className={`max-w-md p-4 rounded-2xl ${message.type === 'inquiry' ? 'bg-white text-black' : 'bg-[#AEC90A] text-black bg-opacity-80'}`}>
+                        <div                     style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+ className={`max-w-md p-4 rounded-2xl ${message.type === 'inquiry' ? 'bg-white text-black custom-3d-shadow ' : 'bg-[#AEC90A] text-black bg-opacity-80 custom-3d-shadow'}`}>
                           <p>{message.text}</p>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-500">{message.time}</span>
@@ -175,7 +228,7 @@ const InquiryPage = () => {
                   </div>
                 </div>
               )}
-              <div className="p-4 bg-neutral-900 flex items-center p-5">
+              <div className="p-4 bg-neutral-900 flex items-center p-5 mb-4">
                 <input
                   type="text"
                   value={newMessage}

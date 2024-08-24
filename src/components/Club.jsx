@@ -46,46 +46,37 @@ const Club = () => {
       sname: "pahasara",
       image: pahasaraImage,
     },
-    {
-      id: "4",
-      name: "ISACA Student Group",
-      sname: "isaca",
-      image: isacaImage,
-    },
-    {
-      id: "5",
-      name: "(IEEE WIE) IEEE Women in Engineering",
-      sname: "wie",
-      image: wieImage,
-    },
+    // {
+    //   id: "4",
+    //   name: "ISACA Student Group",
+    //   sname: "isaca",
+    //   image: isacaImage,
+    // },
+    // {
+    //   id: "5",
+    //   name: "(IEEE WIE) IEEE Women in Engineering",
+    //   sname: "wie",
+    //   image: wieImage,
+    // },
   ];
 
-  const getClubDetails = (club)  => {
+  const getClubDetails = (club) => {
     let basePath;
-    switch (true) {
-        case location.pathname.startsWith('/student'):
-            basePath = '/student';
-            break;
-        case location.pathname.startsWith('/oc'):
-            basePath = '/oc';
-            break;
-        case location.pathname.startsWith('/admin'):
-            basePath = '/admin';
-            break;
-            case location.pathname.startsWith('/secretary'):
-            basePath = '/secretary';
-            break;
-        case location.pathname.startsWith('/member'):
-            basePath = '/member';
-            break;
-        case location.pathname.startsWith('/treasurer'):
-            basePath = '/treasurer';
-            break;
-        default:
-            basePath = ''; // Default base path or handle other cases
+  
+    if (location.pathname.startsWith("/student")) {
+      basePath = "/student/club";
+    } else if (location.pathname.startsWith("/treasurer")) {
+      basePath = "/treasurer/club";
+    } else if (location.pathname.startsWith("/admin")) {
+      basePath = "/admin/club";
+    } else {
+      // You can define a fallback path or handle unexpected cases here
+      basePath = "/default/club";
     }
-    navigate(`${basePath}/club/${club.sname}`, { state: { club, image: club.image } });
-};
+  
+    navigate(`${basePath}/${club.sname}`, { state: { club } });
+  };
+  
 
  
   

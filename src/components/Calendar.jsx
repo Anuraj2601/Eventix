@@ -18,6 +18,8 @@ import {
 import { Fragment, useState } from "react";
 import AddEvent from './AddEvent';
 import { FaPlus } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
+
 
 
 const clubColors = {
@@ -51,40 +53,40 @@ const meetings = [
     id: 1,
     eventName: "MadHack 3.0",
     club: "IEEE",
-    startDatetime: "2024-07-01T13:00",
-    endDatetime: "2024-07-01T14:30",
+    startDatetime: "2024-08-01T13:00",
+    endDatetime: "2024-08-01T14:30",
     eventLocation: "UCSC Main Hall",
   },
   {
     id: 2,
     eventName: "CodeGen",
     club: "Pahasara",
-    startDatetime: "2024-07-01T09:00",
-    endDatetime: "2024-07-01T11:30",
+    startDatetime: "2024-08-01T09:00",
+    endDatetime: "2024-08-01T11:30",
     eventLocation: "UCSC Main Hall",
   },
   {
     id: 3,
     eventName: "MadHack 3.0",
     club: "IEEE",
-    startDatetime: "2024-07-20T17:00",
-    endDatetime: "2024-07-20T18:30",
+    startDatetime: "2024-08-20T17:00",
+    endDatetime: "2024-08-20T18:30",
     eventLocation: "UCSC Main Hall",
   },
   {
     id: 4,
     eventName: "CodeGen",
     club: "Pahasara",
-    startDatetime: "2024-07-09T13:00",
-    endDatetime: "2024-07-09T14:30",
+    startDatetime: "2024-08-09T13:00",
+    endDatetime: "2024-08-09T14:30",
     eventLocation: "UCSC Main Hall",
   },
   {
     id: 5,
     eventName: "Welocome",
     club: "Rekha ",
-    startDatetime: "2024-07-10T14:00",
-    endDatetime: "2024-07-12T14:30",
+    startDatetime: "2024-08-10T14:00",
+    endDatetime: "2024-08-12T14:30",
     eventLocation: "UCSC Main Hall",
   },
 ];
@@ -95,6 +97,7 @@ function classNames(...classes) {
 
 const Calendar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const location = useLocation();
 
   const handleOpenModal = () => {
       setIsModalOpen(true);
@@ -283,19 +286,29 @@ const Calendar = () => {
                   </button>
                 </li>
                 
-                ))}
+                ))} <div className="mt-4 space-y-1 text-sm leading-6 text-center text-gray-500">
+                {(location.pathname.startsWith('/president') || location.pathname.startsWith('/secretary')) && (
+                  <button
+                    className="mt-4 p-2 bg-[#AEC90A] text-black rounded-full"
+                    onClick={handleOpenModal}
+                  >
+                    Schedule Event
+                  </button>
+                )}
+              </div>
               </ol>
             ) : (
               <div className="mt-4 space-y-1 text-sm leading-6 text-center text-gray-500">
-  <p className="text-white">No upcoming events at the moment. Stay tuned for exciting updates!</p>
-  <button
-    className="mt-4 p-2 bg-[#AEC90A] text-black rounded-full"
-    onClick={handleOpenModal}
-    >
-    Schedule Event
-  </button>
-</div>
-
+              <p className="text-white">No upcoming events at the moment. Stay tuned for exciting updates!</p>
+              {(location.pathname.startsWith('/president') || location.pathname.startsWith('/secretary')) && (
+                <button
+                  className="mt-4 p-2 bg-[#AEC90A] text-black rounded-full"
+                  onClick={handleOpenModal}
+                >
+                  Schedule Event
+                </button>
+              )}
+            </div>
 
             )}
           </section>

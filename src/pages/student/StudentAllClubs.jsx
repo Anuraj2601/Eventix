@@ -84,16 +84,16 @@ const clubs = [
 
 
 
-const IgnoredClubs = () => {
-    return (
-      <div className="flex flex-wrap items-center justify-center gap-10">
-        {clubs.map(( club , index) => (
-          <IgnoredClub key={index} club= {club}/>
+// const IgnoredClubs = () => {
+//     return (
+//       <div className="flex flex-wrap items-center justify-center gap-10">
+//         {clubs.map(( club , index) => (
+//           <IgnoredClub key={index} club= {club}/>
 
-        ))}
-      </div>
-    );
-  };
+//         ))}
+//       </div>
+//     );
+//   };
 
 const StudentAllClubs = () => {
 
@@ -112,7 +112,7 @@ const StudentAllClubs = () => {
         {
           label: "Ignored Clubs",
           value: "IgnoredClubs",
-          desc: <IgnoredClubs/>,
+          desc: <IgnoredClub/>,
         }
        
     ];

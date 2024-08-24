@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 import { Typography } from "@material-tailwind/react";
-import StudentMiniNav from '../../components/PresidentClubNav';
+import StudentMiniNav from '../../components/StudentMiniNav';
 import LikeButton from '../../components/LikeButton';
 import CustomSwitch from '../../components/Customswitch'; // Ensure correct import path
 import { FaCheckCircle, FaUsers } from 'react-icons/fa'; // Import icons for successful events and members
@@ -18,8 +18,9 @@ import ieeeImage from '../../assets/clubs/ieee.png';
 import msImage from '../../assets/clubs/ms.png';
 import wicysImage from '../../assets/clubs/wicys.png';
 import rekhaImage from '../../assets/clubs/rekha.png';
+import ClubsService from '../../service/ClubsService';
 
-const clubs = [
+/* const clubs = [
   {
     id: "1",
     name: "Rotaract Club of UCSC",
@@ -83,17 +84,42 @@ const clubs = [
     description: "Get the opportunity to learn from industry professionals, prepare for certifications like CISA and CRISC and and network with professionals in the field.",
     image: rekhaImage,
   },
-];
+]; */
+
 
 const ClubDetails = () => {
-  const { name } = useParams();
+  
+  const { id } = useParams();
   const location = useLocation();
   const { club } = location.state || {};
 
+  const [clubDetails, setClubDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchClubDetails(id);
+  }, [id]);
+
+  const fetchClubDetails = async (clubId) => {
+    try {
+        const token = localStorage.getItem('token');
+        const clubs = await ClubsService.getClubById(clubId, token);
+        //const clubsArray = clubs.content || [];
+        setClubDetails(club);
+        setLoading(false); 
+    } catch (error) {
+        console.error("Failed to fetch clubs", error);
+        setLoading(false);
+    }
+};
+
   const [isOpen, setIsOpen] = useState(false); // State for CustomSwitch
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   // Find the club details based on the name or the state passed
-  const clubDetails = clubs.find(clubItem => clubItem.name.toLowerCase() === name.toLowerCase() || clubItem.name.toLowerCase() === club?.name.toLowerCase()) || club;
+  //const clubDetails = clubsD.find(clubItem => clubItem.id === id) || club;
 
   if (!clubDetails) {
     return <div>Club not found</div>;
@@ -110,8 +136,8 @@ const ClubDetails = () => {
                                                       }}>
             <div className="rounded-full overflow-hidden w-24 h-24 flex-shrink-0m custom-card">
               <img
-                src={clubDetails.image}
-                alt={clubDetails.name}
+                src={clubDetails.club_image}
+                alt={clubDetails.club_name}
                 className="object-cover flex items-start w-full h-full "
                 onError={(e) => {
                   e.target.onerror = null;
@@ -124,11 +150,11 @@ const ClubDetails = () => {
             </div>
             <div className="ml-4 flex flex-col flex-1">
               <Typography variant="h5" className="text-white mb-2">
-                {clubDetails.name}
+                {clubDetails.club_name}
               </Typography>
               <div className="flex flex-col flex-1">
                 <div className="mb-4">
-                  {clubDetails.description.split('\n').map((line, index) => (
+                  {clubDetails.club_description.split('\n').map((line, index) => (
                     <Typography key={index} variant="body1" className="text-white">
                       {line}
                     </Typography>

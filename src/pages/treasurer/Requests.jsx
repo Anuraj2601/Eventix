@@ -12,6 +12,8 @@ const ExploreClub = () => {
                 <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-hidden">
                     {/* Directly display the Requests component */}
                     <div className="overflow-y-auto px-10">
+                    <h1 className="text-[#AEC90A] text-2xl px-10">Event Requests</h1>
+
                         <Requests />
                     </div>
                 </div>

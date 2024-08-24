@@ -17,6 +17,7 @@ import { FaHeart } from "react-icons/fa";
 import { FaTimes } from 'react-icons/fa';
 import { FaUpload } from 'react-icons/fa'; // Import the upload icon
 import EditButton from '../../components/EditButton'; // Import the EditButton component
+import RegistrationModal from '../../components/RegistrationModal'; // Ensure correct path
 
 
 ReactModal.setAppElement('#root'); // For accessibility
@@ -34,15 +35,18 @@ const ExploreEvent = () => {
         sponsors: Array(5).fill({ name: '', type: 'Gold', amount: '' }), // Initialize sponsor fields
         iudApproval: 'not-approved',
         proofOfApproval: '',
-        budget: "1000 USD",  // Dummy budget value
-        purpose: "To enhance the skills of students through practical workshops.",  // Dummy purpose value
-        benefits: "Increased engagement in club activities and better preparation for industry challenges."  // Dummy benefits value
-     
+       
     });
   
     const [isFormValid, setIsFormValid] = useState(false);
 
-    const [budget, setBudget] = useState('1000 USD');
+    const [budget, setBudget] = useState("100000 Rupees");
+  const [purpose, setPurpose] = useState(
+    "To enhance the skills of students through practical workshops."
+  );
+  const [benefits, setBenefits] = useState(
+    "Increased engagement in club activities and better preparation for industry challenges."
+  );
 
     useEffect(() => {
         const initialLikes = Math.floor(Math.random() * 100) + 1;
@@ -104,8 +108,20 @@ const ExploreEvent = () => {
         setIsFormValid(isValid);
     };
 
-    const openModal = () => setModalIsOpen(true);
-    const closeModal = () => setModalIsOpen(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleRegister = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleToggleDescription = () => {
+        setShowFullDescription(!showFullDescription);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
 
     return (
         <div className="fixed inset-0 flex">
@@ -118,10 +134,10 @@ const ExploreEvent = () => {
                             <Card className="w-full bg-neutral-900 h-128 relative">
                                 <CardBody className="h-full relative">
                                     <div className="relative">
-                                        <img src={image} alt={name} className="w-full h-80 object-cover rounded-2xl mb-4 " style={{ 
+                                    <img src={image} alt={name} className="w-full h-80 object-cover rounded-2xl mb-4 " style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }} />
-                                        <div className="absolute p-2 rounded-2xl top-1 right-1 flex items-center space-x-2">
+                                        <div className="absolute p-2 rounded-2xl top-1 right-1 flex items-center space-x-2 text-white">
                                             <span>Organized by</span>
                                             <img src={clubImage} alt={clubName} className="w-10 h-10 rounded-full" />
                                         </div>
@@ -151,7 +167,7 @@ const ExploreEvent = () => {
                                             <Typography color="white" variant="subtitle1" className="text-[#AEC90A]  custom-card">
                                                 Venue - {venue}
                                             </Typography>
-                                            <button
+                                            <button onClick={handleRegister}
                                                 className="  custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90  px-2 py-2 rounded-full"  style={{ 
                                                     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                                                   }}
@@ -236,7 +252,11 @@ const ExploreEvent = () => {
                 </div>
             </div>
 
-                                   
+            <RegistrationModal
+                event={event}
+                isOpen={isModalOpen}
+                onClose={closeModal}
+            />                   
         </div>
     );
 };

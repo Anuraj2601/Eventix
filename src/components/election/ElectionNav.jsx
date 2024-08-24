@@ -1,6 +1,5 @@
-// C:\wamp64\www\Eventix\src\components\election\ElectionNav.jsx
-
 import React from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation for URL checking
 import {
   Tabs,
   TabsHeader,
@@ -12,27 +11,32 @@ import ElectionviewDetails from "./ElectionviewDetails";
 import Votestab from "./Votestab";
 import CandidatesNav from "../CandidatesNav";
 
-
-
-const ElectionNav = ({ clubName, electionId }) => {
+//const ElectionNav = ({ clubName, electionId }) => {}
+const ElectionNav = ({  electionId }) => {
+  const location = useLocation(); // Get the current path
   const [activeTab, setActiveTab] = React.useState("Details");
 
+  // Determine if the URL starts with '/oc' or '/member'
+  const showVotesTab = location.pathname.startsWith('/president') || location.pathname.startsWith('/secretary');
+
+  // Define the tabs and their content
   const data = [
     {
       label: "Details",
       value: "Details",
-      desc: <ElectionviewDetails clubName={clubName} electionId={electionId} />,
+      // desc: <ElectionviewDetails clubName={clubName} electionId={electionId} />,
+      desc: <ElectionviewDetails electionId={electionId} />
     },
     {
       label: "Candidates",
       value: "Candidates",
       desc: <CandidatesNav />,
     },
-    {
+    ...(showVotesTab ? [{
       label: "Votes",
       value: "Votes",
       desc: <Votestab />, // Include VotesTab component here
-    },
+    }] : []),
   ];
 
   return (

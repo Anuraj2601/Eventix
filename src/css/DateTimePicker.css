@@ -1,0 +1,48 @@
+/* Wrapper around the DateTimePicker */
+.react-datetime-picker__wrapper {
+    padding: 0.5rem;
+    background-color: #0B0B0B;
+    
+}
+
+/* Input fields inside the DateTimePicker */
+.react-datetime-picker__inputGroup__input {
+    color: white;
+    background-color: #0B0B0B;
+    border: none;
+}
+
+/* Dropdown toggle button inside the DateTimePicker */
+.react-datetime-picker__inputGroup__divider,
+.react-datetime-picker__inputGroup__amPm {
+    color: white;
+    background-color: #0B0B0B;
+}
+
+/* Style for the calendar dropdown */
+.react-datetime-picker__calendar {
+    background-color: #0B0B0B;
+    border: 2px solid #AEC90A;
+}
+
+/* Style the buttons inside the calendar */
+.react-calendar__navigation button,
+.react-calendar__month-view__days__day {
+    color: white;
+    background-color: #0B0B0B; /* Ensure buttons are black */
+    border: none;
+}
+
+/* Style for selected day in calendar */
+.react-calendar__tile--active {
+    background-color: #0B0B0B; /* Ensure selected day is also black */
+    color: white; /* Ensure selected day text is also white */
+}
+
+/* Style the clear and clock icons */
+.react-datetime-picker__clear-button,
+.react-datetime-picker__clock-button {
+    color: white;
+    background-color: transparent;
+    border: none;
+}
