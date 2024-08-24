@@ -229,7 +229,7 @@ const App = () => {
         {/* President ROUTES */}
         <Route exact path="/president/club" element={<Exploreclub />} />
         <Route exact path="/president/club/event" element={<Exploreevent />} />
-        <Route path='/president/club/:name' element={<ClubDetails />} />
+        <Route path='/president/club/:id' element={<ClubDetails />} />
         <Route path='/president/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
         <Route path='/president/calendar' element={<Calendar />}></Route>
@@ -302,7 +302,7 @@ const App = () => {
 
        
         <Route path='/admin/club' element={<StudentAllClubsadmin/>}></Route>
-        <Route path='/admin/club/:name' element={<StudentClubDetailsadmin/>}></Route>
+        <Route path='/admin/club/:id' element={<StudentClubDetailsadmin/>}></Route>
         <Route path='/admin/notifications' element={<StudentNotificationsadmin/>}></Route>
         <Route path='/admin/dashboard' element={<StudentDashboardadmin/>}></Route>
         <Route path='/clubregister/:name' element={<ClubRegistrationadmin/>}></Route>
