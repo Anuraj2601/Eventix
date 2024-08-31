@@ -309,6 +309,7 @@ const Login = () => {
             setShowSuccessPopup(true);
           localStorage.setItem("token", userData.token);
           localStorage.setItem("role", userData.role);
+          localStorage.setItem("session_id", userData.id);
             
 
 
