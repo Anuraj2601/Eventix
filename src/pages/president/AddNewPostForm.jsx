@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 
@@ -12,15 +12,43 @@ import {
 } from "@material-tailwind/react";
 // import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { HiChevronDown } from "react-icons/hi";
+import UsersService from "../../service/UsersService";
 
 const AddNewPostForm = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [name, setName] = useState("");
+  const [position, setPosition] = useState("");
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedImage(URL.createObjectURL(e.target.files[0]));
     }
   };
+
+  const currentUserDetails = async () => {
+    const session_id = localStorage.getItem("session_id");
+    const token = localStorage.getItem("token");
+    const userDetails = await UsersService.getUserById(session_id, token);
+    //console.log("uuser details in post", userDetails);
+    const { users } = userDetails;
+    if(users){
+      setName(users.firstname + " " + users.lastname);
+      setPosition(users.role);
+
+    }else{
+      console.log("User details are undefined or null");
+    }
+   
+
+  }
+
+  useEffect(() => {
+
+    currentUserDetails();
+
+
+  }, [])
+
 
   return (
     <>
@@ -38,10 +66,11 @@ const AddNewPostForm = () => {
                   {/* Personal Information */}
                   <div className="flex flex-col gap-3">
                     <label htmlFor="name" className="text-white">
-                      Name*
+                      Name
                     </label>
                     <input
                       id="name"
+                      value={name}
                       type="text"
                       placeholder="Kamal Perera"
                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
@@ -51,10 +80,11 @@ const AddNewPostForm = () => {
                   {/* Position Information */}
                   <div className="flex flex-col gap-3 mt-5">
                     <label htmlFor="position" className="text-white">
-                      Position*
+                      Position
                     </label>
                     <input
                       id="position"
+                      value={position}
                       type="text"
                       placeholder="Secretary"
                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
