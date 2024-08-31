@@ -115,7 +115,7 @@ const Dashboard = () => {
       <Sidebar className="flex-shrink-0" />
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="bg-gradient-to-b from-[#27272a] to-[#701a75] bg-opacity-1 backdrop-blur-full shadow-lg shadow-black/50    text-white flex flex-1 overflow-y-auto">
+        <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto">
           <div className="w-2/4 px-2 ml-2 overflow-y-auto">
             {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
             {events.length > 0 && events.map(event => (
@@ -126,7 +126,7 @@ const Dashboard = () => {
             <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl ">
               <Upcoming />
             </div>
-            <div className="flex-1  overflow-y-auto  mb-1">
+            <div className="flex-1  overflow-y-auto  mb-4">
               <Feedback />
             </div>
           </div>
