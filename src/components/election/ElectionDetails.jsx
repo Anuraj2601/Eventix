@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useParams } from 'react-router-dom';
 import {
   Card,
   CardBody,
@@ -9,25 +9,36 @@ import {
 import EditDeleteButton from '../EditDeleteButton';
 import Customswitch from "../Customswitch";
 import { useNavigate } from 'react-router-dom';
+import { FaPlus } from "react-icons/fa6";
+import ElectionService from "../../service/ElectionService";
 
-const ElectionDetails = ({ clubName, electionId }) => {
+const ElectionDetails = ({ club }) => {
   const [value, setValue] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;
   const navigate = useNavigate();
 
-  // Determine the target path based on the current path
-  let targetPath = '';
+  const { id } = useParams();
 
-  if (currentPath.startsWith('/president')) {
-    targetPath = '/president/club/election';
-  } else if (currentPath.startsWith('/member')) {
-    targetPath = '/member/club/election';
-  } else if (currentPath.startsWith('/oc')) {
-    targetPath = '/oc/club/election';
-  } else if (currentPath.startsWith('/secretary')) {
-    targetPath = '/secretary/club/election';
+  const handleViewDetails = (election_id) => {
+    // Determine the target path based on the current path
+    let targetPath = '';
+
+    if (currentPath.startsWith('/president')) {
+      targetPath = `/president/club/election/${election_id}`;
+    } else if (currentPath.startsWith('/member')) {
+      targetPath = '/member/club/election';
+    } else if (currentPath.startsWith('/oc')) {
+      targetPath = '/oc/club/election';
+    } else if (currentPath.startsWith('/secretary')) {
+      targetPath = '/secretary/club/election';
+    }
+
+    navigate(targetPath, { state: { club } });
+
   }
+
+  
 
   // Check if the current path is either '/oc' or '/member'
   const isOcOrMember = currentPath.startsWith('/oc') || currentPath.startsWith('/member') || currentPath.startsWith('/secretary');
@@ -56,6 +67,10 @@ const ElectionDetails = ({ clubName, electionId }) => {
   
     navigate(finalLink);
   };
+
+  const openElectionForm = () => {
+    navigate("/president/club/election/add", { state: { club } });
+  }
   
 
   const events = [
@@ -64,7 +79,7 @@ const ElectionDetails = ({ clubName, electionId }) => {
     },
   ];
 
-  const elections = [
+  const elections1 = [
     {
       id: "1",
       desc: "Club Board of 24/25",
@@ -79,22 +94,87 @@ const ElectionDetails = ({ clubName, electionId }) => {
     },
   ];
 
+  const [ elections, setElections] = useState([]);
+
   const handleEdit = (id) => {
-    // Add your edit handling logic here
+    navigate(`/president/club/election/edit/${id}`, { state: { club } });
   };
 
-  const handleDelete = (id) => {
-    // Add your delete handling logic here
+  const handleDelete = async (id) => {
+    try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this Election?"
+      );
+
+      const token = localStorage.getItem("token");
+      if (confirmDelete) {
+        await ElectionService.deleteElection(id, token);
+
+        //navigate(currentPath, {replace: true});
+        //navigate(-1);
+        setElections(prevElections => prevElections.filter(election => election.election_id !== id));
+      }
+    } catch (error) {
+      console.error("Error fetching elections:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchElections = async () => {
+      try{
+        const token = localStorage.getItem('token');
+        const response = await ElectionService.getAllElections(token);
+        //const electionsArray = response.content || [];
+        const electionsArray = response.content.filter(election => election.club_id === club.club_id) || [];
+        setElections(electionsArray);
+
+
+      }catch(error){
+        console.error('Error fetching elections:', error);
+      }
+    };
+
+    fetchElections();
+
+
+  }, []);
+
+  const parseCustomDate = (dateString) => {
+    if (dateString === null) return 'null date';
+    if (dateString.length < 5) return 'Invalid date'; 
+    //console.log(dateString);
+  
+    return `${dateString[0]}-${String(dateString[1]).padStart(2, '0')}-${String(dateString[2]).padStart(2, '0')}`;
+  };
+
+  const formatDateToYMD = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  };
+
+  const fromUTC = (dateArray) => {
+    const date = new Date(Date.UTC(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]));
+    //const date = new Date(Date.UTC(...dateArray));
+    const offset = date.getTimezoneOffset() * 60000;
+  
+    const localDate = new Date(date.getTime() - offset);
+
+    // Format the localDate to a readable string
+    //return localDate.toLocaleDateString();
+    return formatDateToYMD(localDate);
   };
 
   return (
     <>
       {isEditable && (
         <Button
-          onClick={() => navigateToForm(events[0].joinLink1)}
+          onClick={openElectionForm}
           className="flex items-center gap-2 bg-[#AEC90A] ml-auto mt-0 rounded-full text-black font-bold"
         >
-          New Election
+          <FaPlus size={18} /> New Election
         </Button>
       )}
 
@@ -112,41 +192,41 @@ const ElectionDetails = ({ clubName, electionId }) => {
             </div>
           </div>
           <div>
-            {elections.map(({ id, desc, applicationDate, votingDate }, index) => (
+            {(elections || []).map((election, index) => (
               <div
-                key={id}
+                key={election.election_id}
                 className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl mb-2 ${index === 1 ? 'opacity-50' : ''}`}
                 style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.8)' }}
               >
                 <div className="col-span-2 flex justify-center items-center">
                   <Typography color={index === 1 ? "gray" : "white"} variant="h6">
-                    {desc}
+                    {election.election_name}
                   </Typography>
                 </div>
                 <div className="col-span-2 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
-                    {applicationDate}
-                    {isEditable && (
+                    { fromUTC(election.appOpens) } - {fromUTC(election.appCloses)}
+                    {/* {isEditable && (
                       <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
                         <div className="whitespace-nowrap">Applications</div>
                         <div>
                           <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
                         </div>
                       </div>
-                    )}
+                    )} */}
                   </Typography>
                 </div>
                 <div className="col-span-1 flex justify-center items-center">
                   <Typography className={`text-[#AEC90A] inline-block ${index === 1 ? 'text-gray-500' : ''}`} variant="h6">
-                    {votingDate}
-                    {isEditable && (
+                    {fromUTC(election.votingOpens)} - {fromUTC(election.votingCloses)}
+                    {/* {isEditable && (
                       <div className={`flex gap-1 text-white mt-1 ${index === 1 ? 'opacity-50' : ''}`}>
                         <div className="whitespace-nowrap">Votings</div>
                         <div>
                           <Customswitch isOn={value} handleToggle={() => setValue(!value)} disabled={index === 1} />
                         </div>
                       </div>
-                    )}
+                    )} */}
                   </Typography>
                 </div>
                 <div className="col-span-6 flex flex-col items-end gap-2 p-5">
@@ -175,16 +255,16 @@ const ElectionDetails = ({ clubName, electionId }) => {
                     <>
                       {isEditable && (
                         <EditDeleteButton
-                          onEdit={() => handleEdit(id)}
-                          onDelete={() => handleDelete(id)}
+                          onEdit={() => handleEdit(election.election_id)}
+                          onDelete={() => handleDelete(election.election_id)}
                           disabled={index === 1}
                         />
                       )}
-                      <Link to={targetPath}>
-                        <Button variant="gradient" className="bg-[#AEC90A] rounded-full text-black p-2 inline-block">
+                      {/* <Link to={targetPath}> */}
+                        <Button onClick={() => handleViewDetails(election.election_id)} variant="gradient" className="bg-[#AEC90A] rounded-full text-black p-2 inline-block">
                           View Details
                         </Button>
-                      </Link>
+                      {/* </Link> */}
                     </>
                   )}
                 </div>
