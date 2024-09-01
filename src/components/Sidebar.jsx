@@ -38,7 +38,7 @@ const Sidebar = () => {
   return (
     <aside className="bg-stone-950 shadow-2xl text-white w-52 h-full p-4 flex flex-col justify-between items-center overflow-y-auto">
       <div className="p-2 flex justify-center ">
-        <img src={Logo} alt="logo" className="w-72 h-24 ml-2 mb-4 " />
+        <img src={Logo} alt="logo" className="w-70 h-24 ml-2 mb-4 " />
       </div>
 
       <div className="flex flex-col items-center space-y-1 flex-grow">
