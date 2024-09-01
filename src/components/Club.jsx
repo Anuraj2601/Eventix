@@ -89,10 +89,10 @@ const Club = () => {
             {clubs.map((club, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4 "style={{ 
+                className="flex flex-col sm:flex-row items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4 "style={{ 
                   boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                 }}                            >
-                <div className="flex items-center gap-x-3">
+                <div className="flex flex-col sm:flex-row  items-center gap-x-3">
                   <Avatar
                     size="sm"
                     src={club.image}

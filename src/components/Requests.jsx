@@ -83,7 +83,7 @@ const Dialog = ({ children, isOpen, onClose, title, primaryAction, secondaryActi
   isOpen ? (
     <div className="dialog fixed inset-0 flex items-center justify-center z-50">
       <div className="bg-black bg-opacity-70 absolute inset-0" onClick={onClose}></div>
-      <div className="relative bg-black border-2 border-[#AEC90A] p-6 rounded-lg shadow-lg w-1/3">
+      <div className="relative bg-black border-2 border-[#AEC90A] p-6 rounded-lg shadow-lg w-full max-w-md">
         <div className="dialog-title flex justify-between items-center">
           {icon && <span className={`dialog-icon ${icon}`}></span>}
           <h3 className="text-xl">{title}</h3>

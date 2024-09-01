@@ -97,13 +97,13 @@ const RequestTable = ({ type, onAccept, onReject }) => {
       {data[type].map((row) => (
         <div
           key={row.id}
-          className="bg-black text-[#AEC90A] rounded-2xl p-4 mb-6 flex items-center justify-between" style={{ 
+          className="bg-black text-[#AEC90A] rounded-2xl p-6 mb-6 flex flex-col sm:flex-row items-center justify-between" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}
         >
-          <div className="flex items-center">
+          <div className="flex flex-col sm:flex-row items-center ">
             <img src={row.image} alt="User" className="w-24 h-24 rounded-full mr-4" />
-            <div className="flex flex-col">
+            <div className="flex flex-col text-center sm:text-left">
               <span>{`${row.firstName} ${row.lastName}`}</span>
               <span>{row.regNumber}</span>
               <span>{generateEmail(row.regNumber)}</span>
