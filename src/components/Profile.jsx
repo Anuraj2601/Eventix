@@ -480,72 +480,173 @@ const ProfileUpdatePage = () => {
   const [participatedEvents, setParticipatedEvents] = useState([]);
   const [isEditingBio, setIsEditingBio] = useState(false);
 
-  const handleProfileImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      const formData = new FormData();
-      formData.append("profileImage", file);
-  
-      // Update the preview
-      setProfileImage(URL.createObjectURL(file));
-  
-      // Send the image to the backend
-      axios.post(
-        "http://localhost:8080/api/user/profile/photo",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
-      .then(response => {
-        console.log('Profile image updated:', response.data);
-      })
-      .catch(error => {
-        console.error('There was an error uploading the image!', error);
-        alert('Failed to upload image. Please try again.');
-      });
-    }
-  };
-  
-  
-  
-  // Fetch the user profile data
-  const fetchUserProfile = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/user/profile",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Assuming you store the JWT token in localStorage
-          },
-        }
-      );
-
-      const data = response.data;
-      setFirstName(data.firstName);
-      setLastName(data.lastName);
-      setEmail(data.email);
-      setRegNo(data.regNo);
-      setYearOfStudy(data.yearOfStudy || ""); // Replace with actual field from API
-      setBio(data.bio || ""); // Replace with actual field from API
-      // You might want to fetch and set other fields here
-    } catch (error) {
-      console.error("Error fetching user data: ", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
+  // // Handle Profile Image Change
   // const handleProfileImageChange = (event) => {
   //   if (event.target.files && event.target.files[0]) {
-  //     setProfileImage(URL.createObjectURL(event.target.files[0]));
+  //     const file = event.target.files[0];
+  //     const formData = new FormData();
+  //     formData.append("profileImage", file);
+
+  //     // Update the preview immediately
+  //     setProfileImage(URL.createObjectURL(file));
+
+  //     // Send the image to the backend
+  //     axios.post(
+  //       "http://localhost:8080/api/user/profile/photo",
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       }
+  //     )
+  //     // .then(response => {
+  //     //   console.log('Profile image updated:', response.data);
+  //     //   // If the server returns the new photoUrl, update the profileImage state
+  //     //   if (response.data.photoUrl) {
+  //     //     setProfileImage(response.data.photoUrl);
+  //     //   }
+  //     // })
+  //     .then(response => {
+  //       console.log('Profile image updated:', response.data);
+        
+  //       // If the server returns the new photoUrl, update the profileImage state
+  //       if (response.data.photoUrl) {
+  //         setProfileImage(response.data.photoUrl);
+  //         alert('Profile image uploaded successfully!');
+  //       }
+  //     })
+      
+  //     .catch(error => {
+  //       console.error('There was an error uploading the image!', error);
+  //       alert('Failed to upload image. Please try again.');
+  //       // Optionally, revert to the previous image if upload fails
+  //       fetchUserProfile();
+  //     });
   //   }
   // };
+  
+  
+  // // Fetch the user profile data
+  // const fetchUserProfile = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "http://localhost:8080/api/user/profile",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`, // Assuming you store the JWT token in localStorage
+  //         },
+  //       }
+  //     );
+
+  //     const data = response.data;
+  //     setFirstName(data.firstName);
+  //     setLastName(data.lastName);
+  //     setEmail(data.email);
+  //     setRegNo(data.regNo);
+  //     setYearOfStudy(data.yearOfStudy || ""); // Replace with actual field from API
+  //     setBio(data.bio || ""); // Replace with actual field from API
+  //     // You might want to fetch and set other fields here
+  //     // Set the profile image if photoUrl exists
+  //     // if (data.photoUrl) {
+  //     //   setProfileImage(data.photoUrl);
+  //     // } else {
+  //     //   setProfileImage(null); // Or set a default image if preferred
+  //     // }
+  //     setProfileImage(data.photoUrl || ""); 
+  //   } catch (error) {
+  //     console.error("Error fetching user data: ", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchUserProfile();
+  //   console.log("Profile Image URL:", profileImage); // Add this line
+  // }, []);
+  
+  
+
+  // useEffect(() => {
+  //   fetchUserProfile();
+  // }, []);
+  // Handle Profile Image Change
+const handleProfileImageChange = (event) => {
+  if (event.target.files && event.target.files[0]) {
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append("profileImage", file);
+
+    // Update the preview immediately
+    setProfileImage(URL.createObjectURL(file));
+
+    // Send the image to the backend
+    axios.post(
+      "http://localhost:8080/api/user/profile/photo",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    )
+    .then(response => {
+      console.log('Profile image updated:', response.data);
+      
+      // If the server returns the new photoUrl, update the profileImage state
+      if (response.data.photoUrl) {
+        // setProfileImage(response.data.photoUrl);
+        setProfileImage(`http://localhost:8080${response.data.photoUrl}`);
+
+        alert('Profile image uploaded successfully!');
+      }
+    })
+    .catch(error => {
+      console.error('There was an error uploading the image!', error);
+      alert('Failed to upload image. Please try again.');
+      // Optionally, revert to the previous image if upload fails
+      fetchUserProfile(); // Refreshes the profile data including the image
+    });
+  }
+};
+
+// Fetch the user profile data
+const fetchUserProfile = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:8080/api/user/profile",
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    const data = response.data;
+    setFirstName(data.firstName);
+    setLastName(data.lastName);
+    setEmail(data.email);
+    setRegNo(data.regNo);
+    setYearOfStudy(data.yearOfStudy || "");
+    setBio(data.bio || "");
+
+    // Ensure the photoUrl is correctly formatted before setting it
+    if (data.photoUrl) {
+      setProfileImage(`${data.photoUrl}`);
+    } else {
+      setProfileImage("https://randomuser.me/api/portraits/men/73.jpg"); // Or set a default image if preferred
+    }
+  } catch (error) {
+    console.error("Error fetching user data: ", error);
+  }
+};
+
+useEffect(() => {
+  fetchUserProfile();
+}, []);
+
+
 
   const handleEditBioClick = () => {
     setIsEditingBio(true);
@@ -591,6 +692,11 @@ const ProfileUpdatePage = () => {
                       profileImage ||
                       "https://randomuser.me/api/portraits/men/73.jpg"
                     }
+                    // src={
+                    //   profileImage
+                    //     ? `${profileImage}`
+                    //     : "https://randomuser.me/api/portraits/men/73.jpg"
+                    // }
                     alt="Profile"
                     className="w-full h-full rounded-full object-cover"
                     style={{
