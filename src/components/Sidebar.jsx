@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BsMegaphone } from 'react-icons/bs';
 import { FaHome } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { IoCalendarNumberOutline, IoExitOutline, IoVideocamOutline } from 'react-icons/io5';
 import { MdSettings } from 'react-icons/md';
-import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 
 import Logo from '../assets/eventix Logo1.png';
 import UsersService from '../service/UsersService';
@@ -13,7 +12,6 @@ import UsersService from '../service/UsersService';
 const Sidebar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
-  const [isOpen, setIsOpen] = useState(false);
 
   // Extract base URL (e.g., /club, /calendar)
   const baseUrl = currentPath.split('/')[1];
@@ -38,15 +36,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div>
-      <div className="md:hidden flex justify-between items-center p-4 bg-stone-950">
-        {/* <img src={Logo} alt="logo" className="w- h-auto" /> */}
-        <button onClick={() => setIsOpen(!isOpen)} className="text-white">
-          {isOpen ? <AiOutlineClose size={25} /> : <AiOutlineMenu size={25} />}
-        </button>
-      </div>
-
-      <aside className={`bg-stone-950 shadow-2xl text-white w-52 h-full p-4 flex flex-col justify-between items-center overflow-y-auto ${isOpen ? 'block' : 'hidden'} md:flex`}>
+    <aside className="bg-stone-950 shadow-2xl text-white w-52 h-full p-4 flex flex-col justify-between items-center overflow-y-auto">
       <div className="p-2 flex justify-center ">
         <img src={Logo} alt="logo" className="w-70 h-24 ml-2 mb-4 " />
       </div>
@@ -101,7 +91,6 @@ const Sidebar = () => {
         </li>
       </ul>
     </aside>
-    </div>
   );
 };
 
