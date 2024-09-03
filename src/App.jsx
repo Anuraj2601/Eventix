@@ -238,6 +238,7 @@ const App = () => {
         <Route path="/president/club/election/add" element={<NewElectionForm />} />
         <Route path="/president/club/election/edit/:id" element={<NewElectionForm />} />
         <Route path="/club/new-post" element={<AddNewPostForm />} />
+        <Route path="/club/edit-post/:id" element={<AddNewPostForm />} />
 
         <Route path='/president/notifications' element={<PresidentNotifications  />} ></Route>
         <Route path='/president/announcement' element={<Announcementpresident />}></Route> 

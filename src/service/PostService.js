@@ -4,7 +4,7 @@ class PostService{
 
     static BASE_URL = "http://localhost:8080";
 
-    static async savePost (name, position, description, post_image, post_image, post_status, club_id, published_user_id, token){
+    static async savePost (name, position, description, post_image, post_status, club_id, published_user_id, token){
 
         try{
             const formData = new FormData();
@@ -71,7 +71,7 @@ class PostService{
 
 
 
-    static async updatePost (post_id, name, position, description, post_image, post_image, post_status, club_id, published_user_id, token){
+    static async updatePost (post_id, name, position, description, post_image, post_status, club_id, published_user_id, token){
 
         try{
             const formData = new FormData();
@@ -111,7 +111,7 @@ class PostService{
             {
               headers: { Authorization: `Bearer ${token}` },
             }
-            
+
           );
 
           return response.data;
