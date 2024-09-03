@@ -160,3 +160,129 @@ className={`p-5 rounded-2xl ${message.type === 'inquiry' ? 'bg-[#AEC90A] text-bl
 };
 
 export default InquiryPage;
+
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import { MdDelete, MdEdit } from 'react-icons/md';
+// import Sidebar from '../components/Sidebar';
+// import Navbar from '../components/Navbar';
+
+// const InquiryPage = () => {
+//   const [currentInquiry, setCurrentInquiry] = useState(null);
+//   const [newMessage, setNewMessage] = useState('');
+
+//   useEffect(() => {
+//     // Fetch initial inquiries if needed
+//     axios.get('/messages')
+//       .then(response => {
+//         // Handle the response and set state
+//       })
+//       .catch(error => console.error('Error fetching messages:', error));
+//   }, []);
+
+//   const handleSend = () => {
+//     if (newMessage.trim() && currentInquiry) {
+//       const message = { content: newMessage, sender: 'Current User', timestamp: new Date().toISOString() };
+      
+//       axios.post('/messages', message)
+//         .then(response => {
+//           // Update the state with the new message
+//           setCurrentInquiry(prevInquiry => ({
+//             ...prevInquiry,
+//             messages: [...prevInquiry.messages, response.data]
+//           }));
+//           setNewMessage('');
+//         })
+//         .catch(error => console.error('Error sending message:', error));
+//     }
+//   };
+
+//   const handleDeleteMessage = (messageId) => {
+//     axios.delete(`/messages/${messageId}`)
+//       .then(() => {
+//         // Update the state after deletion
+//         setCurrentInquiry(prevInquiry => ({
+//           ...prevInquiry,
+//           messages: prevInquiry.messages.filter(message => message.id !== messageId)
+//         }));
+//       })
+//       .catch(error => console.error('Error deleting message:', error));
+//   };
+
+//   const handleEditMessage = (messageId, newText) => {
+//     axios.put(`/messages/${messageId}`, newText)
+//       .then(response => {
+//         // Update the state with the edited message
+//         setCurrentInquiry(prevInquiry => ({
+//           ...prevInquiry,
+//           messages: prevInquiry.messages.map(message => 
+//             message.id === messageId ? { ...message, content: response.data.content } : message
+//           )
+//         }));
+//       })
+//       .catch(error => console.error('Error editing message:', error));
+//   };
+
+//   return (
+//     <div className="flex h-screen">
+//       <Sidebar className="flex-shrink-0" />
+//       <div className="flex-1 flex flex-col">
+//         <Navbar className="sticky top-0 z-10 bg-neutral-900 text-white " />
+//         <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
+//           <div className="w-1/6 p-2 custom-3d-shadow rounded-2xl overflow-y-auto">
+//             <h2 className="text-xl mb-4 text-center">Messages</h2>
+//             {/* List inquiries here */}
+//           </div>
+//           <div className="flex-1 flex flex-col">
+//             {currentInquiry && (
+//               <div className="flex-1 overflow-y-auto p-4 bg-neutral-900">
+//                 <div className="flex items-center mb-4">
+//                   {/* Inquiry Header */}
+//                 </div>
+//                 <div>
+//                   {currentInquiry.messages.map((message, index) => (
+//                     <div key={index} className={`flex ${message.type === 'inquiry' ? 'justify-start' : 'justify-end'} mb-4`}>
+//                       <div style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+//                         className={`p-5 rounded-2xl ${message.type === 'inquiry' ? 'bg-[#AEC90A] text-black bg-opacity-80' : 'bg-white text-black'}`}>
+//                         <p className="">{message.text}</p>
+//                         <div className="text-xs text-black">{message.time}</div>
+//                         {message.type === 'reply' && (
+//                           <div className="flex mt-2">
+//                             <button onClick={() => handleEditMessage(message.id, prompt('Edit message:', message.text))}>
+//                               <MdEdit className='text-black' />
+//                             </button>
+//                             <button onClick={() => handleDeleteMessage(message.id)}>
+//                               <MdDelete className='text-black' />
+//                             </button>
+//                           </div>
+//                         )}
+//                       </div>
+//                     </div>
+//                   ))}
+//                 </div>
+//                 <div className="p-4 bg-neutral-900 flex items-center p-5">
+//                   <input
+//                     type="text"
+//                     value={newMessage}
+//                     onChange={(e) => setNewMessage(e.target.value)}
+//                     placeholder="Type your inquiry..."
+//                     className="flex-1 p-5 rounded-lg bg-neutral-900 text-white"
+//                   />
+//                   <button
+//                     onClick={handleSend}
+//                     className="ml-4 bg-[#AEC90A] text-black p-2 rounded-full"
+//                   >
+//                     Reply
+//                   </button>
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default InquiryPage;
+
