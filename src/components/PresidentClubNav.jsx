@@ -147,7 +147,7 @@ const PresidentClubNav = ({ club }) => {
     {
       label: "Posts",
       value: "Posts",
-      desc: <ClubPosts />,
+      desc: <ClubPosts club = {club}/>,
     },
     {
       label: "Events",

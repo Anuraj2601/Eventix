@@ -4,7 +4,17 @@ class PostService{
 
     static BASE_URL = "http://localhost:8080";
 
-    static async savePost (name, position, description, post_image, post_status, club_id, published_user_id, token){
+    static async savePost (name, 
+                            position, 
+                            description, 
+                            post_image, 
+                            post_status, 
+                            club_id, 
+                            published_user_id, 
+                            //id,
+                            token){
+
+        console.log("published id in post service", published_user_id)                        
 
         try{
             const formData = new FormData();
@@ -15,6 +25,7 @@ class PostService{
                 post_status,
                 club_id,
                 published_user_id
+                //id
 
             })], {type: 'application/json'}));
             formData.append('file', post_image);
@@ -71,7 +82,16 @@ class PostService{
 
 
 
-    static async updatePost (post_id, name, position, description, post_image, post_status, club_id, published_user_id, token){
+    static async updatePost (post_id, 
+                            name, 
+                            position, 
+                            description, 
+                            post_image, 
+                            post_status, 
+                            club_id, 
+                            published_user_id, 
+                            //id,
+                            token){
 
         try{
             const formData = new FormData();
@@ -83,6 +103,7 @@ class PostService{
                 post_status,
                 club_id,
                 published_user_id
+                //id
 
             })], {type: 'application/json'}));
             formData.append('file', post_image);
@@ -104,7 +125,7 @@ class PostService{
     }
 
 
-    static async deleteSponsor(post_id, token) {
+    static async deletePost(post_id, token) {
         try {
           const response = await axios.delete(`${PostService.BASE_URL}/president/deletePost/${post_id}`,
 

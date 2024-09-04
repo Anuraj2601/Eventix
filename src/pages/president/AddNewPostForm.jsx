@@ -215,13 +215,17 @@ import {
 // import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { HiChevronDown } from "react-icons/hi";
 import UsersService from "../../service/UsersService";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import PostService from "../../service/PostService";
 
 const AddNewPostForm = () => {
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams(); //post id
+  const { club } = location.state || {};
+
+  //console.log('club in posts form', club);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [name, setName] = useState("");
@@ -230,6 +234,9 @@ const AddNewPostForm = () => {
   const [postStatus, setPostStatus] = useState('PENDING');
   const [postImage, setPostImage] = useState(null);
   const [postImageUrl, setPostImageUrl] = useState(null);
+  const [clubId, setClubId] = useState('');
+  const [publishedUserId, setPublishedUserId] = useState('');
+
   const [errors, setErrors] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -262,6 +269,7 @@ const AddNewPostForm = () => {
 
   const fetchPostDetails = async () => {
     if (id) {
+
       try {
         const token = localStorage.getItem('token');
         const response = await PostService.getPostById(id, token);
@@ -273,6 +281,8 @@ const AddNewPostForm = () => {
           setDescription(content.description || '');
           setPostStatus(content.post_status || 'PENDING');
           setPostImageUrl(content.post_image || '');
+          setClubId(content.club_id || '');
+          setPublishedUserId(content.published_user_id || '');
          
         } else {
           console.warn('Content is undefined or null');
@@ -283,6 +293,7 @@ const AddNewPostForm = () => {
         setErrors("Failed to fetch post details");
         setIsLoading(false);
       }
+
     } else {
       const session_id = localStorage.getItem("session_id");
       const token = localStorage.getItem("token");
@@ -292,6 +303,9 @@ const AddNewPostForm = () => {
       if(users){
         setName(users.firstname + " " + users.lastname);
         setPosition(users.role);
+        setPostStatus('PENDING');
+        setClubId(club.club_id);
+        setPublishedUserId(session_id);
 
       }else{
         console.log("User details are undefined or null");
@@ -372,6 +386,8 @@ const handleSubmit = async (e) => {
     }).every((field) => field !== "" || postImageUrl)) {
     try {
       const token = localStorage.getItem("token");
+      const session_id = localStorage.getItem("session_id")
+      setPublishedUserId(session_id);
       const formData = new FormData();
 
       formData.append("data", new Blob([JSON.stringify({
@@ -379,8 +395,8 @@ const handleSubmit = async (e) => {
           position,
           description,
           postStatus,
-          //club id
-          //published user id
+          clubId,
+          publishedUserId
          
         })], { type: "application/json" }));
 
@@ -396,10 +412,11 @@ const handleSubmit = async (e) => {
           description,
           postImage,
           postStatus,
-          //club id,
-          //published user id,
+          clubId,
+          publishedUserId,
           token
         );
+
         alert("Post updated successfully");
         console.log("Post updated:", response);
         navigate(-1);
@@ -411,13 +428,14 @@ const handleSubmit = async (e) => {
           description,
           postImage,
           postStatus,
-          //club id,
-          //published user id,
+          clubId,
+          publishedUserId,
           token
         );
-        alert("Sponsor added successfully");
-        console.log("Sponsor added:", response);
-        navigate("/president/club");
+
+        alert("Post added successfully");
+        console.log("Post added:", response);
+        navigate(-1);
       }
     } catch (error) {
       console.error("Error processing Post:", error);
@@ -467,9 +485,11 @@ const handleCancel = () => {
                     <input
                       id="name"
                       value={name}
+                      onChange={(e) => setName(e.target.value)}
                       type="text"
                       placeholder="Kamal Perera"
                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
+                      readOnly
                     />
                     {isSubmitted && errors.name && <div className="text-red-500">{errors.name}</div>}
                   </div>
@@ -482,9 +502,11 @@ const handleCancel = () => {
                     <input
                       id="position"
                       value={position}
+                      onChange={(e) => setPosition(e.target.value)}
                       type="text"
                       placeholder="Secretary"
                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
+                      readOnly
                     />
                     {isSubmitted && errors.position && <div className="text-red-500">{errors.position}</div>}
                   </div>
@@ -498,6 +520,7 @@ const handleCancel = () => {
                       id="description"
                       value={description}
                       placeholder="Description"
+                      onChange={(e) => setDescription(e.target.value)}
                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
                     ></textarea>
                     {isSubmitted && errors.description && <div className="text-red-500">{errors.description}</div>}
@@ -515,12 +538,33 @@ const handleCancel = () => {
                       onChange={handleImageChange}
                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
                     />
-                    {postImage && (
+                    {/* {postImage && (
                       <img
                         src={postImage}
                         alt="Selected"
                         className="mt-3 max-h-50"
                       />
+                    )} */}
+                    {!postImage && postImageUrl ? ( // Show existing file if not replaced
+                      <div className="mt-2">
+                        <p className="text-white">Existing file:</p>
+                        <img
+                          src={postImageUrl}
+                          alt="Existing Logo"
+                          className="mt-2 w-32 h-32 object-cover rounded"
+                        />
+                      </div>
+                    ) : (
+                      postImage && (
+                        <div className="mt-2">
+                          <p className="text-white">Selected file: {postImage.name}</p>
+                          <img
+                            src={URL.createObjectURL(postImage)}
+                            alt="Preview"
+                            className="mt-2 w-32 h-32 object-cover rounded"
+                          />
+                        </div>
+                      )
                     )}
                     {isSubmitted && errors.postImage && <div className="text-red-500">{errors.postImage}</div>}
                   </div>

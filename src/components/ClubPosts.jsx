@@ -49,7 +49,7 @@ const Posts = ({ post }) => {
     );
 };
 
-const NewsFeed = ({ posts }) => {
+const NewsFeed = ({ posts , club}) => {
     const location = useLocation(); // Get the current path
     const isMemberPage = location.pathname.startsWith('/member'); // Check if the path starts with /member
     const isPresidentPage = location.pathname.startsWith('/president'); // Check if the path starts with /president
@@ -57,15 +57,17 @@ const NewsFeed = ({ posts }) => {
 
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const navigate = useNavigate();
+
+    //console.log("club details in newsfeed", club);
     
     const events = [
         {
-            joinLink: "/club/new-post",
+            joinLink: "/president/club/new-post",
         }
     ];
 
     const navigateToForm = (link) => {
-        navigate(link);
+        navigate(link, { state: { club } });
     };
 
     const categorizePosts = (posts, category) => {
@@ -122,7 +124,9 @@ const NewsFeed = ({ posts }) => {
     );
 };
 
-const App = () => {
+const App = ({club}) => {
+
+    
     const samplePosts = [
         {
             position: 'Secretary',
@@ -168,7 +172,7 @@ const App = () => {
     ];
 
     return (
-        <NewsFeed posts={samplePosts} />
+        <NewsFeed posts={samplePosts} club= {club} />
     );
 };
 
