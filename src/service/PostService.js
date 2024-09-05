@@ -35,7 +35,7 @@ class PostService{
                 'Authorization': `Bearer ${token}`
             };
 
-            const response = await axios.post(`${PostService.BASE_URL}/president/savePost`, formData, { headers });
+            const response = await axios.post(`${PostService.BASE_URL}/member/savePost`, formData, { headers });
 
             return response.data;
 
@@ -49,7 +49,7 @@ class PostService{
     static async getAllPosts(token) {
         try {
 
-          const response = await axios.get(`${PostService.BASE_URL}/president/getAllPosts`,
+          const response = await axios.get(`${PostService.BASE_URL}/member/getAllPosts`,
             {
 
                 headers: { Authorization: `Bearer ${token}` }
@@ -67,7 +67,7 @@ class PostService{
     static async getPostById(post_id, token) {
         try{
     
-            const response = await axios.get(`${PostService.BASE_URL}/president/getPost/${post_id}`,
+            const response = await axios.get(`${PostService.BASE_URL}/member/getPost/${post_id}`,
                 {
                     headers: {Authorization: `Bearer ${token}`}
                 }
@@ -113,7 +113,7 @@ class PostService{
                 'Authorization': `Bearer ${token}`
             };
 
-            const response = await axios.put(`${PostService.BASE_URL}/president/updatePost`, formData, { headers });
+            const response = await axios.put(`${PostService.BASE_URL}/member/updatePost`, formData, { headers });
 
             return response.data;
 
@@ -127,7 +127,7 @@ class PostService{
 
     static async deletePost(post_id, token) {
         try {
-          const response = await axios.delete(`${PostService.BASE_URL}/president/deletePost/${post_id}`,
+          const response = await axios.delete(`${PostService.BASE_URL}/member/deletePost/${post_id}`,
 
             {
               headers: { Authorization: `Bearer ${token}` },

@@ -65,7 +65,7 @@ const NewsFeed = ({ posts, club }) => {
 
     const events = [
         {
-            joinLink: "/president/club/new-post",
+            joinLink: "/club/new-post",
         }
     ];
 
@@ -82,6 +82,7 @@ const NewsFeed = ({ posts, club }) => {
             <Posts key={index} post={post} showEditDeleteButton={showEditDeleteButton} showApprovalButtons={showApprovalButtons} />
         ));
     };
+
 
     return (
         <div className="bg-neutral-900 text-white min-h-screen relative">
