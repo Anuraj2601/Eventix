@@ -46,7 +46,7 @@ import MainMeetingoc from './components/MainMeeting';
 
 
 
-import Exploreclubsecretary from './pages/secretary/Exploreclub';
+import Exploreclubsecretary from './pages/president/Exploreclub';
 import Exploreeventsecretary from './pages/secretary/Exploreevent';
 import ClubDetailssecretary from './pages/president/ClubDetails';
 import Electionsecretary from './pages/secretary/Election';
@@ -260,9 +260,9 @@ const App = () => {
         
 
          {/* secretary ROUTES */}
-         <Route exact path="/secretary/club" element={<Exploreclubsecretary />} />
-        <Route path='/secretary/club/:name' element={<ClubDetailssecretary />} />
-        <Route exact path="/secretary/club/event" element={<Exploreeventsecretary />} />
+         <Route exact path="/secretary/club" element={<Exploreclub />} />
+        <Route path='/secretary/club/:id' element={<ClubDetails />} />
+        <Route exact path="/secretary/club/event" element={<Exploreevent />} />
         <Route path='/secretary/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
         <Route path='/secretary/calendar' element={<Calendar />}></Route>
