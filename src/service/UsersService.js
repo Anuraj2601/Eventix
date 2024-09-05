@@ -58,10 +58,10 @@ class UsersService{
         }
     }
 
-    static async getUserById(token) {
+    static async getUserById(userId, token) {
         try{
 
-            const response = await axios.get(`${UsersService.BASE_URL}/admin/get-user/${userId}`,
+            const response = await axios.get(`${UsersService.BASE_URL}/admin/get-users/${userId}`,
                 {
                     headers: {Authorization: `Bearer ${token}`}
                 }

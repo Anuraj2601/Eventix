@@ -46,7 +46,7 @@ import MainMeetingoc from './components/MainMeeting';
 
 
 
-import Exploreclubsecretary from './pages/secretary/Exploreclub';
+import Exploreclubsecretary from './pages/president/Exploreclub';
 import Exploreeventsecretary from './pages/secretary/Exploreevent';
 import ClubDetailssecretary from './pages/president/ClubDetails';
 import Electionsecretary from './pages/secretary/Election';
@@ -180,9 +180,9 @@ const App = () => {
         
 
          {/*  member routes */}
-         <Route exact path="/member/club" element={<Explorecluboc />} />
+         <Route exact path="/member/club" element={<Exploreclub />} />
         <Route exact path="/member/club/event" element={<Exploreeventstudent />} />
-        <Route path='/member/club/:name' element={<ClubDetailsoc />} />
+        <Route path='/member/club/:id' element={<ClubDetails />} />
         <Route path='/member/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
         <Route path='/member/calendar' element={<Calendar />}></Route>
@@ -205,7 +205,7 @@ const App = () => {
              
                 {/* STUDENT ROUTES */}
         <Route path='/student/club' element={<StudentAllClubs/>}></Route>
-        <Route path='/student/club/:name' element={<StudentClubDetails/>}></Route>
+        <Route path='/student/club/:id' element={<StudentClubDetails/>}></Route>
         <Route path='/student/notifications' element={<StudentNotifications/>}></Route>
         <Route path='/student/dashboard' element={<StudentDashboard/>}></Route>
         <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
@@ -238,6 +238,7 @@ const App = () => {
         <Route path="/president/club/election/add" element={<NewElectionForm />} />
         <Route path="/president/club/election/edit/:id" element={<NewElectionForm />} />
         <Route path="/club/new-post" element={<AddNewPostForm />} />
+        <Route path="/club/edit-post/:id" element={<AddNewPostForm />} />
 
         <Route path='/president/notifications' element={<PresidentNotifications  />} ></Route>
         <Route path='/president/announcement' element={<Announcementpresident />}></Route> 
@@ -259,9 +260,9 @@ const App = () => {
         
 
          {/* secretary ROUTES */}
-         <Route exact path="/secretary/club" element={<Exploreclubsecretary />} />
-        <Route path='/secretary/club/:name' element={<ClubDetailssecretary />} />
-        <Route exact path="/secretary/club/event" element={<Exploreeventsecretary />} />
+         <Route exact path="/secretary/club" element={<Exploreclub />} />
+        <Route path='/secretary/club/:id' element={<ClubDetails />} />
+        <Route exact path="/secretary/club/event" element={<Exploreevent />} />
         <Route path='/secretary/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
         <Route path='/secretary/calendar' element={<Calendar />}></Route>
@@ -277,9 +278,9 @@ const App = () => {
 
 
         {/* OC ROUTES */}
-        <Route exact path="/oc/club" element={<Explorecluboc />} />
+        <Route exact path="/oc/club" element={<Exploreclub />} />
         <Route exact path="/oc/club/event" element={<Exploreeventoc />} />
-        <Route path='/oc/club/:name' element={<ClubDetailsoc />} />
+        <Route path='/oc/club/:id' element={<ClubDetails />} />
         <Route path='/oc/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
         <Route path='/oc/calendar' element={<Calendar />}></Route>
