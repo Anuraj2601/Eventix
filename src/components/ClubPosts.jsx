@@ -10,16 +10,11 @@ import farewellImage from "../assets/farewell.jpg";
 import esalaImage from "../assets/esala.jpg";
 import posonImage from "../assets/poson.jpg";
 import { useNavigate } from 'react-router-dom';
+import EditDeleteButton from './EditDeleteButton'; // Import the EditDeleteButton component
 
-const Posts = ({ post }) => {
-    const location = useLocation(); // Get the current path
-    const isPresidentPage = location.pathname.startsWith('/president'); // Check if the path starts with /president
-    const isSecretaryPage = location.pathname.startsWith('/secretary'); // Check if the path starts with /secretary
-
-    const showButtons = (isPresidentPage || isSecretaryPage) && post.category === 'pending';
-
+const Posts = ({ post, showEditDeleteButton, showApprovalButtons }) => {
     return (
-        <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4 custom-3d-shadow " style={{ 
+        <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4 custom-3d-shadow" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
             <div className="flex flex-row items-center justify-between mb-6">
@@ -30,10 +25,15 @@ const Posts = ({ post }) => {
                         <p className="text-[#AEC90A]">{post.position}</p>
                     </div>
                 </div>
-                {showButtons && (
+                {showApprovalButtons && (
                     <div className="flex items-center gap-4">
                         <FaCheck className='text-[#AEC90A] custom-card' size={30} />
                         <FaTimes className='text-red-500 custom-card' size={30} />
+                    </div>
+                )}
+                {showEditDeleteButton && (
+                    <div className="flex items-right gap-1">
+                        <EditDeleteButton />
                     </div>
                 )}
             </div>
@@ -49,17 +49,20 @@ const Posts = ({ post }) => {
     );
 };
 
-const NewsFeed = ({ posts , club}) => {
+const NewsFeed = ({ posts, club }) => {
     const location = useLocation(); // Get the current path
-    const isMemberPage = location.pathname.startsWith('/member'); // Check if the path starts with /member
-    const isPresidentPage = location.pathname.startsWith('/president'); // Check if the path starts with /president
-    const isSecretaryPage = location.pathname.startsWith('/secretary'); // Check if the path starts with /secretary
+    const isPresidentPage = location.pathname.startsWith('/president');
+    const isSecretaryPage = location.pathname.startsWith('/secretary');
+    const isMemberPage = location.pathname.startsWith('/member');
+    const isOCPage = location.pathname.startsWith('/oc');
+
+    const showCategorizedPosts = isPresidentPage || isSecretaryPage || isMemberPage || isOCPage;
+    const showApprovalButtons = (isPresidentPage || isSecretaryPage);
+    const showEditDeleteButton = isMemberPage || isOCPage;
 
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const navigate = useNavigate();
 
-    //console.log("club details in newsfeed", club);
-    
     const events = [
         {
             joinLink: "/president/club/new-post",
@@ -76,14 +79,14 @@ const NewsFeed = ({ posts , club}) => {
 
     const renderPosts = (filteredPosts) => {
         return filteredPosts.map((post, index) => (
-            <Posts key={index} post={post} />
+            <Posts key={index} post={post} showEditDeleteButton={showEditDeleteButton} showApprovalButtons={showApprovalButtons} />
         ));
     };
 
     return (
         <div className="bg-neutral-900 text-white min-h-screen relative">
             <div className='relative'>
-                {(isMemberPage || isPresidentPage || isSecretaryPage) && (
+                {(isMemberPage  || isOCPage) && (
                     <div className='flex justify-end mb-2'>
                         {events.map((event, index) => (
                             <div key={index} className="w-full rounded-full p-2 flex flex-col mb-4 -mt-8" style={{ backgroundColor: '#171717' }}>
@@ -97,8 +100,8 @@ const NewsFeed = ({ posts , club}) => {
                         ))}
                     </div>
                 )}
-                {isPresidentPage || isSecretaryPage ? (
-                    <div>
+                {showCategorizedPosts ? (
+                    <>
                         <h2 className="text-2xl mb-4">Pending</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
                             {renderPosts(categorizePosts(posts, 'pending'))}
@@ -111,11 +114,11 @@ const NewsFeed = ({ posts , club}) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
                             {renderPosts(categorizePosts(posts, 'rejected'))}
                         </div>
-                    </div>
+                    </>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
                         {posts.map((post, index) => (
-                            <Posts key={index} post={post} />
+                            <Posts key={index} post={post} showEditDeleteButton={false} showApprovalButtons={false} />
                         ))}
                     </div>
                 )}
@@ -124,9 +127,7 @@ const NewsFeed = ({ posts , club}) => {
     );
 };
 
-const App = ({club}) => {
-
-    
+const App = ({ club }) => {
     const samplePosts = [
         {
             position: 'Secretary',
@@ -164,15 +165,14 @@ const App = ({club}) => {
             position: 'Secretary',
             userName: 'Jane Smith',
             userImage: "https://randomuser.me/api/portraits/men/9.jpg",
-            caption: 'On this sacred Poson Full Moon Poya Day, we pay homage to the significant moment when Arahat Maha Mahinda Thera brought the teachings of Buddhism to our beloved Sri Lanka. May the blessings of this auspicious day guide us towards greater wisdom, unity, and peace. Wishing you a blissful Poson Poya Day, filled with peace, harmony, and spiritual growth!',
+            caption: 'This Poson Poya Day, let’s reflect upon the essence of Buddhism and its timeless message of peace, tolerance, and compassion for all living beings. Happy Poson Poya Day!',
             image: posonImage,
             category: 'rejected'
         },
-        // Add more posts here
     ];
 
     return (
-        <NewsFeed posts={samplePosts} club= {club} />
+        <NewsFeed posts={samplePosts} club={club} />
     );
 };
 

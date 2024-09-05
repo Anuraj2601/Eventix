@@ -180,9 +180,9 @@ const App = () => {
         
 
          {/*  member routes */}
-         <Route exact path="/member/club" element={<Explorecluboc />} />
+         <Route exact path="/member/club" element={<Exploreclub />} />
         <Route exact path="/member/club/event" element={<Exploreeventstudent />} />
-        <Route path='/member/club/:name' element={<ClubDetailsoc />} />
+        <Route path='/member/club/:id' element={<ClubDetails />} />
         <Route path='/member/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
         <Route path='/member/calendar' element={<Calendar />}></Route>
@@ -205,7 +205,7 @@ const App = () => {
              
                 {/* STUDENT ROUTES */}
         <Route path='/student/club' element={<StudentAllClubs/>}></Route>
-        <Route path='/student/club/:name' element={<StudentClubDetails/>}></Route>
+        <Route path='/student/club/:id' element={<StudentClubDetails/>}></Route>
         <Route path='/student/notifications' element={<StudentNotifications/>}></Route>
         <Route path='/student/dashboard' element={<StudentDashboard/>}></Route>
         <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
@@ -278,9 +278,9 @@ const App = () => {
 
 
         {/* OC ROUTES */}
-        <Route exact path="/oc/club" element={<Explorecluboc />} />
+        <Route exact path="/oc/club" element={<Exploreclub />} />
         <Route exact path="/oc/club/event" element={<Exploreeventoc />} />
-        <Route path='/oc/club/:name' element={<ClubDetailsoc />} />
+        <Route path='/oc/club/:id' element={<ClubDetails />} />
         <Route path='/oc/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
         <Route path='/oc/calendar' element={<Calendar />}></Route>
