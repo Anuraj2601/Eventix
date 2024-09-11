@@ -35,6 +35,7 @@ const StudentClubCard = () => {
         const clubs = await ClubsService.getAllClubs(token);
         const clubsArray = clubs.content || [];
         setClubDetails(clubsArray);
+        console.log(clubsArray);
     } catch (error) {
         console.error("Failed to fetch clubs", error);
     }
@@ -104,7 +105,7 @@ const StudentClubCard = () => {
                                             <p className='mb-2 tracking-wide text-white'>{club.club_name}</p>
                                             <div className='flex gap-3'>
                                                 {
-                                                    club.club_state === 'true' ? (
+                                                    club.state ? (
                                                         <>
                                                             <RiOpenArmLine className='text-[#AEC90A]' size={20} />
                                                             <span className='text-[#AEC90A]'>Registrations are Open</span>
@@ -128,9 +129,9 @@ const StudentClubCard = () => {
                             <div className="flex items-center justify-end gap-4">
                                 <Button className="bg-white text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card">Ignore</Button>
                                 <Button
-                                    className={`text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card ${club.club_state === "yes" ? 'bg-[#AEC90A]' : 'bg-[#AEC90A80] cursor-not-allowed'}`}
+                                    className={`text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card ${club.state ? 'bg-[#AEC90A]' : 'bg-[#AEC90A80] cursor-not-allowed'}`}
                                     onClick={() => handleRegisterClick(club)}
-                                    disabled={club.club_state !== "true"}
+                                    disabled={club.state == "false"}
                                 >
                                     Register
                                 </Button>
