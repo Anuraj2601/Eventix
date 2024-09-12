@@ -126,8 +126,6 @@ import Profileadmin from './components/Profile';
 import MainMeetingadmin from './components/MainMeeting';
 
 
-
-
 import StudentDashboardtreasurer from './pages/student/StudentDashboard';
 import StudentAllClubstreasurer from './pages/student/StudentAllClubs';
 import ClubRegistrationtreasurer from './pages/student/ClubRegistration';
@@ -143,12 +141,7 @@ import Inquiriestreasurer  from './pages/student/Inquiry';
 import Messagestreasurer from './components/Message';
 import Profiletreasurer from './components/Profile';
 import MainMeetingtreasurer from './components/MainMeeting';
-
-
-
-
 import Requests from './components/Requests'; 
-
 
 import EventNav from './components/EventNav'; 
 /* import Toggle from './components/election/Toggle'; */
@@ -159,9 +152,7 @@ import { ClubMemberNav } from './components/ClubMemberNav';
 import AddNewAnnouncementForm from './pages/president/AddNewAnnouncementForm';
 import AddNewMeetingForm from './pages/president/AddNewMeetingForm';
 
-
 // Import other pages if necessary
-
 
 const App = () => {
   return (
