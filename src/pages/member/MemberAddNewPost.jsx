@@ -1,120 +1,3 @@
-// import React, { useState } from "react";
-// import Sidebar from "../../components/Sidebar";
-// import Navbar from "../../components/Navbar";
-
-// import {
-//   Menu,
-//   MenuHandler,
-//   MenuList,
-//   MenuItem,
-//   Button,
-//   Typography,
-// } from "@material-tailwind/react";
-// // import { ChevronDownIcon } from "@heroicons/react/24/outline";
-// import { HiChevronDown } from "react-icons/hi";
-
-// const AddNewPostForm = () => {
-//   const [selectedImage, setSelectedImage] = useState(null);
-
-//   const handleImageChange = (e) => {
-//     if (e.target.files && e.target.files.length > 0) {
-//       setSelectedImage(URL.createObjectURL(e.target.files[0]));
-//     }
-//   };
-
-//   return (
-//     <>
-//       <div className="fixed inset-0 flex flex-col md:flex-row">
-//         <Sidebar className="flex-shrink-0 w-full md:w-auto" />
-//         <div className="flex flex-col flex-1 overflow-auto">
-//           <Navbar className="sticky top-0 z-10 p-4" />
-//           <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-auto p-4 md:p-10">
-//             <div className="flex flex-col items-center justify-center relative mt-10 w-full">
-//               <div className="bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4">
-//                 Add a New Post
-//               </div>
-//               <div className="bg-[#0B0B0B] flex flex-col items-center justify-center border-2 border-[#AEC90A] rounded-xl w-full md:w-3/5 py-9">
-//                 <form action="" className="w-full px-4 md:px-2">
-//                   {/* Personal Information */}
-//                   <div className="flex flex-col gap-3">
-//                     <label htmlFor="name" className="text-white">
-//                       Name*
-//                     </label>
-//                     <input
-//                       id="name"
-//                       type="text"
-//                       placeholder="Kamal Perera"
-//                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-//                     />
-//                   </div>
-                  
-//                   {/* Position Information */}
-//                   <div className="flex flex-col gap-3 mt-5">
-//                     <label htmlFor="position" className="text-white">
-//                       Position*
-//                     </label>
-//                     <input
-//                       id="position"
-//                       type="text"
-//                       placeholder="Secretary"
-//                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-//                     />
-//                   </div>
-                
-//                   {/* Description */}
-//                   <div className="flex flex-col gap-3 mt-5">
-//                     <label htmlFor="description" className="text-white">
-//                       Description*
-//                     </label>
-//                     <textarea
-//                       id="description"
-//                       placeholder="Description"
-//                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-//                     ></textarea>
-//                   </div>
-
-//                   {/* Image Upload */}
-//                   <div className="flex flex-col gap-3 mt-5">
-//                     <label htmlFor="image" className="text-white">
-//                       Upload Image
-//                     </label>
-//                     <input
-//                       id="image"
-//                       type="file"
-//                       accept="image/*"
-//                       onChange={handleImageChange}
-//                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-//                     />
-//                     {selectedImage && (
-//                       <img
-//                         src={selectedImage}
-//                         alt="Selected"
-//                         className="mt-3 max-h-50"
-//                       />
-//                     )}
-//                   </div>
-
-//                   <div className="flex items-center justify-center mt-6 gap-4">
-//                     <Button className="border-2 border-[#AEC90A] px-4 py-2 rounded-3xl font-medium text-[#AEC90A]">
-//                       Cancel
-//                     </Button>
-//                     <Button className="bg-[#AEC90A] border-2 border-[#AEC90A] px-4 py-2 rounded-3xl font-medium text-[#0B0B0B]">
-//                       Post
-//                     </Button>
-//                   </div>
-//                 </form>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default AddNewPostForm;
-
-
 // import React, { useEffect, useState } from "react";
 // import Sidebar from "../../components/Sidebar";
 // import Navbar from "../../components/Navbar";
@@ -335,7 +218,7 @@ import UsersService from "../../service/UsersService";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import PostService from "../../service/PostService";
 
-const AddNewPostForm = () => {
+const MemberAddNewPost = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -440,28 +323,15 @@ const AddNewPostForm = () => {
 
   const validateField = (field, value) => {
     let error = "";
-    let maxCharlength = 255;
     switch (field) {
         case "name":
-            if (!value){
-              error = "Name is required.";
-            }else if(value.length > maxCharlength){
-              error = `Name cannot exceed ${maxCharlength} characters.`;
-            }
+            if (!value) error = "Name is required.";
             break;
         case "position":
-            if (!value){
-              error = "Position is required.";
-            }else if(value.length > maxCharlength){
-              error = `Position cannot exceed ${maxCharlength} characters.`;
-            }
+            if (!value) error = "Position is required.";
             break;
         case "description":
-            if (!value){
-              error = "Description is required.";
-            }else if(value.length > maxCharlength){
-              error = `Description cannot exceed ${maxCharlength} characters.`;
-            }
+            if (!value) error = "Description is required.";
             break;
         case "postImage":
           if (!value && !postImageUrl) error = "Post Image is required.";
@@ -469,9 +339,8 @@ const AddNewPostForm = () => {
         default:
             break;
     }
-    //setErrors((prevErrors) => ({ ...prevErrors, [field]: error }));
-    return error;
-  };
+    setErrors((prevErrors) => ({ ...prevErrors, [field]: error }));
+};
 
 useEffect(() => {
     if (isSubmitted) {
@@ -502,56 +371,34 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   setIsSubmitted(true);
 
-  // validateField("name", name);
-  // validateField("position", position);
-  // validateField("description", description);
-  // validateField("postImage", postImage);
+  validateField("name", name);
+  validateField("position", position);
+  validateField("description", description);
+  validateField("postImage", postImage);
   
-  // Check if there are any validation errors
-  // if (!Object.values(errors).every((error) => error === "")) {
-  //   // If there are errors, prevent submission and show errors
-  //   console.log("Form has errors:", errors);
-  //   return;
-  // }
 
-  // Perform synchronous validation and store errors locally
-  const newErrors = {
-    name: validateField("name", name),
-    position: validateField("position", position),
-    description: validateField("description", description),
-    postImage: validateField("postImage", postImage),
-  };
-
-  setErrors(newErrors); // Update errors state at once
-
-  // If there are validation errors, prevent form submission
-  if (Object.values(newErrors).some((error) => error !== "")) {
-    console.log("Form has errors:", newErrors);
-    return;
-  }
-
-  // Proceed if no validation errors
-  if (Object.values({
+  if (Object.values(errors).every((error) => error === "") && Object.values({
       name,
       position,
       description,
       postImage
+     
     }).every((field) => field !== "" || postImageUrl)) {
-    
     try {
       const token = localStorage.getItem("token");
-      const session_id = localStorage.getItem("session_id");
+      const session_id = localStorage.getItem("session_id")
       setPublishedUserId(session_id);
       const formData = new FormData();
 
       formData.append("data", new Blob([JSON.stringify({
-        name,
-        position,
-        description,
-        postStatus,
-        clubId,
-        publishedUserId
-      })], { type: "application/json" }));
+          name,
+          position,
+          description,
+          postStatus,
+          clubId,
+          publishedUserId
+         
+        })], { type: "application/json" }));
 
       if (postImage) {
         formData.append("file", postImage);
@@ -569,8 +416,11 @@ const handleSubmit = async (e) => {
           publishedUserId,
           token
         );
+
         alert("Post updated successfully");
+        console.log("Post updated:", response);
         navigate(-1);
+
       } else {
         const response = await PostService.savePost(
           name,
@@ -582,7 +432,9 @@ const handleSubmit = async (e) => {
           publishedUserId,
           token
         );
+
         alert("Post added successfully");
+        console.log("Post added:", response);
         navigate(-1);
       }
     } catch (error) {
@@ -592,81 +444,9 @@ const handleSubmit = async (e) => {
         : { global: error.message };
       setErrors(errorMessages);
       setTimeout(() => setErrors({}), 5000);
+
     }
   }
-
-  
-
-  // if (Object.values(errors).every((error) => error === "") && Object.values({
-  //     name,
-  //     position,
-  //     description,
-  //     postImage
-     
-  //   }).every((field) => field !== "" || postImageUrl)) {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const session_id = localStorage.getItem("session_id")
-  //     setPublishedUserId(session_id);
-  //     const formData = new FormData();
-
-  //     formData.append("data", new Blob([JSON.stringify({
-  //         name,
-  //         position,
-  //         description,
-  //         postStatus,
-  //         clubId,
-  //         publishedUserId
-         
-  //       })], { type: "application/json" }));
-
-  //     if (postImage) {
-  //       formData.append("file", postImage);
-  //     }
-
-  //     if (id) {
-  //       const response = await PostService.updatePost(
-  //         id,
-  //         name,
-  //         position,
-  //         description,
-  //         postImage,
-  //         postStatus,
-  //         clubId,
-  //         publishedUserId,
-  //         token
-  //       );
-
-  //       alert("Post updated successfully");
-  //       console.log("Post updated:", response);
-  //       navigate(-1);
-
-  //     } else {
-  //       const response = await PostService.savePost(
-  //         name,
-  //         position,
-  //         description,
-  //         postImage,
-  //         postStatus,
-  //         clubId,
-  //         publishedUserId,
-  //         token
-  //       );
-
-  //       alert("Post added successfully");
-  //       console.log("Post added:", response);
-  //       navigate(-1);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error processing Post:", error);
-  //     const errorMessages = error.response
-  //       ? error.response.data.errors
-  //       : { global: error.message };
-  //     setErrors(errorMessages);
-  //     setTimeout(() => setErrors({}), 5000);
-
-  //   }
-  // }
 };
 
 
@@ -807,6 +587,5 @@ const handleCancel = () => {
   );
 };
 
-export default AddNewPostForm;
-
+export default MemberAddNewPost;
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCheck, FaTimes } from "react-icons/fa"; // Import icons for tick and wrong mark
 import { IoMdClose } from "react-icons/io";
 import { MdAdd } from "react-icons/md";
@@ -11,8 +11,35 @@ import esalaImage from "../assets/esala.jpg";
 import posonImage from "../assets/poson.jpg";
 import { useNavigate } from 'react-router-dom';
 import EditDeleteButton from './EditDeleteButton'; // Import the EditDeleteButton component
+import PostService from '../service/PostService';
 
-const Posts = ({ post, showEditDeleteButton, showApprovalButtons }) => {
+
+const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) => {
+
+    const navigate = useNavigate();
+
+    const updatePost = (post_id) => {
+        navigate(`/club/edit-post/${post_id}`)
+    }
+
+    const deletePost = async (post_id) => {
+        try{
+            const confirmDelete = window.confirm(
+                "Are you sure you want to delete this Post?"
+            );
+    
+            const token = localStorage.getItem("token");
+            if(confirmDelete){
+                await PostService.deletePost(post_id, token);
+
+                setPosts(prevPosts => prevPosts.filter(post => post.post_id !== post_id));
+            }
+
+        }catch(error){
+            console.error("Error fetching posts:", error);
+        }
+    }
+
     return (
         <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4 custom-3d-shadow" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
@@ -21,7 +48,7 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons }) => {
                 <div className="flex items-center gap-2 custom-card">
                     <img src={post.userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
                     <div className="flex flex-col">
-                        <p>{post.userName}</p>
+                        <p>{post.name}</p>
                         <p className="text-[#AEC90A]">{post.position}</p>
                     </div>
                 </div>
@@ -33,23 +60,23 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons }) => {
                 )}
                 {showEditDeleteButton && (
                     <div className="flex items-right gap-1">
-                        <EditDeleteButton />
+                        <EditDeleteButton onEdit={()=> updatePost(post.post_id)} onDelete={()=> deletePost(post.post_id)} />
                     </div>
                 )}
             </div>
             <div className="flex flex-col w-full mb-4">
                 <p>
-                    {post.caption}
+                    {post.description}
                     {post.link && <a href={post.link} className='text-[#AEC90A] underline' target="_blank" rel="noopener noreferrer">{post.link}</a>}
                 </p>
-                {post.image && <img src={post.image} alt="" className='w-auto h-100 object-cover mt-3 ' />}
+                {post.post_image && <img src={post.post_image} alt="" className='w-auto h-100 object-cover mt-3 ' />}
                 <LikeButton initialLikes={320} className="absolute bottom-4 right-4 custom-card" />
             </div>
         </div>
     );
 };
 
-const NewsFeed = ({ posts, club }) => {
+const NewsFeed = ({ posts, club, setPosts }) => {
     const location = useLocation(); // Get the current path
     const isPresidentPage = location.pathname.startsWith('/president');
     const isSecretaryPage = location.pathname.startsWith('/secretary');
@@ -74,12 +101,12 @@ const NewsFeed = ({ posts, club }) => {
     };
 
     const categorizePosts = (posts, category) => {
-        return posts.filter(post => post.category === category);
+        return posts.filter(post => post.post_status === category);
     };
 
     const renderPosts = (filteredPosts) => {
         return filteredPosts.map((post, index) => (
-            <Posts key={index} post={post} showEditDeleteButton={showEditDeleteButton} showApprovalButtons={showApprovalButtons} />
+            <Posts key={index} post={post} showEditDeleteButton={showEditDeleteButton} showApprovalButtons={showApprovalButtons} setPosts={setPosts}/>
         ));
     };
 
@@ -105,15 +132,15 @@ const NewsFeed = ({ posts, club }) => {
                     <>
                         <h2 className="text-2xl mb-4">Pending</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                            {renderPosts(categorizePosts(posts, 'pending'))}
+                            {renderPosts(categorizePosts(posts, 'PENDING'))}
                         </div>
                         <h2 className="text-2xl mb-4">Approved</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                            {renderPosts(categorizePosts(posts, 'approved'))}
+                            {renderPosts(categorizePosts(posts, 'APPROVED'))}
                         </div>
                         <h2 className="text-2xl mb-4">Rejected</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                            {renderPosts(categorizePosts(posts, 'rejected'))}
+                            {renderPosts(categorizePosts(posts, 'REJECTED'))}
                         </div>
                     </>
                 ) : (
@@ -172,8 +199,31 @@ const App = ({ club }) => {
         },
     ];
 
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+
+        const fetchPosts = async () => {
+            try{
+                const token = localStorage.getItem('token');
+                const response = await PostService.getAllPosts(token);
+                const postsArray = response.content || [];
+                console.log("all posts", postsArray);
+                setPosts(postsArray);
+    
+            }catch(error){
+                console.error("Error fetching posts", error);
+            }
+
+        }
+
+        fetchPosts();
+
+      
+    }, [])
+
     return (
-        <NewsFeed posts={samplePosts} club={club} />
+        <NewsFeed posts={posts} club={club} setPosts = {setPosts}/>
     );
 };
 
