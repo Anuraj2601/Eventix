@@ -82,6 +82,7 @@ class PostService{
 
 
 
+
     static async updatePost (post_id, 
                             name, 
                             position, 
@@ -113,7 +114,7 @@ class PostService{
                 'Authorization': `Bearer ${token}`
             };
 
-            const response = await axios.put(`${PostService.BASE_URL}/member/updatePost`, formData, { headers });
+            const response = await axios.put(`${PostService.BASE_URL}/member/updatePost/${post_id}`, formData, { headers });
 
             return response.data;
 
