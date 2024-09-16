@@ -12,6 +12,7 @@ import posonImage from "../assets/poson.jpg";
 import { useNavigate } from 'react-router-dom';
 import EditDeleteButton from './EditDeleteButton'; // Import the EditDeleteButton component
 import PostService from '../service/PostService';
+import UsersService from '../service/UsersService';
 
 
 const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) => {
@@ -19,6 +20,31 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) =>
     const navigate = useNavigate();
     const session_id = localStorage.getItem('session_id');
     const editablePerson = session_id == post.published_user_id? true: false;
+    const [userImage, setuserImage] = useState('');
+
+    const fetchUser = async (post) => {
+
+        try{
+            const token = localStorage.getItem('token');
+            const response = await UsersService.getUserById(post.published_user_id ,token);
+            //console.log("user details in post", response);
+            const userImageUrl = response.users.photoUrl;
+            setuserImage(userImageUrl);
+            // const User = response.content || [];
+            // console.log("all posts", postsArray);
+            // setPosts(postsArray);
+
+        }catch(error){
+            console.log("Error fetching user details for posts", error);
+        }
+            
+    }
+
+    useEffect(() =>{
+
+        fetchUser(post);
+
+    }, [])
 
     const updatePost = (post_id) => {
         navigate(`/club/edit-post/${post_id}`)
@@ -49,7 +75,7 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) =>
           }}>
             <div className="flex flex-row items-center justify-between mb-6">
                 <div className="flex items-center gap-2 custom-card">
-                    <img src={post.userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
+                    <img src={userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
                     <div className="flex flex-col">
                         <p>{post.name}</p>
                         <p className="text-[#AEC90A]">{post.position}</p>
