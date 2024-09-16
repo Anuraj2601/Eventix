@@ -63,31 +63,30 @@ const Recruitment = () => {
 
     return (
         <div>
-            <table className="min-w-full bg-black color-white border border-gray-200">
+            <table className="min-w-full bg-black text-white  rounded-xl">
                 <thead>
                     <tr>
-                        <th className="py-2 px-4 border-b">Email</th>
-                        <th className="py-2 px-4 border-b">Club ID</th>
-                        <th className="py-2 px-4 border-b">Team</th>
-                        <th className="py-2 px-4 border-b">Interview Slot</th>
-                        <th className="py-2 px-4 border-b">Reason</th>
-                        <th className="py-2 px-4 border-b">Accepted</th>
-                        <th className="py-2 px-4 border-b">Position</th>
-                        <th className="py-2 px-4 border-b">Action</th>
+                        <th className="py-2 px-4  ">Email</th>
+                        
+                        <th className="py-2 px-4  ">Team</th>
+                        <th className="py-2 px-4  ">Interview Slot</th>
+                        <th className="py-2 px-4  ">Reason</th>
+                       
+                        <th className="py-2 px-4  ">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {registrations.length > 0 ? (
                         registrations.map((reg) => (
                             <tr key={reg.id} className={selectedId === reg.id ? 'bg-gray-100' : ''}>
-                                <td className="py-2 px-4 border-b">{reg.email}</td>
-                                <td className="py-2 px-4 border-b">{reg.clubId}</td>
-                                <td className="py-2 px-4 border-b">{reg.team}</td>
-                                <td className="py-2 px-4 border-b">{reg.interviewSlot}</td>
-                                <td className="py-2 px-4 border-b">{reg.reason}</td>
-                                <td className="py-2 px-4 border-b">{reg.accepted ? 'Yes' : 'No'}</td>
-                                <td className="py-2 px-4 border-b">{reg.position}</td>
-                                <td className="py-2 px-4 border-b">
+                                <td className="py-2 px-4 ">{reg.email}</td>
+                                <td className="py-2 px-4  ">{reg.team}</td>
+                                <td className="py-2 px-4  ">{reg.interviewSlot}</td>
+                            
+
+                                <td className="py-2 px-4  ">{reg.reason}</td>
+                              
+                                <td className="py-2 px-4  ">
                                     {selectedId === reg.id ? (
                                         <button
                                             onClick={() => handleUpdate(reg.id)}
