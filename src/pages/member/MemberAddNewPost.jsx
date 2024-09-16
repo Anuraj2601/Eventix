@@ -475,6 +475,7 @@ const AddNewMeetingForm = () => {
         setErrors((prevErrors) => ({ ...prevErrors, [field]: error }));
     };
 
+    
     useEffect(() => {
         if (isSubmitted) {
           validateField("title", title);

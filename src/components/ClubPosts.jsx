@@ -12,15 +12,44 @@ import posonImage from "../assets/poson.jpg";
 import { useNavigate } from 'react-router-dom';
 import EditDeleteButton from './EditDeleteButton'; // Import the EditDeleteButton component
 import PostService from '../service/PostService';
+import UsersService from '../service/UsersService';
 
 
 const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) => {
 
     const navigate = useNavigate();
+    const session_id = localStorage.getItem('session_id');
+    const editablePerson = session_id == post.published_user_id? true: false;
+    const [userImage, setuserImage] = useState('');
+
+    const fetchUser = async (post) => {
+
+        try{
+            const token = localStorage.getItem('token');
+            const response = await UsersService.getUserById(post.published_user_id ,token);
+            //console.log("user details in post", response);
+            const userImageUrl = response.users.photoUrl;
+            setuserImage(userImageUrl);
+            // const User = response.content || [];
+            // console.log("all posts", postsArray);
+            // setPosts(postsArray);
+
+        }catch(error){
+            console.log("Error fetching user details for posts", error);
+        }
+            
+    }
+
+    useEffect(() =>{
+
+        fetchUser(post);
+
+    }, [])
 
     const updatePost = (post_id) => {
         navigate(`/club/edit-post/${post_id}`)
     }
+
 
     const deletePost = async (post_id) => {
         try{
@@ -40,13 +69,32 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) =>
         }
     }
 
+    const updatePostStatus = async (post_id, status) => {
+
+        try{
+            const token = localStorage.getItem("token");
+            const response = await PostService.updatePostStatus(post_id, status, token);
+
+            setPosts(prevPosts =>
+                prevPosts.map(post =>
+                    post.post_id === post_id ? { ...post, post_status: status } : post
+                )
+            );
+
+
+        }catch(error){
+            console.error("Error updating post status:", error);
+        }
+
+    }
+
     return (
         <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4 custom-3d-shadow" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
             <div className="flex flex-row items-center justify-between mb-6">
                 <div className="flex items-center gap-2 custom-card">
-                    <img src={post.userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
+                    <img src={userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
                     <div className="flex flex-col">
                         <p>{post.name}</p>
                         <p className="text-[#AEC90A]">{post.position}</p>
@@ -54,11 +102,11 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) =>
                 </div>
                 {showApprovalButtons && (
                     <div className="flex items-center gap-4">
-                        <FaCheck className='text-[#AEC90A] custom-card' size={30} />
-                        <FaTimes className='text-red-500 custom-card' size={30} />
+                        <FaCheck className='text-[#AEC90A] custom-card hover:cursor-pointer' onClick={() => updatePostStatus(post.post_id, 'APPROVED')} size={30} />
+                        <FaTimes className='text-red-500 custom-card hover:cursor-pointer' onClick={() => updatePostStatus(post.post_id, 'REJECTED')} size={30} />
                     </div>
                 )}
-                {showEditDeleteButton && (
+                {showEditDeleteButton && editablePerson && (
                     <div className="flex items-right gap-1">
                         <EditDeleteButton onEdit={()=> updatePost(post.post_id)} onDelete={()=> deletePost(post.post_id)} />
                     </div>
