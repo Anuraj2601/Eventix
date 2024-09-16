@@ -1,211 +1,120 @@
-import React, { useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { FaEdit } from 'react-icons/fa';
-import CustomSwitch from './Customswitch'; // Ensure you have this component or replace with your switch
-import { useLocation } from 'react-router-dom'; // For detecting current path
-
-// Sample data
-const sampleData = [
-  {
-    id: 1,
-    fullName: 'Kokulrajh Sivarasa',
-    email: 'kokularajh32@gmail.com',
-    registerNo: '2021cs100',
-    indexNo: '21001006',
-    team: 'Design Team',
-    year: '3rd',
-    reason: 'Passionate about design and creative problem-solving.',
-    interviewSlot: new Date('2024-07-15T14:00:00'),
-    image: 'https://randomuser.me/api/portraits/men/1.jpg',
-  },
-  {
-    id: 2,
-    fullName: 'Jane Doe',
-    email: 'janedoe@example.com',
-    registerNo: '2022cs200',
-    indexNo: '22002007',
-    team: 'Marketing Team',
-    year: '2nd',
-    reason: 'Interested in marketing and team collaboration.',
-    interviewSlot: new Date('2024-07-16T10:00:00'),
-    image: 'https://randomuser.me/api/portraits/men/11.jpg',
-  },
-  // Add more sample entries as needed
-];
+import React, { useEffect, useState } from 'react';
+import RegistrationService from '../service/registrationService'; // Adjust the path as needed
 
 const Recruitment = () => {
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [isOpen, setIsOpen] = useState(false);
-  const [startDate, setStartDate] = useState(new Date('2024-07-01'));
-  const [endDate, setEndDate] = useState(new Date('2024-07-31'));
-  const [editing, setEditing] = useState(false);
-  
-  const location = useLocation();
-  const isStudentPage = location.pathname.startsWith('/student'); // Check if the path starts with /student
+    const [registrations, setRegistrations] = useState([]);
+    const [selectedId, setSelectedId] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [token, setToken] = useState(localStorage.getItem('token') || '');
 
-  // Update the current time every second
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
+    useEffect(() => {
+        const fetchRegistrations = async () => {
+            if (!token) {
+                setError('No token found');
+                setLoading(false);
+                return;
+            }
 
-    return () => clearInterval(timer);
-  }, []);
+            try {
+                console.log('Fetching registrations with token:', token);
+                const response = await RegistrationService.getAllRegistrations(token);
+                console.log('Registrations data:', response);
 
-  const handleSwitchChange = () => {
-    setIsOpen(!isOpen);
-  };
+                // Assuming the actual registrations are in the 'content' property
+                setRegistrations(response.content || []);
+            } catch (err) {
+                console.error('Error fetching registrations:', err);
+                setError('Error fetching registrations. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-  const handleDateChange = (newStartDate, newEndDate) => {
-    setStartDate(newStartDate);
-    setEndDate(newEndDate);
-  };
+        fetchRegistrations();
+    }, [token]);
 
-  const handleDeleteRegistration = (id) => {
-    // Add your delete logic here
-    console.log(`Delete registration with ID: ${id}`);
-  };
+    const handleSelect = (id) => {
+        setSelectedId(id);
+    };
 
-  return (
-    <div className="p-6 space-y-6">
-      {isStudentPage ? (
-        <>
-          <div className="flex justify-end mb-4">
-            <button className="bg-gray-500 text-gray-300 cursor-not-allowed px-4 py-2 rounded-full">Register Now</button>
-          </div>
-          <div className="bg-black p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <span className="text-white">Next Recruitment Open Duration</span>
-            <div className="flex items-center space-x-4">
-              <span>{`${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`}</span>
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="flex justify-center">
-            <div className="bg-black p-4 rounded-lg shadow-lg flex items-center space-x-4">
-              <span className="text-white">Open Club Recruitment</span>
-              <CustomSwitch className="mr-3" isOn={isOpen} handleToggle={handleSwitchChange} />
-              <span className="text-white">Scheduled Interview Duration</span>
+    const handleUpdate = async (id) => {
+        try {
+            const updates = {
+                accepted: 1,
+                position: 'Member',
+            };
 
-              <div className="relative">
-                {editing ? (
-                  <div className="flex space-x-4">
-                    <DatePicker
-                      selected={startDate}
-                      onChange={(date) => handleDateChange(date, endDate)}
-                      selectsStart
-                      startDate={startDate}
-                      endDate={endDate}
-                      className="p-2 border rounded-full text-white bg-black"
-                    />
-                    <DatePicker
-                      selected={endDate}
-                      onChange={(date) => handleDateChange(startDate, date)}
-                      selectsEnd
-                      startDate={startDate}
-                      endDate={endDate}
-                      minDate={startDate}
-                      className="p-2 border rounded-full text-white bg-black"
-                    />
-                    <button onClick={() => setEditing(false)} className="px-4 py-2 bg-[#AEC90A] text-white rounded-full">
-                      Save
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center space-x-4">
-                    <span>{`${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`}</span>
-                    <button onClick={() => setEditing(true)} className="text-[#AEC90A]">
-                      <FaEdit />
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-            
-          </div>
-          
-          <div className="space-y-6">
-            {sampleData.map((entry) => {
-              const isInterviewSlotAvailable = currentTime >= entry.interviewSlot;
-              return (
-                <div key={entry.id} className="bg-black bg-opacity-70 p-6 rounded-2xl shadow-lg flex items-center space-x-4 "style={{ 
-                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-                }}>
-                  <div className="flex-shrink-0">
-                    <img
-                      src={entry.image}
-                      alt="Student"
-                      className="w-24 h-24 rounded-full object-cover border-2 border-black relative  custom-3d-shadow custom-card"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xl font-semibold text-[#AEC90A]">{entry.fullName}</p>
-                    <p className="text-white"><strong>Email:</strong> {entry.email}</p>
-                    <p className="text-white"><strong>Reg No:</strong> {entry.registerNo}</p>
-                    <p className="text-white"><strong>Applying to:</strong> {entry.team}</p>
-                    <p className="text-white"><strong>Year:</strong> {entry.year}</p>
-                  </div>
-                  {!isStudentPage && (
-                    <>
-                      <div className="w-1/4">
-                        <p className="text-white"><strong>Reason:</strong></p>
-                        <p className="text-gray-300">{entry.reason}</p>
-                      </div>
-                      <div className="w-1/4">
-                        <p className="text-white"><strong>Interview Slot:</strong></p>
-                        <p className="text-gray-300">{entry.interviewSlot ? format(entry.interviewSlot, "MMMM d, yyyy h:mm a") : 'Not Scheduled'}</p>
-                      </div>
-                      <div className="flex space-x-2">
-                        <button
-                          disabled={!isInterviewSlotAvailable}
-                          className={`px-4 py-2 rounded-full shadow-lg ${
-                            !isInterviewSlotAvailable
-                              ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
-                              : 'bg-gray-500 text-black font-bold cursor-not-allowed'
-                          }`}
-                        >
-                          Interview
-                        </button>
-                        <button
-                          disabled={!isInterviewSlotAvailable}
-                          className={`px-4 py-2 bg-gray-500 text-gray-300 cursor-not-allowed hover:bg-gray-700 rounded-full ${
-                            !isInterviewSlotAvailable ? 'bg-gray-500 text-gray-300 cursor-not-allowed' : ''
-                          }`}
-                        >
-                          Select
-                        </button>
-                        <button
-                          disabled={!isInterviewSlotAvailable}
-                          className={`px-4 py-2 bg-gray-500 text-gray-300 cursor-not-allowed hover:bg-gray-700 rounded-full ${
-                            !isInterviewSlotAvailable ? 'bg-gray-500 text-gray-300 cursor-not-allowed' : ''
-                          }`}
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    </>
-                  )}
-                  {isStudentPage && (
-                    <div className="flex justify-end space-x-4">
-                      <button
-                        onClick={() => handleDeleteRegistration(entry.id)}
-                        className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-700"
-                      >
-                        Delete Registration
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
-    </div>
-  );
+            await RegistrationService.updateRegistration(id, updates, token);
+            setRegistrations((prev) =>
+                prev.map((reg) =>
+                    reg.id === id ? { ...reg, accepted: 1, position: 'Member' } : reg
+                )
+            );
+            setSelectedId(null); // Deselect after update
+        } catch (err) {
+            console.error('Error updating registration:', err);
+            setError('Error updating registration. Please try again.');
+        }
+    };
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p className="text-red-500">Error: {error}</p>;
+
+    return (
+        <div>
+            <table className="min-w-full bg-black color-white border border-gray-200">
+                <thead>
+                    <tr>
+                        <th className="py-2 px-4 border-b">Email</th>
+                        <th className="py-2 px-4 border-b">Club ID</th>
+                        <th className="py-2 px-4 border-b">Team</th>
+                        <th className="py-2 px-4 border-b">Interview Slot</th>
+                        <th className="py-2 px-4 border-b">Reason</th>
+                        <th className="py-2 px-4 border-b">Accepted</th>
+                        <th className="py-2 px-4 border-b">Position</th>
+                        <th className="py-2 px-4 border-b">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {registrations.length > 0 ? (
+                        registrations.map((reg) => (
+                            <tr key={reg.id} className={selectedId === reg.id ? 'bg-gray-100' : ''}>
+                                <td className="py-2 px-4 border-b">{reg.email}</td>
+                                <td className="py-2 px-4 border-b">{reg.clubId}</td>
+                                <td className="py-2 px-4 border-b">{reg.team}</td>
+                                <td className="py-2 px-4 border-b">{reg.interviewSlot}</td>
+                                <td className="py-2 px-4 border-b">{reg.reason}</td>
+                                <td className="py-2 px-4 border-b">{reg.accepted ? 'Yes' : 'No'}</td>
+                                <td className="py-2 px-4 border-b">{reg.position}</td>
+                                <td className="py-2 px-4 border-b">
+                                    {selectedId === reg.id ? (
+                                        <button
+                                            onClick={() => handleUpdate(reg.id)}
+                                            className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600"
+                                        >
+                                            Update
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() => handleSelect(reg.id)}
+                                            className="bg-green-500 text-white py-1 px-2 rounded hover:bg-green-600"
+                                        >
+                                            Select
+                                        </button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="8" className="py-2 px-4 text-center">No records found</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
+    );
 };
 
 export default Recruitment;

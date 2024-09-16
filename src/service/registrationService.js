@@ -24,26 +24,71 @@ class RegistrationService {
                 interviewSlot,
                 reason,
             };
-    
+
             const headers = {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             };
-    
+
             console.log('Request Data:', data);
             console.log('Request Headers:', headers);
-    
+
             const response = await axios.post(`${RegistrationService.BASE_URL}/student/saveRegistration`, data, { headers });
-    
+
             return response.data;
         } catch (err) {
             console.error('Error during registration:', err);
-            // Provide more detailed error message
             const errorMessage = err.response?.data?.message || err.message || 'Unknown error occurred';
             throw new Error(`Registration failed: ${errorMessage}`);
         }
     }
-    
+
+    /**
+     * Get all registrations from the server.
+     * 
+     * @returns {Promise<Object[]>} - A list of all registrations.
+     * @throws {Error} - Throws an error if the request fails.
+     */
+    static async getAllRegistrations(token) {
+        try {
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+
+            const response = await axios.get(`${RegistrationService.BASE_URL}/student/getAllRegistrations`, { headers });
+            return response.data; // or response.data.data if data is nested
+        } catch (err) {
+            console.error('Error fetching registrations:', err);
+            const errorMessage = err.response?.data?.message || err.message || 'Unknown error occurred';
+            throw new Error(`Fetching registrations failed: ${errorMessage}`);
+        }
+    }
+
+    /**
+     * Update a registration on the server.
+     * 
+     * @param {string} id - The ID of the registration.
+     * @param {Object} updates - The updates to be applied to the registration.
+     * @param {string} token - The authorization token.
+     * @returns {Promise<Object>} - The response data from the server.
+     * @throws {Error} - Throws an error if the request fails.
+     */
+    static async updateRegistration(id, updates, token) {
+        try {
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            };
+
+            const response = await axios.put(`${RegistrationService.BASE_URL}/student/updateRegistration/${id}`, updates, { headers });
+            return response.data;
+        } catch (err) {
+            console.error('Error updating registration:', err);
+            const errorMessage = err.response?.data?.message || err.message || 'Unknown error occurred';
+            throw new Error(`Updating registration failed: ${errorMessage}`);
+        }
+    }
 }
 
 export default RegistrationService;
