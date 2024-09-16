@@ -1,17 +1,12 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // to extract URL params and navigate
-import registrationService from '../service/registrationService'; // Import the registration service
-import {
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-  Button,
-} from "@material-tailwind/react";
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Menu, MenuHandler, MenuList, MenuItem, Button } from "@material-tailwind/react";
 import { HiChevronDown } from "react-icons/hi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { format } from 'date-fns';
+import { format } from 'date-fns'; // Import format
+import { getUserEmailFromToken } from '../utils/utils'; // Adjust the import path as needed
+import RegistrationService from '../service/registrationService'; // Adjust the import path as needed
 
 const menuItems = [
   { title: "Design Team" },
@@ -21,62 +16,109 @@ const menuItems = [
 ];
 
 const ClubRegistrationForm = () => {
-  const { club_id } = useParams(); // Extract club_id from URL
+  const { club_id } = useParams();
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = useState(false);
-  const [openMenu2, setOpenMenu2] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [formData, setFormData] = useState({
-    club_id: club_id || '', // Initialize with club_id from URL or empty string
-    fullName: '',
-    email: '',
-    registerNo: '',
-    indexNo: '',
+    club_id: club_id || '',
+    email: '', // Change from user_id to email
     team: '',
-    year: '',
-    reason: ''
+    reason: '',
+    interviewSlot: ''
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Handle date change
+  useEffect(() => {
+    const fetchUserEmail = async () => {
+      try {
+        const email = getUserEmailFromToken(); // Adjust function to get email
+        setFormData(prevState => ({
+          ...prevState,
+          email
+        }));
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserEmail();
+  }, [club_id]);
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
+    setFormData(prevState => ({
+      ...prevState,
+      interviewSlot: date ? format(date, "yyyy-MM-dd'T'HH:mm:ss") : '' // Use format for specific format
+    }));
   };
 
-  // Handle changes in form fields
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Check if the form is valid
+  const handleMenuItemClick = (title) => {
+    setFormData(prevState => ({
+      ...prevState,
+      team: title
+    }));
+    setOpenMenu(false); // Close the menu after selecting an item
+  };
+
   const isFormValid = () => {
-    return Object.values(formData).every(value => value !== '') && selectedDate !== null;
+    return Object.values(formData).every(value => value.trim() !== '') && selectedDate !== null;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    // Ensure form is valid
     if (!isFormValid()) {
       alert('Please fill in all fields and select a date.');
       return;
     }
-  
+
+    // Retrieve token from localStorage
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('User not authenticated.');
+      return;
+    }
+
+    // Prepare registration data
     const registrationData = {
       ...formData,
-      interviewSlot: format(selectedDate, 'yyyy-MM-dd HH:mm:ss'), // Format the date
+      interviewSlot: format(selectedDate, "yyyy-MM-dd'T'HH:mm:ss"), // Format the interview slot date in the desired format
     };
-  
-    const token = localStorage.getItem('token'); // Retrieve token
-  
+
     try {
-      const result = await registrationService.saveRegistration(registrationData, token); // Use the registration service
+      // Save a new registration
+      await RegistrationService.saveRegistration(
+        formData.email,
+        formData.club_id,
+        formData.team,
+        registrationData.interviewSlot, // Use ISO 8601 format
+        formData.reason,
+        token
+      );
       alert('Registration successful!');
-      navigate(`/success-page/${result.registrationId}`);
+
+      navigate(`/student/club`);
     } catch (error) {
       console.error('Error during registration:', error);
-      alert('Failed to submit the form.');
+
+      // Display error message to the user
+      const errorMessage = error.response?.data?.message || error.message;
+      alert(`Failed to submit the form: ${errorMessage}`);
     }
   };
-  
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
     <div className='flex flex-col items-center justify-center relative'>
       <div className='bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4'>
@@ -89,61 +131,25 @@ const ClubRegistrationForm = () => {
             <div className="flex flex-col gap-3">
               <label htmlFor="club_id" className="text-white">Club ID</label>
               <input
-                type="text"
+                type="number"
                 name="club_id"
                 value={formData.club_id}
-                onChange={handleChange}
                 className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white"
-                placeholder="Enter Club ID"
-                readOnly // Make this field read-only since club_id is extracted from the URL
+                placeholder="Club ID"
+                readOnly
               />
             </div>
 
-            <div className="flex flex-col gap-3">
-              <label htmlFor="fullName" className="text-white">Full Name</label>
-              <input
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white"
-                placeholder="Enter your full name"
-              />
-            </div>
-
+            {/* Email field */}
             <div className="flex flex-col gap-3">
               <label htmlFor="email" className="text-white">Email</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
-                onChange={handleChange}
                 className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white"
-                placeholder="Enter your email"
-              />
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <label htmlFor="registerNo" className="text-white">Register No</label>
-              <input
-                type="text"
-                name="registerNo"
-                value={formData.registerNo}
-                onChange={handleChange}
-                className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white"
-                placeholder="Enter your register number"
-              />
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <label htmlFor="indexNo" className="text-white">Index No</label>
-              <input
-                type="text"
-                name="indexNo"
-                value={formData.indexNo}
-                onChange={handleChange}
-                className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white"
-                placeholder="Enter your index number"
+                placeholder="Email"
+                readOnly
               />
             </div>
           </div>
@@ -168,7 +174,11 @@ const ClubRegistrationForm = () => {
                 <MenuList className='bg-[#0B0B0B] p-0 border-[#AEC90A]'>
                   <ul className="col-span-4 flex w-80 flex-col gap-1 text-white">
                     {menuItems.map(({ title }) => (
-                      <MenuItem key={title} className='hover:bg-slate-900 p-2' onClick={() => setFormData({ ...formData, team: title })}>
+                      <MenuItem
+                        key={title}
+                        className='hover:bg-slate-900 p-2'
+                        onClick={() => handleMenuItemClick(title)}
+                      >
                         {title}
                       </MenuItem>
                     ))}
@@ -177,69 +187,39 @@ const ClubRegistrationForm = () => {
               </Menu>
             </div>
 
-            {/* Year of Study menu */}
+            {/* Interview Slot */}
             <div className="flex flex-col gap-3">
-              <label htmlFor="year" className="text-white">Select Year of Study</label>
-              <Menu open={openMenu2} handler={setOpenMenu2} allowHover>
-                <MenuHandler>
-                  <Button
-                    variant="text"
-                    className="flex items-center justify-between gap-3 text-base font-normal capitalize tracking-normal border-2 border-[#AEC90A] p-3 rounded-full w-80 text-[#9ca3af]"
-                  >
-                    {formData.year || "Year"}{" "}
-                    <HiChevronDown 
-                      strokeWidth={2.5}
-                      className={`h-3.5 w-3.5 transition-transform ${openMenu2 ? "rotate-180" : ""}`}
-                    />
-                  </Button>
-                </MenuHandler>
-                <MenuList className='bg-[#0B0B0B] p-0 border-[#AEC90A]'>
-                  <ul className="col-span-4 flex w-80 flex-col gap-1 text-white">
-                    {['1st Year', '2nd Year', '3rd Year', '4th Year'].map((title) => (
-                      <MenuItem key={title} className='hover:bg-slate-900 p-2' onClick={() => setFormData({ ...formData, year: title })}>
-                        {title}
-                      </MenuItem>
-                    ))}
-                  </ul>
-                </MenuList>
-              </Menu>
+              <label htmlFor="interviewSlot" className="text-white">Select Interview Slot</label>
+              <DatePicker
+                selected={selectedDate}
+                onChange={handleDateChange}
+                showTimeSelect
+                dateFormat="Pp"
+                className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white"
+                placeholderText="Select a date"
+              />
             </div>
           </div>
 
-          {/* Reason for Joining */}
-          <div className="flex flex-col mb-6 gap-3">
-            <label htmlFor="reason" className="text-white">Why do you want to join this club?</label>
+          {/* Reason field */}
+          <div className="flex flex-col gap-3 mb-6">
+            <label htmlFor="reason" className="text-white">Reason for Joining</label>
             <textarea
               name="reason"
               value={formData.reason}
               onChange={handleChange}
-              className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-lg text-white resize-none"
-              placeholder="Explain your reason here"
-              rows="3"
+              className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-lg text-white"
+              placeholder="Your reason..."
             />
           </div>
 
-          {/* Date and time picker */}
-          <div className="flex flex-col gap-3 mb-6">
-            <label htmlFor="interviewSlot" className="text-white">Select Interview Slot</label>
-            <DatePicker
-              selected={selectedDate}
-              onChange={handleDateChange}
-              showTimeSelect
-              timeIntervals={15}
-              dateFormat="MMMM d, yyyy h:mm aa"
-              className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white"
-              placeholderText="Choose interview time"
-            />
-          </div>
-
-          {/* Submit button */}
-          <div className="flex justify-center">
+          <div className="flex items-center gap-4">
             <button
               type="submit"
-              className="py-3 px-6 bg-[#AEC90A] text-[#0B0B0B] rounded-full font-semibold"
+              className="bg-[#AEC90A] text-[#0B0B0B] px-6 py-2 rounded-full font-semibold hover:bg-[#d4d700]"
+              disabled={!isFormValid()}
             >
-              Submit Registration
+              Register
             </button>
           </div>
         </form>

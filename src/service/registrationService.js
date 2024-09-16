@@ -1,45 +1,49 @@
-import axios from "axios";
+import axios from 'axios';
 
-class registrationService {
-    static BASE_URL = "http://localhost:8080"; // Update the base URL as needed
+class RegistrationService {
+    static BASE_URL = "http://localhost:8080"; // Adjust base URL as needed
 
-    static async saveRegistration(formData, token) {
+    /**
+     * Save the registration details to the server.
+     * 
+     * @param {string} email - The email of the user.
+     * @param {string} clubId - The ID of the club.
+     * @param {string} team - The selected team.
+     * @param {string} interviewSlot - The selected interview slot.
+     * @param {string} reason - The reason for joining.
+     * @param {string} token - The authorization token.
+     * @returns {Promise<Object>} - The response data from the server.
+     * @throws {Error} - Throws an error if the request fails.
+     */
+    static async saveRegistration(email, clubId, team, interviewSlot, reason, token) {
         try {
-            // Destructure the formData object
-            const { club_id, fullName, email, registerNo, indexNo, team, year, reason, interviewSlot } = formData;
-
-            // Construct the data object based on the formData fields
             const data = {
-                club_id,      // ID of the club
-                fullName,    // Full name of the participant
-                email,       // Email address
-                registerNo,  // Registration number
-                indexNo,     // Index number
-                team,        // Team the participant is part of
-                year,        // Year of the participant
-                reason,      // Reason for registration
-                interviewSlot // Selected interview time slot
+                clubId,
+                email,
+                team,
+                interviewSlot,
+                reason,
             };
-
-            // Set the request headers, including the Authorization token
+    
             const headers = {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
             };
-
-            // Make the POST request to the backend API
-            const response = await axios.post(`${registrationService.BASE_URL}/student/saveRegistration`, data, { headers });
-
-            // Return the response data
+    
+            console.log('Request Data:', data);
+            console.log('Request Headers:', headers);
+    
+            const response = await axios.post(`${RegistrationService.BASE_URL}/student/saveRegistration`, data, { headers });
+    
             return response.data;
-
         } catch (err) {
-            // Log the error for debugging
-            console.error("Error during registration:", err.response ? err.response.data : err.message);
-            // Throw a more descriptive error
-            throw new Error(`Registration failed: ${err.response ? err.response.data.message : err.message}`);
+            console.error('Error during registration:', err);
+            // Provide more detailed error message
+            const errorMessage = err.response?.data?.message || err.message || 'Unknown error occurred';
+            throw new Error(`Registration failed: ${errorMessage}`);
         }
     }
+    
 }
 
-export default registrationService;
+export default RegistrationService;
