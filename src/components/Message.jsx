@@ -1,3 +1,5 @@
+
+// export default MessagePage;
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { MdDelete, MdEdit } from 'react-icons/md';
@@ -11,9 +13,9 @@ const MessagePage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [newMessage, setNewMessage] = useState('');
 
-  const currentUserId = localStorage.getItem('userId'); // Assuming you store the userId in localStorage
+  const currentUserId = localStorage.getItem('session_id'); // Using session_id as the logged-in user ID
 
-  // Fetch users and messages
+  // Fetch users
   useEffect(() => {
     axios
       .get('http://localhost:8080/api/users', {
@@ -32,31 +34,29 @@ const MessagePage = () => {
       .catch((error) => {
         console.error('Error fetching users:', error);
       });
+  }, []);
 
+  // Handle user selection and fetch conversation with that user
+  const handleSelectUser = (user) => {
+    setSelectedUser(user);
+    
+    // Fetch messages between current user and the selected user
     axios
       .get('http://localhost:8080/api/messages', {
+        params: {
+          senderId: currentUserId, 
+          receiverId: user.id,
+        },
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
       .then((response) => {
-        setMessages(response.data);
+        setCurrentConversation(response.data); // Set the conversation for the selected user
       })
       .catch((error) => {
-        console.error('Error fetching messages:', error);
+        console.error('Error fetching conversation:', error);
       });
-  }, []);
-
-  // Handle user selection and fetch messages for that conversation
-  const handleSelectUser = (user) => {
-    setSelectedUser(user);
-
-    const conversation = messages.filter(
-      (msg) =>
-        (msg.sender === currentUserId && msg.receiver === user.id) ||
-        (msg.sender === user.id && msg.receiver === currentUserId)
-    );
-    setCurrentConversation(conversation);
   };
 
   // Handle sending a new message
@@ -66,7 +66,7 @@ const MessagePage = () => {
         .post(
           'http://localhost:8080/api/messages/send',
           {
-            sender: currentUserId,
+            sender: currentUserId, // Use session_id for current logged-in user
             receiver: selectedUser.id,
             content: newMessage,
           },
@@ -89,6 +89,7 @@ const MessagePage = () => {
     }
   };
 
+  // Handle deleting a message
   const handleDeleteMessage = (messageId) => {
     axios
       .delete(`http://localhost:8080/api/messages/delete/${messageId}`, {
@@ -129,7 +130,6 @@ const MessagePage = () => {
         console.error('Error editing message:', error);
       });
   };
-  
 
   return (
     <div className="flex h-screen">
@@ -197,14 +197,10 @@ const MessagePage = () => {
                         style={{
                           boxShadow:
                             '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
-                          backgroundColor: '#AEC90A',   
+                          backgroundColor: '#AEC90A',
                         }}
                       >
                         <p>{message.content}</p>
-                        <div className="text-xs text-black">                    
-                          {/* {new Date(message.timestamp).toLocaleTimeString()} */}
-                          {/* {new Date(message.timestamp).toLocaleString()} */}
-                        </div>
                         {message.sender === currentUserId && (
                           <div className="flex mt-2">
                             <button
@@ -241,7 +237,7 @@ const MessagePage = () => {
                   />
                   <button
                     onClick={handleSendMessage}
-                    className="ml-4 bg-[#AEC90A] text-black p-2 rounded-full"
+                    className="p-2 rounded-full bg-[#AEC90A] ml-4"
                   >
                     Send
                   </button>
