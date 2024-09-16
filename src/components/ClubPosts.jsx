@@ -69,6 +69,25 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) =>
         }
     }
 
+    const updatePostStatus = async (post_id, status) => {
+
+        try{
+            const token = localStorage.getItem("token");
+            const response = await PostService.updatePostStatus(post_id, status, token);
+
+            setPosts(prevPosts =>
+                prevPosts.map(post =>
+                    post.post_id === post_id ? { ...post, post_status: status } : post
+                )
+            );
+
+
+        }catch(error){
+            console.error("Error updating post status:", error);
+        }
+
+    }
+
     return (
         <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4 custom-3d-shadow" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
@@ -83,8 +102,8 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) =>
                 </div>
                 {showApprovalButtons && (
                     <div className="flex items-center gap-4">
-                        <FaCheck className='text-[#AEC90A] custom-card' size={30} />
-                        <FaTimes className='text-red-500 custom-card' size={30} />
+                        <FaCheck className='text-[#AEC90A] custom-card hover:cursor-pointer' onClick={() => updatePostStatus(post.post_id, 'APPROVED')} size={30} />
+                        <FaTimes className='text-red-500 custom-card hover:cursor-pointer' onClick={() => updatePostStatus(post.post_id, 'REJECTED')} size={30} />
                     </div>
                 )}
                 {showEditDeleteButton && editablePerson && (
