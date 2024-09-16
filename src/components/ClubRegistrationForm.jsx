@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'; // to extract URL params and navigate
-import { submitRegistration } from '../service/registrationService'; // Import the service
+import registrationService from '../service/registrationService'; // Import the registration service
 import {
   Menu,
   MenuHandler,
@@ -21,13 +21,13 @@ const menuItems = [
 ];
 
 const ClubRegistrationForm = () => {
-  const { clubId } = useParams(); // Extract clubId from URL
+  const { club_id } = useParams(); // Extract club_id from URL
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = useState(false);
   const [openMenu2, setOpenMenu2] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [formData, setFormData] = useState({
-    clubId: clubId || '', // Initialize with clubId from URL or empty string
+    club_id: club_id || '', // Initialize with club_id from URL or empty string
     fullName: '',
     email: '',
     registerNo: '',
@@ -52,30 +52,31 @@ const ClubRegistrationForm = () => {
     return Object.values(formData).every(value => value !== '') && selectedDate !== null;
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+  
     if (!isFormValid()) {
       alert('Please fill in all fields and select a date.');
       return;
     }
-
+  
     const registrationData = {
       ...formData,
-      interviewSlot: format(selectedDate, 'yyyy-MM-dd HH:mm:ss'), // Format the date for the backend
+      interviewSlot: format(selectedDate, 'yyyy-MM-dd HH:mm:ss'), // Format the date
     };
-
+  
+    const token = localStorage.getItem('token'); // Retrieve token
+  
     try {
-      const result = await submitRegistration(registrationData);
+      const result = await registrationService.saveRegistration(registrationData, token); // Use the registration service
       alert('Registration successful!');
-      navigate(`/success-page/${result.registrationId}`); // Navigate to success page after submission
+      navigate(`/success-page/${result.registrationId}`);
     } catch (error) {
       console.error('Error during registration:', error);
       alert('Failed to submit the form.');
     }
   };
-
+  
   return (
     <div className='flex flex-col items-center justify-center relative'>
       <div className='bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4'>
@@ -86,15 +87,15 @@ const ClubRegistrationForm = () => {
           <div className="grid gap-x-10 gap-y-6 mb-6 md:grid-cols-2">
             {/* Club ID field */}
             <div className="flex flex-col gap-3">
-              <label htmlFor="clubId" className="text-white">Club ID</label>
+              <label htmlFor="club_id" className="text-white">Club ID</label>
               <input
                 type="text"
-                name="clubId"
-                value={formData.clubId}
+                name="club_id"
+                value={formData.club_id}
                 onChange={handleChange}
                 className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white"
                 placeholder="Enter Club ID"
-                readOnly // Make this field read-only since clubId is extracted from the URL
+                readOnly // Make this field read-only since club_id is extracted from the URL
               />
             </div>
 
@@ -160,9 +161,7 @@ const ClubRegistrationForm = () => {
                     {formData.team || "Team"}{" "}
                     <HiChevronDown 
                       strokeWidth={2.5}
-                      className={`h-3.5 w-3.5 transition-transform ${
-                        openMenu ? "rotate-180" : ""
-                      }`}
+                      className={`h-3.5 w-3.5 transition-transform ${openMenu ? "rotate-180" : ""}`}
                     />
                   </Button>
                 </MenuHandler>
@@ -180,7 +179,7 @@ const ClubRegistrationForm = () => {
 
             {/* Year of Study menu */}
             <div className="flex flex-col gap-3">
-              <label htmlFor="year" className="text-white">Year of Study</label>
+              <label htmlFor="year" className="text-white">Select Year of Study</label>
               <Menu open={openMenu2} handler={setOpenMenu2} allowHover>
                 <MenuHandler>
                   <Button
@@ -190,59 +189,59 @@ const ClubRegistrationForm = () => {
                     {formData.year || "Year"}{" "}
                     <HiChevronDown 
                       strokeWidth={2.5}
-                      className={`h-3.5 w-3.5 transition-transform ${
-                        openMenu2 ? "rotate-180" : ""
-                      }`}
+                      className={`h-3.5 w-3.5 transition-transform ${openMenu2 ? "rotate-180" : ""}`}
                     />
                   </Button>
                 </MenuHandler>
                 <MenuList className='bg-[#0B0B0B] p-0 border-[#AEC90A]'>
                   <ul className="col-span-4 flex w-80 flex-col gap-1 text-white">
-                    <MenuItem className='hover:bg-slate-900 p-2' onClick={() => setFormData({ ...formData, year: '1st Year' })}>1st Year</MenuItem>
-                    <MenuItem className='hover:bg-slate-900 p-2' onClick={() => setFormData({ ...formData, year: '2nd Year' })}>2nd Year</MenuItem>
-                    <MenuItem className='hover:bg-slate-900 p-2' onClick={() => setFormData({ ...formData, year: '3rd Year' })}>3rd Year</MenuItem>
-                    <MenuItem className='hover:bg-slate-900 p-2' onClick={() => setFormData({ ...formData, year: '4th Year' })}>4th Year</MenuItem>
+                    {['1st Year', '2nd Year', '3rd Year', '4th Year'].map((title) => (
+                      <MenuItem key={title} className='hover:bg-slate-900 p-2' onClick={() => setFormData({ ...formData, year: title })}>
+                        {title}
+                      </MenuItem>
+                    ))}
                   </ul>
                 </MenuList>
               </Menu>
             </div>
-
-            {/* Reason field */}
-            <div className="flex flex-col gap-3">
-              <label htmlFor="reason" className="text-white">Reason for Joining</label>
-              <textarea
-                name="reason"
-                value={formData.reason}
-                onChange={handleChange}
-                className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-lg text-white"
-                placeholder="Enter your reason for joining"
-                rows="4"
-              />
-            </div>
           </div>
 
-          {/* Interview Date and Time */}
-          <div className="flex flex-col gap-3 mb-6">
-            <label htmlFor="interviewSlot" className="text-white">Select Interview Time Slot</label>
-            <DatePicker 
-              selected={selectedDate}
-              onChange={handleDateChange}
-              showTimeSelect
-              dateFormat="Pp"
-              className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white'
+          {/* Reason for Joining */}
+          <div className="flex flex-col mb-6 gap-3">
+            <label htmlFor="reason" className="text-white">Why do you want to join this club?</label>
+            <textarea
+              name="reason"
+              value={formData.reason}
+              onChange={handleChange}
+              className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-lg text-white resize-none"
+              placeholder="Explain your reason here"
+              rows="3"
             />
           </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className={`bg-[#AEC90A] p-3 rounded-full text-black font-semibold w-80 ${
-              !isFormValid() ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={!isFormValid()}
-          >
-            Submit
-          </button>
+          {/* Date and time picker */}
+          <div className="flex flex-col gap-3 mb-6">
+            <label htmlFor="interviewSlot" className="text-white">Select Interview Slot</label>
+            <DatePicker
+              selected={selectedDate}
+              onChange={handleDateChange}
+              showTimeSelect
+              timeIntervals={15}
+              dateFormat="MMMM d, yyyy h:mm aa"
+              className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white"
+              placeholderText="Choose interview time"
+            />
+          </div>
+
+          {/* Submit button */}
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="py-3 px-6 bg-[#AEC90A] text-[#0B0B0B] rounded-full font-semibold"
+            >
+              Submit Registration
+            </button>
+          </div>
         </form>
       </div>
     </div>
