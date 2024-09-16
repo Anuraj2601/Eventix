@@ -323,15 +323,28 @@ const AddNewPostForm = () => {
 
   const validateField = (field, value) => {
     let error = "";
+    let maxCharlength = 255;
     switch (field) {
         case "name":
-            if (!value) error = "Name is required.";
+            if (!value){
+              error = "Name is required.";
+            }else if(value.length > maxCharlength){
+              error = `Name cannot exceed ${maxCharlength} characters.`;
+            }
             break;
         case "position":
-            if (!value) error = "Position is required.";
+            if (!value){
+              error = "Position is required.";
+            }else if(value.length > maxCharlength){
+              error = `Position cannot exceed ${maxCharlength} characters.`;
+            }
             break;
         case "description":
-            if (!value) error = "Description is required.";
+            if (!value){
+              error = "Description is required.";
+            }else if(value.length > maxCharlength){
+              error = `Description cannot exceed ${maxCharlength} characters.`;
+            }
             break;
         case "postImage":
           if (!value && !postImageUrl) error = "Post Image is required.";
@@ -339,8 +352,9 @@ const AddNewPostForm = () => {
         default:
             break;
     }
-    setErrors((prevErrors) => ({ ...prevErrors, [field]: error }));
-};
+    //setErrors((prevErrors) => ({ ...prevErrors, [field]: error }));
+    return error;
+  };
 
 useEffect(() => {
     if (isSubmitted) {
@@ -371,34 +385,56 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   setIsSubmitted(true);
 
-  validateField("name", name);
-  validateField("position", position);
-  validateField("description", description);
-  validateField("postImage", postImage);
+  // validateField("name", name);
+  // validateField("position", position);
+  // validateField("description", description);
+  // validateField("postImage", postImage);
   
+  // Check if there are any validation errors
+  // if (!Object.values(errors).every((error) => error === "")) {
+  //   // If there are errors, prevent submission and show errors
+  //   console.log("Form has errors:", errors);
+  //   return;
+  // }
 
-  if (Object.values(errors).every((error) => error === "") && Object.values({
+  // Perform synchronous validation and store errors locally
+  const newErrors = {
+    name: validateField("name", name),
+    position: validateField("position", position),
+    description: validateField("description", description),
+    postImage: validateField("postImage", postImage),
+  };
+
+  setErrors(newErrors); // Update errors state at once
+
+  // If there are validation errors, prevent form submission
+  if (Object.values(newErrors).some((error) => error !== "")) {
+    console.log("Form has errors:", newErrors);
+    return;
+  }
+
+  // Proceed if no validation errors
+  if (Object.values({
       name,
       position,
       description,
       postImage
-     
     }).every((field) => field !== "" || postImageUrl)) {
+    
     try {
       const token = localStorage.getItem("token");
-      const session_id = localStorage.getItem("session_id")
+      const session_id = localStorage.getItem("session_id");
       setPublishedUserId(session_id);
       const formData = new FormData();
 
       formData.append("data", new Blob([JSON.stringify({
-          name,
-          position,
-          description,
-          postStatus,
-          clubId,
-          publishedUserId
-         
-        })], { type: "application/json" }));
+        name,
+        position,
+        description,
+        postStatus,
+        clubId,
+        publishedUserId
+      })], { type: "application/json" }));
 
       if (postImage) {
         formData.append("file", postImage);
@@ -416,11 +452,8 @@ const handleSubmit = async (e) => {
           publishedUserId,
           token
         );
-
         alert("Post updated successfully");
-        console.log("Post updated:", response);
         navigate(-1);
-
       } else {
         const response = await PostService.savePost(
           name,
@@ -432,9 +465,7 @@ const handleSubmit = async (e) => {
           publishedUserId,
           token
         );
-
         alert("Post added successfully");
-        console.log("Post added:", response);
         navigate(-1);
       }
     } catch (error) {
@@ -444,9 +475,81 @@ const handleSubmit = async (e) => {
         : { global: error.message };
       setErrors(errorMessages);
       setTimeout(() => setErrors({}), 5000);
-
     }
   }
+
+  
+
+  // if (Object.values(errors).every((error) => error === "") && Object.values({
+  //     name,
+  //     position,
+  //     description,
+  //     postImage
+     
+  //   }).every((field) => field !== "" || postImageUrl)) {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     const session_id = localStorage.getItem("session_id")
+  //     setPublishedUserId(session_id);
+  //     const formData = new FormData();
+
+  //     formData.append("data", new Blob([JSON.stringify({
+  //         name,
+  //         position,
+  //         description,
+  //         postStatus,
+  //         clubId,
+  //         publishedUserId
+         
+  //       })], { type: "application/json" }));
+
+  //     if (postImage) {
+  //       formData.append("file", postImage);
+  //     }
+
+  //     if (id) {
+  //       const response = await PostService.updatePost(
+  //         id,
+  //         name,
+  //         position,
+  //         description,
+  //         postImage,
+  //         postStatus,
+  //         clubId,
+  //         publishedUserId,
+  //         token
+  //       );
+
+  //       alert("Post updated successfully");
+  //       console.log("Post updated:", response);
+  //       navigate(-1);
+
+  //     } else {
+  //       const response = await PostService.savePost(
+  //         name,
+  //         position,
+  //         description,
+  //         postImage,
+  //         postStatus,
+  //         clubId,
+  //         publishedUserId,
+  //         token
+  //       );
+
+  //       alert("Post added successfully");
+  //       console.log("Post added:", response);
+  //       navigate(-1);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error processing Post:", error);
+  //     const errorMessages = error.response
+  //       ? error.response.data.errors
+  //       : { global: error.message };
+  //     setErrors(errorMessages);
+  //     setTimeout(() => setErrors({}), 5000);
+
+  //   }
+  // }
 };
 
 
