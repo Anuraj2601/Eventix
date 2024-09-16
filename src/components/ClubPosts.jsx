@@ -17,10 +17,13 @@ import PostService from '../service/PostService';
 const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) => {
 
     const navigate = useNavigate();
+    const session_id = localStorage.getItem('session_id');
+    const editablePerson = session_id == post.published_user_id? true: false;
 
     const updatePost = (post_id) => {
         navigate(`/club/edit-post/${post_id}`)
     }
+
 
     const deletePost = async (post_id) => {
         try{
@@ -58,7 +61,7 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) =>
                         <FaTimes className='text-red-500 custom-card' size={30} />
                     </div>
                 )}
-                {showEditDeleteButton && (
+                {showEditDeleteButton && editablePerson && (
                     <div className="flex items-right gap-1">
                         <EditDeleteButton onEdit={()=> updatePost(post.post_id)} onDelete={()=> deletePost(post.post_id)} />
                     </div>
