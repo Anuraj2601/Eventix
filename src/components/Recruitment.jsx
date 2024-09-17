@@ -132,13 +132,12 @@ const Recruitment = () => {
 
     return (
         <div>
-            <table className="min-w-full bg-black text-white rounded-xl">
+            <table className="min-w-full bg-black text-white rounded-xl text-center">
                 <thead>
                     <tr>
-                        <th className="py-2 px-4">Registration ID</th>
+                        <th className="py-2 px-4">ID</th>
                         <th className="py-2 px-4">Email</th>
                         <th className="py-2 px-4">Team</th>
-                        <th className="py-2 px-4">Interview Slot</th>
                         <th className="py-2 px-4">Reason</th>
                         <th className="py-2 px-4">Action</th>
                     </tr>
@@ -150,7 +149,6 @@ const Recruitment = () => {
                                 <td className="py-2 px-4">{reg.registrationId}</td>
                                 <td className="py-2 px-4">{reg.email}</td>
                                 <td className="py-2 px-4">{reg.team}</td>
-                                <td className="py-2 px-4">{new Date(reg.interviewSlot).toLocaleString()}</td>
                                 <td className="py-2 px-4">{reg.reason}</td>
                                 <td className="py-2 px-4">
       <button
