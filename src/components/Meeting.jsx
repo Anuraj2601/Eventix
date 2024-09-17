@@ -55,6 +55,7 @@ const Meeting = ({club}) => {
         const token = localStorage.getItem('token');
         const response = await MeetingService.getAllMeetings(token);
         const meetingsArray = response.content || [];
+        //const meetingsArray = response.content.filter(meeting => meeting.clubId == club.club_id) || [];
         setMeetings(meetingsArray);
       } catch (error) {
         console.error('Error fetching meetings:', error);
