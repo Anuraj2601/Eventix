@@ -199,7 +199,7 @@ const App = () => {
         <Route path='/student/club/:id' element={<StudentClubDetails/>}></Route>
         <Route path='/student/notifications' element={<StudentNotifications/>}></Route>
         <Route path='/student/dashboard' element={<StudentDashboard/>}></Route>
-        <Route path='/clubregister/:name' element={<ClubRegistration/>}></Route>
+        <Route path='/:role/clubregister/:club_id' element={<ClubRegistration />} />
         <Route path='/eventregister/:event' element={<EventRegistration/>}></Route>
         <Route path='/student/club/event' element={<Exploreeventstudent />}></Route>
         <Route path='/student/calendar' element={<StudentEventCalendar />}></Route>
