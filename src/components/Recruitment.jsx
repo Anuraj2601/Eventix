@@ -21,7 +21,6 @@ const Recruitment = () => {
                 const response = await RegistrationService.getAllRegistrations(token);
                 console.log('API Response:', response);
 
-                // Check if 'data' or 'content' is the correct field
                 if (response.data) {
                     setRegistrations(response.data);
                 } else if (response.content) {
@@ -40,21 +39,63 @@ const Recruitment = () => {
         fetchRegistrations();
     }, [token]);
 
-    const handleSelect = (id) => {
-        setSelectedId(id);
-    };
+    const handleSelect = async (id) => {
+        const updatedRegistration = registrations.find((reg) => reg.registrationId === id);
 
-    const handleUpdate = async (id) => {
+        if (!updatedRegistration) {
+            console.error('Registration not found for ID:', id);
+            return;
+        }
+
+        const updates = {
+            accepted: 1,
+            position: 'Member',
+            ...updatedRegistration, // Add all existing registration data
+        };
+
+        console.log('Updating registration with ID:', id);
+        console.log('Data being submitted for update:', updates);
+
         try {
-            const updates = {
-                accepted: 1, // Update only 'accepted' and 'position'
-                position: 'Member',
-            };
+            const response = await RegistrationService.updateRegistration(id, updates, token);
+            console.log('Update response:', response);
 
-            await RegistrationService.updateRegistration(id, updates, token);
             setRegistrations((prev) =>
                 prev.map((reg) =>
                     reg.registrationId === id ? { ...reg, accepted: 1, position: 'Member' } : reg
+                )
+            );
+            setSelectedId(id);
+        } catch (err) {
+            console.error('Error updating registration:', err);
+            setError('Error updating registration. Please try again.');
+        }
+    };
+
+    const handleReject = async (id) => {
+        const updatedRegistration = registrations.find((reg) => reg.registrationId === id);
+
+        if (!updatedRegistration) {
+            console.error('Registration not found for ID:', id);
+            return;
+        }
+
+        const updates = {
+            accepted: 0, // Set 'accepted' to 0
+            position: 'Rejected', // Set 'position' to 'Rejected'
+            ...updatedRegistration, // Add all existing registration data
+        };
+
+        console.log('Rejecting registration with ID:', id);
+        console.log('Data being submitted for update:', updates);
+
+        try {
+            const response = await RegistrationService.updateRegistration(id, updates, token);
+            console.log('Update response:', response);
+
+            setRegistrations((prev) =>
+                prev.map((reg) =>
+                    reg.registrationId === id ? { ...reg, accepted: 0, position: 'Rejected' } : reg
                 )
             );
             setSelectedId(null); // Deselect after update
@@ -96,12 +137,20 @@ const Recruitment = () => {
                                 <td className="py-2 px-4">{reg.reason}</td>
                                 <td className="py-2 px-4">
                                     {selectedId === reg.registrationId ? (
-                                        <button
-                                            onClick={() => handleUpdate(reg.registrationId)}
-                                            className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600"
-                                        >
-                                            Update
-                                        </button>
+                                        <>
+                                            <button
+                                                onClick={() => handleSelect(reg.registrationId)}
+                                                className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 mr-2"
+                                            >
+                                                Select
+                                            </button>
+                                            <button
+                                                onClick={() => handleReject(reg.registrationId)}
+                                                className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600"
+                                            >
+                                                Reject
+                                            </button>
+                                        </>
                                     ) : (
                                         <button
                                             onClick={() => handleSelect(reg.registrationId)}
