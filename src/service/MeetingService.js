@@ -4,7 +4,13 @@ class MeetingService{
 
     static BASE_URL = "http://localhost:8080";
 
-    static async saveMeeting(meeting_name, date, time, meeting_type, participant_type, token ){
+    static async saveMeeting(meeting_name, 
+                            date, 
+                            time, 
+                            meeting_type, 
+                            participant_type, 
+                            club_id, 
+                            token ){
         try{
 
             const data = {
@@ -12,7 +18,8 @@ class MeetingService{
                 date,
                 time,
                 meeting_type,
-                participant_type
+                participant_type,
+                club_id
             };
 
             const headers = {
@@ -68,7 +75,14 @@ class MeetingService{
     }
 
 
-    static async updateMeeting(meeting_id ,meeting_name, date, time, meeting_type, participant_type, token ){
+    static async updateMeeting(meeting_id, 
+                                meeting_name, 
+                                date, 
+                                time, 
+                                meeting_type, 
+                                participant_type, 
+                                club_id, 
+                                token ){
 
         try{
 
@@ -78,7 +92,8 @@ class MeetingService{
                 date,
                 time,
                 meeting_type,
-                participant_type
+                participant_type,
+                club_id
             };
 
             const headers = {

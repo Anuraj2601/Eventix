@@ -118,7 +118,7 @@ const Meeting = ({club}) => {
   ]; */
 
   const handleUpdate = (id) => {
-    navigate(`/president/club/meeting/edit/${id}`);
+    navigate(`/president/club/meeting/edit/${id}`, { state: { club } });
   }
 
   const handleDelete = async (id) => {
@@ -142,7 +142,7 @@ const Meeting = ({club}) => {
   };
 
   const openMeetingForm = () =>{
-    navigate(`/president/club/meeting/add`);
+    navigate(`/president/club/meeting/add`, { state: { club } });
   }
 
   return (
