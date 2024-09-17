@@ -4,10 +4,11 @@ import Navbar from "../../components/Navbar";
 import { Badge, Button } from "@material-tailwind/react";
 import { Radio } from "@material-tailwind/react";
 import AnnouncementService from '../../service/AnnouncementService';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const AddNewAnnouncementForm = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -16,6 +17,8 @@ const AddNewAnnouncementForm = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const { id } = useParams();
+    const { club } = location.state || {};
+    //console.log("club in new announcement", club);
     
     const handleRadioChange = (e) => {
         setAnnouncementType(e.target.value);
@@ -95,6 +98,7 @@ const AddNewAnnouncementForm = () => {
                     title,
                     content,
                     announcementType,
+                    club.club_id,
                     token
                 );
     
@@ -109,6 +113,7 @@ const AddNewAnnouncementForm = () => {
                     title,
                     content,
                     announcementType,
+                    club.club_id,
                     token
                 );
     

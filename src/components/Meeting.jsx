@@ -9,7 +9,7 @@ import MeetingService from "../service/MeetingService";
 
 
 
-const Meeting = () => {
+const Meeting = ({club}) => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();

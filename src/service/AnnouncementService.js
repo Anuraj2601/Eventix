@@ -3,7 +3,11 @@ import axios from "axios";
 class AnnouncementService{
     static BASE_URL = "http://localhost:8080"
 
-    static async saveAnnouncement(title, content, type, token){
+    static async saveAnnouncement(title, 
+                                content, 
+                                type, 
+                                club_id, 
+                                token){
 
         try{
 
@@ -17,7 +21,8 @@ class AnnouncementService{
             const data = {
                 title,
                 content,
-                type
+                type,
+                club_id
             };
 
             const headers = {
@@ -71,7 +76,12 @@ class AnnouncementService{
     }
 
 
-    static async updateAnnouncement(announcement_id ,title, content, type, token){
+    static async updateAnnouncement(announcement_id, 
+                                    title, 
+                                    content, 
+                                    type, 
+                                    club_id, 
+                                    token){
 
         try{
 
@@ -79,7 +89,8 @@ class AnnouncementService{
                 announcement_id,
                 title,
                 content,
-                type
+                type,
+                club_id
             };
 
             const headers = {
