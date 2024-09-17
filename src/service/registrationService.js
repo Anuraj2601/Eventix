@@ -65,7 +65,7 @@ class RegistrationService {
         }
     }
 
-    /**
+   /**
      * Update a registration on the server.
      * 
      * @param {string} id - The ID of the registration.
@@ -74,21 +74,29 @@ class RegistrationService {
      * @returns {Promise<Object>} - The response data from the server.
      * @throws {Error} - Throws an error if the request fails.
      */
-    static async updateRegistration(id, updates, token) {
-        try {
-            const headers = {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            };
-
-            const response = await axios.put(`${RegistrationService.BASE_URL}/student/updateRegistration/${id}`, updates, { headers });
-            return response.data;
-        } catch (err) {
-            console.error('Error updating registration:', err);
-            const errorMessage = err.response?.data?.message || err.message || 'Unknown error occurred';
-            throw new Error(`Updating registration failed: ${errorMessage}`);
+   static async updateRegistration(id, updates, token) {
+    try {
+        // Ensure that only 'accepted' and 'position' are updated
+        const { accepted, position } = updates;
+        if (accepted === undefined && position === undefined) {
+            throw new Error('No valid update fields provided.');
         }
+
+        const data = { accepted, position };
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        };
+
+        const response = await axios.put(`${RegistrationService.BASE_URL}/student/updateRegistration/${id}`, data, { headers });
+        return response.data;
+    } catch (err) {
+        console.error('Error updating registration:', err);
+        const errorMessage = err.response?.data?.message || err.message || 'Unknown error occurred';
+        throw new Error(`Updating registration failed: ${errorMessage}`);
     }
+}
 }
 
 export default RegistrationService;

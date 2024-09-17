@@ -41,14 +41,14 @@ const Recruitment = () => {
     const handleUpdate = async (id) => {
         try {
             const updates = {
-                accepted: 1,
+                accepted: 1, // Update only 'accepted' and 'position'
                 position: 'Member',
             };
 
             await RegistrationService.updateRegistration(id, updates, token);
             setRegistrations((prev) =>
                 prev.map((reg) =>
-                    reg.id === id ? { ...reg, accepted: 1, position: 'Member' } : reg
+                    reg.registrationId === id ? { ...reg, accepted: 1, position: 'Member' } : reg
                 )
             );
             setSelectedId(null); // Deselect after update
@@ -63,40 +63,37 @@ const Recruitment = () => {
 
     return (
         <div>
-            <table className="min-w-full bg-black text-white  rounded-xl">
+            <table className="min-w-full bg-black text-white rounded-xl">
                 <thead>
                     <tr>
-                        <th className="py-2 px-4  ">Email</th>
-                        
-                        <th className="py-2 px-4  ">Team</th>
-                        <th className="py-2 px-4  ">Interview Slot</th>
-                        <th className="py-2 px-4  ">Reason</th>
-                       
-                        <th className="py-2 px-4  ">Action</th>
+                        <th className="py-2 px-4">Registration ID</th> {/* New column header */}
+                        <th className="py-2 px-4">Email</th>
+                        <th className="py-2 px-4">Team</th>
+                        <th className="py-2 px-4">Interview Slot</th>
+                        <th className="py-2 px-4">Reason</th>
+                        <th className="py-2 px-4">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {registrations.length > 0 ? (
                         registrations.map((reg) => (
-                            <tr key={reg.id} className={selectedId === reg.id ? 'bg-gray-100' : ''}>
-                                <td className="py-2 px-4 ">{reg.email}</td>
-                                <td className="py-2 px-4  ">{reg.team}</td>
-                                <td className="py-2 px-4  ">{reg.interviewSlot}</td>
-                            
-
-                                <td className="py-2 px-4  ">{reg.reason}</td>
-                              
-                                <td className="py-2 px-4  ">
-                                    {selectedId === reg.id ? (
+                            <tr key={reg.registrationId} className={selectedId === reg.registrationId ? 'bg-gray-100' : ''}>
+                                <td className="py-2 px-4">{reg.registrationId}</td> {/* Display registration ID */}
+                                <td className="py-2 px-4">{reg.email}</td>
+                                <td className="py-2 px-4">{reg.team}</td>
+                                <td className="py-2 px-4">{reg.interviewSlot}</td>
+                                <td className="py-2 px-4">{reg.reason}</td>
+                                <td className="py-2 px-4">
+                                    {selectedId === reg.registrationId ? (
                                         <button
-                                            onClick={() => handleUpdate(reg.id)}
+                                            onClick={() => handleUpdate(reg.registrationId)}
                                             className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600"
                                         >
                                             Update
                                         </button>
                                     ) : (
                                         <button
-                                            onClick={() => handleSelect(reg.id)}
+                                            onClick={() => handleSelect(reg.registrationId)}
                                             className="bg-green-500 text-white py-1 px-2 rounded hover:bg-green-600"
                                         >
                                             Select
@@ -107,7 +104,7 @@ const Recruitment = () => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="8" className="py-2 px-4 text-center">No records found</td>
+                            <td colSpan="6" className="py-2 px-4 text-center">No records found</td>
                         </tr>
                     )}
                 </tbody>
