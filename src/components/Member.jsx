@@ -1,166 +1,207 @@
-import React, { useEffect, useState } from "react";
-import { Card, CardBody, Typography, Avatar } from "@material-tailwind/react";
-import Chart from "react-apexcharts";
-import Remove from "./Remove";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
 import RegistrationService from '../service/registrationService'; // Adjust the path as needed
-
-const chartConfig = {
-  type: "pie",
-  width: 80,
-  height: 80,
-  series: [20, 80],
-  options: {
-    chart: {
-      toolbar: {
-        show: false,
-      },
-    },
-    title: {
-      show: "",
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    colors: ["#1E1E1E", "#AEC90A"],
-    legend: {
-      show: false,
-    },
-  },
-};
+import UsersService from '../service/UsersService'; // Adjust path if needed
 
 const Member = () => {
-  const location = useLocation();
-  const showRemoveButton = location.pathname.startsWith('/secretary') || location.pathname.startsWith('/president');
+    const [registrations, setRegistrations] = useState([]);
+    const [selectedId, setSelectedId] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [token, setToken] = useState(localStorage.getItem('token') || '');
+    const [userProfiles, setUserProfiles] = useState({});
 
-  const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+    useEffect(() => {
+        const fetchRegistrations = async () => {
+            if (!token) {
+                setError('No token found');
+                setLoading(false);
+                return;
+            }
 
-  useEffect(() => {
-    const fetchMembers = async () => {
-      const token = localStorage.getItem('token') || '';
+            try {
+                console.log('Fetching registrations with token:', token);
+                const response = await RegistrationService.getAllRegistrations(token);
+                console.log('API Response:', response);
 
-      try {
-        const response = await RegistrationService.getAllRegistrations(token);
-        if (response.data) {
-          // Filter members with accepted value 1 and position 'Member'
-          const filteredMembers = response.data.filter(
-            (reg) => reg.accepted === 1 && reg.position === 'Member'
-          );
-          setMembers(filteredMembers);
-        } else if (response.content) {
-          const filteredMembers = response.content.filter(
-            (reg) => reg.accepted === 1 && reg.position === 'Member'
-          );
-          setMembers(filteredMembers);
-        } else {
-          setError('Unexpected response format');
+                if (response.data) {
+                    setRegistrations(response.data);
+                } else if (response.content) {
+                    setRegistrations(response.content);
+                } else {
+                    setError('Unexpected response format');
+                }
+            } catch (err) {
+                console.error('Error fetching registrations:', err);
+                setError('Error fetching registrations. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchRegistrations();
+    }, [token]);
+
+    useEffect(() => {
+        const fetchUserProfiles = async () => {
+            try {
+                const profilePromises = registrations.map(async (reg) => {
+                    if (reg.email && !userProfiles[reg.email]) {
+                        try {
+                            const response = await UsersService.getUserProfileByEmail(reg.email);
+                            return { email: reg.email, name: response.name, profileImage: response.profileImage };
+                        } catch (err) {
+                            console.error('Error fetching profile:', err);
+                            return { email: reg.email, name: 'Unknown', profileImage: '' }; // Handle the case where fetching profile fails
+                        }
+                    }
+                });
+
+                const profilesArray = await Promise.all(profilePromises);
+                const profiles = profilesArray.reduce((acc, profile) => {
+                    if (profile) {
+                        acc[profile.email] = profile;
+                    }
+                    return acc;
+                }, {});
+
+                setUserProfiles((prevProfiles) => ({ ...prevProfiles, ...profiles }));
+            } catch (err) {
+                setError('Error fetching user profiles. Please try again.');
+            }
+        };
+
+        if (registrations.length) {
+            fetchUserProfiles();
         }
-      } catch (err) {
-        setError('Error fetching registrations. Please try again.');
-      } finally {
-        setLoading(false);
-      }
+    }, [registrations]);
+
+    const handleSelect = async (id) => {
+        const updatedRegistration = registrations.find((reg) => reg.registrationId === id);
+
+        if (!updatedRegistration) {
+            console.error('Registration not found for ID:', id);
+            return;
+        }
+
+        const updates = {
+            accepted: 1,
+            position: 'Member',
+            registrationId: updatedRegistration.registrationId,
+            email: updatedRegistration.email,
+            clubId: updatedRegistration.clubId,
+            team: updatedRegistration.team,
+            interviewSlot: updatedRegistration.interviewSlot,
+            reason: updatedRegistration.reason
+        };
+
+        console.log('Updating registration with ID:', id);
+        console.log('Data being submitted for update:', updates);
+
+        try {
+            const response = await RegistrationService.updateRegistration(id, updates, token);
+            console.log('Update response:', response);
+
+            setRegistrations((prev) =>
+                prev.map((reg) =>
+                    reg.registrationId === id ? { ...reg, accepted: 1, position: 'Member' } : reg
+                )
+            );
+            setSelectedId(id);
+        } catch (err) {
+            console.error('Error updating registration:', err);
+            setError('Error updating registration. Please try again.');
+        }
     };
 
-    fetchMembers();
-  }, []);
+    const handleReject = async (id) => {
+        const updatedRegistration = registrations.find((reg) => reg.registrationId === id);
 
-  const handleRemove = async (id) => {
-    const token = localStorage.getItem('token') || '';
-    const updatedRegistration = members.find((reg) => reg.registrationId === id);
+        if (!updatedRegistration) {
+            console.error('Registration not found for ID:', id);
+            return;
+        }
 
-    if (!updatedRegistration) {
-      console.error('Registration not found for ID:', id);
-      return;
-    }
+        const updates = {
+            accepted: 0,
+            position: 'Rejected',
+            registrationId: updatedRegistration.registrationId,
+            email: updatedRegistration.email,
+            clubId: updatedRegistration.clubId,
+            team: updatedRegistration.team,
+            interviewSlot: updatedRegistration.interviewSlot,
+            reason: updatedRegistration.reason
+        };
 
-    const updates = {
-      position: 'Removed', // Set 'position' to 'Removed'
-      ...updatedRegistration, // Add all existing registration data
+        console.log('Rejecting registration with ID:', id);
+        console.log('Data being submitted for update:', updates);
+
+        try {
+            const response = await RegistrationService.updateRegistration(id, updates, token);
+            console.log('Update response:', response);
+
+            setRegistrations((prev) =>
+                prev.map((reg) =>
+                    reg.registrationId === id ? { ...reg, accepted: 0, position: 'Rejected' } : reg
+                )
+            );
+            setSelectedId(null);
+        } catch (err) {
+            console.error('Error updating registration:', err);
+            setError('Error updating registration. Please try again.');
+        }
     };
 
-    try {
-      await RegistrationService.updateRegistration(id, updates, token);
-      setMembers((prev) =>
-        prev.map((reg) =>
-          reg.registrationId === id ? { ...reg, position: 'Removed' } : reg
-        )
-      );
-    } catch (err) {
-      setError('Error updating registration. Please try again.');
-    }
-  };
+    const isPresidentView = window.location.href.includes('president');
+    const clubIdFromUrl = window.location.pathname.split('/').pop(); // Extract the last part of the URL
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">Error: {error}</p>;
+    console.log('Extracted Club ID from URL:', clubIdFromUrl); // Log the extracted Club ID
 
-  return (
-    <Card className="w-full bg-neutral-900">
-      <CardBody>
-        {members.map((member) => (
-          <div
-            key={member.registrationId}
-            className="relative flex items-start justify-between p-3 mb-5 bg-zinc-950 bg-opacity-80 rounded-2xl custom-3d-shadow"
-            style={{ 
-              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-            }}
-          >
-            <div className="flex items-center gap-4">
-              <Avatar
-                size="xl"
-                src={member.image}
-                alt={member.name}
-                className="border-2 border-black rounded-full w-24 h-24 custom-card"
-              />
-              <div>
-                <Typography color="white" variant="h5" className="mb-1">
-                  {member.name}
-                </Typography>
-                <Typography color="white" variant="subtitle1" className="mb-1">
-                  From Team: {member.team}
-                </Typography>
-                {showRemoveButton && (
-                  <Remove
-                    onEdit={() => {}}
-                    onDelete={() => handleRemove(member.registrationId)}
-                  />
-                )}
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Typography color="white" variant="subtitle1" className="mb-1">
-                Joined Event OCs:
-              </Typography>
-              <ul className="list-disc list-inside">
-                {member.events.map((event, idx) => (
-                  <li key={idx} className="text-[#AEC90A]">
-                    {event}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex flex-col items-end gap-2">
-              <div className="flex items-center gap-2">
-                <Typography color="white" variant="subtitle1" className="mb-1">
-                  OC Participation
-                </Typography>
-                <Chart {...chartConfig} />
-                <Typography color="white" variant="subtitle1">{member.ocPercentage}%</Typography>
-              </div>
-              <div className="flex items-center gap-2">
-                <Typography color="white" variant="subtitle1" className="mb-1">
-                  Attendance
-                </Typography>
-                <Chart {...chartConfig} />
-                <Typography color="white" variant="subtitle1">{member.attendancePercentage}%</Typography>
-              </div>
-            </div>
-          </div>
-        ))}
-      </CardBody>
-    </Card>
+    // Filter registrations based on club ID
+    const filteredRegistrations = registrations.filter(
+        (reg) => reg.accepted === 1 && reg.position === 'member'&& String(reg.clubId) === String(clubIdFromUrl)
+    );
+    console.log('Filtered Registrations:', filteredRegistrations); // Log filtered registrations
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p className="text-red-500">Error: {error}</p>;
+
+    return (
+      <div className="flex flex-wrap gap-4">
+          {filteredRegistrations.length > 0 ? (
+              filteredRegistrations.map((reg) => (
+                  <div key={reg.registrationId} className="flex justify-center gap-3 p-3 text-white">
+                      <div className="flex flex-col items-center p-2 bg-black rounded-2xl custom-card text-center">
+                          {/* Image Section */}
+                          <div style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
+                              <img
+                                  src={userProfiles[reg.email]?.profileImage || '/default-profile.png'}
+                                  alt={`${userProfiles[reg.email]?.name || 'Unknown'}'s profile`}
+                                  className="w-48 h-48 object-cover rounded-full p-2 custom-card"
+                              />
+                          </div>
+                          {/* Details Section */}
+                          <div className="w-full h-1/2 p-4 flex flex-col text-center">
+                              <h3 className="text-xl font-semibold mb-2">{userProfiles[reg.email]?.name || 'Unknown'}</h3>
+                              <p className="mb-2"><strong>Team:</strong> {reg.team}</p>
+                              <p className="mb-4"><strong>Email:</strong> {reg.email}</p>
+                              {isPresidentView && (
+                                  <div className="flex justify-end">
+                                      <button
+                                          onClick={() => handleReject(reg.registrationId)}
+                                          className="w-1/2 border border-red-500 text-red-500 rounded-full hover:bg-red-600 hover:text-white text-sm border-opacity-50"
+                                      >
+                                          Remove
+                                      </button>
+                                  </div>
+                              )}
+                          </div>
+                      </div>
+                  </div>
+              ))
+          ) : (
+              <p className="text-center w-full">No records found</p>
+          )}
+      </div>
   );
 };
 

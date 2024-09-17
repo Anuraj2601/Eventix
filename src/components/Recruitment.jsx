@@ -150,12 +150,15 @@ const Recruitment = () => {
             setError('Error updating registration. Please try again.');
         }
     };
+    const clubIdFromUrl = window.location.pathname.split('/').pop(); // Extract the last part of the URL
 
+    console.log('Extracted Club ID from URL:', clubIdFromUrl); // Log the extracted Club ID
+    
     if (loading) return <p>Loading...</p>;
     if (error) return <p className="text-red-500">Error: {error}</p>;
 
     const filteredRegistrations = registrations.filter(
-        (reg) => reg.accepted === 0 && reg.position === 'student'
+        (reg) => reg.accepted === 0 && reg.position === 'student'&& String(reg.clubId) === String(clubIdFromUrl)
     );
 
     return (
