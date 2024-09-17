@@ -19,10 +19,16 @@ const Recruitment = () => {
             try {
                 console.log('Fetching registrations with token:', token);
                 const response = await RegistrationService.getAllRegistrations(token);
-                console.log('Registrations data:', response);
+                console.log('API Response:', response);
 
-                // Assuming the actual registrations are in the 'content' property
-                setRegistrations(response.content || []);
+                // Check if 'data' or 'content' is the correct field
+                if (response.data) {
+                    setRegistrations(response.data);
+                } else if (response.content) {
+                    setRegistrations(response.content);
+                } else {
+                    setError('Unexpected response format');
+                }
             } catch (err) {
                 console.error('Error fetching registrations:', err);
                 setError('Error fetching registrations. Please try again.');
@@ -61,12 +67,17 @@ const Recruitment = () => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p className="text-red-500">Error: {error}</p>;
 
+    // Filter registrations to include only those with accepted value 0 and position value 'student'
+    const filteredRegistrations = registrations.filter(
+        (reg) => reg.accepted === 0 && reg.position === 'student'
+    );
+
     return (
         <div>
             <table className="min-w-full bg-black text-white rounded-xl">
                 <thead>
                     <tr>
-                        <th className="py-2 px-4">Registration ID</th> {/* New column header */}
+                        <th className="py-2 px-4">Registration ID</th>
                         <th className="py-2 px-4">Email</th>
                         <th className="py-2 px-4">Team</th>
                         <th className="py-2 px-4">Interview Slot</th>
@@ -75,13 +86,13 @@ const Recruitment = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {registrations.length > 0 ? (
-                        registrations.map((reg) => (
+                    {filteredRegistrations.length > 0 ? (
+                        filteredRegistrations.map((reg) => (
                             <tr key={reg.registrationId} className={selectedId === reg.registrationId ? 'bg-gray-100' : ''}>
-                                <td className="py-2 px-4">{reg.registrationId}</td> {/* Display registration ID */}
+                                <td className="py-2 px-4">{reg.registrationId}</td>
                                 <td className="py-2 px-4">{reg.email}</td>
                                 <td className="py-2 px-4">{reg.team}</td>
-                                <td className="py-2 px-4">{reg.interviewSlot}</td>
+                                <td className="py-2 px-4">{new Date(reg.interviewSlot).toLocaleString()}</td>
                                 <td className="py-2 px-4">{reg.reason}</td>
                                 <td className="py-2 px-4">
                                     {selectedId === reg.registrationId ? (
