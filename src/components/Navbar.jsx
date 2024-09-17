@@ -40,34 +40,11 @@ const Navbar = () => {
       <div className="flex items-center">
         {/* Centered Search Box */}
         <div className="relative mr-4">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-64 h-9 bg-neutral-900 text-white rounded-full py-1 px-3 focus:ring focus:border-[#AEC90A] border-[#AEC90A] text-center"
-          />
-          <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#AEC90A]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.3}
-              stroke="#AEC90A"
-              className="size-5"
-              style={{ opacity: 0.7 }}
-            >
-              <path
-                fillRule="evenodd"
-                d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
+          
         </div>
         {/* Image Icons */}
-        <div className="flex">
-          <Link to={getLinkPath(basePath, 'inquiry')} className="px-3">
-            <BiHelpCircle size={25} className={`inline-block  ${isSelected('inquiry') ? 'text-black bg-[#AEC90A]  rounded-full ' : 'text-[#AEC90A] hover:text-white'}`} />
-          </Link>
+        <div className="flex p-2">
+          
           <Link to={getLinkPath(basePath, 'messages')} className="px-3">
             <FiMessageSquare size={25} className={`inline-block  ${isSelected('message') ? 'text-black bg-[#AEC90A]  rounded-full p-1' : 'text-[#AEC90A] hover:text-white'}`} />
           </Link>
