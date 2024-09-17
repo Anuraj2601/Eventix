@@ -167,12 +167,12 @@ const PresidentClubNav = ({ club }) => {
     {
       label: "Meetings",
       value: "Meetings",
-      desc: <Meeting />,
+      desc: <Meeting club = {club}/>,
     },
     {
       label: "Announcement",
       value: "Announcement",
-      desc: <Announcement />,
+      desc: <Announcement club = {club}/>,
     },
     ...(showRestrictedTabs ? [
       {

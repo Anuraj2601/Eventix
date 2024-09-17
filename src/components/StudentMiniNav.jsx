@@ -20,8 +20,9 @@ import ClubPosts from "./ClubPosts";
 
 
 
-const StudentMiniNav = () => {
+const StudentMiniNav = ({ club }) => {
     const [activeTab, setActiveTab] = useState("Events");
+    //console.log("club in student mini nav", club);
 
     const clubs = [
         {
@@ -67,7 +68,7 @@ const StudentMiniNav = () => {
         {
           label: "Posts",
           value: "Posts",
-          desc: <ClubPosts />,
+          desc: <ClubPosts club = { club }/>,
           },
         {
         label: "Events",
@@ -117,4 +118,4 @@ const StudentMiniNav = () => {
   )
 }
 
-export default StudentMiniNav
+export default StudentMiniNav;

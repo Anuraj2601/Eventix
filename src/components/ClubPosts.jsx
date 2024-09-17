@@ -194,7 +194,7 @@ const NewsFeed = ({ posts, club, setPosts }) => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
                         {posts.map((post, index) => (
-                            <Posts key={index} post={post} showEditDeleteButton={false} showApprovalButtons={false} />
+                            <Posts key={index} post={post} showEditDeleteButton={false} showApprovalButtons={false} setPosts={setPosts}/>
                         ))}
                     </div>
                 )}
