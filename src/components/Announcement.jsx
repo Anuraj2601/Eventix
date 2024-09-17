@@ -78,7 +78,7 @@ const Announcement = ({club}) => {
       try {
         const token = localStorage.getItem('token');
         const response = await AnnouncementService.getAllAnnouncements(token);
-        const announcementsArray = response.content || [];
+        const announcementsArray = response.content.filter(announcement => announcement.club_id === club.club_id) || [];
         setAnnouncements(announcementsArray);
       } catch (error) {
         console.error('Error fetching announcements:', error);
