@@ -134,6 +134,7 @@ const ElectionDetails = ({ club }) => {
       }
     };
 
+    
     fetchElections();
 
 

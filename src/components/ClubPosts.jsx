@@ -255,7 +255,7 @@ const App = ({ club }) => {
             try{
                 const token = localStorage.getItem('token');
                 const response = await PostService.getAllPosts(token);
-                const postsArray = response.content || [];
+                const postsArray = response.content.filter(post => post.club_id === club.club_id) || [];
                 console.log("all posts", postsArray);
                 setPosts(postsArray);
     
