@@ -122,7 +122,15 @@ const Candidates = ({ activeTab }) => {
   };
 
     const categories = ["President", "Secretary", "Treasurer"];
-    
+
+    // Function to get the count of selected candidates per category
+    const getSelectedCount = (category) => {
+        return candidates.filter(candidate =>
+            candidate.position.toLowerCase() === category.toLowerCase() &&
+            candidate.selected === "selected"
+        ).length;
+    };
+
     return (
       <div className="text-white">
           {message && (
@@ -137,6 +145,9 @@ const Candidates = ({ activeTab }) => {
               // Sort candidates by performance in descending order
               const sortedCandidates = [...filteredCandidates].sort((a, b) => b.performance - a.performance);
               
+              // Get the number of selected candidates for the current category
+              const selectedCount = getSelectedCount(category);
+
               return (
                   <div key={category} className="mb-8">
                       <Typography variant="h5" className="mb-2">
@@ -173,12 +184,18 @@ const Candidates = ({ activeTab }) => {
                                       </div>
                                       {/* Buttons at the Bottom Right Corner */}
                                       <div className="mt-4 flex justify-end gap-2">
-                                          <Button className="flex items-center p-2 text-[#AEC90A] border-2 border-[#AEC90A] text-lg rounded-full hover:text-white hover:border-white"
-                                                  onClick={() => handleSelect(candidate.id)}>
+                                          <Button
+                                              className={`flex items-center p-2 text-[#AEC90A] border-2 border-[#AEC90A] text-lg rounded-full hover:text-white hover:border-white ${selectedCount >= 3 ? 'cursor-not-allowed opacity-50' : ''}`}
+                                              onClick={() => handleSelect(candidate.id)}
+                                              disabled={selectedCount >= 3}
+                                          >
                                               Select
                                           </Button>
-                                          <Button className="flex items-center p-2 text-red-500 border-2 border-red-500 text-lg rounded-full hover:text-white hover:border-white"
-                                                  onClick={() => handleReject(candidate.id)}>
+                                          <Button
+                                              className={`flex items-center p-2 text-red-500 border-2 border-red-500 text-lg rounded-full hover:text-white hover:border-white ${selectedCount >= 3 ? 'cursor-not-allowed opacity-50' : ''}`}
+                                              onClick={() => handleReject(candidate.id)}
+                                              disabled={selectedCount >= 3}
+                                          >
                                               Reject
                                           </Button>
                                       </div>
