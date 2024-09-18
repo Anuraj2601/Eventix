@@ -1,204 +1,214 @@
-import React from "react";
-import {
-  Card,
-  CardBody,
-  Typography,
-  Avatar,
-} from "@material-tailwind/react";
-import Chart from "react-apexcharts";
-import SelectRemove from "./SelectRemove";
+import React, { useEffect, useState } from "react";
+import { getAllCandidates, updateCandidateSelection } from "../service/candidateService";
+import { Card, CardBody, Typography, Avatar, Button } from "@material-tailwind/react";
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, Tooltip, Legend, ArcElement } from 'chart.js';
 
-// Predefined teams
-const teams = ["Content", "Design", "Marketing", "Finance"];
-
-// Predefined events
-const predefinedEvents = [
-  "Reid Extreme 3.0",
-  "MadHack 2.0",
-  "FreshHack 1.0"
-];
-
-const getRandomEvents = () => {
-  const shuffledEvents = predefinedEvents.sort(() => 0.5 - Math.random());
-  return shuffledEvents.slice(0, Math.floor(Math.random() * shuffledEvents.length) + 1);
-};
-
-const generateRandomMember = (status, position) => {
-  return {
-    id: Math.random().toString(36).substr(2, 9),
-    name: status === "Selected" ? generateRandomName("male") : generateRandomName("female"),
-    team: teams[Math.floor(Math.random() * teams.length)],
-    image: `https://randomuser.me/api/portraits/${status === "Selected" ? "men" : "women"}/${Math.floor(Math.random() * 99)}.jpg`,
-    events: getRandomEvents(),
-    ocPercentage: Math.floor(Math.random() * (90 - 60 + 1)) + 60,
-    attendancePercentage: Math.floor(Math.random() * (80 - 50 + 1)) + 50,
-    status: status,
-    position: position,
-  };
-};
-
-const generateRandomName = (gender) => {
-  const names = gender === "male" ?
-    ["John", "Michael", "James", "David", "William", "Joseph", "Daniel", "George", "Anthony", "Charles"] :
-    ["Mary", "Jennifer", "Linda", "Susan", "Karen", "Lisa", "Nancy", "Betty", "Helen", "Sandra"];
-  return names[Math.floor(Math.random() * names.length)];
-};
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Candidates = ({ activeTab }) => {
-  const chartConfig = {
-    type: "pie",
-    width: 80,
-    height: 80,
-    series: [20, 80],
-    options: {
-      chart: {
-        toolbar: {
-          show: false,
-        },
-      },
-      title: {
-        show: "",
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      colors: ["#1E1E1E", "#AEC90A"],
-      legend: {
-        show: false,
-      },
-    },
-  };
+    const [candidates, setCandidates] = useState([]);
+    const [message, setMessage] = useState(""); 
 
-  // Generate random members for each tab and position
-  const generateMembersForPosition = (status, position) => 
-    Array.from({ length: 3 }, () => generateRandomMember(status, position));
+    useEffect(() => {
+        const fetchCandidates = async () => {
+            try {
+                const data = await getAllCandidates();
+                console.log("Fetched candidates:", data);
+                if (Array.isArray(data)) {
+                    data.forEach(candidate => {
+                        console.log(`Candidate ID: ${candidate.id}`);
+                        console.log(`Name: ${candidate.name}`);
+                        console.log(`Performance: ${candidate.performance}`);
+                        console.log(`Event OCs:`, candidate.oc);
+                    });
+                } else {
+                    console.error("Fetched data is not an array:", data);
+                }
+                setCandidates(data);
+            } catch (error) {
+                console.error("Error fetching candidates:", error);
+            }
+        };
+        fetchCandidates();
+    }, []);
 
-  const selectedMembers = {
-    President: generateMembersForPosition("Selected", "President"),
-    Secretary: generateMembersForPosition("Selected", "Secretary"),
-    Treasurer: generateMembersForPosition("Selected", "Treasurer"),
+    const filterCandidates = (candidates) => {
+        switch (activeTab) {
+            case "Applicants":
+                return candidates.filter(candidate => candidate.selected === "applied");
+            case "Selected":
+                return candidates.filter(candidate => candidate.selected === "selected");
+            case "Rejected":
+                return candidates.filter(candidate => candidate.selected === "rejected");
+            default:
+                return candidates;
+        }
+    };
+
+    const handleSelect = async (id) => {
+        try {
+            const status = "selected";
+            await updateCandidateSelection(id, status);
+            setCandidates(candidates.map(candidate =>
+                candidate.id === id ? { ...candidate, selected: status } : candidate
+            ));
+            setMessage(`Candidate updated to ${status}.`);
+            setTimeout(() => setMessage(""), 3000);
+        } catch (error) {
+            setMessage("Error updating candidate.");
+        }
+    };
+
+    const handleReject = async (id) => {
+        try {
+            const status = "rejected";
+            await updateCandidateSelection(id, status);
+            setCandidates(candidates.map(candidate =>
+                candidate.id === id ? { ...candidate, selected: status } : candidate
+            ));
+            setMessage(`Candidate updated to ${status}.`);
+            setTimeout(() => setMessage(""), 3000);
+        } catch (error) {
+            setMessage("Error updating candidate.");
+        }
+    };
+
+    const renderOCList = (ocList) => {
+      // Check if the ocList is a JSON string and parse it if necessary
+      let parsedOCList = [];
+      try {
+          parsedOCList = typeof ocList === 'string' ? JSON.parse(ocList) : ocList;
+      } catch (error) {
+          console.error("Error parsing OC data:", error);
+          return <Typography>Invalid OC data format</Typography>;
+      }
+  
+      if (!Array.isArray(parsedOCList) || parsedOCList.length === 0) {
+          return <Typography>No OC data available</Typography>;
+      }
+      return (
+          <div className="ml-auto text-right">
+              <ul className="list-disc list-inside text-left">
+                  {parsedOCList.map((event, index) => (
+                      <li key={index} className="text-white">
+                          {event}
+                      </li>
+                  ))}
+              </ul>
+          </div>
+      );
   };
   
-  const rejectedMembers = {
-    President: generateMembersForPosition("Rejected", "President"),
-    Secretary: generateMembersForPosition("Rejected", "Secretary"),
-    Treasurer: generateMembersForPosition("Rejected", "Treasurer"),
-  };
+    const renderPieChart = (performance) => {
+      if (typeof performance !== 'number') {
+          return <Typography>Invalid performance data</Typography>;
+      }
+      
+      const data = {
+          labels: ['Performance'],
+          datasets: [{
+              data: [performance, 100 - performance],
+              backgroundColor: ['#AEC90A', 'black'],
+              borderWidth: 1,
+          }],
+      };
   
-  const applicantsMembers = {
-    President: generateMembersForPosition("Applicants", "President"),
-    Secretary: generateMembersForPosition("Applicants", "Secretary"),
-    Treasurer: generateMembersForPosition("Applicants", "Treasurer"),
+      return (
+          <div className="w-36 h-36"> {/* Adjust width and height here */} 
+              <Pie data={data} />
+          </div>
+      );
   };
 
-  // Determine which members to display based on activeTab
-  let displayMembers = {};
-  if (activeTab === "Selected") {
-    displayMembers = selectedMembers;
-  } else if (activeTab === "Rejected") {
-    displayMembers = rejectedMembers;
-  } else {
-    displayMembers = applicantsMembers;
-  }
+    const categories = ["President", "Secretary", "Treasurer"];
 
-  const renderMembers = (members, position) => (
-    <>
-      <Typography color="white" variant="h4" className="mb-4 ">
-        {position} Position
-      </Typography>
-      {members.map((member) => (
-        <div
-          key={member.id}
-          className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-2xl " style={{ 
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-          }}
-        >
-          <div className="flex items-center gap-4">
-            <Avatar
-              size="xl"
-              src={member.image}
-              alt={member.name}
-              className="border-4 border-black rounded-full w-24 h-24 custom-card"
-            />
-            <div>
-              <Typography color="white" variant="h5" className="mb-1">
-                {member.name}
-              </Typography>
-              <Typography color="white" variant="subtitle1" className="mb-1">
-                From Team: {member.team}
-              </Typography>
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <Typography color="white" variant="subtitle1" className="mb-1">
-              Joined Event OCs:
-            </Typography>
-            <ul className="list-disc list-inside">
-              {member.events.map((event, idx) => (
-                <li key={idx} className="text-[#AEC90A]">
-                  {event}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            <div className="flex items-center gap-2">
-              <Typography color="white" variant="subtitle1" className="mb-1">
-                OC Participation
-              </Typography>
-              <Chart {...chartConfig} />
-              <Typography color="white" variant="subtitle1">
-                {member.ocPercentage}%
-              </Typography>
-            </div>
-            <div className="flex items-center gap-2">
-              <Typography color="white" variant="subtitle1" className="mb-1">
-                Attendance
-              </Typography>
-              <Chart {...chartConfig} />
-              <Typography color="white" variant="subtitle1">
-                {member.attendancePercentage}%
-              </Typography>
-            </div>
-          </div>
-          <div>
-            {member.status === "Applicants" && (
-              <SelectRemove onEdit={() => {}} onDelete={() => {}} />
-            )}
-            {member.status === "Selected" && (
-              <button className="px-4 py-2 border-[#AEC90A] border-2 text-[#AEC90A] rounded-full custom-card">
-                Selected
-              </button>
-            )}
-            {member.status === "Rejected" && (
-              <button className="px-4 py-2 border-red-700 border-2 text-red-700 rounded-full custom-card">
-                Rejected
-              </button>
-            )}
-          </div>
-        </div>
-      ))}
-    </>
-  );
+    // Function to get the count of selected candidates per category
+    const getSelectedCount = (category) => {
+        return candidates.filter(candidate =>
+            candidate.position.toLowerCase() === category.toLowerCase() &&
+            candidate.selected === "selected"
+        ).length;
+    };
 
-  return (
-    <div className="w-full bg-neutral-900">
-     <Card className="w-full bg-neutral-900">
-  <CardBody>
-    {activeTab === "Selected" && (
-      <div className="flex justify-end mb-4">
-        <button className="px-4 py-2 bg-[#AEC90A] text-black font-bold rounded-full shadow-md hover:bg-[#8f9b1d] transition-colors">
-          Announce Final Candidates
-        </button>
+    return (
+      <div className="text-white">
+          {message && (
+              <div className="bg-black text-yellow-500 p-4 mb-4">
+                  <Typography>{message}</Typography>
+              </div>
+          )}
+          {categories.map(category => {
+              const categoryCandidates = candidates.filter(candidate => candidate.position.toLowerCase() === category.toLowerCase());
+              const filteredCandidates = filterCandidates(categoryCandidates);
+
+              // Sort candidates by performance in descending order
+              const sortedCandidates = [...filteredCandidates].sort((a, b) => b.performance - a.performance);
+              
+              // Get the number of selected candidates for the current category
+              const selectedCount = getSelectedCount(category);
+
+              return (
+                  <div key={category} className="mb-8">
+                      <Typography variant="h5" className="mb-2">
+                          {category}
+                      </Typography>
+                      {sortedCandidates.length > 0 ? (
+                          sortedCandidates.map(candidate => (
+                              <Card key={candidate.id} className="mb-4 bg-black text-white">
+                                  <CardBody>
+                                      <div className="flex items-start gap-4">
+                                          {/* Image on the Left */}
+                                          <div className="flex-shrink-0 w-1/6">
+                                              <Avatar className="w-40 h-40" src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
+                                          </div>
+                                          {/* Details in the Middle */}
+                                          <div className="flex-grow flex flex-col gap-4 w-1/3">
+                                              <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
+                                              <Typography variant="body2">Position applied for: {candidate.position}</Typography>
+                                              <Typography variant="body2">How can they make a change? {candidate.contribution}</Typography>
+                                              <Typography variant="body2">Status: {candidate.selected}</Typography>
+                                          </div>
+                                          {/* Event OCs List */}
+                                          <div className="flex-shrink-0 w-1/4">
+                                              <Typography variant="body2" className="mb-2">Event OCs:</Typography>
+                                              {renderOCList(candidate.oc)}
+                                          </div>
+                                          {/* Pie Chart on the Right */}
+                                          <div className="flex-shrink-0 w-1/6 flex flex-col items-center">
+                                              {renderPieChart(candidate.performance)}
+                                              <Typography variant="body2" className="mt-2">
+                                                  {candidate.performance}%
+                                              </Typography>
+                                          </div>
+                                      </div>
+                                      {/* Buttons at the Bottom Right Corner */}
+                                      <div className="mt-4 flex justify-end gap-2">
+                                          <Button
+                                              className={`flex items-center p-2 text-[#AEC90A] border-2 border-[#AEC90A] text-lg rounded-full hover:text-white hover:border-white ${selectedCount >= 3 ? 'cursor-not-allowed opacity-50' : ''}`}
+                                              onClick={() => handleSelect(candidate.id)}
+                                              disabled={selectedCount >= 3}
+                                          >
+                                              Select
+                                          </Button>
+                                          <Button
+                                              className={`flex items-center p-2 text-red-500 border-2 border-red-500 text-lg rounded-full hover:text-white hover:border-white ${selectedCount >= 3 ? 'cursor-not-allowed opacity-50' : ''}`}
+                                              onClick={() => handleReject(candidate.id)}
+                                              disabled={selectedCount >= 3}
+                                          >
+                                              Reject
+                                          </Button>
+                                      </div>
+                                  </CardBody>
+                              </Card>
+                          ))
+                      ) : (
+                          <Typography>No candidates for {category}.</Typography>
+                      )}
+                  </div>
+              );
+          })}
       </div>
-    )}
-    {Object.keys(displayMembers).map((position) =>
-      renderMembers(displayMembers[position], position)
-    )}
-  </CardBody>
-</Card>
-
-    </div>
   );
 };
 

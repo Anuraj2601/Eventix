@@ -1,81 +1,81 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { getAllCandidates } from "../../service/candidateService"; // Import the service function
 
 const Votestab = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const [candidates, setCandidates] = useState({
+    president: [],
+    secretary: [],
+    treasurer: []
+  });
+
+  const [filteredCandidates, setFilteredCandidates] = useState({
+    president: [],
+    secretary: [],
+    treasurer: []
+  });
+
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        const data = await getAllCandidates();
+        console.log("Fetched candidates:", data);
+
+        if (Array.isArray(data)) {
+          // Categorize candidates by position
+          const categorizedCandidates = {
+            president: data.filter(candidate => candidate.position === "President"),
+            secretary: data.filter(candidate => candidate.position === "Secretary"),
+            treasurer: data.filter(candidate => candidate.position === "Treasurer")
+          };
+
+          setCandidates(categorizedCandidates);
+        } else {
+          console.error("Fetched data is not an array:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching candidates:", error);
+      }
+    };
+
+    fetchCandidates();
+  }, []);
+
+  useEffect(() => {
+    // Function to filter candidates based on the selected status
+    const filterCandidatesByStatus = (candidates, status) =>
+      candidates.filter(candidate => candidate.selected === status);
+
+    // Function to sort candidates by votes in descending order
+    const sortCandidatesByVotes = (candidates) =>
+      candidates.sort((a, b) => b.votes - a.votes);
+
+    setFilteredCandidates({
+      president: sortCandidatesByVotes(filterCandidatesByStatus(candidates.president, "selected")),
+      secretary: sortCandidatesByVotes(filterCandidatesByStatus(candidates.secretary, "selected")),
+      treasurer: sortCandidatesByVotes(filterCandidatesByStatus(candidates.treasurer, "selected"))
+    });
+  }, [candidates]);
 
   const handleReleaseResults = () => {
     // Add your logic to release results here
     console.log("Results released to the club");
   };
 
-  // Example data for candidates
-  const presidentCandidates = [
-    {
-      id: 1,
-      votes: 75,
-      name: "John Doe",
-      image: "https://randomuser.me/api/portraits/men/1.jpg", // Example image URL
-    },
-    {
-      id: 2,
-      votes: 60,
-      name: "Jane Smith",
-      image: "https://randomuser.me/api/portraits/women/2.jpg", // Example image URL
-    },
-    {
-      id: 3,
-      votes: 45,
-      name: "Michael Brown",
-      image: "https://randomuser.me/api/portraits/men/3.jpg", // Example image URL
-    },
-  ];
-
-  const vicePresidentCandidates = [
-    {
-      id: 4,
-      votes: 70,
-      name: "Emily Johnson",
-      image: "https://randomuser.me/api/portraits/women/10.jpg", // New image URL for Emily Johnson
-    },
-    {
-      id: 5,
-      votes: 55,
-      name: "David Lee",
-      image: "https://randomuser.me/api/portraits/men/5.jpg", // Example image URL
-    },
-    {
-      id: 6,
-      votes: 40,
-      name: "Sarah Williams",
-      image: "https://randomuser.me/api/portraits/women/11.jpg", // New image URL for Sarah Williams
-    },
-  ];
-
-  const treasurerCandidates = [
-    {
-      id: 7,
-      votes: 65,
-      name: "Matthew Wilson",
-      image: "https://randomuser.me/api/portraits/men/7.jpg", // Example image URL
-    },
-    {
-      id: 8,
-      votes: 50,
-      name: "Jessica Garcia",
-      image: "https://randomuser.me/api/portraits/women/8.jpg", // Example image URL
-    },
-    {
-      id: 9,
-      votes: 35,
-      name: "Daniel Martinez",
-      image: "https://randomuser.me/api/portraits/men/9.jpg", // Example image URL
-    },
-  ];
+  const handleCandidateSelection = (position, candidateId) => {
+    setCandidates(prev => {
+      const updatedCandidates = { ...prev };
+      updatedCandidates[position] = updatedCandidates[position].map(candidate =>
+        candidate.id === candidateId ? { ...candidate, selected: candidate.selected === "selected" ? "rejected" : "selected" } : candidate
+      );
+      return updatedCandidates;
+    });
+  };
 
   const showInstruction = currentPath === "/oc" || currentPath === "/member";
-  
+
   return (
     <div className="w-full flex flex-col items-center py-2 px-20 overflow-y-auto">
       <div className="w-full flex justify-end mt-8 pr-4">
@@ -89,18 +89,19 @@ const Votestab = () => {
 
       {/* President Position */}
       <div className="relative mb-12 w-full p-5">
-        <div className="absolute left-0 z-10 w-full flex justify-center ">
-          <div className="py-2 px-4 rounded-lg ">
+        <div className="absolute left-0 z-10 w-full flex justify-center">
+          <div className="py-2 px-4 rounded-lg">
             <h2 className="text-3xl text-center text-white">President Position</h2>
           </div>
         </div>
 
         <div className="relative w-full rounded-xl p-5 mt-8">
           <div className="flex items-center justify-around space-x-2">
-            {presidentCandidates.map((candidate, index) => (
+            {filteredCandidates.president.map((candidate, index) => (
               <div
                 key={candidate.id}
                 className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
+                onClick={() => handleCandidateSelection("president", candidate.id)}
               >
                 {showInstruction && (
                   <div className="absolute top-4 text-white bg-black px-3 py-1 rounded-full">
@@ -113,7 +114,7 @@ const Votestab = () => {
                   {index + 1}
                 </span>
                 <img
-                  src={candidate.image}
+                  src={candidate.imageUrl } 
                   alt={`Candidate ${candidate.id}`}
                   className="w-56 h-56 rounded-full object-cover border-black border-4 custom-card"
                   style={{ 
@@ -132,20 +133,21 @@ const Votestab = () => {
         </div>
       </div>
 
-      {/* Vice President Position */}
+      {/* Secretary Position */}
       <div className="relative mb-12 w-full p-5">
-        <div className="absolute left-0 z-10 w-full flex justify-center ">
-          <div className="py-2 px-4 rounded-lg ">
-            <h2 className="text-3xl text-center text-white">Vice President Position</h2>
+        <div className="absolute left-0 z-10 w-full flex justify-center">
+          <div className="py-2 px-4 rounded-lg">
+            <h2 className="text-3xl text-center text-white">Secretary Position</h2>
           </div>
         </div>
 
         <div className="relative w-full rounded-xl p-5 mt-8">
           <div className="flex items-center justify-around space-x-2">
-            {vicePresidentCandidates.map((candidate, index) => (
-               <div
-               key={candidate.id}
-               className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
+            {filteredCandidates.secretary.map((candidate, index) => (
+              <div
+                key={candidate.id}
+                className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
+                onClick={() => handleCandidateSelection("secretary", candidate.id)}
               >
                 {showInstruction && (
                   <div className="absolute top-4 text-white bg-black px-3 py-1 rounded-full">
@@ -158,7 +160,7 @@ const Votestab = () => {
                   {index + 1}
                 </span>
                 <img
-                  src={candidate.image}
+                  src={candidate.imageUrl } 
                   alt={`Candidate ${candidate.id}`}
                   className="w-56 h-56 rounded-full object-cover border-black border-4 custom-card"
                   style={{ 
@@ -179,18 +181,19 @@ const Votestab = () => {
 
       {/* Treasurer Position */}
       <div className="relative mb-28 w-full p-5">
-        <div className="absolute left-0 z-10 w-full flex justify-center ">
-          <div className="py-2 px-4 rounded-lg ">
+        <div className="absolute left-0 z-10 w-full flex justify-center">
+          <div className="py-2 px-4 rounded-lg">
             <h2 className="text-3xl text-center text-white">Treasurer Position</h2>
           </div>
         </div>
 
         <div className="relative w-full rounded-xl p-5 mt-8">
           <div className="flex items-center justify-around space-x-2">
-            {treasurerCandidates.map((candidate, index) => (
+            {filteredCandidates.treasurer.map((candidate, index) => (
               <div
                 key={candidate.id}
                 className="relative flex flex-col items-center space-y-4 p-10 rounded-lg"
+                onClick={() => handleCandidateSelection("treasurer", candidate.id)}
               >
                 {showInstruction && (
                   <div className="absolute top-4 text-white bg-black px-3 py-1 rounded-full">
@@ -203,7 +206,7 @@ const Votestab = () => {
                   {index + 1}
                 </span>
                 <img
-                  src={candidate.image}
+                  src={candidate.imageUrl } 
                   alt={`Candidate ${candidate.id}`}
                   className="w-56 h-56 rounded-full object-cover border-black border-4 custom-card"
                   style={{ 
