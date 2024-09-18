@@ -68,10 +68,9 @@ const ElectionDetails = ({ club }) => {
     navigate(finalLink);
   };
 
-  const openElectionForm = () => {
-    navigate("/president/club/election/add", { state: { club } });
-  }
-  
+  const openElectionForm = (electionId) => {
+    navigate(`/member/club/election/apply/${electionId}`, { state: { club } });
+  };
 
   const events = [
     {
@@ -233,7 +232,7 @@ const ElectionDetails = ({ club }) => {
                   {isOcOrMember ? (
                     <div className="flex gap-2 mb-4">
                       <Button
-                        onClick={() => navigateToForm("/apply")}
+                        onClick={() => openElectionForm(election.election_id)}
                         className="bg-[#AEC90A] text-gray-700 rounded-full"
                       >
                         Apply
