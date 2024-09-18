@@ -261,7 +261,7 @@ const ElectionDetails = ({ club }) => {
                       )}
                       {/* <Link to={targetPath}> */}
                         <Button onClick={() => handleViewDetails(election.election_id)} variant="gradient" className="bg-[#AEC90A] rounded-full text-black p-2 inline-block">
-                          View Details
+                          Explore
                         </Button>
                       {/* </Link> */}
                     </>

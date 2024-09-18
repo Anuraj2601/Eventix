@@ -1,207 +1,198 @@
 import React, { useEffect, useState } from "react";
 import { getAllCandidates, updateCandidateSelection } from "../service/candidateService";
 import { Card, CardBody, Typography, Avatar, Button } from "@material-tailwind/react";
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, Tooltip, Legend, ArcElement } from 'chart.js';
 
-const Candidates = () => {
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+const Candidates = ({ activeTab }) => {
     const [candidates, setCandidates] = useState([]);
-    const [message, setMessage] = useState(""); // State for success or error message
+    const [message, setMessage] = useState(""); 
 
     useEffect(() => {
         const fetchCandidates = async () => {
             try {
                 const data = await getAllCandidates();
-                console.log("Fetched candidates:", data); // Log the fetched data
+                console.log("Fetched candidates:", data);
+                if (Array.isArray(data)) {
+                    data.forEach(candidate => {
+                        console.log(`Candidate ID: ${candidate.id}`);
+                        console.log(`Name: ${candidate.name}`);
+                        console.log(`Performance: ${candidate.performance}`);
+                        console.log(`Event OCs:`, candidate.oc);
+                    });
+                } else {
+                    console.error("Fetched data is not an array:", data);
+                }
                 setCandidates(data);
             } catch (error) {
                 console.error("Error fetching candidates:", error);
             }
         };
-
         fetchCandidates();
     }, []);
 
-    // Filter candidates based on position
-    const presidents = candidates.filter(candidate => candidate.position.toLowerCase() === "president");
-    const secretaries = candidates.filter(candidate => candidate.position.toLowerCase() === "secretary");
-    const treasurers = candidates.filter(candidate => candidate.position.toLowerCase() === "treasurer");
+    const filterCandidates = (candidates) => {
+        switch (activeTab) {
+            case "Applicants":
+                return candidates.filter(candidate => candidate.selected === "applied");
+            case "Selected":
+                return candidates.filter(candidate => candidate.selected === "selected");
+            case "Rejected":
+                return candidates.filter(candidate => candidate.selected === "rejected");
+            default:
+                return candidates;
+        }
+    };
 
     const handleSelect = async (id) => {
-      console.log(`Attempting to update candidate with ID: ${id} to status: selected`);
-  
+        try {
+            const status = "selected";
+            await updateCandidateSelection(id, status);
+            setCandidates(candidates.map(candidate =>
+                candidate.id === id ? { ...candidate, selected: status } : candidate
+            ));
+            setMessage(`Candidate updated to ${status}.`);
+            setTimeout(() => setMessage(""), 3000);
+        } catch (error) {
+            setMessage("Error updating candidate.");
+        }
+    };
+
+    const handleReject = async (id) => {
+        try {
+            const status = "rejected";
+            await updateCandidateSelection(id, status);
+            setCandidates(candidates.map(candidate =>
+                candidate.id === id ? { ...candidate, selected: status } : candidate
+            ));
+            setMessage(`Candidate updated to ${status}.`);
+            setTimeout(() => setMessage(""), 3000);
+        } catch (error) {
+            setMessage("Error updating candidate.");
+        }
+    };
+
+    const renderOCList = (ocList) => {
+      // Check if the ocList is a JSON string and parse it if necessary
+      let parsedOCList = [];
       try {
-          const status = "selected";
-          const response = await updateCandidateSelection(id, status);
-          console.log("Update response:", response);
-  
-          setCandidates(candidates.map(candidate =>
-              candidate.id === id ? { ...candidate, selected: status } : candidate
-          ));
-  
-          setMessage(`Candidate updated successfully to ${status}.`);
-  
-          setTimeout(() => {
-              setMessage("");
-          }, 3000);
+          parsedOCList = typeof ocList === 'string' ? JSON.parse(ocList) : ocList;
       } catch (error) {
-          console.error("Error updating candidate selection:", error.message);
-          setMessage("Error updating candidate. Please try again.");
+          console.error("Error parsing OC data:", error);
+          return <Typography>Invalid OC data format</Typography>;
       }
+  
+      if (!Array.isArray(parsedOCList) || parsedOCList.length === 0) {
+          return <Typography>No OC data available</Typography>;
+      }
+      return (
+          <div className="ml-auto text-right">
+              <ul className="list-disc list-inside text-left">
+                  {parsedOCList.map((event, index) => (
+                      <li key={index} className="text-white">
+                          {event}
+                      </li>
+                  ))}
+              </ul>
+          </div>
+      );
   };
   
-  const handleReject = async (id) => {
-      console.log(`Attempting to update candidate with ID: ${id} to status: rejected`);
-  
-      try {
-          const status = "rejected";
-          const response = await updateCandidateSelection(id, status);
-          console.log("Update response:", response);
-  
-          setCandidates(candidates.map(candidate =>
-              candidate.id === id ? { ...candidate, selected: status } : candidate
-          ));
-  
-          setMessage(`Candidate updated successfully to ${status}.`);
-  
-          setTimeout(() => {
-              setMessage("");
-          }, 3000);
-      } catch (error) {
-          console.error("Error updating candidate selection:", error.message);
-          setMessage("Error updating candidate. Please try again.");
+    const renderPieChart = (performance) => {
+      if (typeof performance !== 'number') {
+          return <Typography>Invalid performance data</Typography>;
       }
+      
+      const data = {
+          labels: ['Performance'],
+          datasets: [{
+              data: [performance, 100 - performance],
+              backgroundColor: ['#AEC90A', 'black'],
+              borderWidth: 1,
+          }],
+      };
+  
+      return (
+          <div className="w-36 h-36"> {/* Adjust width and height here */} 
+              <Pie data={data} />
+          </div>
+      );
   };
-  
-  
+
+    const categories = ["President", "Secretary", "Treasurer"];
+    
     return (
-        <div className="text-white">
-            {/* Display message */}
-            {message && (
-                <div className="bg-black text-yellow-500 p-4 mb-4">
-                    <Typography>{message}</Typography>
-                </div>
-            )}
+      <div className="text-white">
+          {message && (
+              <div className="bg-black text-yellow-500 p-4 mb-4">
+                  <Typography>{message}</Typography>
+              </div>
+          )}
+          {categories.map(category => {
+              const categoryCandidates = candidates.filter(candidate => candidate.position.toLowerCase() === category.toLowerCase());
+              const filteredCandidates = filterCandidates(categoryCandidates);
 
-            {/* President Category */}
-            <div className="mb-8">
-                <Typography variant="h5" className="mb-2">
-                    President
-                </Typography>
-                {presidents.length > 0 ? (
-                    presidents.map(candidate => (
-                        <Card key={candidate.id} className="mb-4 bg-black text-white">
-                            <CardBody>
-                                <div className="flex items-center gap-4">
-                                    <Avatar src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
-                                    <div>
-                                        <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
-                                        <Typography variant="body2">Position: {candidate.position}</Typography>
-                                        <Typography variant="body2">Contribution: {candidate.contribution}</Typography>
-                                        <Typography variant="body2">Selected: {candidate.selected}</Typography>
-                                        <div className="mt-2 flex gap-2">
-                                            <Button
-                                                color="green"
-                                                onClick={() => handleSelect(candidate.id)}
-                                            >
-                                                Select
-                                            </Button>
-                                            <Button
-                                                color="red"
-                                                onClick={() => handleReject(candidate.id)}
-                                                >
-                                                Reject
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </CardBody>
-                        </Card>
-                    ))
-                ) : (
-                    <Typography>No candidates for President.</Typography>
-                )}
-            </div>
-
-            {/* Secretary Category */}
-            <div className="mb-8">
-                <Typography variant="h5" className="mb-2">
-                    Secretary
-                </Typography>
-                {secretaries.length > 0 ? (
-                    secretaries.map(candidate => (
-                        <Card key={candidate.id} className="mb-4 bg-black text-white">
-                            <CardBody>
-                                <div className="flex items-center gap-4">
-                                    <Avatar src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
-                                    <div>
-                                        <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
-                                        <Typography variant="body2">Position: {candidate.position}</Typography>
-                                        <Typography variant="body2">Contribution: {candidate.contribution}</Typography>
-                                        <Typography variant="body2">Selected: {candidate.selected}</Typography>
-                                        <div className="mt-2 flex gap-2">
-                                            <Button
-                                                color="green"
-                                                onClick={() => handleSelection(candidate.id, "selected")}
-                                            >
-                                                Select
-                                            </Button>
-                                            <Button
-                                                color="red"
-                                                onClick={() => handleSelection(candidate.id, "rejected")}
-                                            >
-                                                Reject
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </CardBody>
-                        </Card>
-                    ))
-                ) : (
-                    <Typography>No candidates for Secretary.</Typography>
-                )}
-            </div>
-
-            {/* Treasurer Category */}
-            <div className="mb-8">
-                <Typography variant="h5" className="mb-2">
-                    Treasurer
-                </Typography>
-                {treasurers.length > 0 ? (
-                    treasurers.map(candidate => (
-                        <Card key={candidate.id} className="mb-4 bg-black text-white">
-                            <CardBody>
-                                <div className="flex items-center gap-4">
-                                    <Avatar src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
-                                    <div>
-                                        <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
-                                        <Typography variant="body2">Position: {candidate.position}</Typography>
-                                        <Typography variant="body2">Contribution: {candidate.contribution}</Typography>
-                                        <Typography variant="body2">Selected: {candidate.selected}</Typography>
-                                        <div className="mt-2 flex gap-2">
-                                            <Button
-                                                color="green"
-                                                onClick={() => handleSelection(candidate.id, "selected")}
-                                            >
-                                                Select
-                                            </Button>
-                                            <Button
-                                                color="red"
-                                                onClick={() => handleSelection(candidate.id, "rejected")}
-                                            >
-                                                Reject
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </CardBody>
-                        </Card>
-                    ))
-                ) : (
-                    <Typography>No candidates for Treasurer.</Typography>
-                )}
-            </div>
-        </div>
-    );
+              // Sort candidates by performance in descending order
+              const sortedCandidates = [...filteredCandidates].sort((a, b) => b.performance - a.performance);
+              
+              return (
+                  <div key={category} className="mb-8">
+                      <Typography variant="h5" className="mb-2">
+                          {category}
+                      </Typography>
+                      {sortedCandidates.length > 0 ? (
+                          sortedCandidates.map(candidate => (
+                              <Card key={candidate.id} className="mb-4 bg-black text-white">
+                                  <CardBody>
+                                      <div className="flex items-start gap-4">
+                                          {/* Image on the Left */}
+                                          <div className="flex-shrink-0 w-1/6">
+                                              <Avatar className="w-40 h-40" src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
+                                          </div>
+                                          {/* Details in the Middle */}
+                                          <div className="flex-grow flex flex-col gap-4 w-1/3">
+                                              <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
+                                              <Typography variant="body2">Position applied for: {candidate.position}</Typography>
+                                              <Typography variant="body2">How can they make a change? {candidate.contribution}</Typography>
+                                              <Typography variant="body2">Status: {candidate.selected}</Typography>
+                                          </div>
+                                          {/* Event OCs List */}
+                                          <div className="flex-shrink-0 w-1/4">
+                                              <Typography variant="body2" className="mb-2">Event OCs:</Typography>
+                                              {renderOCList(candidate.oc)}
+                                          </div>
+                                          {/* Pie Chart on the Right */}
+                                          <div className="flex-shrink-0 w-1/6 flex flex-col items-center">
+                                              {renderPieChart(candidate.performance)}
+                                              <Typography variant="body2" className="mt-2">
+                                                  {candidate.performance}%
+                                              </Typography>
+                                          </div>
+                                      </div>
+                                      {/* Buttons at the Bottom Right Corner */}
+                                      <div className="mt-4 flex justify-end gap-2">
+                                          <Button className="flex items-center p-2 text-[#AEC90A] border-2 border-[#AEC90A] text-lg rounded-full hover:text-white hover:border-white"
+                                                  onClick={() => handleSelect(candidate.id)}>
+                                              Select
+                                          </Button>
+                                          <Button className="flex items-center p-2 text-red-500 border-2 border-red-500 text-lg rounded-full hover:text-white hover:border-white"
+                                                  onClick={() => handleReject(candidate.id)}>
+                                              Reject
+                                          </Button>
+                                      </div>
+                                  </CardBody>
+                              </Card>
+                          ))
+                      ) : (
+                          <Typography>No candidates for {category}.</Typography>
+                      )}
+                  </div>
+              );
+          })}
+      </div>
+  );
 };
 
 export default Candidates;
