@@ -168,7 +168,7 @@ const ApplyForm = () => {
 
                     {/* Success Dialog Box */}
                     {successMessage && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-white p-4 rounded-lg shadow-lg">
+                        <div className="fixed inset-0 flex items-center justify-center bg-black p-4 rounded-lg shadow-lg">
                             <div className="text-center">
                                 <Typography variant="h6" className="text-yellow-500">{successMessage}</Typography>
                                 <button

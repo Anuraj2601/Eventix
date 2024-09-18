@@ -1,205 +1,207 @@
-import React from "react";
-import {
-  Card,
-  CardBody,
-  Typography,
-  Avatar,
-} from "@material-tailwind/react";
-import Chart from "react-apexcharts";
-import SelectRemove from "./SelectRemove";
+import React, { useEffect, useState } from "react";
+import { getAllCandidates, updateCandidateSelection } from "../service/candidateService";
+import { Card, CardBody, Typography, Avatar, Button } from "@material-tailwind/react";
 
-// Predefined teams
-const teams = ["Content", "Design", "Marketing", "Finance"];
+const Candidates = () => {
+    const [candidates, setCandidates] = useState([]);
+    const [message, setMessage] = useState(""); // State for success or error message
 
-// Predefined events
-const predefinedEvents = [
-  "Reid Extreme 3.0",
-  "MadHack 2.0",
-  "FreshHack 1.0"
-];
+    useEffect(() => {
+        const fetchCandidates = async () => {
+            try {
+                const data = await getAllCandidates();
+                console.log("Fetched candidates:", data); // Log the fetched data
+                setCandidates(data);
+            } catch (error) {
+                console.error("Error fetching candidates:", error);
+            }
+        };
 
-const getRandomEvents = () => {
-  const shuffledEvents = predefinedEvents.sort(() => 0.5 - Math.random());
-  return shuffledEvents.slice(0, Math.floor(Math.random() * shuffledEvents.length) + 1);
-};
+        fetchCandidates();
+    }, []);
 
-const generateRandomMember = (status, position) => {
-  return {
-    id: Math.random().toString(36).substr(2, 9),
-    name: status === "Selected" ? generateRandomName("male") : generateRandomName("female"),
-    team: teams[Math.floor(Math.random() * teams.length)],
-    image: `https://randomuser.me/api/portraits/${status === "Selected" ? "men" : "women"}/${Math.floor(Math.random() * 99)}.jpg`,
-    events: getRandomEvents(),
-    ocPercentage: Math.floor(Math.random() * (90 - 60 + 1)) + 60,
-    attendancePercentage: Math.floor(Math.random() * (80 - 50 + 1)) + 50,
-    status: status,
-    position: position,
-  };
-};
+    // Filter candidates based on position
+    const presidents = candidates.filter(candidate => candidate.position.toLowerCase() === "president");
+    const secretaries = candidates.filter(candidate => candidate.position.toLowerCase() === "secretary");
+    const treasurers = candidates.filter(candidate => candidate.position.toLowerCase() === "treasurer");
 
-const generateRandomName = (gender) => {
-  const names = gender === "male" ?
-    ["John", "Michael", "James", "David", "William", "Joseph", "Daniel", "George", "Anthony", "Charles"] :
-    ["Mary", "Jennifer", "Linda", "Susan", "Karen", "Lisa", "Nancy", "Betty", "Helen", "Sandra"];
-  return names[Math.floor(Math.random() * names.length)];
-};
-
-const Candidates = ({ activeTab }) => {
-  const chartConfig = {
-    type: "pie",
-    width: 80,
-    height: 80,
-    series: [20, 80],
-    options: {
-      chart: {
-        toolbar: {
-          show: false,
-        },
-      },
-      title: {
-        show: "",
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      colors: ["#1E1E1E", "#AEC90A"],
-      legend: {
-        show: false,
-      },
-    },
-  };
-
-  // Generate random members for each tab and position
-  const generateMembersForPosition = (status, position) => 
-    Array.from({ length: 3 }, () => generateRandomMember(status, position));
-
-  const selectedMembers = {
-    President: generateMembersForPosition("Selected", "President"),
-    Secretary: generateMembersForPosition("Selected", "Secretary"),
-    Treasurer: generateMembersForPosition("Selected", "Treasurer"),
+    const handleSelect = async (id) => {
+      console.log(`Attempting to update candidate with ID: ${id} to status: selected`);
+  
+      try {
+          const status = "selected";
+          const response = await updateCandidateSelection(id, status);
+          console.log("Update response:", response);
+  
+          setCandidates(candidates.map(candidate =>
+              candidate.id === id ? { ...candidate, selected: status } : candidate
+          ));
+  
+          setMessage(`Candidate updated successfully to ${status}.`);
+  
+          setTimeout(() => {
+              setMessage("");
+          }, 3000);
+      } catch (error) {
+          console.error("Error updating candidate selection:", error.message);
+          setMessage("Error updating candidate. Please try again.");
+      }
   };
   
-  const rejectedMembers = {
-    President: generateMembersForPosition("Rejected", "President"),
-    Secretary: generateMembersForPosition("Rejected", "Secretary"),
-    Treasurer: generateMembersForPosition("Rejected", "Treasurer"),
+  const handleReject = async (id) => {
+      console.log(`Attempting to update candidate with ID: ${id} to status: rejected`);
+  
+      try {
+          const status = "rejected";
+          const response = await updateCandidateSelection(id, status);
+          console.log("Update response:", response);
+  
+          setCandidates(candidates.map(candidate =>
+              candidate.id === id ? { ...candidate, selected: status } : candidate
+          ));
+  
+          setMessage(`Candidate updated successfully to ${status}.`);
+  
+          setTimeout(() => {
+              setMessage("");
+          }, 3000);
+      } catch (error) {
+          console.error("Error updating candidate selection:", error.message);
+          setMessage("Error updating candidate. Please try again.");
+      }
   };
   
-  const applicantsMembers = {
-    President: generateMembersForPosition("Applicants", "President"),
-    Secretary: generateMembersForPosition("Applicants", "Secretary"),
-    Treasurer: generateMembersForPosition("Applicants", "Treasurer"),
-  };
+  
+    return (
+        <div className="text-white">
+            {/* Display message */}
+            {message && (
+                <div className="bg-black text-yellow-500 p-4 mb-4">
+                    <Typography>{message}</Typography>
+                </div>
+            )}
 
-  // Determine which members to display based on activeTab
-  let displayMembers = {};
-  if (activeTab === "Selected") {
-    displayMembers = selectedMembers;
-  } else if (activeTab === "Rejected") {
-    displayMembers = rejectedMembers;
-  } else {
-    displayMembers = applicantsMembers;
-  }
+            {/* President Category */}
+            <div className="mb-8">
+                <Typography variant="h5" className="mb-2">
+                    President
+                </Typography>
+                {presidents.length > 0 ? (
+                    presidents.map(candidate => (
+                        <Card key={candidate.id} className="mb-4 bg-black text-white">
+                            <CardBody>
+                                <div className="flex items-center gap-4">
+                                    <Avatar src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
+                                    <div>
+                                        <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
+                                        <Typography variant="body2">Position: {candidate.position}</Typography>
+                                        <Typography variant="body2">Contribution: {candidate.contribution}</Typography>
+                                        <Typography variant="body2">Selected: {candidate.selected}</Typography>
+                                        <div className="mt-2 flex gap-2">
+                                            <Button
+                                                color="green"
+                                                onClick={() => handleSelect(candidate.id)}
+                                            >
+                                                Select
+                                            </Button>
+                                            <Button
+                                                color="red"
+                                                onClick={() => handleReject(candidate.id)}
+                                                >
+                                                Reject
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardBody>
+                        </Card>
+                    ))
+                ) : (
+                    <Typography>No candidates for President.</Typography>
+                )}
+            </div>
 
-  const renderMembers = (members, position) => (
-    <>
-      <Typography color="white" variant="h4" className="mb-4 ">
-        {position} Position
-      </Typography>
-      {members.map((member) => (
-        <div
-          key={member.id}
-          className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-2xl " style={{ 
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-          }}
-        >
-          <div className="flex items-center gap-4">
-            <Avatar
-              size="xl"
-              src={member.image}
-              alt={member.name}
-              className="border-4 border-black rounded-full w-24 h-24 custom-card"
-            />
-            <div>
-              <Typography color="white" variant="h5" className="mb-1">
-                {member.name}
-              </Typography>
-              <Typography color="white" variant="subtitle1" className="mb-1">
-                From Team: {member.team}
-              </Typography>
+            {/* Secretary Category */}
+            <div className="mb-8">
+                <Typography variant="h5" className="mb-2">
+                    Secretary
+                </Typography>
+                {secretaries.length > 0 ? (
+                    secretaries.map(candidate => (
+                        <Card key={candidate.id} className="mb-4 bg-black text-white">
+                            <CardBody>
+                                <div className="flex items-center gap-4">
+                                    <Avatar src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
+                                    <div>
+                                        <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
+                                        <Typography variant="body2">Position: {candidate.position}</Typography>
+                                        <Typography variant="body2">Contribution: {candidate.contribution}</Typography>
+                                        <Typography variant="body2">Selected: {candidate.selected}</Typography>
+                                        <div className="mt-2 flex gap-2">
+                                            <Button
+                                                color="green"
+                                                onClick={() => handleSelection(candidate.id, "selected")}
+                                            >
+                                                Select
+                                            </Button>
+                                            <Button
+                                                color="red"
+                                                onClick={() => handleSelection(candidate.id, "rejected")}
+                                            >
+                                                Reject
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardBody>
+                        </Card>
+                    ))
+                ) : (
+                    <Typography>No candidates for Secretary.</Typography>
+                )}
             </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <Typography color="white" variant="subtitle1" className="mb-1">
-              Joined Event OCs:
-            </Typography>
-            <ul className="list-disc list-inside">
-              {member.events.map((event, idx) => (
-                <li key={idx} className="text-[#AEC90A]">
-                  {event}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            <div className="flex items-center gap-2">
-              <Typography color="white" variant="subtitle1" className="mb-1">
-                OC Participation
-              </Typography>
-              <Chart {...chartConfig} />
-              <Typography color="white" variant="subtitle1">
-                {member.ocPercentage}%
-              </Typography>
+
+            {/* Treasurer Category */}
+            <div className="mb-8">
+                <Typography variant="h5" className="mb-2">
+                    Treasurer
+                </Typography>
+                {treasurers.length > 0 ? (
+                    treasurers.map(candidate => (
+                        <Card key={candidate.id} className="mb-4 bg-black text-white">
+                            <CardBody>
+                                <div className="flex items-center gap-4">
+                                    <Avatar src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
+                                    <div>
+                                        <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
+                                        <Typography variant="body2">Position: {candidate.position}</Typography>
+                                        <Typography variant="body2">Contribution: {candidate.contribution}</Typography>
+                                        <Typography variant="body2">Selected: {candidate.selected}</Typography>
+                                        <div className="mt-2 flex gap-2">
+                                            <Button
+                                                color="green"
+                                                onClick={() => handleSelection(candidate.id, "selected")}
+                                            >
+                                                Select
+                                            </Button>
+                                            <Button
+                                                color="red"
+                                                onClick={() => handleSelection(candidate.id, "rejected")}
+                                            >
+                                                Reject
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardBody>
+                        </Card>
+                    ))
+                ) : (
+                    <Typography>No candidates for Treasurer.</Typography>
+                )}
             </div>
-            <div className="flex items-center gap-2">
-              <Typography color="white" variant="subtitle1" className="mb-1">
-                Attendance
-              </Typography>
-              <Chart {...chartConfig} />
-              <Typography color="white" variant="subtitle1">
-                {member.attendancePercentage}%
-              </Typography>
-            </div>
-          </div>
-          <div>
-            {member.status === "Applicants" && (
-              <SelectRemove onEdit={() => {}} onDelete={() => {}} />
-            )}
-            {member.status === "Selected" && (
-              <button className="px-4 py-2 border-[#AEC90A] border-2 text-[#AEC90A] rounded-full custom-card">
-                Selected
-              </button>
-            )}
-            {member.status === "Rejected" && (
-              <button className="px-4 py-2 border-red-700 border-2 text-red-700 rounded-full custom-card">
-                Rejected
-              </button>
-            )}
-          </div>
         </div>
-      ))}
-    </>
-  );
-
-  return (
-    <div className="w-full bg-neutral-900">
-     <Card className="w-full bg-neutral-900">
-  <CardBody>
-    {activeTab === "Selected" && (
-      <div className="flex justify-end mb-4">
-        <button className="px-4 py-2 bg-[#AEC90A] text-black font-bold rounded-full shadow-md hover:bg-[#8f9b1d] transition-colors">
-          Announce Final Candidates
-        </button>
-      </div>
-    )}
-    {Object.keys(displayMembers).map((position) =>
-      renderMembers(displayMembers[position], position)
-    )}
-  </CardBody>
-</Card>
-
-    </div>
-  );
+    );
 };
 
 export default Candidates;
