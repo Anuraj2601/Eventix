@@ -127,9 +127,9 @@ const ApplyForm = () => {
                                 value={formFields.userEmail}
                                 onChange={handleInputChange}
                                 className="w-full h-16 bg-black text-white p-2 rounded-2xl"
-                                readOnly
+                                
                                 style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                            />
+                                readOnly />
                         </div>
 
                         {/* Contribution Text Area */}
@@ -168,18 +168,21 @@ const ApplyForm = () => {
 
                     {/* Success Dialog Box */}
                     {successMessage && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-black p-4 rounded-lg shadow-lg">
-                            <div className="text-center">
-                                <Typography variant="h6" className="text-yellow-500">{successMessage}</Typography>
-                                <button
-                                    onClick={() => setSuccessMessage('')}
-                                    className="mt-4 p-2 bg-yellow-500 text-white rounded-lg"
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    )}
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
+    <div className="bg-white p-6 rounded-lg max-w-md w-full text-center">
+      <Typography variant="h6" className="text-2xl font-bold mb-4 text-[#AEC90A]">
+        {successMessage}
+      </Typography>
+      <button
+        onClick={() => setSuccessMessage('')}
+        className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
                 </div>
             </div>
         </div>

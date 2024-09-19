@@ -372,15 +372,15 @@ const handleCancel = () => {
         <div className="flex flex-col flex-1 overflow-auto">
           <Navbar className="sticky top-0 z-10 p-4" />
           <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-auto p-4 md:p-10">
-            <div className="flex flex-col items-center justify-center relative mt-10 w-full">
-              <div className="bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4">
-                {pageTitle()}
-              </div>
-              <div className="bg-[#0B0B0B] flex flex-col items-center justify-center border-2 border-[#AEC90A] rounded-xl w-full md:w-3/5 py-9">
+          <div className=" bg-opacity-90 text-white flex-col md:p-20 overflow-y-auto">
+                                 <Typography variant="h3" className="mb-4 text-center"> {pageTitle()}</Typography>
+
+                                 <div className="grid grid-cols-1 gap-4">
                 <form onSubmit={handleSubmit} className="w-full px-4 md:px-2">
                   {/* Personal Information */}
                   <div className="flex flex-col gap-3">
-                    <label htmlFor="name" className="text-white">
+                    <label htmlFor="name"                               className="block "
+>
                       Name
                     </label>
                     <input
@@ -389,8 +389,9 @@ const handleCancel = () => {
                       onChange={(e) => setName(e.target.value)}
                       type="text"
                       placeholder="Kamal Perera"
-                      className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-                      readOnly
+                      className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                      style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                      readOnly
                     />
                     {isSubmitted && errors.name && <div className="text-red-500">{errors.name}</div>}
                   </div>
@@ -406,8 +407,10 @@ const handleCancel = () => {
                       onChange={(e) => setPosition(e.target.value)}
                       type="text"
                       placeholder="Secretary"
-                      className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-                      readOnly
+                      className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                      style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                      readOnly
+                                          
                     />
                     {isSubmitted && errors.position && <div className="text-red-500">{errors.position}</div>}
                   </div>
@@ -422,8 +425,9 @@ const handleCancel = () => {
                       value={description}
                       placeholder="Description"
                       onChange={(e) => setDescription(e.target.value)}
-                      className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-                    ></textarea>
+ className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                      style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                    ></textarea>
                     {isSubmitted && errors.description && <div className="text-red-500">{errors.description}</div>}
                   </div>
 
@@ -437,8 +441,9 @@ const handleCancel = () => {
                       type="file"
                       accept="image/*"
                       onChange={handleImageChange}
-                      className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-                    />
+ className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                      style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                    />
                     {/* {postImage && (
                       <img
                         src={postImage}
