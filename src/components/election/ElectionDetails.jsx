@@ -253,11 +253,14 @@ const ElectionDetails = ({ club }) => {
                         View Final Candidates
                       </Button>
                       <Button
-                        onClick={() => openvotingform(election.election_id)}
-                        className="bg-gray-500 text-gray-700 rounded-full opacity-50"
-                      >
-                        Vote
-                      </Button>
+  onClick={() => openvotingform(election.election_id)} // Pass the election_id
+  className={`rounded-full ${election.is_voting_closed ? "bg-gray-500 text-gray-700 opacity-50" : "bg-[#AEC90A] text-black"}`} 
+  disabled={election.is_voting_closed === 1} // Disables button if voting is closed
+>
+  Vote
+</Button>
+
+
                     </div>
                   ) : (
                     <>

@@ -149,14 +149,14 @@ const Finalists = () => {
           </div>
 
             {/* Candidates Display */}
-            <div className="w-3/4 p-6 bg-neutral-900">
-              <div className="relative mb-12 w-full p-5">
-                <div className="absolute left-0 z-10 w-full flex justify-center mb-16">
-                  <div className="py-2 px-4 rounded-lg ">
-                    <h2 className="text-3xl text-center ">{`${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Position`}</h2>
+            <div className="w-3/4 bg-neutral-900">
+              <div className="relative mb-12 w-full ">
+                <div className="absolute  z-10 w-full flex justify-center mb-16">
+                  <div className="py-2 px-4 rounded-lg  -mt-20">
+                    <h2 className="text-3xl text-center">{`${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Position`}</h2>
                   </div>
                 </div>
-                <div className="relative w-full rounded-xl p-5 mt-8 ">
+                <div className="relative w-full rounded-xl mt-40 ">
                   {renderCandidates(candidates[activeTab])}
                 </div>
               </div>

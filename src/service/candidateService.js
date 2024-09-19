@@ -45,3 +45,14 @@ export const incrementVotes = async (candidateIds) => {
         throw new Error(error.response?.data?.message || 'Error incrementing votes');
     }
 };
+
+
+const releaseElection = async (electionId) => {
+    try {
+        const response = await axios.patch(`${API_URL}/releaseElection/${electionId}`);
+        return response.data; // Adjust as necessary based on your API response structure
+    } catch (error) {
+        console.error('Error releasing election:', error);
+        throw error; // Re-throw or handle the error as needed
+    }
+};
