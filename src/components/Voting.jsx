@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import Modal from "react-modal";
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
-import { getAllCandidates } from "../service/candidateService";
+import { getAllCandidates,incrementVotes } from "../service/candidateService";
 
 // Ensure you set the modal app element (usually the root element of your app)
 Modal.setAppElement('#root');
@@ -13,6 +13,8 @@ const Voting = () => {
   const currentPath = location.pathname;
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); // New state for error modal
+  const [isThankYouModalOpen, setIsThankYouModalOpen] = useState(false);
+
   const electionIdFromUrl = currentPath.split('/').pop(); // Extract the last part of the URL (electionId)
 
   const [candidates, setCandidates] = useState({
@@ -59,17 +61,38 @@ const Voting = () => {
     }));
   };
 
-  const handleCompleteVoting = () => {
+  const handleCompleteVoting = async () => {
     if (
       selectedCandidates.president &&
       selectedCandidates.secretary &&
       selectedCandidates.treasurer
     ) {
-      console.log("Voting completed");
+      try {
+        const candidateIds = [
+          selectedCandidates.president,
+          selectedCandidates.secretary,
+          selectedCandidates.treasurer
+        ];
+  
+        // Call the service to increment votes
+        await incrementVotes(candidateIds);
+        console.log("Voting completed and votes incremented");
+  
+        // Show success modal with the same design
+        setIsThankYouModalOpen(true); // Reuse the modal state to show the success message
+        setTimeout(() => {
+          setIsModalOpen(false); // Close the modal after 3 seconds
+          window.history.back(); // Navigate back to the previous page
+        }, 3000);
+      } catch (error) {
+        console.error("Error completing voting:", error);
+        // Optionally, show an error modal or message
+      }
     } else {
-      setIsErrorModalOpen(true); // Show the error modal
+      setIsErrorModalOpen(true); // Show the error modal if not all candidates are selected
     }
   };
+  
 
   const showInstruction = currentPath === "/oc" || currentPath === "/member";
 
@@ -117,6 +140,24 @@ const Voting = () => {
                 </button>
               </div>
             </Modal>
+
+            <Modal
+  isOpen={isThankYouModalOpen}
+  onRequestClose={() => setIsThankYouModalOpen(false)}
+  className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70"
+>
+  <div className="bg-white p-6 rounded-lg max-w-md w-full text-center">
+    <h2 className="text-2xl font-bold mb-4">Thank you for voting!</h2>
+    <p className="mb-4">We have successfully saved your votes!</p>
+    <button
+      onClick={() => setIsThankYouModalOpen(false)}
+      className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+    >
+      OK
+    </button>
+  </div>
+</Modal>
+
             {/* President Position */}
             <div className="relative mb-12 w-full p-5">
               <div className="absolute left-0 z-10 w-full flex justify-center">
@@ -150,7 +191,9 @@ const Voting = () => {
                         }}
                       />
                       <div className="text-center mt-2">
+  <div className="text-white text-2xl font-bold">{candidate.id}</div>
   <div className="text-white text-2xl font-bold">{candidate.name}</div>
+
   <div className="text-gray-300 text-lg font-light">{candidate.contribution}</div>
 </div>
 
@@ -193,6 +236,8 @@ const Voting = () => {
                       />
                      <div className="text-center mt-2">
   <div className="text-white text-2xl font-bold">{candidate.name}</div>
+  <div className="text-white text-2xl font-bold">{candidate.id}</div>
+
   <div className="text-gray-300 text-lg font-light">{candidate.contribution}</div>
 </div>
 
@@ -233,7 +278,8 @@ const Voting = () => {
                         }}
                       />
                      <div className="text-center mt-2">
-  <div className="text-white text-2xl font-bold">{candidate.name}</div>
+  <div className="text-white text-2xl font-bold">{candidate.name}</div>  <div className="text-white text-2xl font-bold">{candidate.id}</div>
+
   <div className="text-gray-300 text-lg font-light">{candidate.contribution}</div>
 </div>
 

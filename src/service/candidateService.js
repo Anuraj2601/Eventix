@@ -33,3 +33,15 @@ export const updateCandidateSelection = async (id, selected) => {
         throw new Error(error.response?.data?.message || 'Error updating candidate selection');
     }
 };
+
+
+// candidateService.js
+
+export const incrementVotes = async (candidateIds) => {
+    try {
+        const response = await axios.patch(`${API_BASE_URL}/candidates/vote`, candidateIds);
+        return response.data; // This may be empty since the controller returns Void
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Error incrementing votes');
+    }
+};
