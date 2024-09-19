@@ -34,17 +34,26 @@ const Candidates = ({ activeTab }) => {
     }, []);
 
     const filterCandidates = (candidates) => {
-        switch (activeTab) {
-            case "Applicants":
-                return candidates.filter(candidate => candidate.selected === "applied");
-            case "Selected":
-                return candidates.filter(candidate => candidate.selected === "selected");
-            case "Rejected":
-                return candidates.filter(candidate => candidate.selected === "rejected");
-            default:
-                return candidates;
-        }
+        const electionIdFromUrl = window.location.pathname.split('/').pop(); // Extract the last part of the URL (electionId)
+    
+        return candidates.filter(candidate => {
+            // Check if the candidate's electionId matches the one from the URL
+            const isSameElection = String(candidate.electionId) === String(electionIdFromUrl);
+    
+            // Apply the activeTab filtering and ensure the candidate is part of the current election
+            switch (activeTab) {
+                case "Applicants":
+                    return candidate.selected === "applied" && isSameElection;
+                case "Selected":
+                    return candidate.selected === "selected" && isSameElection;
+                case "Rejected":
+                    return candidate.selected === "rejected" && isSameElection;
+                default:
+                    return isSameElection; // If no tab is selected, return all candidates for the election
+            }
+        });
     };
+    
 
     const handleSelect = async (id) => {
         try {
