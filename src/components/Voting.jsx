@@ -13,6 +13,7 @@ const Voting = () => {
   const currentPath = location.pathname;
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); // New state for error modal
+  const electionIdFromUrl = currentPath.split('/').pop(); // Extract the last part of the URL (electionId)
 
   const [candidates, setCandidates] = useState({
     president: [],
@@ -34,9 +35,9 @@ const Voting = () => {
 
         if (Array.isArray(data)) {
           const categorizedCandidates = {
-            president: data.filter(candidate => candidate.position === "President"),
-            secretary: data.filter(candidate => candidate.position === "Secretary"),
-            treasurer: data.filter(candidate => candidate.position === "Treasurer")
+            president: data.filter(candidate => candidate.position === "President" && String(candidate.electionId) === String(electionIdFromUrl)),
+            secretary: data.filter(candidate => candidate.position === "Secretary" && String(candidate.electionId) === String(electionIdFromUrl)),
+            treasurer: data.filter(candidate => candidate.position === "Treasurer" && String(candidate.electionId) === String(electionIdFromUrl))
           };
 
           setCandidates(categorizedCandidates);
@@ -244,7 +245,7 @@ const Voting = () => {
             
             <button
               onClick={handleCompleteVoting}
-              className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full mt-6"
+              className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full mt-6 mb-40"
             >
               Complete Voting
             </button>

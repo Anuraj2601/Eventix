@@ -5,6 +5,8 @@ import { getAllCandidates } from "../../service/candidateService"; // Import the
 const Votestab = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const electionIdFromUrl = currentPath.split('/').pop(); // Extract the last part of the URL (electionId)
+
   const [candidates, setCandidates] = useState({
     president: [],
     secretary: [],
@@ -26,9 +28,9 @@ const Votestab = () => {
         if (Array.isArray(data)) {
           // Categorize candidates by position
           const categorizedCandidates = {
-            president: data.filter(candidate => candidate.position === "President"),
-            secretary: data.filter(candidate => candidate.position === "Secretary"),
-            treasurer: data.filter(candidate => candidate.position === "Treasurer")
+            president: data.filter(candidate => candidate.position === "President" && String(candidate.electionId) === String(electionIdFromUrl)),
+            secretary: data.filter(candidate => candidate.position === "Secretary" && String(candidate.electionId) === String(electionIdFromUrl)),
+            treasurer: data.filter(candidate => candidate.position === "Treasurer" && String(candidate.electionId) === String(electionIdFromUrl))
           };
 
           setCandidates(categorizedCandidates);

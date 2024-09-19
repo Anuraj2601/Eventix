@@ -49,19 +49,19 @@ const ElectionDetails = ({ club }) => {
 
     if (currentPath.startsWith('/oc')) {
         if (link === "/final-candidates") {
-            finalLink = "/oc/club/finalists";
+            finalLink = "/oc/club/finalists/${election_id}";
         } else if (link === "/voting") {
-            finalLink = "/oc/club/voting";
+            finalLink = "/oc/club/voting/${election_id}";
         } else if (link === "/apply") {
-            finalLink = "/oc/election/apply";
+            finalLink = "/oc/election/apply/${election_id}";
         }
     } else if (currentPath.startsWith('/member')) {
         if (link === "/final-candidates") {
-            finalLink = "/member/club/finalists";
+            finalLink = "/member/club/finalists/${election_id}";
         } else if (link === "/voting") {
-            finalLink = "/member/club/voting";
+            finalLink = "/member/club/voting/${election_id}";
         } else if (link === "/apply") {
-            finalLink = "/member/election/apply";
+            finalLink = "/member/election/apply/${election_id}";
         }
     }
   
@@ -70,6 +70,14 @@ const ElectionDetails = ({ club }) => {
 
   const openElectionForm = (electionId) => {
     navigate(`/member/club/election/apply/${electionId}`, { state: { club } });
+  };
+
+  const openvotingform = (electionId) => {
+    navigate(`/member/club/election/voting/${electionId}`, { state: { club } });
+  };
+
+  const viewfinalists = (electionId) => {
+    navigate(`/member/club/election/finalists/${electionId}`, { state: { club } });
   };
 
   const events = [
@@ -239,13 +247,13 @@ const ElectionDetails = ({ club }) => {
                         Apply
                       </Button>
                       <Button
-                        onClick={() => navigateToForm("/final-candidates")}
+                        onClick={() => viewfinalists(election.election_id)}
                         className="bg-gray-500 text-gray-700 rounded-full opacity-50"
                       >
                         View Final Candidates
                       </Button>
                       <Button
-                        onClick={() => navigateToForm("/voting")}
+                        onClick={() => openvotingform(election.election_id)}
                         className="bg-gray-500 text-gray-700 rounded-full opacity-50"
                       >
                         Vote
