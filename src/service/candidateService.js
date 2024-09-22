@@ -47,12 +47,35 @@ export const incrementVotes = async (candidateIds) => {
 };
 
 
-const releaseElection = async (electionId) => {
+export const releaseElection = async (electionId, body, token) => {
     try {
-        const response = await axios.patch(`${API_URL}/releaseElection/${electionId}`);
-        return response.data; // Adjust as necessary based on your API response structure
+        const response = await axios.patch(
+            `${API_BASE_URL}/president/releaseElection/${electionId}`,
+            body,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Include the token here
+                },
+            }
+        );
+        return response.data;
     } catch (error) {
         console.error('Error releasing election:', error);
-        throw error; // Re-throw or handle the error as needed
+        throw error;
+    }
+};
+
+
+export const getElectionReleased = async (electionId, token) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/president/getElectionReleased/${electionId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Include the token in the headers
+            },
+        });
+        return response.data; // Return the response data
+    } catch (error) {
+        console.error("Error fetching election released status:", error);
+        throw error; // Rethrow the error for further handling
     }
 };

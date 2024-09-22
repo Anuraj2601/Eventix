@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { getAllCandidates } from "../../service/candidateService"; // Import the service function
+import { getAllCandidates, releaseElection, getElectionReleased } from "../../service/candidateService"; // Import the service function
+
 
 const Votestab = () => {
   const location = useLocation();
@@ -18,6 +19,9 @@ const Votestab = () => {
     secretary: [],
     treasurer: []
   });
+
+  const [releasedStatus, setReleasedStatus] = useState(0); // Add state for released status
+
 
   useEffect(() => {
     const fetchCandidates = async () => {
@@ -46,6 +50,23 @@ const Votestab = () => {
   }, []);
 
   useEffect(() => {
+    const fetchReleasedStatus = async () => {
+        console.log("Fetching released status...");
+        try {
+            const token = localStorage.getItem('token'); 
+            const releasedData = await getElectionReleased(electionIdFromUrl, token);
+            console.log("Passed Election ID:", electionIdFromUrl);
+            console.log("Fetched Released Status:", releasedData.content); // Access the content property
+            setReleasedStatus(releasedData.content ? 1 : 0); // Set to 1 if true, else 0
+        } catch (error) {
+            console.error("Error fetching released status:", error);
+        }
+    };
+    fetchReleasedStatus();
+}, [electionIdFromUrl]);
+
+
+  useEffect(() => {
     // Function to filter candidates based on the selected status
     const filterCandidatesByStatus = (candidates, status) =>
       candidates.filter(candidate => candidate.selected === status);
@@ -61,10 +82,17 @@ const Votestab = () => {
     });
   }, [candidates]);
 
-  const handleReleaseResults = () => {
-    // Add your logic to release results here
-    console.log("Results released to the club");
-  };
+  const handleReleaseResults = async () => {
+    try {
+        const body = { released: 1 }; // The body to send
+        const token = localStorage.getItem("token");
+        const response = await releaseElection(electionIdFromUrl, body, token);
+        console.log("Results released:", response);
+    } catch (error) {
+        console.error("Error releasing results:", error);
+    }
+};
+
 
   const handleCandidateSelection = (position, candidateId) => {
     setCandidates(prev => {
@@ -80,13 +108,15 @@ const Votestab = () => {
 
   return (
     <div className="w-full flex flex-col items-center py-2 px-20 overflow-y-auto">
-      <div className="w-full flex justify-end mt-8 pr-4">
+       <div className="w-full flex justify-end mt-8 pr-4">
         <button
           onClick={handleReleaseResults}
-          className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-3 px-6 rounded-full shadow-lg transition duration-300"
+          className={`text-black font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 ${releasedStatus === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#AEC90A] hover:bg-[#9AB307]'}`}
+          disabled={releasedStatus === 1} // Disable if releasedStatus is 1
         >
           Release Results to Club
         </button>
+        <span className="ml-4 text-white">{releasedStatus === 1 ? "Results Released" : "Results Not Released"}</span>
       </div>
 
       {/* President Position */}

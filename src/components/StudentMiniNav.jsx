@@ -10,12 +10,10 @@ import { useParams } from "react-router-dom";
 
 
 
-import Member from "./Member";
 import StudentMiniNavEvent from './StudentMiniNavEvent';
 import Board from "./Board";
-import Recruitment from './Recruitment';
 import ClubEvent from "./ClubEvent";
-import StudentMiniNavMember from './StudentMiniNavMember';
+import Member from "./Member"; // Change this line
 import ClubPosts from "./ClubPosts";
 
 
@@ -76,15 +74,12 @@ const StudentMiniNav = ({ club }) => {
         desc:  <StudentMiniNavEvent club={clubs}/> /* `Events` */,
         },
         {
-        label: "Members",
-        value: "Members",
-        desc: <StudentMiniNavMember/>,
-        },
-        {
-        label: "Recruitment",
-        value: "Recruitment",
-        desc: <Recruitment/>,
-        },
+          label: "Members",
+          value: "Members",
+          desc: <Member />, // Update this line
+      },
+      
+       
     ];
 
   return (

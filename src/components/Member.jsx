@@ -123,7 +123,7 @@ const Member = () => {
 
         const updates = {
             accepted: 0,
-            position: 'Rejected',
+            position: 'Removed',
             registrationId: updatedRegistration.registrationId,
             email: updatedRegistration.email,
             clubId: updatedRegistration.clubId,
