@@ -35,7 +35,7 @@ const UserProfileDisplay = ({ email }) => {
             <img
                 src={profile.photoUrl}
                 alt={`${profile.firstname}'s profile`}
-                className="w-16 h-16 rounded-full object-cover mr-4"
+                className="w-40 h-40 rounded-full object-cover mr-4"
             />
             <div>
                 <h2 className="text-lg font-semibold">{`${profile.firstname} ${profile.lastname}`}</h2>

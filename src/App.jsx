@@ -186,9 +186,9 @@ const App = () => {
         <Route path='/member/inquiry' element={<Inquiriesoc/>}></Route>
         <Route path='/member/messages' element={<Messagesoc/>}></Route>
         <Route path='/member/profile' element={<Profileoc/>}></Route>
-        <Route path='/member/club/finalists' element={<Finalistsoc/>}></Route>
-        <Route path='/member/club/voting' element={<Votingoc/>}></Route>
-        <Route path='/member/election/Apply' element={<Apply/>}></Route>
+        <Route path='/member/club/election/finalists/:electionId' element={<Finalistsoc/>}></Route>
+        <Route path='/member/club/election/voting/:electionId' element={<Votingoc/>}></Route>
+        <Route path='/member/club/election/apply/:electionId' element={<Apply/>}></Route>
         <Route path='/member/meeting' element={<MainMeetingmember />}></Route> 
 
 
