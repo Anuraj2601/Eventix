@@ -3,15 +3,20 @@ import axios from "axios";
 class ClubsService {
   static BASE_URL = "http://localhost:8080";
 
-  static async addClub(clubData, file, token) {
+  static async addClub(club_name, club_president_id, club_in_charge, club_description, club_image, token) {
     try {
       const formData = new FormData();
-      formData.append(
-        "data",
-        new Blob([JSON.stringify(clubData)], { type: "applicationn/json" })
-      );
-      if (file) {
-        formData.append("file", file);
+      formData.append('data', new Blob([JSON.stringify({
+        club_name,
+        club_president_id,
+        club_in_charge,
+        club_description,
+       
+        //id
+
+    })], {type: 'application/json'}));
+      if (club_image) {
+        formData.append("file", club_image);
       }
 
       const headers = {
@@ -26,6 +31,7 @@ class ClubsService {
       );
 
       return response.data;
+      
     } catch (err) {
       throw err;
     }

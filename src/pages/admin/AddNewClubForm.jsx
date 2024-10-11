@@ -4,16 +4,18 @@ import { FaUpload } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import EventService from "../../service/EventService";
+import ClubsService from "../../service/ClubsService";
+import { useNavigate } from "react-router-dom";
 
 const AddNewClubForm = () => {
+    const navigate = useNavigate();
+
   const [formFields, setFormFields] = useState({
     name: "",
-    venue: "",
-    date: "",
-    budgetFile: null, // PDF file for the budget,
-    purpose: "",
-    benefits: "",
-    eventImage: null, // New field for the event image
+    presidentEmail: "",
+    advisorEmail: "",
+    description: "",
+    clubImage: null, // New field for the event image
   });
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -57,15 +59,15 @@ const AddNewClubForm = () => {
     console.log(`File selected for ${name}:`, file);
 
     // Validate file type for budget
-    if (name === 'budgetFile') {
-      if (file && file.type !== 'application/pdf') {
-        alert("Please upload a PDF file for the budget.");
-        return;
-      }
-    }
+    // if (name === 'budgetFile') {
+    //   if (file && file.type !== 'application/pdf') {
+    //     alert("Please upload a PDF file for the budget.");
+    //     return;
+    //   }
+    // }
 
     // Validate file type for eventImage
-    if (name === 'eventImage') {
+    if (name === 'clubImage') {
       if (file && !['image/jpeg', 'image/png'].includes(file.type)) {
         alert("Please upload an image file (JPEG or PNG) for the event image.");
         return;
@@ -82,12 +84,10 @@ const AddNewClubForm = () => {
   const validateForm = () => {
     const {
       name,
-      venue,
-      date,
-      budgetFile,
-      purpose,
-      benefits,
-      eventImage,
+      presidentEmail,
+      advisorEmail,
+      description,
+      clubImage,
     } = formFields;
     
     // Add console log to inspect form fields
@@ -95,14 +95,11 @@ const AddNewClubForm = () => {
 
     const isValid =
       name.trim() !== "" &&
-      venue.trim() !== "" &&
-      date.trim() !== "" &&
-      budgetFile !== null && // Budget file is required
-        (budgetFile instanceof File && budgetFile.type === 'application/pdf') && // Check for PDF type
-      purpose.trim() !== "" &&
-      benefits.trim() !== "" &&
-      (eventImage === null || (eventImage instanceof File && 
-        ['image/jpeg', 'image/png'].includes(eventImage.type))); // Event image is optional but must be JPEG or PNG if provided
+      presidentEmail.trim() !== "" &&
+      advisorEmail.trim() !== "" &&
+      description.trim() !== "" &&
+      (clubImage === null || (clubImage instanceof File && 
+        ['image/jpeg', 'image/png'].includes(clubImage.type))); // Event image is optional but must be JPEG or PNG if provided
 
     console.log("Form Validation Status:", isValid); // Debugging line
     setIsFormValid(isValid);
@@ -119,34 +116,33 @@ const AddNewClubForm = () => {
     
     // Append form fields to FormData
     formData.append("name", formFields.name);
-    formData.append("venue", formFields.venue);
-    formData.append("date", formFields.date);
-    formData.append("purpose", formFields.purpose);
-    formData.append("benefits", formFields.benefits);
+    formData.append("presidentEmail", formFields.presidentEmail);
+    formData.append("advisorEmail", formFields.advisorEmail);
+    formData.append("description", formFields.description);
     
     // Append files to FormData
-    if (formFields.budget) {
-      formData.append("budgetFile", formFields.budgetFile);
-    }
-    if (formFields.eventImage) {
-      formData.append("eventImage", formFields.eventImage);
+    // if (formFields.budget) {
+    //   formData.append("budgetFile", formFields.budgetFile);
+    // }
+    if (formFields.clubImage) {
+      formData.append("clubImage", formFields.clubImage);
     }
 
     const token = localStorage.getItem("token");
 
     try {
       // Replace with your backend API URL
-      const response = await EventService.saveEvent(
+      const response = await ClubsService.addClub(
         formFields.name,
-        formFields.venue,
-        formFields.date,
-        formFields.purpose,
-        formFields.benefits,
-        formFields.eventImage,
-        formFields.budgetFile,
+        formFields.presidentEmail,
+        formFields.advisorEmail,
+        formFields.description,
+        formFields.clubImage,
         token
       );
       console.log("Form submitted successfully", response);
+      alert("Club added successfully");
+      navigate(-1);
     } catch (error) {
       console.error("Error submitting form", error);
     }
@@ -169,7 +165,7 @@ const AddNewClubForm = () => {
               <div className="flex flex-col items-center">
                 <input
                   type="file"
-                  name="eventImage"
+                  name="clubImage"
                   onChange={handleFileChange}
                   className="w-full h-12 bg-black text-white p-2 rounded-2xl"
                   style={{
@@ -201,8 +197,8 @@ const AddNewClubForm = () => {
                 <label className="block mb-2">Club President Email:</label>
                 <input
                   type="text"
-                  name="venue"
-                  value={formFields.venue}
+                  name="presidentEmail"
+                  value={formFields.presidentEmail}
                   onChange={handleInputChange}
                   className="w-full h-16 bg-black text-white p-2 rounded-2xl"
                   style={{
@@ -216,9 +212,9 @@ const AddNewClubForm = () => {
                   Club Advisor Email:
                 </label>
                 <input
-                  type="date"
-                  name="date"
-                  value={formFields.date}
+                  type="text"
+                  name="advisorEmail"
+                  value={formFields.advisorEmail}
                   onChange={handleInputChange}
                   className="w-full h-16 bg-black text-white p-2 rounded-2xl"
                   style={{
@@ -268,8 +264,8 @@ const AddNewClubForm = () => {
               <div>
                 <label className="block mb-2">Club Description:</label>
                 <textarea
-                  name="purpose"
-                  value={formFields.purpose}
+                  name="description"
+                  value={formFields.description}
                   onChange={handleInputChange}
                   className="w-full h-32 bg-black text-white p-2 rounded-2xl"
                   style={{
