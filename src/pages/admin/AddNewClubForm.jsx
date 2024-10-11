@@ -33,6 +33,20 @@ const AddNewClubForm = () => {
     });
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@stu\.ucsc\.cmb\.ac\.lk$/;
+    if (!email) return "Email is required";
+    if (!emailRegex.test(email)) return "Invalid Email format";
+    return "";
+  };
+
+  const validateAdvisorEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@ucsc\.cmb\.ac\.lk$/;
+    if (!email) return "Email is required";
+    if (!emailRegex.test(email)) return "Invalid Email format";
+    return "";
+  };
+
   // const handleSponsorChange = (index, field, value) => {
   //   const updatedSponsors = [...formFields.sponsors];
   //   updatedSponsors[index] = { ...updatedSponsors[index], [field]: value };
@@ -94,9 +108,9 @@ const AddNewClubForm = () => {
     console.log("Validating form with fields:", formFields);
 
     const isValid =
-      name.trim() !== "" &&
-      presidentEmail.trim() !== "" &&
-      advisorEmail.trim() !== "" &&
+      name.trim() !== "" && 
+      presidentEmail.trim() !== "" && !validateEmail(presidentEmail) &&
+      advisorEmail.trim() !== "" && !validateAdvisorEmail(advisorEmail) &&
       description.trim() !== "" &&
       (clubImage === null || (clubImage instanceof File && 
         ['image/jpeg', 'image/png'].includes(clubImage.type))); // Event image is optional but must be JPEG or PNG if provided
