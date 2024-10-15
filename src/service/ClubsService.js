@@ -5,6 +5,8 @@ class ClubsService {
 
   static async addClub(club_name, club_president_id, club_in_charge, club_description, club_image, token) {
     try {
+
+      
       const formData = new FormData();
       formData.append('data', new Blob([JSON.stringify({
         club_name,

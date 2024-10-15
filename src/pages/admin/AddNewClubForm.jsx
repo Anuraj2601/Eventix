@@ -6,6 +6,7 @@ import Navbar from "../../components/Navbar";
 import EventService from "../../service/EventService";
 import ClubsService from "../../service/ClubsService";
 import { useNavigate } from "react-router-dom";
+import UsersService from "../../service/UsersService";
 
 const AddNewClubForm = () => {
     const navigate = useNavigate();
@@ -125,12 +126,30 @@ const AddNewClubForm = () => {
       return;
     }
 
+    const token = localStorage.getItem("token");
+    let president_id;
+
+    try{
+      //const token = localStorage.getItem("token");
+      const response1 = await UsersService.getUserByEmail(formFields.presidentEmail, token);
+      console.log("User id by email", response1);
+      president_id = response1.content.id;
+      
+
+        
+
+    }catch(err){
+        console.log("Error getting club president id:", err)
+
+    }
+
 
     const formData = new FormData();
     
     // Append form fields to FormData
     formData.append("name", formFields.name);
-    formData.append("presidentEmail", formFields.presidentEmail);
+    //formData.append("presidentEmail", formFields.presidentEmail);
+    formData.append("presidentId", president_id);
     formData.append("advisorEmail", formFields.advisorEmail);
     formData.append("description", formFields.description);
     
@@ -142,13 +161,13 @@ const AddNewClubForm = () => {
       formData.append("clubImage", formFields.clubImage);
     }
 
-    const token = localStorage.getItem("token");
+    
 
     try {
       // Replace with your backend API URL
       const response = await ClubsService.addClub(
         formFields.name,
-        formFields.presidentEmail,
+        president_id,
         formFields.advisorEmail,
         formFields.description,
         formFields.clubImage,
