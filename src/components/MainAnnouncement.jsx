@@ -1,16 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import ieeeImage from '../assets/clubs/ieee.png';
 import isacaImage from '../assets/clubs/isaca1.png';
 import rotaractImage from '../assets/clubs/rotaract.png';
 import { useLocation } from 'react-router-dom';
+import AnnouncementService from '../service/AnnouncementService';
+import RegistrationService from '../service/registrationService';
+import UsersService from '../service/UsersService';
 
 const MainAnnouncement = () => {
     const [selectedFilter, setSelectedFilter] = useState('allAnnouncements');
     const [selectedClub, setSelectedClub] = useState(null);
     const [viewMode, setViewMode] = useState('new');
     const isAdminPath = location.pathname.startsWith('/admin');
+
+    const [AllAnnouncements, setAllAnnouncements] = useState('');
 
     const clubAnnouncements = [
         {
@@ -88,6 +93,50 @@ const MainAnnouncement = () => {
         }
         return array;
     }
+
+    const isRegistered = async () => {
+        const token = localStorage.getItem('token');
+        const session_id = localStorage.getItem('session_id');
+
+        try{
+            const response2 = await UsersService.getUserById(session_id, token);
+
+            // Ensure the response has the user email
+            if (!response2 || !response2.users || !response2.users.email) {
+                console.error('User data or email is missing in response');
+                return;
+            }
+            const currentUserEmail = response2.users.email;
+         
+            const response1 = await RegistrationService.getAllRegistrations(token);
+
+            // Ensure the response has the registrations content
+            if (!response1 || !response1.content) {
+                console.error('Registration data is missing in response');
+                return;
+            }
+            //console.log("is registered", response1);
+            const registeredClubsArray = response1.content.filter(reg => reg.email === currentUserEmail);
+            console.log("registered clubs array", registeredClubsArray);
+
+        }catch(error){
+            console.log("Error fetching data", error);
+        }
+        
+
+    }
+
+    const fetchAllAnnouncements = async () => {
+        const token = localStorage.getItem('token');
+        const response = await AnnouncementService.getAllAnnouncements(token);
+        const publicAnnouncementsArray = response.content.filter(announcement => announcement.type === 'PUBLIC') || [];
+        setAllAnnouncements(publicAnnouncementsArray);
+
+    }
+
+    useEffect(() => {
+        isRegistered();
+      }, []);
         
 
     
@@ -276,3 +325,4 @@ const MainAnnouncement = () => {
 };
 
 export default MainAnnouncement;
+
