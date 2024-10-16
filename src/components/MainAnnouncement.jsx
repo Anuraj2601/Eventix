@@ -15,7 +15,9 @@ const MainAnnouncement = () => {
     const [viewMode, setViewMode] = useState('new');
     const isAdminPath = location.pathname.startsWith('/admin');
 
-    const [AllAnnouncements, setAllAnnouncements] = useState('');
+    const [registeredClubs, setRegisteredClubs] = useState([]);
+    const [AllAnnouncements, setAllAnnouncements] = useState([]);
+    const [filteredAllAnnouncements, setFilteredAllAnnouncements] = useState([]);
 
     const clubAnnouncements = [
         {
@@ -118,6 +120,7 @@ const MainAnnouncement = () => {
             //console.log("is registered", response1);
             const registeredClubsArray = response1.content.filter(reg => reg.email === currentUserEmail);
             console.log("registered clubs array", registeredClubsArray);
+            setRegisteredClubs(registeredClubsArray);
 
         }catch(error){
             console.log("Error fetching data", error);
@@ -129,14 +132,28 @@ const MainAnnouncement = () => {
     const fetchAllAnnouncements = async () => {
         const token = localStorage.getItem('token');
         const response = await AnnouncementService.getAllAnnouncements(token);
-        const publicAnnouncementsArray = response.content.filter(announcement => announcement.type === 'PUBLIC') || [];
-        setAllAnnouncements(publicAnnouncementsArray);
+        //console.log("fetch all announcemnts", response);
+        const AnnouncementsArray = response.content;
+        setAllAnnouncements(AnnouncementsArray || []);
 
     }
 
     useEffect(() => {
         isRegistered();
-      }, []);
+        fetchAllAnnouncements();
+    }, []);
+
+    useEffect(() => {
+        if (registeredClubs.length > 0 || AllAnnouncements.length > 0) {
+            // Combine public announcements and those that match the user's registered clubs
+            const matchingAnnouncements = AllAnnouncements.filter(announcement =>
+                announcement.type === 'PUBLIC' || // Public announcements
+                registeredClubs.some(club => club.clubId === announcement.club_id) // Announcements relevant to the user's clubs
+            );
+            setFilteredAllAnnouncements(matchingAnnouncements);
+            console.log("Filtered Announcements", matchingAnnouncements);
+        }
+    }, [registeredClubs, AllAnnouncements]);
         
 
     
@@ -262,8 +279,8 @@ const MainAnnouncement = () => {
                 <div className="p-4 rounded-lg">
                 <h2 className="text-xl font-medium mb-4"></h2>
                 <div className="grid grid-cols-1 gap-4">
-                    {allAnnouncements.map((announcement) => (
-                        <div key={announcement.id} className="relative mb-4 p-4 bg-dark-400 rounded-lg flex items-center" style={{ 
+                    {filteredAllAnnouncements.map((announcement) => (
+                        <div key={announcement.announcement_id} className="relative mb-4 p-4 bg-dark-400 rounded-lg flex items-center" style={{ 
                             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                           }}          >
                             {announcement.clubImage && (
@@ -271,10 +288,10 @@ const MainAnnouncement = () => {
                             )}
                             <div className="flex-1">
                                 <p className="text-sm text-primary font-semibold">{announcement.title}</p>
-                                <p className="text-sm text-neutral-400">{announcement.type}</p>
-                                <p className="text-sm text-neutral-400">{announcement.description}</p>
-                                <p className="text-sm text-neutral-400">{announcement.date} - {announcement.time}</p>
-                                {announcement.location && <p className="text-sm text-neutral-400">Location: {announcement.location}</p>}
+                                {/* <p className="text-sm text-neutral-400">{announcement.type}</p> */}
+                                <p className="text-sm text-neutral-400">{announcement.content}</p>
+                                <p className="text-sm text-neutral-400">{announcement.date_posted}</p>
+                                {/* {announcement.location && <p className="text-sm text-neutral-400">Location: {announcement.location}</p>} */}
                             </div>
                         </div>
                     ))}
