@@ -365,16 +365,16 @@ const AddNewClubForm = () => {
             {/* Sponsors */}
           </div>
           <div className="flex justify-center mt-4">
-            <button 
+            <button className="bg-gray-500 p-2 rounded-2xl"
               onClick={handleSubmit}
-              disabled={!isFormValid}
-              className={`p-2 rounded-2xl ${
-                isFormValid ? "bg-green-500" : "bg-gray-500"
-              } text-white`}
-              style={{
-                boxShadow:
-                  "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-              }}
+              // disabled={!isFormValid}
+              // className={`p-2 rounded-2xl ${
+              //   isFormValid ? "bg-green-500" : "bg-gray-500"
+              // } text-white`}
+              // style={{
+              //   boxShadow:
+              //     "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+              // }}
             >
               Submit
             </button>
