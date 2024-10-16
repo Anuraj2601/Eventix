@@ -13,7 +13,7 @@ const AddNewClubForm = () => {
 
   const [formFields, setFormFields] = useState({
     name: "",
-    presidentEmail: "",
+    //presidentEmail: "",
     advisorEmail: "",
     description: "",
     clubImage: null, // New field for the event image
@@ -99,7 +99,7 @@ const AddNewClubForm = () => {
   const validateForm = () => {
     const {
       name,
-      presidentEmail,
+      //presidentEmail,
       advisorEmail,
       description,
       clubImage,
@@ -110,7 +110,7 @@ const AddNewClubForm = () => {
 
     const isValid =
       name.trim() !== "" && 
-      presidentEmail.trim() !== "" && !validateEmail(presidentEmail) &&
+      //presidentEmail.trim() !== "" && !validateEmail(presidentEmail) &&
       advisorEmail.trim() !== "" && !validateAdvisorEmail(advisorEmail) &&
       description.trim() !== "" &&
       (clubImage === null || (clubImage instanceof File && 
@@ -127,21 +127,21 @@ const AddNewClubForm = () => {
     }
 
     const token = localStorage.getItem("token");
-    let president_id;
+    // let president_id;
 
-    try{
-      //const token = localStorage.getItem("token");
-      const response1 = await UsersService.getUserByEmail(formFields.presidentEmail, token);
-      console.log("User id by email", response1);
-      president_id = response1.content.id;
+    // try{
+    //   //const token = localStorage.getItem("token");
+    //   const response1 = await UsersService.getUserByEmail(formFields.presidentEmail, token);
+    //   console.log("User id by email", response1);
+    //   president_id = response1.content.id;
       
 
         
 
-    }catch(err){
-        console.log("Error getting club president id:", err)
+    // }catch(err){
+    //     console.log("Error getting club president id:", err)
 
-    }
+    // }
 
 
     const formData = new FormData();
@@ -149,7 +149,7 @@ const AddNewClubForm = () => {
     // Append form fields to FormData
     formData.append("name", formFields.name);
     //formData.append("presidentEmail", formFields.presidentEmail);
-    formData.append("presidentId", president_id);
+    //formData.append("presidentId", president_id);
     formData.append("advisorEmail", formFields.advisorEmail);
     formData.append("description", formFields.description);
     
@@ -167,7 +167,7 @@ const AddNewClubForm = () => {
       // Replace with your backend API URL
       const response = await ClubsService.addClub(
         formFields.name,
-        president_id,
+        //president_id,
         formFields.advisorEmail,
         formFields.description,
         formFields.clubImage,
@@ -226,7 +226,7 @@ const AddNewClubForm = () => {
                   }}
                 />
               </div>
-              <div>
+              {/* <div>
                 <label className="block mb-2">Club President Email:</label>
                 <input
                   type="text"
@@ -239,7 +239,7 @@ const AddNewClubForm = () => {
                       "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
                   }}
                 />
-              </div>
+              </div> */}
               <div>
                 <label className="block mb-2">
                   Club Advisor Email:
@@ -365,7 +365,7 @@ const AddNewClubForm = () => {
             {/* Sponsors */}
           </div>
           <div className="flex justify-center mt-4">
-            <button
+            <button 
               onClick={handleSubmit}
               disabled={!isFormValid}
               className={`p-2 rounded-2xl ${

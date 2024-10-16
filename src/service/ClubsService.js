@@ -3,14 +3,14 @@ import axios from "axios";
 class ClubsService {
   static BASE_URL = "http://localhost:8080";
 
-  static async addClub(club_name, club_president_id, club_in_charge, club_description, club_image, token) {
+  static async addClub(club_name, club_in_charge, club_description, club_image, token) {
     try {
 
       
       const formData = new FormData();
       formData.append('data', new Blob([JSON.stringify({
         club_name,
-        club_president_id,
+        //club_president_id,
         club_in_charge,
         club_description,
        
