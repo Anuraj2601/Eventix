@@ -100,6 +100,25 @@ const MainAnnouncement = () => {
         return array;
     }
 
+    // Function to format date
+    const formatDate = (dateArray) => {
+        
+        const [year, month, day, hour, minute] = dateArray;
+        
+        
+        const date = new Date(year, month - 1, day, hour, minute);
+        
+        // Format options for date and time
+        const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const optionsTime = { hour: 'numeric', minute: '2-digit', hour12: true };
+    
+        // Use toLocaleDateString and toLocaleTimeString for formatting
+        const formattedDate = date.toLocaleDateString('en-GB', optionsDate); // yyyy-mm-dd format
+        const formattedTime = date.toLocaleTimeString('en-US', optionsTime); // hh:mm AM/PM format
+    
+        return `${formattedDate} ${formattedTime}`;
+    };
+
     const isRegistered = async () => {
         const token = localStorage.getItem('token');
         const session_id = localStorage.getItem('session_id');
@@ -318,7 +337,7 @@ const MainAnnouncement = () => {
                                                 <p className="text-sm">{announcement.content} </p>
                                             </div>
                                             <div className="absolute bottom-2 right-2 text-xs text-gray-400">
-                                                <span className="mx-2">{announcement.date_posted}</span>
+                                                <span className="mx-2">{formatDate(announcement.date_posted) }</span>
                                                 {/* <span className="mx-2">{announcement.postedTime}</span> */}
                                             </div>
                                         </div>
@@ -345,7 +364,7 @@ const MainAnnouncement = () => {
                                 <p className="text-sm text-primary font-semibold">{announcement.title}</p>
                                 {/* <p className="text-sm text-neutral-400">{announcement.type}</p> */}
                                 <p className="text-sm text-neutral-400">{announcement.content}</p>
-                                <p className="text-sm text-neutral-400">{announcement.date_posted}</p>
+                                <p className="text-sm text-neutral-400">{formatDate(announcement.date_posted) }</p>
                                 {/* {announcement.location && <p className="text-sm text-neutral-400">Location: {announcement.location}</p>} */}
                             </div>
                         </div>
