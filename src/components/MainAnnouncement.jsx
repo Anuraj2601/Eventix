@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import AnnouncementService from '../service/AnnouncementService';
 import RegistrationService from '../service/registrationService';
 import UsersService from '../service/UsersService';
+import ClubsService from '../service/ClubsService';
 
 const MainAnnouncement = () => {
     const [selectedFilter, setSelectedFilter] = useState('allAnnouncements');
@@ -18,6 +19,9 @@ const MainAnnouncement = () => {
     const [registeredClubs, setRegisteredClubs] = useState([]);
     const [AllAnnouncements, setAllAnnouncements] = useState([]);
     const [filteredAllAnnouncements, setFilteredAllAnnouncements] = useState([]);
+    const [UnionAnnouncements, setUnionAnnouncements] = useState([]);
+
+    let unionClubId;
 
     const clubAnnouncements = [
         {
@@ -129,12 +133,62 @@ const MainAnnouncement = () => {
 
     }
 
-    const fetchAllAnnouncements = async () => {
+    const getUnionClubId = async () => {
         const token = localStorage.getItem('token');
-        const response = await AnnouncementService.getAllAnnouncements(token);
-        //console.log("fetch all announcemnts", response);
-        const AnnouncementsArray = response.content;
-        setAllAnnouncements(AnnouncementsArray || []);
+        try{
+            const response3 = await ClubsService.getAllClubs(token);
+            //console.log("all clubs",response3)
+            const unionClub = response3.content.filter(club => club.club_name.toLowerCase().includes("union") );
+            if (unionClub.length > 0) {
+                unionClubId = unionClub[0].club_id;
+                console.log("union club id", unionClubId);
+                return unionClubId;  
+
+            } else {
+                console.log("No club found with 'union' in the name");
+                return null;  // In case no union club is found
+            }
+            
+
+        }catch(error){
+            console.log("Error while fetching club details", error)
+        }
+    }
+
+    const fetchAllAnnouncements = async () => {
+        // const token = localStorage.getItem('token');
+        // const response = await AnnouncementService.getAllAnnouncements(token);
+        // console.log("fetch all announcemnts", response);    
+        // const AnnouncementsArray = response.content;
+        // getUnionClubId();
+        // console.log("union club id function", unionClubId);
+        // const unionAnnouncementsArray = response.content.filter(announcement => announcement.club_id == unionClubId);
+        // console.log("union announcements:" , unionAnnouncementsArray);
+        
+        // setUnionAnnouncements(unionAnnouncementsArray);
+        // setAllAnnouncements(AnnouncementsArray || []);
+        const token = localStorage.getItem('token');
+        try {
+            const response = await AnnouncementService.getAllAnnouncements(token);
+            console.log("fetch all announcements", response);
+            const AnnouncementsArray = response.content;
+
+            // Await the result of getUnionClubId()
+            const unionClubId = await getUnionClubId();
+            if (unionClubId) {
+                // Filter announcements for the union club
+                const unionAnnouncementsArray = AnnouncementsArray.filter(announcement => announcement.club_id == unionClubId);
+                console.log("union announcements:", unionAnnouncementsArray);
+
+                setUnionAnnouncements(unionAnnouncementsArray);
+            } else {
+                console.log("No union club announcements found");
+            }
+            
+            setAllAnnouncements(AnnouncementsArray || []);
+        } catch (error) {
+            console.log("Error while fetching announcements", error);
+        }
 
     }
 
@@ -248,26 +302,27 @@ const MainAnnouncement = () => {
         </button>
        
     </div> )}
-                        {unionAnnouncements.map((union) => (
-                            <div key={union.id} className="mb-6">
-                                <div className="grid grid-cols-1 gap-4 mt-12">
+                        {UnionAnnouncements.map((announcement) => (
+                            <div  >
+                                <div className="grid grid-cols-1 gap-4 mt-2">
                                
-                                    {union.announcements.map((announcement) => (
+                                   
                                          
-                                        <div key={announcement.id} className="relative p-4 bg-dark-500 rounded-lg flex flex-col" style={{ 
+                                        <div key={announcement.announcement_id} className="relative p-4 bg-dark-500 rounded-lg flex flex-col" style={{ 
                                             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                                           }}          >
                                             
                                             <div>
                                                 <p className="text-sm text-primary font-semibold">{announcement.title}</p>
-                                                <p className="text-sm">{announcement.description} <span className='ml-5 text-primary opacity-60'>{announcement.date} | {announcement.time} | {announcement.location}</span></p>
+                                                {/* <p className="text-sm">{announcement.content} <span className='ml-5 text-primary opacity-60'>{announcement.date} | {announcement.time} | {announcement.location}</span></p> */}
+                                                <p className="text-sm">{announcement.content} </p>
                                             </div>
                                             <div className="absolute bottom-2 right-2 text-xs text-gray-400">
-                                                <span className="mx-2">{announcement.postedDate}</span>
-                                                <span className="mx-2">{announcement.postedTime}</span>
+                                                <span className="mx-2">{announcement.date_posted}</span>
+                                                {/* <span className="mx-2">{announcement.postedTime}</span> */}
                                             </div>
                                         </div>
-                                    ))}
+                                    
                                 </div>
                             </div>
                         ))}
