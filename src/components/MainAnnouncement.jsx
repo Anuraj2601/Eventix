@@ -411,7 +411,7 @@ const MainAnnouncement = () => {
                                             </p>
                                         </div>
                                         <div className="absolute bottom-2 right-2 text-xs text-gray-400">
-                                            <span className="mx-2">{announcement.date_posted}</span>
+                                            <span className="mx-2">{formatDate(announcement.date_posted)}</span>
                                             {/* <span className="mx-2">{announcement.postedTime}</span> */}
                                         </div>
                                     </div>
