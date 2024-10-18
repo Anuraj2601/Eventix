@@ -303,6 +303,11 @@ const MainAnnouncement = () => {
                     announcement.type === 'PUBLIC' || // Public announcements
                     registeredClubs.some(club => club.clubId === announcement.club_id) // Announcements relevant to the user's clubs
                 );
+
+
+                // matchingAnnouncements.sort((a, b) => new Date(b.date_posted) - new Date(a.date_posted));
+
+                // console.log("Sorted Filtered Announcements", matchingAnnouncements);
     
                 //setFilteredAllAnnouncements(matchingAnnouncements);
                 console.log("Filtered Announcements", matchingAnnouncements);
@@ -363,22 +368,38 @@ const MainAnnouncement = () => {
                 //         };
                 //     })
                 // );
-                const clubsWithAnnouncements = [];
-                for (let clubId of Object.keys(groupedAnnouncementsByClubId)) {
-                    const clubDetails = await ClubsService.getClubById(clubId, token);
 
+                // const clubsWithAnnouncements = [];
+                // for (let clubId of Object.keys(groupedAnnouncementsByClubId)) {
+                //     const clubDetails = await ClubsService.getClubById(clubId, token);
+
+                //     const announcementsForClub = groupedAnnouncementsByClubId[clubId];
+
+                //     // Calculate the total count of announcements (new + old)
+                //     const announcementCount = announcementsForClub.new.length + announcementsForClub.old.length;
+
+                //     clubsWithAnnouncements.push({
+                //         clubId,
+                //         clubDetails,
+                //         announcements: announcementsForClub,
+                //         announcementCount
+                //     });
+                // }
+
+                const clubsWithAnnouncements = Object.keys(groupedAnnouncementsByClubId).map(clubId => {
+                    const clubDetails = clubDetailsMap[clubId]; // Reuse fetched club details
                     const announcementsForClub = groupedAnnouncementsByClubId[clubId];
-
+    
                     // Calculate the total count of announcements (new + old)
                     const announcementCount = announcementsForClub.new.length + announcementsForClub.old.length;
-
-                    clubsWithAnnouncements.push({
+    
+                    return {
                         clubId,
                         clubDetails,
                         announcements: announcementsForClub,
                         announcementCount
-                    });
-                }
+                    };
+                });
 
     
                 console.log("Clubs with announcements:", clubsWithAnnouncements);
