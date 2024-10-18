@@ -20,6 +20,7 @@ const MainAnnouncement = () => {
     const [AllAnnouncements, setAllAnnouncements] = useState([]);
     const [filteredAllAnnouncements, setFilteredAllAnnouncements] = useState([]);
     const [UnionAnnouncements, setUnionAnnouncements] = useState([]);
+    const [ClubsAnnouncements, setClubsAnnouncements] = useState([]);
 
     let unionClubId;
 
@@ -174,6 +175,30 @@ const MainAnnouncement = () => {
         }
     }
 
+    // Helper function to determine if an announcement is new (e.g., within the last 7 days)
+    const isNewAnnouncement = (announcementDateArray) => {
+        const currentDate = new Date();
+
+        // Convert the array [year, month, day, hours, minutes, seconds, milliseconds] into a Date object
+        // Note: JavaScript Date months are zero-indexed, so we need to subtract 1 from the month.
+        const announcementDateObj = new Date(
+            announcementDateArray[0],    // Year
+            announcementDateArray[1] - 1, // Month (subtract 1 since months are zero-indexed)
+            announcementDateArray[2],    // Day
+            announcementDateArray[3],    // Hour
+            announcementDateArray[4],    // Minute
+            announcementDateArray[5],    // Second
+            announcementDateArray[6]     // Millisecond
+        );
+
+        const diffInTime = currentDate - announcementDateObj;
+        const diffInDays = diffInTime / (1000 * 3600 * 24); // Convert milliseconds to days
+
+        // If the announcement was made in the last 7 days, consider it new
+        return diffInDays <= 7;
+    };
+
+
     const fetchAllAnnouncements = async () => {
         // const token = localStorage.getItem('token');
         // const response = await AnnouncementService.getAllAnnouncements(token);
@@ -203,6 +228,8 @@ const MainAnnouncement = () => {
             } else {
                 console.log("No union club announcements found");
             }
+
+           
             
             setAllAnnouncements(AnnouncementsArray || []);
         } catch (error) {
@@ -225,6 +252,29 @@ const MainAnnouncement = () => {
             );
             setFilteredAllAnnouncements(matchingAnnouncements);
             console.log("Filtered Announcements", matchingAnnouncements);
+
+
+            // Group announcements by club_id and categorize them as 'new' or 'old'
+            const groupedAnnouncementsByClubId = matchingAnnouncements.reduce((acc, announcement) => {
+                // Get the club_id of the current announcement
+                const clubId = announcement.club_id;
+
+                // Initialize the club group if not already present
+                if (!acc[clubId]) {
+                    acc[clubId] = { new: [], old: [] };
+                }
+
+                // Check if the announcement is new or old
+                if (isNewAnnouncement(announcement.date_posted)) {
+                    acc[clubId].new.push(announcement);
+                } else {
+                    acc[clubId].old.push(announcement);
+                }
+
+                return acc;
+            }, {});
+
+            console.log("Grouped announcements by club_id with new/old:", groupedAnnouncementsByClubId);
         }
     }, [registeredClubs, AllAnnouncements]);
         
