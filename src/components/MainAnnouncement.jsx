@@ -243,40 +243,131 @@ const MainAnnouncement = () => {
         fetchAllAnnouncements();
     }, []);
 
+    // useEffect(() => {
+    //     if (registeredClubs.length > 0 || AllAnnouncements.length > 0) {
+    //         // Combine public announcements and those that match the user's registered clubs
+    //         const matchingAnnouncements = AllAnnouncements.filter(announcement =>
+    //             announcement.type === 'PUBLIC' || // Public announcements
+    //             registeredClubs.some(club => club.clubId === announcement.club_id) // Announcements relevant to the user's clubs
+    //         );
+    //         setFilteredAllAnnouncements(matchingAnnouncements);
+    //         console.log("Filtered Announcements", matchingAnnouncements);
+
+
+    //         // Group announcements by club_id and categorize them as 'new' or 'old'
+    //         const groupedAnnouncementsByClubId = matchingAnnouncements.reduce((acc, announcement) => {
+    //             // Get the club_id of the current announcement
+    //             const clubId = announcement.club_id;
+
+    //             // Initialize the club group if not already present
+    //             if (!acc[clubId]) {
+    //                 acc[clubId] = { new: [], old: [] };
+    //             }
+
+    //             // Check if the announcement is new or old
+    //             if (isNewAnnouncement(announcement.date_posted)) {
+    //                 acc[clubId].new.push(announcement);
+    //             } else {
+    //                 acc[clubId].old.push(announcement);
+    //             }
+
+    //             return acc;
+    //         }, {});
+
+    //         console.log("Grouped announcements by club_id with new/old:", groupedAnnouncementsByClubId);
+
+    //         // Fetch club details for each club_id and combine with announcements
+    //         const clubsWithAnnouncements = await Promise.all(
+    //             Object.keys(groupedByClubId).map(async (clubId) => {
+    //                 // Fetch club details by clubId
+    //                 const clubDetails = await ClubsService.getclubByid(clubId, token);
+    //                 return {
+    //                     clubId,
+    //                     clubDetails, // This contains club image and other club details
+    //                     announcements: groupedByClubId[clubId] // New and old announcements
+    //                 };
+    //             })
+    //         );
+
+    //         console.log("Clubs with announcements:", clubsWithAnnouncements);
+    //     }
+    // }, [registeredClubs, AllAnnouncements]);
+
     useEffect(() => {
-        if (registeredClubs.length > 0 || AllAnnouncements.length > 0) {
-            // Combine public announcements and those that match the user's registered clubs
-            const matchingAnnouncements = AllAnnouncements.filter(announcement =>
-                announcement.type === 'PUBLIC' || // Public announcements
-                registeredClubs.some(club => club.clubId === announcement.club_id) // Announcements relevant to the user's clubs
-            );
-            setFilteredAllAnnouncements(matchingAnnouncements);
-            console.log("Filtered Announcements", matchingAnnouncements);
+        const fetchAnnouncementsAndClubDetails = async () => {
+            if (registeredClubs.length > 0 || AllAnnouncements.length > 0) {
+                const token = localStorage.getItem('token');
+    
+                // Combine public announcements and those that match the user's registered clubs
+                const matchingAnnouncements = AllAnnouncements.filter(announcement =>
+                    announcement.type === 'PUBLIC' || // Public announcements
+                    registeredClubs.some(club => club.clubId === announcement.club_id) // Announcements relevant to the user's clubs
+                );
+    
+                setFilteredAllAnnouncements(matchingAnnouncements);
+                console.log("Filtered Announcements", matchingAnnouncements);
+    
+                // Group announcements by club_id and categorize them as 'new' or 'old'
+                const groupedAnnouncementsByClubId = matchingAnnouncements.reduce((acc, announcement) => {
+                    const clubId = announcement.club_id;
+    
+                    // Initialize the club group if not already present
+                    if (!acc[clubId]) {
+                        acc[clubId] = { new: [], old: [] };
+                    }
+    
+                    // Check if the announcement is new or old
+                    if (isNewAnnouncement(announcement.date_posted)) {
+                        acc[clubId].new.push(announcement);
+                    } else {
+                        acc[clubId].old.push(announcement);
+                    }
+    
+                    return acc;
+                }, {});
+    
+                console.log("Grouped announcements by club_id with new/old:", groupedAnnouncementsByClubId);
+    
+                // Fetch club details for each club_id and combine with announcements
+                // const clubsWithAnnouncements = await Promise.all(
+                //     Object.keys(groupedAnnouncementsByClubId).map(async (clubId) => {
+                //         // Fetch club details by clubId
+                //         const clubDetails = await ClubsService.getClubById(clubId, token);
+                //         console.log(`Fetched club details for ${clubId}:`, clubDetails);
+                //         return {
+                //             clubId,
+                //             clubDetails, // This contains club image and other club details
+                //             announcements: groupedAnnouncementsByClubId[clubId] // New and old announcements
+                //         };
+                //     })
+                // );
+                const clubsWithAnnouncements = [];
+                for (let clubId of Object.keys(groupedAnnouncementsByClubId)) {
+                    const clubDetails = await ClubsService.getClubById(clubId, token);
 
+                    const announcementsForClub = groupedAnnouncementsByClubId[clubId];
 
-            // Group announcements by club_id and categorize them as 'new' or 'old'
-            const groupedAnnouncementsByClubId = matchingAnnouncements.reduce((acc, announcement) => {
-                // Get the club_id of the current announcement
-                const clubId = announcement.club_id;
+                    // Calculate the total count of announcements (new + old)
+                    const announcementCount = announcementsForClub.new.length + announcementsForClub.old.length;
 
-                // Initialize the club group if not already present
-                if (!acc[clubId]) {
-                    acc[clubId] = { new: [], old: [] };
+                    clubsWithAnnouncements.push({
+                        clubId,
+                        clubDetails,
+                        announcements: announcementsForClub,
+                        announcementCount
+                    });
                 }
 
-                // Check if the announcement is new or old
-                if (isNewAnnouncement(announcement.date_posted)) {
-                    acc[clubId].new.push(announcement);
-                } else {
-                    acc[clubId].old.push(announcement);
-                }
-
-                return acc;
-            }, {});
-
-            console.log("Grouped announcements by club_id with new/old:", groupedAnnouncementsByClubId);
-        }
+    
+                console.log("Clubs with announcements:", clubsWithAnnouncements);
+                setClubsAnnouncements(clubsWithAnnouncements);
+            }
+        };
+    
+        // Call the async function inside useEffect
+        fetchAnnouncementsAndClubDetails();
     }, [registeredClubs, AllAnnouncements]);
+    
         
 
     
@@ -359,7 +450,7 @@ const MainAnnouncement = () => {
             return (
                 <div className="relative p-4 rounded-lg h-[70vh]">
                    
-                    <div className="grid grid-cols-1 gap-4">
+                    <div  className="grid grid-cols-1 gap-4">
                     {isAdminPath && (
 
                     <div className="flex space-x-4 absolute top-2 right-4">
