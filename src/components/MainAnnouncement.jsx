@@ -101,7 +101,7 @@ const MainAnnouncement = () => {
         return array;
     }
 
-    // Function to format date
+    
     const formatDate = (dateArray) => {
         
         const [year, month, day, hour, minute] = dateArray;
@@ -304,8 +304,30 @@ const MainAnnouncement = () => {
                     registeredClubs.some(club => club.clubId === announcement.club_id) // Announcements relevant to the user's clubs
                 );
     
-                setFilteredAllAnnouncements(matchingAnnouncements);
+                //setFilteredAllAnnouncements(matchingAnnouncements);
                 console.log("Filtered Announcements", matchingAnnouncements);
+
+                // Fetch club details for each unique club in the filtered announcements
+                const uniqueClubIds = [...new Set(matchingAnnouncements.map(announcement => announcement.club_id))];
+                
+                const clubDetailsMap = {};
+                for (let clubId of uniqueClubIds) {
+                    const clubDetails = await ClubsService.getClubById(clubId, token);
+                    clubDetailsMap[clubId] = clubDetails; // Store club details by clubId
+                }
+
+                // Combine the announcements with their respective club details
+                const announcementsWithClubDetails = matchingAnnouncements.map(announcement => ({
+                    ...announcement,
+                    clubDetails: clubDetailsMap[announcement.club_id] // Add club details to each announcement
+                }));
+
+                setFilteredAllAnnouncements(announcementsWithClubDetails); // Set the updated list
+                console.log("Filtered Announcements with club details", announcementsWithClubDetails);
+
+
+
+
     
                 // Group announcements by club_id and categorize them as 'new' or 'old'
                 const groupedAnnouncementsByClubId = matchingAnnouncements.reduce((acc, announcement) => {
@@ -519,8 +541,8 @@ const MainAnnouncement = () => {
                         <div key={announcement.announcement_id} className="relative mb-4 p-4 bg-dark-400 rounded-lg flex items-center" style={{ 
                             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                           }}          >
-                            {announcement.clubImage && (
-                                <img src={announcement.clubImage} alt={announcement.clubName} className="w-16 h-16 rounded-full mr-4" />
+                            {announcement.clubDetails.content.club_image && (
+                                <img src={announcement.clubDetails.content.club_image} alt={announcement.clubDetails.content.club_name} className="w-16 h-16 rounded-full mr-4" />
                             )}
                             <div className="flex-1">
                                 <p className="text-sm text-primary font-semibold">{announcement.title}</p>
