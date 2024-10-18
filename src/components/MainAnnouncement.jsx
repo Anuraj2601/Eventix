@@ -502,6 +502,7 @@ const MainAnnouncement = () => {
                                         <span className="text-[16px] font-semibold mt-3 mr-12">New</span>
                                         <span className="text-xl font-medium absolute right-1 top-1 w-10 h-10 flex items-center bg-dark-500 text-primary justify-center rounded-full border border-black">
                                             {announcement.announcements.new.length}
+                                            
                                         </span>
                                     </button>
                                 </div>
