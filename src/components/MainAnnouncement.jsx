@@ -374,8 +374,11 @@ const MainAnnouncement = () => {
     const renderContent = () => {
         if (selectedFilter === 'clubAnnouncements') {
             if (selectedClub) {
-                const club = clubAnnouncements.find(club => club.id === selectedClub);
-                const announcementsToShow = viewMode === 'new' ? club.announcements.slice(-club.newAnnouncements) : club.announcements.slice(0, club.oldAnnouncements);
+                const club = ClubsAnnouncements.find(club => club.clubId === selectedClub);
+                //const announcementsToShow = viewMode === 'new' ? club.announcements.slice(-club.newAnnouncements) : club.announcements.slice(0, club.oldAnnouncements);
+                const announcementsToShow = viewMode === 'new' 
+                    ? club.announcements.new  // Show new announcements
+                    : club.announcements.old; // Show old announcements
                 return (
                     <div className="p-4 rounded-lg relative ">
                         <button
@@ -386,7 +389,7 @@ const MainAnnouncement = () => {
                         </button>
                         <h2 className="text-xl font-medium mb-10">{club.name} </h2>
                         <div className="grid grid-cols-1 gap-4">
-                            {announcementsToShow.map((announcement) => (
+                            {/* {announcementsToShow.map((announcement) => (
                                 <div key={announcement.id} className="relative p-4 bg-dark-500 rounded-lg flex flex-col">
                                     <div>
                                         <p className="text-sm text-primary font-semibold">{announcement.title}</p>
@@ -397,25 +400,43 @@ const MainAnnouncement = () => {
                                         <span className="mx-2">{announcement.postedTime}</span>
                                     </div>
                                 </div>
-                            ))}
+                            ))} */}
+                            {announcementsToShow.length > 0 ? (
+                                announcementsToShow.map((announcement) => (
+                                    <div key={announcement.announcement_id} className="relative p-4 bg-dark-500 rounded-lg flex flex-col">
+                                        <div>
+                                            <p className="text-sm text-primary font-semibold">{announcement.title}</p>
+                                            <p className="text-sm">{announcement.content} 
+                                                {/* <span className='ml-5 text-primary opacity-60'>{announcement.date} | {announcement.time} | {announcement.location}</span> */}
+                                            </p>
+                                        </div>
+                                        <div className="absolute bottom-2 right-2 text-xs text-gray-400">
+                                            <span className="mx-2">{announcement.date_posted}</span>
+                                            {/* <span className="mx-2">{announcement.postedTime}</span> */}
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No {viewMode === 'new' ? 'new' : 'old'} announcements available for this club.</p>
+                            )}
                         </div>
                     </div>
                 );
             } else {
                 return (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {clubAnnouncements.map((club) => (
-                            <div key={club.id} className="bg-dark-500 p-6 rounded-lg flex flex-col items-center relative border border-transparent hover:border-primary" style={{ 
+                        {ClubsAnnouncements.map((announcement) => (
+                            <div key={announcement.clubId} className="bg-dark-500 p-6 rounded-lg flex flex-col items-center relative border border-transparent hover:border-primary" style={{ 
                                 boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
                               }}          >
-                                <img src={club.image} alt={club.name} className="h-24 w-24 mb-4 rounded-lg" />
-                                <h2 className="text-xl font-medium mb-2">{club.name}</h2>
-                                <p className="text-sm text-primary mb-4">{club.totalAnnouncements} Announcements</p>
+                                <img src={announcement.clubDetails.content.club_image} alt={announcement.clubDetails.content.club_name} className="h-24 w-24 mb-4 rounded-lg" />
+                                <h2 className="text-xl font-medium mb-2">{announcement.clubDetails.content.club_name}</h2>
+                                <p className="text-sm text-primary mb-4">{announcement.announcementCount} Announcements</p>
                                 <div className="flex justify-around w-full mt-4">
                                     <button
                                         className="flex flex-col items-center ml-6 w-[130px] h-12 bg-dark-400 border rounded-[15px] border-primary relative transform transition-transform hover:scale-105 cursor-pointer"
                                         onClick={() => {
-                                            setSelectedClub(club.id);
+                                            setSelectedClub(announcement.clubId);
                                             setViewMode('old');
                                         }} style={{ 
                                             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
@@ -423,13 +444,13 @@ const MainAnnouncement = () => {
                                     >
                                         <span className="text-[16px] font-medium mt-3 mr-12 ">Old</span>
                                         <span className="text-xl font-medium absolute right-1 top-[2px] w-10 h-10 flex items-center justify-center ">
-                                            {club.oldAnnouncements}
+                                            {announcement.announcements.old.length}
                                         </span>
                                     </button>
                                     <button
                                         className="flex flex-col items-center w-[130px] mr-6 h-12 bg-primary text-dark-500 rounded-[15px] relative transform transition-transform hover:scale-105 cursor-pointer"
                                         onClick={() => {
-                                            setSelectedClub(club.id);
+                                            setSelectedClub(announcement.clubId);
                                             setViewMode('new');
                                         }} style={{ 
                                             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
@@ -437,7 +458,7 @@ const MainAnnouncement = () => {
                                     >
                                         <span className="text-[16px] font-semibold mt-3 mr-12">New</span>
                                         <span className="text-xl font-medium absolute right-1 top-1 w-10 h-10 flex items-center bg-dark-500 text-primary justify-center rounded-full border border-black">
-                                            {club.newAnnouncements}
+                                            {announcement.announcements.new.length}
                                         </span>
                                     </button>
                                 </div>
