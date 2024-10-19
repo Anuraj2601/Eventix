@@ -23,6 +23,7 @@ class RegistrationService {
         }
     }
 
+    
     /**
      * Get all registrations for the authenticated user.
      */

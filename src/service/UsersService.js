@@ -147,6 +147,24 @@ class UsersService{
             throw new Error(err.response?.data?.message || 'Failed to fetch user profile by email.');
         }
     }
+
+    static async getUserByEmail(email, token){
+        try{
+
+            const response = await axios.get(`${UsersService.BASE_URL}/api/users/getUserByEmail`,
+                {
+                    headers: {Authorization: `Bearer ${token}`},
+                    params: { email }
+                }
+            )
+            return response.data;
+
+            
+
+        }catch(err){
+            throw err;
+        }
+    }
     
 }
 

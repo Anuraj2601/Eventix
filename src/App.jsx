@@ -151,6 +151,7 @@ import AddEvent from './components/AddEvent';
 import { ClubMemberNav } from './components/ClubMemberNav';
 import AddNewAnnouncementForm from './pages/president/AddNewAnnouncementForm';
 import AddNewMeetingForm from './pages/president/AddNewMeetingForm';
+import AddNewClubForm from './pages/admin/AddNewClubForm';
 
 // Import other pages if necessary
 
@@ -291,8 +292,6 @@ const App = () => {
 
         
 
-
-       
         <Route path='/admin/club' element={<StudentAllClubsadmin/>}></Route>
         <Route path='/admin/club/:id' element={<StudentClubDetailsadmin/>}></Route>
         <Route path='/admin/notifications' element={<StudentNotificationsadmin/>}></Route>
@@ -310,6 +309,7 @@ const App = () => {
         <Route path='/admin/messages' element={<Messagesadmin/>}></Route>
         <Route path='/admin/profile' element={<Profileadmin/>}></Route>
         <Route path='/admin/meeting' element={<MainMeetingadmin />}></Route> 
+        <Route path='/admin/addclub' element={<AddNewClubForm />}></Route>
 
 
         <Route path='/treasurer/club' element={<StudentAllClubstreasurer/>}></Route>
