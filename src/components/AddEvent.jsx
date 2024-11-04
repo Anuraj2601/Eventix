@@ -5,8 +5,12 @@ import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import axios from "axios";
 import EventService from "../service/EventService";
+import { useParams } from "react-router-dom";
 
 const AddEvent = () => {
+  //<Route path='/club/:id/add-event' element={<AddEvent />} ></Route>
+  const { id } = useParams(); // Get club_id from the URL
+
   const [formFields, setFormFields] = useState({
     name: "",
     venue: "",
@@ -19,6 +23,7 @@ const AddEvent = () => {
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
+    console.log("Club ID Pram:", id);
     console.log("Form fields changed, validating form...");
     validateForm();
   }, [formFields]);
