@@ -223,7 +223,7 @@ const App = () => {
         <Route exact path="/president/club/event" element={<Exploreevent />} />
         <Route path='/president/club/:id' element={<ClubDetails />} />
         <Route path='/president/dashboard' element={<Dashboard  />} ></Route>
-        <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
+        <Route path='/club/:id/add-event' element={<AddEvent />} ></Route>
         <Route path='/president/calendar' element={<Calendar />}></Route>
         <Route path='/president/club/election/:id' element={<Election/>}></Route>
         <Route path='/president' element={<Dashboard  />} ></Route>

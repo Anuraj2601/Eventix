@@ -51,6 +51,23 @@ const ClubEvent = ({ club }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   
+  
+// // Decode token and retrieve user_id
+// const getUserIdFromToken = () => {
+//   const token = localStorage.getItem('token'); // Or wherever the token is stored
+//   if (!token) return null;
+
+//   try {
+//     const decoded = jwtDecode(token);
+//     console.log("Decoded user_id:", decoded.user_id); // Print user_id to check
+//     return decoded.user_id; // Ensure this matches the user ID key in your JWT payload
+//   } catch (error) {
+//     console.error("Invalid token", error);
+//     return null;
+//   }
+// };
+  
+  
   // Check if the current path matches the specified routes
   const isAuthorizedUser = () => {
     return location.pathname.startsWith('/president') || 
@@ -71,7 +88,7 @@ const ClubEvent = ({ club }) => {
   };
    
   const handleEvent = () => {
-    navigate(`/club/${club.club_name}/add-event`);
+    navigate(`/club/${club.club_id}/add-event`);
   };
 
 
