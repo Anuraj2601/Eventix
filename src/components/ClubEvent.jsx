@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IconButton } from '@material-tailwind/react';
 import { FaArrowRight, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
@@ -39,6 +39,8 @@ import acm6 from "../assets/events/reid2.jpg";
 
 import LikeButton from './LikeButton';
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
+import ClubsService from "../service/ClubsService";
+import { Token } from "@mui/icons-material";
 
 ReactModal.setAppElement('#root');
 
@@ -49,9 +51,10 @@ const ClubEvent = ({ club }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  
-  
+  const [selectedEvent, setSelectedEvent] = useState(null);  
+  const [loading, setLoading] = useState(true);
+
+
 // // Decode token and retrieve user_id
 // const getUserIdFromToken = () => {
 //   const token = localStorage.getItem('token'); // Or wherever the token is stored
@@ -66,9 +69,40 @@ const ClubEvent = ({ club }) => {
 //     return null;
 //   }
 // };
-  
-  
-  // Check if the current path matches the specified routes
+
+
+  const [presidentId, setPresidentId] = useState(-1);
+  const userId = localStorage.getItem("User_Id");
+  useEffect(() => {
+    console.log("yoooooooo: " + userId);
+    
+    fetchClubData();
+  }, []);
+
+
+  // Fetch club data for the specific club_id to get president_id
+  const fetchClubData = async () => {
+    setLoading(true);
+    try {
+      const storedToken = localStorage.getItem("token");
+      console.log("Retrieved Token from localStorage:", storedToken); // Log to console
+
+      console.log("Club Id:", club.club_id); // Log to console
+
+      const clubData = await ClubsService.getClubById(club.club_id, storedToken)
+      console.log("Fetched Club Data:", clubData); // Log the club data
+
+      setPresidentId(clubData.content.president ? clubData.content.president.id : null);  
+      console.log("hiiii: " + userId); // Log the president id
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching club data:", error);
+      setLoading(false);
+    }
+  };
+
+
+// Check if the current path matches the specified routes
   const isAuthorizedUser = () => {
     return location.pathname.startsWith('/president') || 
            location.pathname.startsWith('/secretary') || 
@@ -215,14 +249,15 @@ const ClubEvent = ({ club }) => {
   };
 
   return (
-    <div className="flex justify-center items-center flex-col p-4 rounded-2xl bg-black opacity-70">
-      {isAuthorizedUser() && (
+    <>
+    {loading ? <h1 className="text-white">New Loading ....</h1> :   <div className="flex justify-center items-center flex-col p-4 rounded-2xl bg-black opacity-70">
+      {userId == presidentId && (
         <div className='flex justify-end mb-2'>
           <button
             className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute top-10 right-32 z-10"
             onClick={handleEvent}
           >
-            <MdAdd size={24} />
+         <MdAdd size={24} />
           </button>
         </div>
       )}
@@ -357,7 +392,8 @@ const ClubEvent = ({ club }) => {
           )}
         </div>
       </ReactModal>
-    </div>
+    </div>}
+  </>
   );
 };
 
