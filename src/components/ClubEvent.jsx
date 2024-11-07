@@ -41,6 +41,7 @@ import LikeButton from './LikeButton';
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
 import ClubsService from "../service/ClubsService";
 import { Token } from "@mui/icons-material";
+import EventService from "../service/EventService";
 
 ReactModal.setAppElement('#root');
 
@@ -53,7 +54,8 @@ const ClubEvent = ({ club }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);  
   const [loading, setLoading] = useState(true);
-
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
 
 // // Decode token and retrieve user_id
 // const getUserIdFromToken = () => {
@@ -73,6 +75,10 @@ const ClubEvent = ({ club }) => {
 
   const [presidentId, setPresidentId] = useState(-1);
   const userId = localStorage.getItem("User_Id");
+
+  const storedToken = localStorage.getItem("token");
+  console.log("Retrieved Token from localStorage:", storedToken); // Log to console
+
   useEffect(() => {
     console.log("yoooooooo: " + userId);
     
@@ -84,8 +90,7 @@ const ClubEvent = ({ club }) => {
   const fetchClubData = async () => {
     setLoading(true);
     try {
-      const storedToken = localStorage.getItem("token");
-      console.log("Retrieved Token from localStorage:", storedToken); // Log to console
+     
 
       console.log("Club Id:", club.club_id); // Log to console
 
@@ -94,6 +99,7 @@ const ClubEvent = ({ club }) => {
 
       setPresidentId(clubData.content.president ? clubData.content.president.id : null);  
       console.log("hiiii: " + userId); // Log the president id
+      getEvents();
       setLoading(false);
     } catch (error) {
       console.error("Error fetching club data:", error);
@@ -182,56 +188,30 @@ const ClubEvent = ({ club }) => {
     // Add your delete logic here
   };
 
-  const getEvents = () => {
-    if (location.pathname.includes('ieee')) {
-      return {
-        upcoming: [
-          { name: "MadHack 3.0", image: ieee1, date: "25.08.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-          { name: "ReidExtreme 3.0", image: ieee2, date: "09.09.2024", venue: "S104 Hall", status: "Approved", link: "https://example.com/join-oc" },
-          { name: "Introductory Session", image: ieee3, date: "19.09.2024", venue: "S104 Hall", status: "Rejected", reason: "Budget not approved", link: "https://example.com/join-oc" },
-          { name: "Revolux 3.0", image: ieee5, date: "29.09.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-        ],
-        past: [
-          { name: "IEEE Day 3.0", image: ieee4, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
-          { name: "ReidExtreme 2.0", image: ieee6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
-        ]
-      };
-    } else if (location.pathname.includes('rotaract') || 
-    location.pathname.includes('rotract') || 
-    location.pathname.includes('Rotaract Club of UCSC')) {
-      return {
-        upcoming: [
-          { name: "Tech Trail Blazer'23", image: rac1, date: "07.09.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-          { name: "SnapFlix", image: rac2, date: "17.09.2024", venue: "S104 Hall", status: "Pending", link: "https://example.com/join-oc" },
-          { name: "Dev Possible", image: rac3, date: "27.09.2024", venue: "S104 Hall", status: "Rejected", reason: "Budget not approved", link: "https://example.com/join-oc" },
-          { name: "Sport X", image: rac4, date: "07.10.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-        ],
-        past: [
-          { name: "G-Tech", image: rac5, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
-          { name: "Training Session", image: rac6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
-        ]
-      };
-    } else if (location.pathname.includes('acm')) {
-      return {
-        upcoming: [
-          { name: "8 Weeks of Code", image: acm1, date: "05.09.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-          { name: "Hour of Code", image: acm2, date: "15.09.2024", venue: "S104 Hall", status: "Pending", link: "https://example.com/join-oc" },
-          { name: "Ballet Code", image: acm3, date: "25.09.2024", venue: "S104 Hall", status: "Rejected", reason: "Budget not approved", link: "https://example.com/join-oc" },
-          { name: "Discussion Session", image: acm4, date: "05.01.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-        ],
-        past: [
-          { name: "Creative Friday", image: acm5, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
-          { name: "ReidExtreme", image: acm6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
-        ]
-      };
-    } else {
-      // Fallback to empty arrays if none of the keywords match
-      return { upcoming: [], past: [] };
-    }
+  const getEvents = async () => {
+      // axios.get() TODO :: YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+      const eventsData = await EventService.getAllEventsById(club.club_id, storedToken)
+      console.log(eventsData)
+      const formattedData = [];
+      eventsData.content.forEach((event) => {
+        formattedData.push({
+          name: event.name,
+          image: event.event_image ? event.event_image : rac1, 
+          date: `${event.date[0]}/${event.date[1]}/${event.date[2]}`,
+          venue: event.venue,
+          status: "Approved",
+          link: "https://example.com/join-oc"
+        })
+      });
+      setUpcomingEvents(formattedData);
+      setPastEvents([
+        { name: "G-Tech", image: rac5, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
+        { name: "Training Session", image: rac6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
+      ]);
   };
 
 
-  const { upcoming, past } = getEvents();
+  // const { upcoming, past } = getEvents(); Commented hereeeee
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -266,7 +246,7 @@ const ClubEvent = ({ club }) => {
       <div className="w-full max-w-screen-lg">
         <h2 className="text-2xl font-bold text-white mb-4">Upcoming</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        {upcoming.map((event, index) => (
+        {upcomingEvents.map((event, index) => (
             <div
               key={index}
               className="relative rounded-lg p-4 custom-card"
@@ -338,7 +318,7 @@ const ClubEvent = ({ club }) => {
       <div className="w-full max-w-screen-lg mt-8">
         <h2 className="text-2xl font-bold text-white mb-4">Past Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        {past.map((event, index) => (
+        {pastEvents.map((event, index) => (
             <div key={index} className="relative rounded-lg p-4 custom-card">
               <div className="relative custom-3d-shadow custom-card">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
