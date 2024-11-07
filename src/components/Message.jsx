@@ -197,7 +197,8 @@ const MessagePage = () => {
                         style={{
                           boxShadow:
                             '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
-                          backgroundColor: '#AEC90A',
+                          backgroundColor: '#90a50d',
+                          color: 'black' 
                         }}
                       >
                         <p>{message.content}</p>
