@@ -6,6 +6,8 @@ import Navbar from "./Navbar";
 import axios from "axios";
 import EventService from "../service/EventService";
 import { useParams } from "react-router-dom";
+import Swal from 'sweetalert2'
+
 
 const AddEvent = () => {
   //<Route path='/club/:id/add-event' element={<AddEvent />} ></Route>
@@ -153,6 +155,22 @@ const AddEvent = () => {
         token
       );
       console.log("Form submitted successfully", response);
+      Swal.fire({
+        text: "Event Request Created Successfully!",
+        icon: "success",
+      }).then(() => {
+        // Reset form fields after success
+        setFormFields({
+          name: "",
+          venue: "",
+          date: "",
+          budgetFile: null,
+          purpose: "",
+          benefits: "",
+          eventImage: null,
+        });
+        setIsFormValid(false); // Optionally reset form validation
+      });
     } catch (error) {
       console.error("Error submitting form", error);
     }
