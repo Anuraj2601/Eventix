@@ -126,6 +126,46 @@ class UsersService{
     static adminOnly() {
         return this.isAuthenticated() && this.isAdmin();
     }
+
+    static async getAllUserProfiles() {
+        try {
+            const response = await axios.get(`${UsersService.BASE_URL}/profiles`);
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async getUserProfileByEmail(email) {
+        try {
+            console.log(`Sending request to get profile by email: ${email}`);
+            const response = await axios.get(`${UsersService.BASE_URL}/api/users/profile`, { params: { email } });
+            console.log(`Response received for profile by email: ${email}`, response.data);
+            return response.data;
+        } catch (err) {
+            console.error(`Error fetching profile for ${email}:`, err.response?.data?.message || err.message);
+            throw new Error(err.response?.data?.message || 'Failed to fetch user profile by email.');
+        }
+    }
+
+    static async getUserByEmail(email, token){
+        try{
+
+            const response = await axios.get(`${UsersService.BASE_URL}/api/users/getUserByEmail`,
+                {
+                    headers: {Authorization: `Bearer ${token}`},
+                    params: { email }
+                }
+            )
+            return response.data;
+
+            
+
+        }catch(err){
+            throw err;
+        }
+    }
+    
 }
 
 export default UsersService;

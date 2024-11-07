@@ -10,18 +10,17 @@ import { useParams } from "react-router-dom";
 
 
 
-import Member from "./Member";
 import StudentMiniNavEvent from './StudentMiniNavEvent';
 import Board from "./Board";
-import Recruitment from './Recruitment';
 import ClubEvent from "./ClubEvent";
-import StudentMiniNavMember from './StudentMiniNavMember';
+import Member from "./Member"; // Change this line
 import ClubPosts from "./ClubPosts";
 
 
 
-const StudentMiniNav = () => {
+const StudentMiniNav = ({ club }) => {
     const [activeTab, setActiveTab] = useState("Events");
+    //console.log("club in student mini nav", club);
 
     const clubs = [
         {
@@ -67,7 +66,7 @@ const StudentMiniNav = () => {
         {
           label: "Posts",
           value: "Posts",
-          desc: <ClubPosts />,
+          desc: <ClubPosts club = { club }/>,
           },
         {
         label: "Events",
@@ -75,15 +74,12 @@ const StudentMiniNav = () => {
         desc:  <StudentMiniNavEvent club={clubs}/> /* `Events` */,
         },
         {
-        label: "Members",
-        value: "Members",
-        desc: <StudentMiniNavMember/>,
-        },
-        {
-        label: "Recruitment",
-        value: "Recruitment",
-        desc: <Recruitment/>,
-        },
+          label: "Members",
+          value: "Members",
+          desc: <Member />, // Update this line
+      },
+      
+       
     ];
 
   return (
@@ -117,4 +113,4 @@ const StudentMiniNav = () => {
   )
 }
 
-export default StudentMiniNav
+export default StudentMiniNav;

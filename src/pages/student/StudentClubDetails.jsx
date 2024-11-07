@@ -96,6 +96,7 @@ const ClubDetails = () => {
   const [clubDetails, setClubDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  
   useEffect(() => {
     fetchClubDetails(id);
   }, [id]);

@@ -49,29 +49,36 @@ const ElectionDetails = ({ club }) => {
 
     if (currentPath.startsWith('/oc')) {
         if (link === "/final-candidates") {
-            finalLink = "/oc/club/finalists";
+            finalLink = "/oc/club/finalists/${election_id}";
         } else if (link === "/voting") {
-            finalLink = "/oc/club/voting";
+            finalLink = "/oc/club/voting/${election_id}";
         } else if (link === "/apply") {
-            finalLink = "/oc/election/apply";
+            finalLink = "/oc/election/apply/${election_id}";
         }
     } else if (currentPath.startsWith('/member')) {
         if (link === "/final-candidates") {
-            finalLink = "/member/club/finalists";
+            finalLink = "/member/club/finalists/${election_id}";
         } else if (link === "/voting") {
-            finalLink = "/member/club/voting";
+            finalLink = "/member/club/voting/${election_id}";
         } else if (link === "/apply") {
-            finalLink = "/member/election/apply";
+            finalLink = "/member/election/apply/${election_id}";
         }
     }
   
     navigate(finalLink);
   };
 
-  const openElectionForm = () => {
-    navigate("/president/club/election/add", { state: { club } });
-  }
-  
+  const openElectionForm = (electionId) => {
+    navigate(`/member/club/election/apply/${electionId}`, { state: { club } });
+  };
+
+  const openvotingform = (electionId) => {
+    navigate(`/member/club/election/voting/${electionId}`, { state: { club } });
+  };
+
+  const viewfinalists = (electionId) => {
+    navigate(`/member/club/election/finalists/${electionId}`, { state: { club } });
+  };
 
   const events = [
     {
@@ -134,6 +141,7 @@ const ElectionDetails = ({ club }) => {
       }
     };
 
+    
     fetchElections();
 
 
@@ -233,23 +241,26 @@ const ElectionDetails = ({ club }) => {
                   {isOcOrMember ? (
                     <div className="flex gap-2 mb-4">
                       <Button
-                        onClick={() => navigateToForm("/apply")}
+                        onClick={() => openElectionForm(election.election_id)}
                         className="bg-[#AEC90A] text-gray-700 rounded-full"
                       >
                         Apply
                       </Button>
                       <Button
-                        onClick={() => navigateToForm("/final-candidates")}
+                        onClick={() => viewfinalists(election.election_id)}
                         className="bg-gray-500 text-gray-700 rounded-full opacity-50"
                       >
                         View Final Candidates
                       </Button>
                       <Button
-                        onClick={() => navigateToForm("/voting")}
-                        className="bg-gray-500 text-gray-700 rounded-full opacity-50"
-                      >
-                        Vote
-                      </Button>
+  onClick={() => openvotingform(election.election_id)} // Pass the election_id
+  className={`rounded-full ${election.is_voting_closed ? "bg-gray-500 text-gray-700 opacity-50" : "bg-[#AEC90A] text-black"}`} 
+  disabled={election.is_voting_closed === 1} // Disables button if voting is closed
+>
+  Vote
+</Button>
+
+
                     </div>
                   ) : (
                     <>
@@ -262,7 +273,7 @@ const ElectionDetails = ({ club }) => {
                       )}
                       {/* <Link to={targetPath}> */}
                         <Button onClick={() => handleViewDetails(election.election_id)} variant="gradient" className="bg-[#AEC90A] rounded-full text-black p-2 inline-block">
-                          View Details
+                          Explore
                         </Button>
                       {/* </Link> */}
                     </>

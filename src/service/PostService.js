@@ -142,6 +142,25 @@ class PostService{
           throw err;
         }
     }
+
+    static async updatePostStatus(post_id, status, token){
+
+        try{
+            const response = await axios.put(`${PostService.BASE_URL}/member/updatePostStatus/${post_id}/${status}`,
+                null,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+
+            );
+
+            return response.data;
+
+        }catch(err){
+            throw err;
+        }
+
+    }
     
 
 

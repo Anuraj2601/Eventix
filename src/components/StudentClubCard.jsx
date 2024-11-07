@@ -41,9 +41,37 @@ const StudentClubCard = () => {
     }
 };
 
-    const handleRegisterClick = (clubDetails) => {
-        navigate(`/clubregister/${clubDetails.club_name}`);
-    };
+const handleRegisterClick = (club) => {
+    let basePath;
+    // Determine the base path from the current location
+    switch (true) {
+        case location.pathname.startsWith('/president'):
+            basePath = '/president';
+            break;
+        case location.pathname.startsWith('/student'):
+            basePath = '/student';
+            break;
+        case location.pathname.startsWith('/oc'):
+            basePath = '/oc';
+            break;
+        case location.pathname.startsWith('/secretary'):
+            basePath = '/secretary';
+            break;
+        case location.pathname.startsWith('/admin'):
+            basePath = '/admin';
+            break;
+        case location.pathname.startsWith('/member'):
+            basePath = '/member';
+            break;
+        case location.pathname.startsWith('/treasurer'):
+            basePath = '/treasurer';
+            break;
+        default:
+            basePath = ''; // Default base path or handle other cases
+    }
+    // Navigate to the club registration page with the club ID appended
+    navigate(`${basePath}/clubregister/${club.club_id}`);
+};
 
     const handleExploreClick = (club) => {
         let basePath;

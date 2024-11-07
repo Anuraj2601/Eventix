@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react'
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import MeetingService from '../../service/MeetingService';
 import { Button } from "@material-tailwind/react";
 import DatePicker from "react-datepicker";
@@ -11,6 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const AddNewMeetingForm = () => {
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [title, setTitle] = useState('');
     const [date, setDate] = useState('');
@@ -22,6 +23,9 @@ const AddNewMeetingForm = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     const { id } = useParams();
+
+    const { club } = location.state || {};
+    //console.log("club in meetings", club);
     
     const handleRadioChange = (e) => {
         setMeetingType(e.target.value);
@@ -150,6 +154,7 @@ const AddNewMeetingForm = () => {
                         time,
                         meetingType,
                         participantType,
+                        club.club_id,
                         token
                     );
         
@@ -166,6 +171,7 @@ const AddNewMeetingForm = () => {
                         time,
                         meetingType,
                         participantType,
+                        club.club_id,
                         token
                     );
         

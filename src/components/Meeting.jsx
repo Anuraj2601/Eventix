@@ -9,7 +9,7 @@ import MeetingService from "../service/MeetingService";
 
 
 
-const Meeting = () => {
+const Meeting = ({club}) => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -55,6 +55,7 @@ const Meeting = () => {
         const token = localStorage.getItem('token');
         const response = await MeetingService.getAllMeetings(token);
         const meetingsArray = response.content || [];
+        //const meetingsArray = response.content.filter(meeting => meeting.clubId == club.club_id) || [];
         setMeetings(meetingsArray);
       } catch (error) {
         console.error('Error fetching meetings:', error);
@@ -118,7 +119,7 @@ const Meeting = () => {
   ]; */
 
   const handleUpdate = (id) => {
-    navigate(`/president/club/meeting/edit/${id}`);
+    navigate(`/president/club/meeting/edit/${id}`, { state: { club } });
   }
 
   const handleDelete = async (id) => {
@@ -142,7 +143,7 @@ const Meeting = () => {
   };
 
   const openMeetingForm = () =>{
-    navigate(`/president/club/meeting/add`);
+    navigate(`/president/club/meeting/add`, { state: { club } });
   }
 
   return (

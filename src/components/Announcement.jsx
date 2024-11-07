@@ -16,11 +16,13 @@ import { FaPlus } from "react-icons/fa6";
 import AnnouncementService from '../service/AnnouncementService';
 import { Token } from "@mui/icons-material";
 
-const Announcement = () => {
+const Announcement = ({club}) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+
+  //console.log("club in announcements component", club);
 
   // Check if the current path is either '/president' or '/secretary'
   const isEditable = currentPath.startsWith('/president') || currentPath.startsWith('/secretary');
@@ -36,7 +38,7 @@ const Announcement = () => {
   };
 
   const openAnnouncementForm = () => {
-    navigate(`/president/club/announcement/add`);
+    navigate(`/president/club/announcement/add`, { state: { club } });
   }
 
   const [announcements,setAnnouncements] = useState([]);
@@ -76,7 +78,7 @@ const Announcement = () => {
       try {
         const token = localStorage.getItem('token');
         const response = await AnnouncementService.getAllAnnouncements(token);
-        const announcementsArray = response.content || [];
+        const announcementsArray = response.content.filter(announcement => announcement.club_id === club.club_id) || [];
         setAnnouncements(announcementsArray);
       } catch (error) {
         console.error('Error fetching announcements:', error);
@@ -94,7 +96,7 @@ const Announcement = () => {
   };
 
   function updateAnnouncement(announcementId){
-    navigate(`/president/club/announcement/edit/${announcementId}`);
+    navigate(`/president/club/announcement/edit/${announcementId}`, { state: { club } });
   }
 
   const handleDeleteAnnouncement = async (announcementId) => {
@@ -170,6 +172,7 @@ const Announcement = () => {
               >
                 <div className="flex flex-col w-full">
                   <div className="flex flex-col mb-2">
+                    <Typography color="white" className="mb-3 text-[#AEC90A] font-semibold text-lg">{announcement.title}</Typography>
                     <Typography color="white" variant="h6">
                       {/* {announcement.content.split('\n').map((line, i) => (
                         <React.Fragment key={i}>

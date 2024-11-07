@@ -4,10 +4,11 @@ import Navbar from "../../components/Navbar";
 import { Badge, Button } from "@material-tailwind/react";
 import { Radio } from "@material-tailwind/react";
 import AnnouncementService from '../../service/AnnouncementService';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const AddNewAnnouncementForm = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -16,6 +17,8 @@ const AddNewAnnouncementForm = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const { id } = useParams();
+    const { club } = location.state || {};
+    //console.log("club in new announcement", club);
     
     const handleRadioChange = (e) => {
         setAnnouncementType(e.target.value);
@@ -95,6 +98,7 @@ const AddNewAnnouncementForm = () => {
                     title,
                     content,
                     announcementType,
+                    club.club_id,
                     token
                 );
     
@@ -109,6 +113,7 @@ const AddNewAnnouncementForm = () => {
                     title,
                     content,
                     announcementType,
+                    club.club_id,
                     token
                 );
     
@@ -167,7 +172,7 @@ const AddNewAnnouncementForm = () => {
                         <div className="flex flex-col w-full">
                             <div className="flex flex-col gap-3 w-96 mt-4">
                                 <label htmlFor="title">Title</label>
-                                <input type="text" placeholder='General Meeting' className='block p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'
+                                <input type="text" placeholder='New announcement' className='block p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'
                                     id='title'
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
@@ -176,7 +181,7 @@ const AddNewAnnouncementForm = () => {
                             </div>
                             <div className="flex flex-col gap-3  w-96 mt-4">
                                 <label htmlFor="content">Content</label>
-                                <input type="text" placeholder='A meeting will be held on...' className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'
+                                <input type="text" placeholder='A workshop will be held on...' className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'
                                     id='content'
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
