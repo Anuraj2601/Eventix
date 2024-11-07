@@ -24,6 +24,7 @@
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
     "date-fns": "^3.6.0",
+    "eventix": "file:",
     "heroicons": "^1.0.6",
     "jquery": "^3.7.1",
     "lottie-react": "^2.4.0",
