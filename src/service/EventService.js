@@ -33,7 +33,7 @@ class EventService{
 
     static async getAllEventsById(club_id, token){
         try{
-            const response = await axios.get(`${EventService.BASE_URL}/event/getAllEvents`,
+            const response = await axios.get(`${EventService.BASE_URL}/event/getEventsByClub/${club_id}`,
                 {
                     headers: {Authorization: `Bearer ${token}`}
                 }
