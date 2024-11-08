@@ -13,7 +13,10 @@ const ClubDetails = () => {
   const { id } = useParams(); // Extract club ID from URL
   const location = useLocation();
   const { club } = location.state || {};
-
+  const getRandomLikes = () => Math.floor(Math.random() * (500 - 100 + 1)) + 100; // Random between 100 and 500
+  const getRandomEvents = () => Math.floor(Math.random() * (11 - 5 + 1)) + 5; // Random between 5 and 20
+  const getRandomMembers = () => Math.floor(Math.random() * (120 - 100 + 1)) + 100; // Random between 100 and 500
+  
   const [clubDetails, setClubDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [registrationState, setRegistrationState] = useState(null); // State for registration status
@@ -85,21 +88,23 @@ const ClubDetails = () => {
                   ))}
                 </div>
                 <div className="flex items-center mb-4">
-                  <LikeButton initialLikes={320} className="mr-2 custom-card" />
+                <LikeButton initialLikes={getRandomLikes()} className="mr-2 custom-card" />
 
-                  <div className="flex items-center mr-6 bg-[#1E1E1E] rounded-full">
-                    <FaCheckCircle className="text-[#AEC90A] text-lg" />
-                    <Typography variant="body1" className="text-white ml-2 custom-card">
-                      10 Successful Events
-                    </Typography>
-                  </div>
+{/* Successful Events with random count */}
+<div className="flex items-center mr-6 bg-[#1E1E1E] rounded-full">
+  <FaCheckCircle className="text-[#AEC90A] text-lg" />
+  <Typography variant="body1" className="text-white ml-2 custom-card">
+    {getRandomEvents()} Successful Events
+  </Typography>
+</div>
 
-                  <div className="flex items-center mr-6 bg-[#1E1E1E] rounded-full">
-                    <FaUsers className="text-[#AEC90A] text-lg" />
-                    <Typography variant="body1" className="text-white ml-2 custom-card">
-                      200 Members Community
-                    </Typography>
-                  </div>
+{/* Members Community with random count */}
+<div className="flex items-center mr-6 bg-[#1E1E1E] rounded-full">
+  <FaUsers className="text-[#AEC90A] text-lg" />
+  <Typography variant="body1" className="text-white ml-2 custom-card">
+    {getRandomMembers()} Members Community
+  </Typography>
+</div>
 
                   {isPresidentView && (
                    <div className="flex items-center ml-4">
