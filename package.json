@@ -47,6 +47,7 @@
     "react-swipeable-views-utils": "^0.14.0",
     "react-toastify": "^10.0.5",
     "slick-carousel": "^1.8.1",
+    "sweetalert2": "^11.14.5",
     "swiper": "^11.1.5",
     "web-vitals": "^4.2.3"
   },

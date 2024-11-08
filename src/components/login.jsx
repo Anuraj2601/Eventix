@@ -310,7 +310,7 @@ const Login = () => {
           localStorage.setItem("token", userData.token);
           localStorage.setItem("role", userData.role);
           localStorage.setItem("session_id", userData.id);
-            
+          localStorage.setItem("User_Id", userData.id);
 
 
           switch (userData.role) {

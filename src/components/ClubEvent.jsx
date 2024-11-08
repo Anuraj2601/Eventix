@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IconButton } from '@material-tailwind/react';
 import { FaArrowRight, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
@@ -39,6 +39,9 @@ import acm6 from "../assets/events/reid2.jpg";
 
 import LikeButton from './LikeButton';
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
+import ClubsService from "../service/ClubsService";
+import { Token } from "@mui/icons-material";
+import EventService from "../service/EventService";
 
 ReactModal.setAppElement('#root');
 
@@ -49,9 +52,11 @@ const ClubEvent = ({ club }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  
-  
+  const [selectedEvent, setSelectedEvent] = useState(null);  
+  const [loading, setLoading] = useState(true);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
+
 // // Decode token and retrieve user_id
 // const getUserIdFromToken = () => {
 //   const token = localStorage.getItem('token'); // Or wherever the token is stored
@@ -66,9 +71,44 @@ const ClubEvent = ({ club }) => {
 //     return null;
 //   }
 // };
-  
-  
-  // Check if the current path matches the specified routes
+
+
+  const [presidentId, setPresidentId] = useState(-1);
+  const userId = localStorage.getItem("User_Id");
+
+  const storedToken = localStorage.getItem("token");
+  console.log("Retrieved Token from localStorage:", storedToken); // Log to console
+
+  useEffect(() => {
+    console.log("yoooooooo: " + userId);
+    
+    fetchClubData();
+  }, []);
+
+
+  // Fetch club data for the specific club_id to get president_id
+  const fetchClubData = async () => {
+    setLoading(true);
+    try {
+     
+
+      console.log("Club Id:", club.club_id); // Log to console
+
+      const clubData = await ClubsService.getClubById(club.club_id, storedToken)
+      console.log("Fetched Club Data:", clubData); // Log the club data
+
+      setPresidentId(clubData.content.president ? clubData.content.president.id : null);  
+      console.log("hiiii: " + userId); // Log the president id
+      getEvents();
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching club data:", error);
+      setLoading(false);
+    }
+  };
+
+
+// Check if the current path matches the specified routes
   const isAuthorizedUser = () => {
     return location.pathname.startsWith('/president') || 
            location.pathname.startsWith('/secretary') || 
@@ -148,56 +188,30 @@ const ClubEvent = ({ club }) => {
     // Add your delete logic here
   };
 
-  const getEvents = () => {
-    if (location.pathname.includes('ieee')) {
-      return {
-        upcoming: [
-          { name: "MadHack 3.0", image: ieee1, date: "25.08.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-          { name: "ReidExtreme 3.0", image: ieee2, date: "09.09.2024", venue: "S104 Hall", status: "Approved", link: "https://example.com/join-oc" },
-          { name: "Introductory Session", image: ieee3, date: "19.09.2024", venue: "S104 Hall", status: "Rejected", reason: "Budget not approved", link: "https://example.com/join-oc" },
-          { name: "Revolux 3.0", image: ieee5, date: "29.09.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-        ],
-        past: [
-          { name: "IEEE Day 3.0", image: ieee4, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
-          { name: "ReidExtreme 2.0", image: ieee6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
-        ]
-      };
-    } else if (location.pathname.includes('rotaract') || 
-    location.pathname.includes('rotract') || 
-    location.pathname.includes('Rotaract Club of UCSC')) {
-      return {
-        upcoming: [
-          { name: "Tech Trail Blazer'23", image: rac1, date: "07.09.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-          { name: "SnapFlix", image: rac2, date: "17.09.2024", venue: "S104 Hall", status: "Pending", link: "https://example.com/join-oc" },
-          { name: "Dev Possible", image: rac3, date: "27.09.2024", venue: "S104 Hall", status: "Rejected", reason: "Budget not approved", link: "https://example.com/join-oc" },
-          { name: "Sport X", image: rac4, date: "07.10.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-        ],
-        past: [
-          { name: "G-Tech", image: rac5, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
-          { name: "Training Session", image: rac6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
-        ]
-      };
-    } else if (location.pathname.includes('acm')) {
-      return {
-        upcoming: [
-          { name: "8 Weeks of Code", image: acm1, date: "05.09.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-          { name: "Hour of Code", image: acm2, date: "15.09.2024", venue: "S104 Hall", status: "Pending", link: "https://example.com/join-oc" },
-          { name: "Ballet Code", image: acm3, date: "25.09.2024", venue: "S104 Hall", status: "Rejected", reason: "Budget not approved", link: "https://example.com/join-oc" },
-          { name: "Discussion Session", image: acm4, date: "05.01.2024", venue: "S204 Hall", status: "Approved", link: "https://example.com/join-oc" },
-        ],
-        past: [
-          { name: "Creative Friday", image: acm5, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
-          { name: "ReidExtreme", image: acm6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
-        ]
-      };
-    } else {
-      // Fallback to empty arrays if none of the keywords match
-      return { upcoming: [], past: [] };
-    }
+  const getEvents = async () => {
+      // axios.get() TODO :: YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+      const eventsData = await EventService.getAllEventsById(club.club_id, storedToken)
+      console.log(eventsData)
+      const formattedData = [];
+      eventsData.content.forEach((event) => {
+        formattedData.push({
+          name: event.name,
+          image: event.event_image ? event.event_image : rac1, 
+          date: `${event.date[0]}/${event.date[1]}/${event.date[2]}`,
+          venue: event.venue,
+          status: "Approved",
+          link: "https://example.com/join-oc"
+        })
+      });
+      setUpcomingEvents(formattedData);
+      setPastEvents([
+        { name: "G-Tech", image: rac5, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
+        { name: "Training Session", image: rac6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
+      ]);
   };
 
 
-  const { upcoming, past } = getEvents();
+  // const { upcoming, past } = getEvents(); Commented hereeeee
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -215,14 +229,15 @@ const ClubEvent = ({ club }) => {
   };
 
   return (
-    <div className="flex justify-center items-center flex-col p-4 rounded-2xl bg-black opacity-70">
-      {isAuthorizedUser() && (
+    <>
+    {loading ? <h1 className="text-white">New Loading ....</h1> :   <div className="flex justify-center items-center flex-col p-4 rounded-2xl bg-black opacity-70">
+      {userId == presidentId && (
         <div className='flex justify-end mb-2'>
           <button
             className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute top-10 right-32 z-10"
             onClick={handleEvent}
           >
-            <MdAdd size={24} />
+         <MdAdd size={24} />
           </button>
         </div>
       )}
@@ -231,7 +246,7 @@ const ClubEvent = ({ club }) => {
       <div className="w-full max-w-screen-lg">
         <h2 className="text-2xl font-bold text-white mb-4">Upcoming</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        {upcoming.map((event, index) => (
+        {upcomingEvents.map((event, index) => (
             <div
               key={index}
               className="relative rounded-lg p-4 custom-card"
@@ -303,7 +318,7 @@ const ClubEvent = ({ club }) => {
       <div className="w-full max-w-screen-lg mt-8">
         <h2 className="text-2xl font-bold text-white mb-4">Past Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        {past.map((event, index) => (
+        {pastEvents.map((event, index) => (
             <div key={index} className="relative rounded-lg p-4 custom-card">
               <div className="relative custom-3d-shadow custom-card">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
@@ -357,7 +372,8 @@ const ClubEvent = ({ club }) => {
           )}
         </div>
       </ReactModal>
-    </div>
+    </div>}
+  </>
   );
 };
 
