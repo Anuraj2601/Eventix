@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@material-tailwind/react";
 import Modal from "react-modal";
 import { FaTimes } from 'react-icons/fa'; // Import the white cross icon
 import { useLocation } from 'react-router-dom'; // Import useLocation hook
+import RegistrationService from '../service/registrationService';
+import UsersService from '../service/UsersService';
 
 const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick, showAddButton }) => {
     return (
@@ -103,6 +105,8 @@ const App = ({clubId}) => {
     const [addedMembers, setAddedMembers] = useState([]);
     const [availableMembers, setAvailableMembers] = useState([]);
 
+    const [allClubMembers, setAllClubMembers] = useState([]);
+
     const location = useLocation(); // Get the current path
 
     //console.log("club id in OC", clubId);
@@ -138,6 +142,38 @@ const App = ({clubId}) => {
         const newAvailableMembers = availableMembers.filter((m) => m.userName !== member.userName);
         setAvailableMembers(newAvailableMembers);
     };
+
+    useEffect(() => {
+
+        const fetchMembers = async () => {
+            try{
+                const token = localStorage.getItem('token');
+                const response = await RegistrationService.getAllRegistrations(token) ;
+                const regArray = response.content.filter(reg => reg.club_id === clubId && reg.accepted == 1) || [];
+                
+
+                // Map through regArray to fetch user details for each user
+                const detailedMembers = await Promise.all(
+                    regArray.map(async reg => {
+                        const userResponse = await UsersService.getUserById(reg.userId, token);
+                        //console.log("user details in oc",userResponse);
+                        return { ...reg, memberName: userResponse.users.firstname, memberImage: userResponse.users.photoUrl };
+                    })
+                );
+                console.log("all registrations", detailedMembers);
+                setAllClubMembers(detailedMembers);
+                
+    
+            }catch(error){
+                console.error("Error fetching registrations", error);
+            }
+
+        }
+
+        fetchMembers();
+
+      
+    }, [modalIsOpen])
 
     return (
         <div className="bg-neutral-900 text-white p-2 w-full">
@@ -192,14 +228,14 @@ const App = ({clubId}) => {
     <div>
         <h3 className="text-xl text-white mb-2 ">Available Members</h3> {/* Centered subheading */}
         <div className="grid grid-cols-4 gap-1"> {/* Reduced gap between members */}
-            {availableMembers.map((member, index) => (
+            {allClubMembers.map((member, index) => (
                 <div key={index} className="flex flex-col items-center  custom-card">
                     <img
-                        src={member.userImage}
-                        alt={member.userName}
+                        src={member.memberImage}
+                        alt={member.memberName}
                         className="w-30 h-30 rounded-full p-2" // Adjusted image size
                     />
-                    <p className="text-white text-center">{member.userName}</p> {/* Centered text */}
+                    <p className="text-white text-center">{member.memberName}</p> {/* Centered text */}
                     <Button
                         className="bg-[#AEC90A] text-black mt-2 rounded-full  custom-card"
                         onClick={() => handleAddMember(member, currentTeam)}
