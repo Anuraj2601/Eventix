@@ -3,11 +3,12 @@ import axios from "axios";
 class EventService{
     static BASE_URL = "http://localhost:8080"
 
-    static async saveEvent(name, venue, date, purpose, benefits, eventImage, budgetFile, token){
+    static async saveEvent(name, venue, date, purpose, benefits, eventImage, budgetFile, club_id, token){
         try{
 
+          
             const formData = new FormData();
-            formData.append('data', new Blob([JSON.stringify({ name, venue, date, purpose, benefits })], { type: 'application/json' }));
+            formData.append('data', new Blob([JSON.stringify({ name, venue, date, purpose, benefits, club_id })], { type: 'application/json' }));
             if (eventImage) formData.append('eventImage', eventImage);
             if (budgetFile) formData.append('budgetFile', budgetFile);
 
@@ -30,10 +31,18 @@ class EventService{
         
     }
 
-
-
-
-
+    static async getAllEventsById(club_id, token){
+        try{
+            const response = await axios.get(`${EventService.BASE_URL}/event/getEventsByClub/${club_id}`,
+                {
+                    headers: {Authorization: `Bearer ${token}`}
+                }
+            )
+            return response.data;
+        }catch(err){
+            throw err;
+        }
+    }
 
 
     static logout() {

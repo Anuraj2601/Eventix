@@ -5,8 +5,16 @@ import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import axios from "axios";
 import EventService from "../service/EventService";
+import { useParams } from "react-router-dom";
+import Swal from 'sweetalert2'
+
 
 const AddEvent = () => {
+  // <Route path='/club/454/add-event' element={<AddEvent />} ></Route>
+  const id  = useParams(); // Get club_id from the URL
+  const club_id = id.name;
+  console.log("Club ID:", club_id);
+
   const [formFields, setFormFields] = useState({
     name: "",
     venue: "",
@@ -124,6 +132,8 @@ const AddEvent = () => {
     formData.append("date", formFields.date);
     formData.append("purpose", formFields.purpose);
     formData.append("benefits", formFields.benefits);
+
+    //formData.append("club_id", club_id);
     
     // Append files to FormData
     if (formFields.budget) {
@@ -145,9 +155,26 @@ const AddEvent = () => {
         formFields.benefits,
         formFields.eventImage,
         formFields.budgetFile,
+        club_id,
         token
       );
       console.log("Form submitted successfully", response);
+      Swal.fire({
+        text: "Event Request Created Successfully!",
+        icon: "success",
+      }).then(() => {
+        // Reset form fields after success
+        setFormFields({
+          name: "",
+          venue: "",
+          date: "",
+          budgetFile: null,
+          purpose: "",
+          benefits: "",
+          eventImage: null,
+        });
+        setIsFormValid(false); // Optionally reset form validation
+      });
     } catch (error) {
       console.error("Error submitting form", error);
     }
