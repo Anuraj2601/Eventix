@@ -172,6 +172,7 @@ const ClubEvent = ({ club }) => {
 
     const clubDetails = {
       clubImage: club.image,
+      //clubId: club.club_id,
       ...event,
     };
 

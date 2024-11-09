@@ -35,7 +35,7 @@ const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick, showAddButto
     );
 };
 
-const App = () => {
+const App = ({clubId}) => {
     const [teams, setTeams] = useState({
         "Team Design": [
             { userName: 'Alice', userImage: 'https://randomuser.me/api/portraits/women/9.jpg' },
@@ -104,6 +104,8 @@ const App = () => {
     const [availableMembers, setAvailableMembers] = useState([]);
 
     const location = useLocation(); // Get the current path
+
+    //console.log("club id in OC", clubId);
 
     // Function to check if the path starts with one of the specified paths
     const isMatchingPage = () => {

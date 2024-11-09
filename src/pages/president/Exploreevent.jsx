@@ -28,8 +28,9 @@ ReactModal.setAppElement("#root"); // For accessibility
 
 const Exploreevent = () => {
   const location = useLocation();
-  console.log(location);
+  
   const { name, image, date, clubName, clubImage, venue } = location.state || {} ;
+  //console.log("explore events location", location.state);
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -45,6 +46,8 @@ const Exploreevent = () => {
     /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */ // Dummy benefits value
   });
 
+  const club_id = location.state.clubId;
+  
   const navigate = useNavigate();
 
   const [eventSponsor, setEventSponsonsors] = useState([]);
@@ -264,7 +267,7 @@ const Exploreevent = () => {
             </div>
 
             <div className="order-3 md:order-2 flex w-full">
-              <EventNav className="w-full h-full" />
+              <EventNav className="w-full h-full" clubId={club_id} />
             </div>
           </div>
 
