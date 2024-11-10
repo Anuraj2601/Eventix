@@ -41,7 +41,7 @@ const ElectionDetails = ({ club }) => {
   const isEditable = currentPath.startsWith('/president');
 
   const openElectionForm = (electionId) => {
-    navigate(`/member/club/election/apply/${electionId}`, { state: { club } });
+    navigate(`/president/club/election/add`, { state: { club } });
   };
 
   const openvotingform = (electionId) => {
