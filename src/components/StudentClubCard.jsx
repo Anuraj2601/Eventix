@@ -34,6 +34,9 @@ const StudentClubCard = () => {
         const token = localStorage.getItem('token');
         const clubs = await ClubsService.getAllClubs(token);
         const clubsArray = clubs.content || [];
+        clubsArray.forEach(club => {
+            console.log(`Club: ${club.club_name}, Image URL: ${club.club_image}`);
+          });
         setClubDetails(clubsArray);
         console.log(clubsArray);
     } catch (error) {
