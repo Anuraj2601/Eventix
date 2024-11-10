@@ -20,8 +20,8 @@ const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick, showAddButto
             <div className="grid grid-cols-4 gap-4 overflow-auto">
                 {teamMembers.map((member, index) => (
                     <div key={index} className="flex flex-col items-center custom-card">
-                        <img src={member.userImage} alt={member.userName} className='w-30 h-30 rounded-full p-2' />
-                        <p className="text-white">{member.userName}</p>
+                        <img src={member.memberImage} alt={member.memberName} className='w-30 h-30 rounded-full p-2' />
+                        <p className="text-white">{member.memberName}</p>
                         {showAddButton && (
                             <Button
                                 className="text-red-500 mt-2 custom-card"
@@ -38,67 +38,70 @@ const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick, showAddButto
 };
 
 const App = ({clubId}) => {
-    const [teams, setTeams] = useState({
-        "Team Design": [
-            { userName: 'Alice', userImage: 'https://randomuser.me/api/portraits/women/9.jpg' },
-            { userName: 'Bob', userImage: 'https://randomuser.me/api/portraits/men/13.jpg' },
-            { userName: 'Charlie', userImage: 'https://randomuser.me/api/portraits/men/19.jpg' },
-            { userName: 'Dave', userImage: 'https://randomuser.me/api/portraits/men/29.jpg' },
-        ],
-        "Team Finance": [
-            { userName: 'Eve', userImage: 'https://randomuser.me/api/portraits/women/13.jpg' },
-            { userName: 'Frank', userImage: 'https://randomuser.me/api/portraits/men/23.jpg' },
-            { userName: 'Grace', userImage: 'https://randomuser.me/api/portraits/men/33.jpg' },
-            { userName: 'Hank', userImage: 'https://randomuser.me/api/portraits/men/43.jpg' },
-        ],
-        "Team Content": [
-            { userName: 'Ivy', userImage: 'https://randomuser.me/api/portraits/women/14.jpg' },
-            { userName: 'Jack', userImage: 'https://randomuser.me/api/portraits/men/24.jpg' },
-            { userName: 'Kara', userImage: 'https://randomuser.me/api/portraits/men/34.jpg' },
-            { userName: 'Liam', userImage: 'https://randomuser.me/api/portraits/men/44.jpg' },
-        ],
-        "Team Marketing": [
-            { userName: 'Mia', userImage: 'https://randomuser.me/api/portraits/women/15.jpg' },
-            { userName: 'Noah', userImage: 'https://randomuser.me/api/portraits/men/25.jpg' },
-            { userName: 'Olivia', userImage: 'https://randomuser.me/api/portraits/men/35.jpg' },
-            { userName: 'Paul', userImage: 'https://randomuser.me/api/portraits/men/45.jpg' },
-        ],
-    });
+    // const [teams, setTeams] = useState({
+    //     "Team Design": [
+    //         { userName: 'Alice', userImage: 'https://randomuser.me/api/portraits/women/9.jpg' },
+    //         { userName: 'Bob', userImage: 'https://randomuser.me/api/portraits/men/13.jpg' },
+    //         { userName: 'Charlie', userImage: 'https://randomuser.me/api/portraits/men/19.jpg' },
+    //         { userName: 'Dave', userImage: 'https://randomuser.me/api/portraits/men/29.jpg' },
+    //     ],
+    //     "Team Finance": [
+    //         { userName: 'Eve', userImage: 'https://randomuser.me/api/portraits/women/13.jpg' },
+    //         { userName: 'Frank', userImage: 'https://randomuser.me/api/portraits/men/23.jpg' },
+    //         { userName: 'Grace', userImage: 'https://randomuser.me/api/portraits/men/33.jpg' },
+    //         { userName: 'Hank', userImage: 'https://randomuser.me/api/portraits/men/43.jpg' },
+    //     ],
+    //     "Team Content": [
+    //         { userName: 'Ivy', userImage: 'https://randomuser.me/api/portraits/women/14.jpg' },
+    //         { userName: 'Jack', userImage: 'https://randomuser.me/api/portraits/men/24.jpg' },
+    //         { userName: 'Kara', userImage: 'https://randomuser.me/api/portraits/men/34.jpg' },
+    //         { userName: 'Liam', userImage: 'https://randomuser.me/api/portraits/men/44.jpg' },
+    //     ],
+    //     "Team Marketing": [
+    //         { userName: 'Mia', userImage: 'https://randomuser.me/api/portraits/women/15.jpg' },
+    //         { userName: 'Noah', userImage: 'https://randomuser.me/api/portraits/men/25.jpg' },
+    //         { userName: 'Olivia', userImage: 'https://randomuser.me/api/portraits/men/35.jpg' },
+    //         { userName: 'Paul', userImage: 'https://randomuser.me/api/portraits/men/45.jpg' },
+    //     ],
+    // });
 
-    const clubMembers = {
-        "Team Design": [
-            { userName: 'Quinn', userImage: 'https://randomuser.me/api/portraits/women/16.jpg' },
-            { userName: 'Ryan', userImage: 'https://randomuser.me/api/portraits/men/26.jpg' },
-            { userName: 'Sophia', userImage: 'https://randomuser.me/api/portraits/women/36.jpg' },
-            { userName: 'Thomas', userImage: 'https://randomuser.me/api/portraits/men/46.jpg' },
-            { userName: 'Uma', userImage: 'https://randomuser.me/api/portraits/women/47.jpg' },
-            { userName: 'Victor', userImage: 'https://randomuser.me/api/portraits/men/48.jpg' },
-        ],
-        "Team Finance": [
-            { userName: 'Will', userImage: 'https://randomuser.me/api/portraits/men/49.jpg' },
-            { userName: 'Xena', userImage: 'https://randomuser.me/api/portraits/women/50.jpg' },
-            { userName: 'Yara', userImage: 'https://randomuser.me/api/portraits/women/51.jpg' },
-            { userName: 'Zane', userImage: 'https://randomuser.me/api/portraits/men/52.jpg' },
-            { userName: 'Ava', userImage: 'https://randomuser.me/api/portraits/women/53.jpg' },
-            { userName: 'Ben', userImage: 'https://randomuser.me/api/portraits/men/54.jpg' },
-        ],
-        "Team Content": [
-            { userName: 'Cora', userImage: 'https://randomuser.me/api/portraits/women/55.jpg' },
-            { userName: 'Dylan', userImage: 'https://randomuser.me/api/portraits/men/56.jpg' },
-            { userName: 'Ella', userImage: 'https://randomuser.me/api/portraits/women/57.jpg' },
-            { userName: 'Finn', userImage: 'https://randomuser.me/api/portraits/men/58.jpg' },
-            { userName: 'Gina', userImage: 'https://randomuser.me/api/portraits/women/59.jpg' },
-            { userName: 'Harry', userImage: 'https://randomuser.me/api/portraits/men/60.jpg' },
-        ],
-        "Team Marketing": [
-            { userName: 'Isla', userImage: 'https://randomuser.me/api/portraits/women/61.jpg' },
-            { userName: 'Jake', userImage: 'https://randomuser.me/api/portraits/men/62.jpg' },
-            { userName: 'Kara', userImage: 'https://randomuser.me/api/portraits/women/63.jpg' },
-            { userName: 'Leo', userImage: 'https://randomuser.me/api/portraits/men/64.jpg' },
-            { userName: 'Mona', userImage: 'https://randomuser.me/api/portraits/women/65.jpg' },
-            { userName: 'Nate', userImage: 'https://randomuser.me/api/portraits/men/66.jpg' },
-        ],
-    };
+
+    
+
+    // const clubMembers = {
+    //     "Team Design": [
+    //         { userName: 'Quinn', userImage: 'https://randomuser.me/api/portraits/women/16.jpg' },
+    //         { userName: 'Ryan', userImage: 'https://randomuser.me/api/portraits/men/26.jpg' },
+    //         { userName: 'Sophia', userImage: 'https://randomuser.me/api/portraits/women/36.jpg' },
+    //         { userName: 'Thomas', userImage: 'https://randomuser.me/api/portraits/men/46.jpg' },
+    //         { userName: 'Uma', userImage: 'https://randomuser.me/api/portraits/women/47.jpg' },
+    //         { userName: 'Victor', userImage: 'https://randomuser.me/api/portraits/men/48.jpg' },
+    //     ],
+    //     "Team Finance": [
+    //         { userName: 'Will', userImage: 'https://randomuser.me/api/portraits/men/49.jpg' },
+    //         { userName: 'Xena', userImage: 'https://randomuser.me/api/portraits/women/50.jpg' },
+    //         { userName: 'Yara', userImage: 'https://randomuser.me/api/portraits/women/51.jpg' },
+    //         { userName: 'Zane', userImage: 'https://randomuser.me/api/portraits/men/52.jpg' },
+    //         { userName: 'Ava', userImage: 'https://randomuser.me/api/portraits/women/53.jpg' },
+    //         { userName: 'Ben', userImage: 'https://randomuser.me/api/portraits/men/54.jpg' },
+    //     ],
+    //     "Team Content": [
+    //         { userName: 'Cora', userImage: 'https://randomuser.me/api/portraits/women/55.jpg' },
+    //         { userName: 'Dylan', userImage: 'https://randomuser.me/api/portraits/men/56.jpg' },
+    //         { userName: 'Ella', userImage: 'https://randomuser.me/api/portraits/women/57.jpg' },
+    //         { userName: 'Finn', userImage: 'https://randomuser.me/api/portraits/men/58.jpg' },
+    //         { userName: 'Gina', userImage: 'https://randomuser.me/api/portraits/women/59.jpg' },
+    //         { userName: 'Harry', userImage: 'https://randomuser.me/api/portraits/men/60.jpg' },
+    //     ],
+    //     "Team Marketing": [
+    //         { userName: 'Isla', userImage: 'https://randomuser.me/api/portraits/women/61.jpg' },
+    //         { userName: 'Jake', userImage: 'https://randomuser.me/api/portraits/men/62.jpg' },
+    //         { userName: 'Kara', userImage: 'https://randomuser.me/api/portraits/women/63.jpg' },
+    //         { userName: 'Leo', userImage: 'https://randomuser.me/api/portraits/men/64.jpg' },
+    //         { userName: 'Mona', userImage: 'https://randomuser.me/api/portraits/women/65.jpg' },
+    //         { userName: 'Nate', userImage: 'https://randomuser.me/api/portraits/men/66.jpg' },
+    //     ],
+    // };
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [currentTeam, setCurrentTeam] = useState('');
@@ -123,12 +126,25 @@ const App = ({clubId}) => {
         setTeams(newTeams);
     };
 
+    // const handleAddNewClick = (teamName) => {
+    //     setCurrentTeam(teamName);
+    //     const currentMembers = teams[teamName];
+    //     const availableMembers = clubMembers[teamName].filter(
+    //         (member) => !currentMembers.some((m) => m.userName === member.userName)
+    //     );
+    //     setAddedMembers(currentMembers);
+    //     setAvailableMembers(availableMembers);
+    //     setModalIsOpen(true);
+    // };
+
     const handleAddNewClick = (teamName) => {
         setCurrentTeam(teamName);
         const currentMembers = teams[teamName];
-        const availableMembers = clubMembers[teamName].filter(
-            (member) => !currentMembers.some((m) => m.userName === member.userName)
-        );
+        // const availableMembers = allClubMembers[teamName].filter(
+        //     (member) => !currentMembers.some((m) => m.userName === member.userName)
+        // );
+        const availableMembers = allClubMembers[teamName]
+        console.log("Availble members", availableMembers);
         setAddedMembers(currentMembers);
         setAvailableMembers(availableMembers);
         setModalIsOpen(true);
@@ -157,11 +173,29 @@ const App = ({clubId}) => {
                     regArray.map(async reg => {
                         const userResponse = await UsersService.getUserById(reg.userId, token);
                         //console.log("user details in oc",userResponse);
-                        return { ...reg, memberName: userResponse.users.firstname, memberImage: userResponse.users.photoUrl };
+                        return { 
+                            ...reg, 
+                            memberName: userResponse.users.firstname, 
+                            memberImage: userResponse.users.photoUrl
+                            
+                        };
                     })
                 );
-                console.log("all registrations", detailedMembers);
-                setAllClubMembers(detailedMembers);
+
+                //console.log("detailed members ", detailedMembers);
+
+                // Group members by team
+                const categorizedMembers = detailedMembers.reduce((acc, member) => {
+                    const team = member.team || "No Team"; 
+                    if (!acc[team]) {
+                        acc[team] = [];
+                    }
+                    acc[team].push(member);
+                    return acc;
+                }, {});
+
+                console.log("Categorized members by team", categorizedMembers);
+                setAllClubMembers(categorizedMembers);
                 
     
             }catch(error){
@@ -174,6 +208,13 @@ const App = ({clubId}) => {
 
       
     }, [modalIsOpen])
+
+    const [teams, setTeams] = useState([]);
+
+    useEffect(() => {
+        setTeams(allClubMembers);
+    }, [allClubMembers]);
+    
 
     return (
         <div className="bg-neutral-900 text-white p-2 w-full">
@@ -228,7 +269,7 @@ const App = ({clubId}) => {
     <div>
         <h3 className="text-xl text-white mb-2 ">Available Members</h3> {/* Centered subheading */}
         <div className="grid grid-cols-4 gap-1"> {/* Reduced gap between members */}
-            {allClubMembers.map((member, index) => (
+            {availableMembers.map((member, index) => (
                 <div key={index} className="flex flex-col items-center  custom-card">
                     <img
                         src={member.memberImage}
