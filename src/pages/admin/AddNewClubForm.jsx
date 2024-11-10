@@ -194,7 +194,7 @@ const AddNewClubForm = () => {
           <div className="grid grid-cols-1 gap-4">
             {/* Event Image Upload */}
             <div className="mb-4">
-              <label className="block mb-2">Club Image:</label>
+              <label className="block mb-2">Club Logo Image:</label>
               <div className="flex flex-col items-center">
                 <input
                   type="file"
