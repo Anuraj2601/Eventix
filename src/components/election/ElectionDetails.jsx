@@ -44,8 +44,15 @@ const ElectionDetails = ({ club }) => {
     navigate(`/president/club/election/add`, { state: { club } });
   };
 
+  
+  
+
   const openvotingform = (electionId) => {
     navigate(`/member/club/election/voting/${electionId}`, { state: { club } });
+  };
+
+  const openapplyform = (electionId) => {
+    navigate(`/member/club/election/apply/${electionId}`, { state: { club } });
   };
 
   const viewfinalists = (electionId) => {
@@ -169,6 +176,8 @@ const ElectionDetails = ({ club }) => {
               fromUTC={fromUTC}
               viewfinalists={viewfinalists}
               openvotingform={openvotingform}
+              openapplyform={openapplyform}
+
               openElectionForm={openElectionForm}
             />
           ))}
@@ -188,6 +197,8 @@ const ElectionDetails = ({ club }) => {
               fromUTC={fromUTC}
               viewfinalists={viewfinalists}
               openvotingform={openvotingform}
+              openapplyform={openapplyform}
+
               openElectionForm={openElectionForm}
               isPastElection
             />
@@ -198,7 +209,7 @@ const ElectionDetails = ({ club }) => {
   );
 };
 
-const ElectionCard = ({ election, isOcOrMember, isEditable, handleEdit, handleDelete, handleViewDetails, fromUTC, viewfinalists, openvotingform, openElectionForm, isPastElection }) => (
+const ElectionCard = ({ election, isOcOrMember, isEditable, handleEdit, handleDelete, handleViewDetails, fromUTC, viewfinalists, openvotingform, openapplyform, openElectionForm, isPastElection }) => (
   <div
     className={`grid grid-cols-6 gap-1 items-center p-5 bg-[#1E1E1E] rounded-xl mb-2 ${isPastElection ? 'opacity-50' : ''}`}
     style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.8)' }}
@@ -221,7 +232,7 @@ const ElectionCard = ({ election, isOcOrMember, isEditable, handleEdit, handleDe
     <div className="col-span-6 flex flex-col items-end gap-2 p-5">
       {isOcOrMember ? (
         <div className="flex gap-2 mb-4">
-          <Button onClick={() => openElectionForm(election.election_id)} className="bg-[#AEC90A] text-gray-700 rounded-full">
+          <Button onClick={() => openapplyform(election.election_id)} className="bg-[#AEC90A] text-gray-700 rounded-full">
             Apply
           </Button>
           <Button onClick={() => viewfinalists(election.election_id)} className="bg-gray-500 text-gray-700 rounded-full opacity-50">
