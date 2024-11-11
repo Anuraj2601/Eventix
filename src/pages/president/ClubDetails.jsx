@@ -10,7 +10,7 @@ import { FaCheckCircle, FaUsers } from 'react-icons/fa'; // Import icons for suc
 import ClubsService from '../../service/ClubsService';
 
 const ClubDetails = () => {
-  const { id } = useParams(); // Extract club ID from URL
+  const { id } = useParams();
   const location = useLocation();
   const { club } = location.state || {};
   const getRandomLikes = () => Math.floor(Math.random() * (500 - 100 + 1)) + 100; // Random between 100 and 500
@@ -35,8 +35,8 @@ const ClubDetails = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await ClubsService.getClubById(clubId, token);
-      setClubDetails(response.content);
-      setRegistrationState(response.content.registrationState); // Set initial registration state
+      setClubDetails(response);
+      setRegistrationState(response.registrationState); // Set initial registration state
       setLoading(false);
     } catch (error) {
       console.error("Failed to fetch club details", error);
