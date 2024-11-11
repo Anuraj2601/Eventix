@@ -7,6 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { format } from 'date-fns';
 import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function is correctly implemented
 import RegistrationService from '../service/registrationService';
+import { Typography } from "@material-tailwind/react";
+
 
 const menuItems = [
   { title: "Design Team" },
@@ -95,7 +97,8 @@ const ClubRegistrationForm = () => {
         token
       );
       alert('Registration successful!');
-      navigate(`/student/club`);
+      navigate(-1);
+
     } catch (error) {
       const errorMessage = error.message || 'Failed to submit the form.';
       alert(errorMessage);
@@ -107,34 +110,36 @@ const ClubRegistrationForm = () => {
 
   return (
     <div className='flex flex-col items-center justify-center relative'>
-      <div className='bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4'>
+       <Typography variant="h5" className="mb-4 text-center">
         Club Registration Form
-      </div>
-      <div className="bg-[#0B0B0B] flex flex-col items-center justify-center border-2 border-[#AEC90A] rounded-lg w-3/5 py-9">
+      </Typography>
+      <div className="grid grid-cols-1 gap-4">
         <form onSubmit={handleSubmit}>
           <div className="grid gap-x-10 gap-y-6 mb-6 md:grid-cols-2">
             {/* Club ID field */}
             <div className="flex flex-col gap-3">
-              <label htmlFor="club_id" className="text-white">Club ID</label>
+              <label htmlFor="club_id" className="block mb-2">Club ID</label>
               <input
                 type="number"
                 name="club_id"
                 value={formData.club_id}
-                className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white"
-                placeholder="Club ID"
+                className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                placeholder="Club ID"
                 readOnly
               />
             </div>
 
             {/* Email field */}
             <div className="flex flex-col gap-3">
-              <label htmlFor="email" className="text-white">Email</label>
+              <label htmlFor="email" className="block mb-2">Email</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
-                className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-full text-white"
-                placeholder="Email"
+                className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                placeholder="Email"
                 readOnly
               />
             </div>
@@ -143,13 +148,14 @@ const ClubRegistrationForm = () => {
           <div className="grid gap-10 mb-6 md:grid-cols-2">
             {/* Team menu */}
             <div className="flex flex-col gap-3">
-              <label htmlFor="team" className="text-white">Select a Team</label>
+              <label htmlFor="team" className="block mb-2">Select a Team</label>
               <Menu open={openMenu} handler={setOpenMenu} allowHover>
                 <MenuHandler>
                   <Button
                     variant="text"
-                    className="flex items-center justify-between gap-3 text-base font-normal capitalize tracking-normal border-2 border-[#AEC90A] p-3 rounded-full w-80 text-[#9ca3af]"
-                  >
+                    className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                  >
                     {formData.team || "Team"}{" "}
                     <HiChevronDown
                       strokeWidth={2.5}
@@ -175,12 +181,13 @@ const ClubRegistrationForm = () => {
 
             {/* Interview Slot */}
             <div className="flex flex-col gap-3">
-              <label htmlFor="interviewSlot" className="text-white">Select Interview Slot</label>
+              <label htmlFor="interviewSlot" className="block mb-2">Select Interview Slot</label>
               <DatePicker
                 selected={selectedDate}
                 onChange={handleDateChange}
-                className="w-80 text-white rounded-full border-2 border-[#AEC90A] bg-[#0B0B0B] p-3"
-                placeholderText="Pick a date"
+                className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                placeholderText="Pick a date"
                 showTimeSelect
                 timeFormat="HH:mm"
                 timeIntervals={15}
@@ -192,15 +199,16 @@ const ClubRegistrationForm = () => {
 
           {/* Reason field */}
           <div className="flex flex-col mb-6 gap-3">
-            <label htmlFor="reason" className="text-white">Reason</label>
+            <label htmlFor="reason" className="block mb-2">Reason</label>
             <textarea
               id="reason"
               name="reason"
               value={formData.reason}
               onChange={handleChange}
               rows="4"
-              className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] rounded-lg text-white"
-              placeholder="Enter the reason you want to join this club"
+              className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+              style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}              placeholder="Enter the reason you want to join this club"
             ></textarea>
           </div>
 
@@ -208,8 +216,9 @@ const ClubRegistrationForm = () => {
           <div className="flex items-center justify-center">
             <button
               type="submit"
-              className="p-3 w-80 bg-[#AEC90A] text-white rounded-full hover:bg-[#9ca3af]"
-              disabled={!isFormValid()}
+              className={`p-2 rounded-2xl ${isFormValid ? 'bg-[#AEC90A]' : 'bg-gray-500'} text-white`}
+              style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                       disabled={!isFormValid()}
             >
               {loading ? 'Loading...' : 'Register'}
             </button>
