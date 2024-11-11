@@ -7,6 +7,9 @@ import StudentMiniNav from '../../components/StudentMiniNav';
 import LikeButton from '../../components/LikeButton';
 import CustomSwitch from '../../components/Customswitch'; // Ensure correct import path
 import { FaCheckCircle, FaUsers } from 'react-icons/fa'; // Import icons for successful events and members
+import ClubToggle from '../../components/ClubToggle'; // Ensure correct import path
+import PresidentClubNav from '../../components/PresidentClubNav';
+
 
 // Image imports
 import rotaractImage from '../../assets/clubs/rotaract.png';
@@ -93,13 +96,22 @@ const ClubDetails = () => {
   const location = useLocation();
   const { club } = location.state || {};
 
+  const getRandomLikes = () => Math.floor(Math.random() * (500 - 100 + 1)) + 100; // Random between 100 and 500
+  const getRandomEvents = () => Math.floor(Math.random() * (11 - 5 + 1)) + 5; // Random between 5 and 20
+  const getRandomMembers = () => Math.floor(Math.random() * (120 - 100 + 1)) + 100; // Random between 100 and 500
   const [clubDetails, setClubDetails] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isPresidentView, setIsPresidentView] = useState(false); // State for URL check
 
   
   useEffect(() => {
     fetchClubDetails(id);
-  }, [id]);
+
+    // Check if the URL contains 'president'
+    if (location.pathname.includes('president')) {
+      setIsPresidentView(true);
+    }
+  }, [id, location.pathname]);
 
   const fetchClubDetails = async (clubId) => {
     try {
@@ -161,31 +173,43 @@ const ClubDetails = () => {
                     </Typography>
                   ))}
                 </div>
-                <div className="flex items-center">
-                  {/* Like Button */}
-                  <LikeButton initialLikes={320} className="mr-2 custom-card" />
+                <div className="flex items-center mb-4">
+                <LikeButton initialLikes={getRandomLikes()} className="mr-2 custom-card" />
 
-                  {/* Successful Events */}
-                  <div className="flex items-center mr-6 bg-[#1E1E1E] rounded-full">
-                    <FaCheckCircle className="text-[#AEC90A] text-lg" />
-                    <Typography variant="body1" className="text-white ml-2 custom-card">
-                      10 Successful Events
-                    </Typography>
-                  </div>
+{/* Successful Events with random count */}
+<div className="flex items-center mr-6 bg-[#1E1E1E] rounded-full">
+  <FaCheckCircle className="text-[#AEC90A] text-lg" />
+  <Typography variant="body1" className="text-white ml-2 custom-card">
+    {getRandomEvents()} Successful Events
+  </Typography>
+</div>
 
-                  {/* Members */}
-                  <div className="flex items-center bg-[#1E1E1E] rounded-full">
-                    <FaUsers className="text-[#AEC90A] text-lg" />
-                    <Typography variant="body1" className="text-white ml-2 custom-card">
-                      200 Members Community
-                    </Typography>
-                  </div>
+{/* Members Community with random count */}
+<div className="flex items-center mr-6 bg-[#1E1E1E] rounded-full">
+  <FaUsers className="text-[#AEC90A] text-lg" />
+  <Typography variant="body1" className="text-white ml-2 custom-card">
+    {getRandomMembers()} Members Community
+  </Typography>
+</div>
+
+                  {isPresidentView && (
+                   <div className="flex items-center ml-4">
+                   <Typography variant="body1" className="text-white mr-2">
+                     Recruitment
+                   </Typography>
+                   <ClubToggle clubId={id} /> {/* Pass the club ID to ClubToggle */}
+                 </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
-        <StudentMiniNav  club={clubDetails}
-/>
+          {isPresidentView ? (
+  <PresidentClubNav club={clubDetails} />
+) : (
+  <StudentMiniNav club={clubDetails} />
+)}
+
         </div>
       </div>
     </div>
