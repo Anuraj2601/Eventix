@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect  } from 'react'
 import {
     Tabs,
     TabsHeader,
@@ -6,7 +6,7 @@ import {
     Tab,
     TabPanel,
   } from "@material-tailwind/react";
-import { useParams } from "react-router-dom";
+import { useParams,useLocation, useNavigate } from "react-router-dom";
 
 
 
@@ -19,42 +19,12 @@ import ClubPosts from "./ClubPosts";
 
 
 const StudentMiniNav = ({ club }) => {
-    const [activeTab, setActiveTab] = useState("Events");
+  const [activeTab, setActiveTab] = useState(null);  
+  const location = useLocation();
+  const navigate = useNavigate();// Initially set to null
     //console.log("club in student mini nav", club);
 
-    const clubs = [
-        {
-            id: "1",
-            name: "IEEE Student Group",
-            sname: "ieee",
-            image: "src/assets/clubs/ieee.png",
-        },
-        {
-            id: "2",
-            name: "ISACA Student Group",
-            sname: "isaca",
-            image: "src/assets/clubs/isaca.png",
-        },
-        {
-            id: "3",
-            name: "Gavel Club (Public Speaking and Leadership)",
-            sname: "gavel",
-            image: "src/assets/clubs/gavel.png",
-        },
-        {
-            id: "4",
-            name: "Pahasara Club (Innovation and Creativity)",
-            sname: "pahasara",
-            image: "src/assets/clubs/pahasara.png",
-        },
-        {
-            id: "5",
-            name: "Rotaract Club of UCSC",
-            sname: "rotract",
-            image: "src/assets/clubs/rotaract.png",
-        },
-    ];
-
+   
     const sname = useParams();
 
     const data = [
@@ -71,7 +41,7 @@ const StudentMiniNav = ({ club }) => {
         {
         label: "Events",
         value: "Events",
-        desc:  <StudentMiniNavEvent club={clubs}/> /* `Events` */,
+        desc:  <ClubEvent club={club}/> /* `Events` */,
         },
         {
           label: "Members",
@@ -82,6 +52,34 @@ const StudentMiniNav = ({ club }) => {
        
     ];
 
+    useEffect(() => {
+      if (activeTab === null) {  // Only set the tab if it's not already set
+        const urlTab = new URLSearchParams(location.search).get("tab");
+        const savedTab = localStorage.getItem("activeTab");
+  
+        if (urlTab) {
+          setActiveTab(urlTab);  // Use the tab from the URL if available
+        } else if (savedTab) {
+          setActiveTab(savedTab);  // Fall back to localStorage if URL doesn't have a tab
+        } else {
+          setActiveTab("Events");  // Default to "Events" if no tab is found
+        }
+      }
+    }, [location, activeTab]);
+  
+    // Save the active tab to localStorage and URL whenever it changes
+    useEffect(() => {
+      if (activeTab !== null) {
+        localStorage.setItem("activeTab", activeTab);  // Save to localStorage
+        navigate(`?tab=${activeTab}`, { replace: true });  // Update the URL without adding to history
+      }
+    }, [activeTab, navigate]);
+  
+    // Loading state while activeTab is not set
+    if (activeTab === null) {
+      return <div>Loading...</div>;
+    }
+    
   return (
     <Tabs value={activeTab}>
       <TabsHeader
