@@ -71,7 +71,7 @@ const StudentMiniNav = ({ club }) => {
     useEffect(() => {
       if (activeTab !== null) {
         localStorage.setItem("activeTab", activeTab);  // Save to localStorage
-        navigate(`?tab=${activeTab}`, { replace: true });  // Update the URL without adding to history
+          // Update the URL without adding to history
       }
     }, [activeTab, navigate]);
   
