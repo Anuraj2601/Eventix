@@ -6,30 +6,65 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { Dialog } from "@material-tailwind/react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ClubsService from '../service/ClubsService';
+import RegistrationService from '../service/RegistrationsService';  // Assuming you have a service to fetch registrations
 
 const ClubPresident = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [clubDetails, setClubDetails] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
+  const [filteredClubs, setFilteredClubs] = useState([]);
 
+  // Fetch the clubs and registrations data
   useEffect(() => {
     fetchClubs();
+    fetchRegistrations();
   }, []);
 
+  // Fetch all clubs
   const fetchClubs = async () => {
     try {
       const token = localStorage.getItem('token');
       const clubs = await ClubsService.getAllClubs(token);
       const clubsArray = clubs.content || [];
-      clubsArray.forEach(club => {
-        console.log(`Club: ${club.club_name}, Image URL: ${club.club_image}`);
-      });
       setClubDetails(clubsArray);
     } catch (error) {
       console.error("Failed to fetch clubs", error);
     }
   };
+
+  // Fetch all registrations
+  const fetchRegistrations = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const currentUserId = localStorage.getItem('userId');  // Assuming the user ID is stored in localStorage
+      const registrationsData = await RegistrationService.getAllRegistrations(token);
+      setRegistrations(registrationsData);
+    } catch (error) {
+      console.error("Failed to fetch registrations", error);
+    }
+  };
+
+  // Filter clubs based on the user's session ID and position
+  useEffect(() => {
+    if (registrations.length > 0 && clubDetails.length > 0) {
+      const currentUserId = localStorage.getItem('userId');
+      // Filter registrations to match current user's ID and accepted status, with relevant positions
+      const filteredRegistrations = registrations.filter(reg =>
+        reg.accepted === 1 &&
+        reg.user_id === currentUserId && 
+        ['president', 'secretary', 'oc'].includes(reg.position)
+      );
+
+      // Extract the club IDs from the filtered registrations
+      const clubIds = filteredRegistrations.map(reg => reg.club_id);
+
+      // Filter clubs that match the club IDs from the registrations
+      const filteredClubs = clubDetails.filter(club => clubIds.includes(club.club_id));
+      setFilteredClubs(filteredClubs);  // Only show clubs that the user is a part of in the relevant positions
+    }
+  }, [registrations, clubDetails]);
 
   const handleExploreClick = (club) => {
     let basePath;
@@ -68,7 +103,7 @@ const ClubPresident = () => {
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div>
-            {clubDetails.map((club) => (
+            {filteredClubs.map((club) => (
               <div
                 key={club.club_id}
                 className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
@@ -107,37 +142,36 @@ const ClubPresident = () => {
         </CardBody>
       </Card>
       <Dialog
-  size="xs"
-  open={open}
-  handler={handleOpen}
-  className="fixed inset-0 flex items-center justify-center bg-opacity-60 backdrop-blur-sm transition-opacity duration-200 z-50"
->
-  <Card className="mx-auto w-full max-w-[24rem] p-3 relative">
-    <IoIosCloseCircle
-      className="absolute text-xl top-1 right-1 cursor-pointer"
-      onClick={handleOpen}
-    />
-    <CardBody className="flex flex-col">
-      <Typography
-        className="mb-3 font-normal font-[poppins]"
-        variant="paragraph"
-        color="gray"
+        size="xs"
+        open={open}
+        handler={handleOpen}
+        className="fixed inset-0 flex items-center justify-center bg-opacity-60 backdrop-blur-sm transition-opacity duration-200 z-50"
       >
-        Why are you leaving? Let us know your reason:
-      </Typography>
-      <div className="relative">
-        <Textarea
-          size="lg"
-          className="h-16 border-2 bg-slate-100"
-          placeholder="Type your reason"
-          required
-        />
-        <MdSend className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer" />
-      </div>
-    </CardBody>
-  </Card>
-</Dialog>
-
+        <Card className="mx-auto w-full max-w-[24rem] p-3 relative">
+          <IoIosCloseCircle
+            className="absolute text-xl top-1 right-1 cursor-pointer"
+            onClick={handleOpen}
+          />
+          <CardBody className="flex flex-col">
+            <Typography
+              className="mb-3 font-normal font-[poppins]"
+              variant="paragraph"
+              color="gray"
+            >
+              Why are you leaving? Let us know your reason:
+            </Typography>
+            <div className="relative">
+              <Textarea
+                size="lg"
+                className="h-16 border-2 bg-slate-100"
+                placeholder="Type your reason"
+                required
+              />
+              <MdSend className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer" />
+            </div>
+          </CardBody>
+        </Card>
+      </Dialog>
     </>
   );
 };
