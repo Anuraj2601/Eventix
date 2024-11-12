@@ -204,6 +204,8 @@ const App = ({clubId, event}) => {
         setAvailableMembers(newAvailableMembers);
     };
 
+    const allTeams = ["Design Team", "Marketing Team", "Finance Team", "Program Team"];
+
     useEffect(() => {
 
         const fetchOCMembers = async () => {
@@ -239,6 +241,14 @@ const App = ({clubId, event}) => {
                     acc[team].push(member);
                     return acc;
                 }, {});
+
+                // Ensure all teams are present, even if they have no members
+                allTeams.forEach((team) => {
+                    if (!categorizedOCMembers[team]) {
+                        categorizedOCMembers[team] = [];
+                    }
+                });
+
 
                 console.log("Categorized OC members by team", categorizedOCMembers);
                 setCurrentOcMembers(categorizedOCMembers);
