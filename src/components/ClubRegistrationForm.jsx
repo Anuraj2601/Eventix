@@ -116,7 +116,7 @@ const ClubRegistrationForm = () => {
       <div className="grid grid-cols-1 gap-4">
         <form onSubmit={handleSubmit}>
           <div className="grid gap-x-10 gap-y-6 mb-6 md:grid-cols-2">
-            {/* Club ID field */}
+           
             <div className="flex flex-col gap-3">
               <label htmlFor="club_id" className="block mb-2">Club ID</label>
               <input

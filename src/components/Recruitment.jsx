@@ -174,7 +174,8 @@ const Recruitment = () => {
                         <th className="py-2 px-4">Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody 
+           className="min-w-full bg-black text-white rounded-xl text-center">
                     {filteredRegistrations.length > 0 ? (
                         filteredRegistrations.map((reg) => (
                             <tr key={reg.registrationId} className={selectedId === reg.registrationId ? 'bg-gray-100' : ''}>
