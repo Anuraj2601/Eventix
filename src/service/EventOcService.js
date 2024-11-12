@@ -131,6 +131,25 @@ class EventOcService{
 
     }
 
+    static async removeEventOC(eventOc_id, token){
+
+        try{
+            const response = await axios.put(`${EventOcService.BASE_URL}/president/removeEventOc/${eventOc_id}`,
+                null,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+
+            );
+
+            return response.data;
+
+        }catch(err){
+            throw err;
+        }
+
+    }
+
     static logout() {
         localStorage.removeItem("token");
         localStorage.removeItem("role");
