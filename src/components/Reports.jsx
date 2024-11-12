@@ -66,7 +66,7 @@ const Reports = () => {
                   textStyle: { color: "white" },
                 },
                 legend: { position: "none" },
-                colors: ["#AEC90A", "#AEC90A"],
+                colors: ["blue", "green"],
               }}
             />
           </div>
@@ -100,7 +100,7 @@ const Reports = () => {
                   textStyle: { color: "white" },
                 },
                 legend: { position: "none" },
-                colors: ["#AEC90A", "#FF5733"], // Different colors for contrast
+                colors: ["orange", "#FF5733"], // Different colors for contrast
               }}
             />
           </div>

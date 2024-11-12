@@ -6,6 +6,8 @@ import onlineMeeting from '../assets/onlineMeeting.png';
 import ieee from '../assets/ieee.jpeg';
 import isaca from '../assets/isaca.png';
 import rotract from '../assets/rotract.jpeg';
+import { useLocation } from 'react-router-dom';
+
 
 const MainMeeting = () => {
     const [selectedFilter, setSelectedFilter] = useState('physical');
@@ -17,7 +19,9 @@ const MainMeeting = () => {
     const [showDeclinedModal, setShowDeclinedModal] = useState(false);
     const [popupVisible, setPopupVisible] = useState(null);
     const [disabledButtons, setDisabledButtons] = useState(new Set());
-    
+    const location = useLocation();
+    const path = location.pathname;
+    const shouldShowForm = path.startsWith('/admin') || path.startsWith('/president') || path.startsWith('/secretary');
 
 
     const meetingAnnouncements = [
@@ -132,77 +136,83 @@ const MainMeeting = () => {
     const renderContent = () => {
         return (
             <div className="relative flex flex-col items-center">
-                <img
-                    src={selectedFilter === 'physical' ? physicalMeeting : onlineMeeting}
-                    alt={selectedFilter === 'physical' ? "Physical Meeting" : "Online Meeting"}
-                    className="w-full h-auto mb-6 shadow-lg"
-                />
+    <img
+        src={selectedFilter === 'physical' ? physicalMeeting : onlineMeeting}
+        alt={selectedFilter === 'physical' ? "Physical Meeting" : "Online Meeting"}
+        className="w-full h-auto mb-6 shadow-lg"
+    />
+    {selectedFilter === 'physical' && (
+        <button
+            onClick={() => setShowDeclinedModal(true)}
+            className="absolute top-4 right-4 bg-[#DDFF00] font-medium text-dark-500 px-4 py-2 rounded-md shadow-md"
+        >
+            Declined ({declinedMeetings.size})
+        </button>
+    )}
+    {(selectedFilter === 'physical' || selectedFilter === 'online') && shouldShowForm && (
+        <div
+            className={`absolute left-10 top-7 bg-black bg-opacity-75 p-6 rounded-lg text-white w-[600px] mt-3 ${selectedFilter === 'online' ? 'h-[400px]' : 'h-[500px]'}`}
+        >
+            {selectedFilter === 'physical' && (
+                <h2 className="text-lg font-semibold mb-4">Create New Physical Meeting</h2>
+            )}
+            {selectedFilter === 'online' && (
+                <h2 className="text-lg font-semibold mb-4">Create New Online Meeting</h2>
+            )}
+            <form className="space-y-4">
+                <div>
+                    <label className="block text-sm mb-2">Topic</label>
+                    <input
+                        type="text"
+                        className="w-full p-4 rounded-md h-12 bg-dark-500 border border-gray-600 text-white text-sm"
+                        placeholder="Enter meeting topic"
+                    />
+                </div>
+                <div className="flex space-x-4">
+                    <div className="flex-1">
+                        <label className="block text-sm mb-2">Date</label>
+                        <input
+                            type="date"
+                            className="w-full p-2 text-sm h-10 rounded-md bg-dark-500 border border-gray-600 text-white"
+                            style={{ color: 'white', caretColor: 'white' }}
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <label className="block text-sm mb-2">Time</label>
+                        <input
+                            type="time"
+                            className="w-full text-sm h-10 p-2 rounded-md bg-dark-500 border border-gray-600 text-white"
+                            style={{ color: 'white', caretColor: 'white' }}
+                        />
+                    </div>
+                </div>
                 {selectedFilter === 'physical' && (
-                    <button
-                        onClick={() => setShowDeclinedModal(true)}
-                        className="absolute top-4 right-4 bg-[#DDFF00] font-medium text-dark-500 px-4 py-2 rounded-md shadow-md"
-                    >
-                        Declined ({declinedMeetings.size})
-                    </button>
-                )}
-
-                {(selectedFilter === 'physical' || selectedFilter === 'online') && (
-                    <div
-                        className={`absolute left-10 top-7 bg-black bg-opacity-75 p-6 rounded-lg text-white w-[600px] mt-3 ${selectedFilter === 'online' ? 'h-[400px]' : 'h-[500px]'
-                            }`}
-                    >
-                        
-                        <h2 className="text-lg font-semibold mb-4">Create Meeting</h2>
-                        <form className="space-y-4">
-                            <div>
-                                <label className="block text-sm mb-2">Topic</label>
-                                <input
-                                    type="text"
-                                    className="w-full p-4 rounded-md h-12 bg-dark-500 border border-gray-600 text-white text-sm"
-                                    placeholder="Enter meeting topic"
-                                />
-                            </div>
-                            <div className="flex space-x-4">
-                                <div className="flex-1">
-                                    <label className="block text-sm mb-2">Date</label>
-                                    <input
-                                        type="date"
-                                        className="w-full p-2 text-sm h-10 rounded-md bg-dark-500 border border-gray-600 text-white"
-                                        style={{ color: 'white', caretColor: 'white' }}
-                                    />
-                                </div>
-                                <div className="flex-1">
-                                    <label className="block text-sm mb-2">Time</label>
-                                    <input
-                                        type="time"
-                                        className="w-full text-sm h-10 p-2 rounded-md bg-dark-500 border border-gray-600 text-white"
-                                        style={{ color: 'white', caretColor: 'white' }}
-                                    />
-                                </div>
-                            </div>
-                            {selectedFilter === 'physical' && (
-                                <div>
-                                    <label className="block text-sm mb-2">Venue</label>
-                                    <input
-                                        type="text"
-                                        className="w-full p-4 rounded-md bg-dark-500 border h-12 border-gray-600 text-white text-sm"
-                                        placeholder="Enter Meeting Venue"
-                                    />
-                                </div>
-                            )}
-                            <div>
-                                <label className="block text-sm mb-2">For who</label>
-                                <select className="w-full p-2 rounded-md bg-dark-500 border border-gray-600 text-white">
-                                    <option>Board</option>
-                                    <option>OC</option>
-                                    <option>Club Members</option>
-                                </select>
-                            </div>
-                            <button type="submit" className="w-full bg-[#DDFF00] text-dark-500 font-medium py-2 rounded-md">Create Meeting</button>
-                        </form>
+                    <div>
+                        <label className="block text-sm mb-2">Venue</label>
+                        <input
+                            type="text"
+                            className="w-full p-4 rounded-md bg-dark-500 border h-12 border-gray-600 text-white text-sm"
+                            placeholder="Enter Meeting Venue"
+                        />
                     </div>
                 )}
-            </div>
+                <div>
+                    <label className="block text-sm mb-2">For who</label>
+                    <select className="w-full p-2 rounded-md bg-dark-500 border border-gray-600 text-white">
+                        <option>Board</option>
+                        <option>OC</option>
+                        <option>Club Members</option>
+                    </select>
+                </div>
+                <button type="submit" className="w-full bg-[#DDFF00] text-dark-500 font-medium py-2 rounded-md">
+                    Create Meeting
+                </button>
+            </form>
+        </div>
+    )}
+</div>
+
+          
         );
     };
 
