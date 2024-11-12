@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './css/globals.css'
 import Exploreclub from './pages/president/Exploreclub';
 import Exploreevent from './pages/president/Exploreevent';
-import ClubDetails from './pages/president/ClubDetails';
+import ClubDetails from './pages/student/StudentClubDetails';
 import Election from './pages/president/Election';
 import Dashboard from './pages/president/Dashboard';
 import Calendar from './pages/president/Calendar';

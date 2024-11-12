@@ -293,15 +293,16 @@ useEffect(() => {
         <Sidebar className="hidden md:flex flex-shrink-0" />
         <div className="flex flex-col flex-1">
           <Navbar className="sticky top-0 z-10 p-4" />
-          <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-hidden">
-            <div className="flex flex-col items-center justify-center relative mt-10 px-4 md:px-10">
-              <div className="bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4">
-                {pageTitle()}
-              </div>
-              <div className="bg-[#0B0B0B] flex flex-col items-center justify-center border-2 border-[#AEC90A] rounded-xl w-full max-w-3xl py-9">
-                <form onSubmit={handleSubmit} className="w-full px-4">
+          <div className="bg-black bg-opacity-90 text-white flex-col md:p-20 overflow-y-auto">
+                    <div variant="h3" className="mb-4 text-center">  {pageTitle()}</div>
+
+                    <div className="grid grid-cols-1 gap-4">
+              
+             
+              <div className=" rounded-xl w-full ">
+                <form onSubmit={handleSubmit} >
                   <div className="flex flex-col gap-3">
-                    <label htmlFor="electionFor" className="text-white">
+                    <label htmlFor="electionFor" className="block mb-2">
                       Election For *
                     </label>
                     <input
@@ -310,12 +311,13 @@ useEffect(() => {
                       onChange={(e) => setElectionName(e.target.value)}
                       type="text"
                       placeholder="Club Board of 24/25"
-                      className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-                    />
+                      className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                      style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                    />
                     {isSubmitted && errors.electionName && <div className="text-red-500">{errors.electionName}</div>}
                   </div>
                   <div className="flex flex-col gap-3 mt-5">
-                    <label htmlFor="candidatesOpen" className="text-white">
+                    <label htmlFor="candidatesOpen" className="block mb-2">
                       Candidate Applications open (time duration) *
                     </label>
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
@@ -326,7 +328,9 @@ useEffect(() => {
                           showTimeSelect
                           timeFormat="hh:mm"
                           dateFormat="Pp"
-                          className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'
+                          className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                          style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                   
                       
                       />
                  
@@ -346,8 +350,9 @@ useEffect(() => {
                           showTimeSelect
                           timeFormat="hh:mm"
                           dateFormat="Pp"
-                          className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'
-                      
+                          className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                          style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                                         
                       />
                       {isSubmitted && errors.appCloses && <div className="text-red-500">{errors.appCloses}</div>}
                       {/* <input
@@ -360,7 +365,7 @@ useEffect(() => {
                     </div>
                   </div>
                   <div className="flex flex-col gap-3 mt-5">
-                    <label htmlFor="votingsOpen" className="text-white">
+                    <label htmlFor="votingsOpen" className="block mb-2">
                       Votings Open (time duration) *
                     </label>
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
@@ -371,8 +376,9 @@ useEffect(() => {
                           showTimeSelect
                           timeFormat="hh:mm"
                           dateFormat="Pp"
-                          className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'
-                      
+                          className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                          style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                                         
                       />
                       {isSubmitted && errors.votingOpens && <div className="text-red-500">{errors.votingOpens}</div>}
                       {/* <input
@@ -390,8 +396,9 @@ useEffect(() => {
                           showTimeSelect
                           timeFormat="hh:mm"
                           dateFormat="Pp"
-                          className='p-3 border-2 border-[#AEC90A] bg-[#0B0B0B]'
-                      
+                          className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                          style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                                         
                       />
                       {isSubmitted && errors.votingCloses && <div className="text-red-500">{errors.votingCloses}</div>}
                       {/* <input
@@ -408,7 +415,8 @@ useEffect(() => {
                     <Button onClick={handleCancel} className="border-2 border-[#AEC90A] px-4 py-2 rounded-3xl font-medium text-[#AEC90A]" >
                       Cancel
                     </Button>
-                    <Button type='submit' className="bg-[#AEC90A] px-4 py-2 rounded-3xl font-medium text-[#0B0B0B]">
+                    <Button type='submit'         className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+>
                       Submit
                     </Button>
                   </div>
@@ -417,7 +425,7 @@ useEffect(() => {
             </div>
           </div>
         </div>
-      </div>
+        </div>
     </>
   );
 };
