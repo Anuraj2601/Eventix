@@ -14,7 +14,7 @@ import Posts from "./Posts";
 import Oc from "./Oc";
 import YourRegistration from "./YourRegistration"; // Import YourRegistration component
 
-const EventNav = ({clubId }) => {
+const EventNav = ({clubId , event}) => {
   const [activeTab, setActiveTab] = React.useState("Posts");
   const [isDropdownVisible, setDropdownVisible] = React.useState(false);
 
@@ -33,7 +33,7 @@ const EventNav = ({clubId }) => {
     {
       label: "Organizing Committee",
       value: "OC",
-      desc: <Oc clubId = {clubId}/>,
+      desc: <Oc clubId = {clubId} event = {event}/>,
     },
    
   ];

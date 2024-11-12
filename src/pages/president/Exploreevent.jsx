@@ -47,6 +47,8 @@ const Exploreevent = () => {
   });
 
   const club_id = location.state.clubId;
+  //console.log("explore events location", club_id);
+  const eventDetails = location.state;
   
   const navigate = useNavigate();
 
@@ -267,7 +269,7 @@ const Exploreevent = () => {
             </div>
 
             <div className="order-3 md:order-2 flex w-full">
-              <EventNav className="w-full h-full" clubId={club_id} />
+              <EventNav className="w-full h-full" clubId={club_id} event={eventDetails}/>
             </div>
           </div>
 

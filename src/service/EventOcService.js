@@ -47,9 +47,10 @@ class EventOcService{
 
             const response1 = await axios.get(`${EventOcService.BASE_URL}/president/getAllEventOcs`,
                 {
-                    headers: {Authorization: `Bearer ${token}`,
-                    "Content-Type": 'application/json'
-                }
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": 'application/json'
+                    }
                 }
             )
             console.log("Event OC response", response1.data);

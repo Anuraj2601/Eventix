@@ -5,6 +5,7 @@ import { FaTimes } from 'react-icons/fa'; // Import the white cross icon
 import { useLocation } from 'react-router-dom'; // Import useLocation hook
 import RegistrationService from '../service/registrationService';
 import UsersService from '../service/UsersService';
+import EventOcService from '../service/EventOcService';
 
 const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick, showAddButton }) => {
     return (
@@ -37,7 +38,7 @@ const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick, showAddButto
     );
 };
 
-const App = ({clubId}) => {
+const App = ({clubId, event}) => {
     // const [teams, setTeams] = useState({
     //     "Team Design": [
     //         { userName: 'Alice', userImage: 'https://randomuser.me/api/portraits/women/9.jpg' },
@@ -109,10 +110,12 @@ const App = ({clubId}) => {
     const [availableMembers, setAvailableMembers] = useState([]);
 
     const [allClubMembers, setAllClubMembers] = useState([]);
+    const [currentOcMembers, setCurrentOcMembers] = useState([]);
 
     const location = useLocation(); // Get the current path
 
     //console.log("club id in OC", clubId);
+    //console.log("event in OC", event);
 
     // Function to check if the path starts with one of the specified paths
     const isMatchingPage = () => {
@@ -150,7 +153,49 @@ const App = ({clubId}) => {
         setModalIsOpen(true);
     };
 
-    const handleAddMember = (member, teamName) => {
+    // const handleAddMember = (member, teamName) => {
+
+    //     const newTeams = { ...teams };
+    //     newTeams[teamName].push(member);
+    //     setTeams(newTeams);
+
+    //     const newAvailableMembers = availableMembers.filter((m) => m.userName !== member.userName);
+    //     setAvailableMembers(newAvailableMembers);
+    // };
+
+    const handleAddMember = async (member, teamName) => {
+
+        const token = localStorage.getItem('token'); 
+
+        try{
+
+            const response = await EventOcService.saveEventOc(
+                member.memberName,
+                member.team,
+                event.name,
+                false,
+                event.event_id,
+                member.userId,
+                token
+            );
+
+            
+            alert('Event OC added successfully');
+            console.log('Event OC added:', response);
+            //navigate(-1);
+
+
+        }catch(err){
+
+            console.error("Error processing Event Oc:", err);
+            
+            // const errorMessages = err.response ? err.response.data.errors : { global: err.message };
+            // setErrors(errorMessages);
+            // setTimeout(() => setErrors({}), 5000);
+
+        }
+
+
         const newTeams = { ...teams };
         newTeams[teamName].push(member);
         setTeams(newTeams);
@@ -161,12 +206,65 @@ const App = ({clubId}) => {
 
     useEffect(() => {
 
+        const fetchOCMembers = async () => {
+            try{
+                const token = localStorage.getItem('token');
+                const response = await EventOcService.getAllEventOcs(token) ;
+                //console.log("oc array", response);
+                const ocArray = response.content.filter(oc => oc.event_id === event.event_id && oc._removed == false) || [];
+                console.log("oc array", ocArray);
+
+                // Map through ocArray to fetch user details for each user
+                const detailedOCMembers = await Promise.all(
+                    ocArray.map(async oc => {
+                        const userResponse = await UsersService.getUserById(oc.user_id, token);
+                        //console.log("user details in oc",userResponse);
+                        return { 
+                            ...oc, 
+                            memberName: userResponse.users.firstname, 
+                            memberImage: userResponse.users.photoUrl
+                            
+                        };
+                    })
+                );
+
+                //console.log("detailed members ", detailedMembers);
+
+                // Group members by team
+                const categorizedOCMembers = detailedOCMembers.reduce((acc, member) => {
+                    const team = member.team || "No Team"; 
+                    if (!acc[team]) {
+                        acc[team] = [];
+                    }
+                    acc[team].push(member);
+                    return acc;
+                }, {});
+
+                console.log("Categorized OC members by team", categorizedOCMembers);
+                setCurrentOcMembers(categorizedOCMembers);
+                
+    
+            }catch(error){
+                console.error("Error fetching event OCs", error);
+            }
+
+        }
+
+        fetchOCMembers();
+
+      
+    }, [modalIsOpen])
+    
+
+    useEffect(() => {
+
         const fetchMembers = async () => {
             try{
                 const token = localStorage.getItem('token');
                 const response = await RegistrationService.getAllRegistrations(token) ;
-                const regArray = response.content.filter(reg => reg.club_id === clubId && reg.accepted == 1) || [];
-                
+                //console.log("response array", response);
+                const regArray = response.content.filter(reg => reg.clubId === clubId && reg.accepted == 1) || [];
+                //console.log("reg array", regArray);
 
                 // Map through regArray to fetch user details for each user
                 const detailedMembers = await Promise.all(
@@ -212,8 +310,8 @@ const App = ({clubId}) => {
     const [teams, setTeams] = useState([]);
 
     useEffect(() => {
-        setTeams(allClubMembers);
-    }, [allClubMembers]);
+        setTeams(currentOcMembers);
+    }, [currentOcMembers]);
     
 
     return (
@@ -256,11 +354,11 @@ const App = ({clubId}) => {
             {addedMembers.map((member, index) => (
                 <div key={index} className="flex flex-col items-center  custom-card">
                     <img
-                        src={member.userImage}
-                        alt={member.userName}
+                        src={member.memberImage}
+                        alt={member.memberName}
                         className="w-30 h-30 rounded-full p-2" // Adjusted image size
                     />
-                    <p className="text-white text-center">{member.userName}</p> {/* Centered text */}
+                    <p className="text-white text-center">{member.memberName}</p> {/* Centered text */}
                 </div>
             ))}
         </div>
@@ -277,7 +375,7 @@ const App = ({clubId}) => {
                         className="w-30 h-30 rounded-full p-2" // Adjusted image size
                     />
                     <p className="text-white text-center">{member.memberName}</p> {/* Centered text */}
-                    <Button
+                    <Button type='submit'
                         className="bg-[#AEC90A] text-black mt-2 rounded-full  custom-card"
                         onClick={() => handleAddMember(member, currentTeam)}
                     >
