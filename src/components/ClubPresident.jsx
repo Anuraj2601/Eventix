@@ -6,7 +6,7 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { Dialog } from "@material-tailwind/react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ClubsService from '../service/ClubsService';
-import RegistrationService from '../service/RegistrationsService';  // Assuming you have a service to fetch registrations
+import RegistrationService from '../service/registrationService';  // Assuming you have a service to fetch registrations
 
 const ClubPresident = () => {
   const navigate = useNavigate();
