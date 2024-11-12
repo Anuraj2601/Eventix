@@ -143,10 +143,10 @@ const App = ({clubId, event}) => {
     const handleAddNewClick = (teamName) => {
         setCurrentTeam(teamName);
         const currentMembers = teams[teamName];
-        // const availableMembers = allClubMembers[teamName].filter(
-        //     (member) => !currentMembers.some((m) => m.userName === member.userName)
-        // );
-        const availableMembers = allClubMembers[teamName]
+        const availableMembers = allClubMembers[teamName].filter(
+            (member) => !currentMembers.some((m) => m.memberName === member.memberName)
+        );
+        //const availableMembers = allClubMembers[teamName]
         console.log("Availble members", availableMembers);
         setAddedMembers(currentMembers);
         setAvailableMembers(availableMembers);
@@ -200,7 +200,7 @@ const App = ({clubId, event}) => {
         newTeams[teamName].push(member);
         setTeams(newTeams);
 
-        const newAvailableMembers = availableMembers.filter((m) => m.userName !== member.userName);
+        const newAvailableMembers = availableMembers.filter((m) => m.memberName !== member.memberName);
         setAvailableMembers(newAvailableMembers);
     };
 
