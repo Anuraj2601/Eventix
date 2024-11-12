@@ -111,28 +111,25 @@ const ClubRegistrationForm = () => {
   return (
     <div className='flex flex-col items-center justify-center relative'>
        <Typography variant="h5" className="mb-4 text-center">
-        Club Registration Form
+       
       </Typography>
       <div className="grid grid-cols-1 gap-4">
         <form onSubmit={handleSubmit}>
           <div className="grid gap-x-10 gap-y-6 mb-6 md:grid-cols-2">
            
-            <div className="flex flex-col gap-3">
-              <label htmlFor="club_id" className="block mb-2">Club ID</label>
+           
               <input
                 type="number"
                 name="club_id"
                 value={formData.club_id}
                 className="w-full h-16 bg-black text-white p-2 rounded-2xl"
                                 
-                style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                placeholder="Club ID"
+                style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)'}}                placeholder="Club ID"
                 readOnly
               />
-            </div>
-
+            
             {/* Email field */}
-            <div className="flex flex-col gap-3">
-              <label htmlFor="email" className="block mb-2">Email</label>
+            <div className="flex flex-col gap-3 w-full">
               <input
                 type="email"
                 name="email"
