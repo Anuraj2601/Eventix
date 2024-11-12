@@ -5,15 +5,6 @@ import { FaArrowRight, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { HiDocumentText } from "react-icons/hi2";
 import ReactModal from 'react-modal';
 
- 
-//upcoming events of ieee
-import ieee1 from "../assets/events/madhack.png";
-import ieee2 from "../assets/events/reid.jpg";
-import ieee3 from "../assets/events/intro.jpg";
-import ieee4 from "../assets/events/ieeeday.jpg";
-//past events of ieee
-import ieee5 from "../assets/events/revol.jpg";
-import ieee6 from "../assets/events/reid2.jpg";
 
 
 //upcoming events of rac
@@ -24,17 +15,6 @@ import rac4 from "../assets/events/sport.jpg";
 //past events of rac
 import rac5 from "../assets/events/gtech.jpg";
 import rac6 from "../assets/events/training.jpg";
-
-
-//upcoming events of acm
-import acm1 from "../assets/events/8.jpg";
-import acm2 from "../assets/events/hour.jpg";
-import acm3 from "../assets/events/ballet.jpg";
-import acm4 from "../assets/events/discussion.jpg";
-//past events of acm
-import acm5 from "../assets/events/creative.jpg";
-import acm6 from "../assets/events/reid2.jpg";
-
 
 
 import LikeButton from './LikeButton';
@@ -84,6 +64,16 @@ const ClubEvent = ({ club }) => {
     
     fetchClubData();
   }, []);
+
+  // Helper function to determine event status based on budget_status and iud_status
+  const getEventStatus = (budgetStatus, iudStatus) => {
+    if (budgetStatus === 1 && iudStatus === 1) return "Approved";
+    if ((budgetStatus === 1 && iudStatus === -1) || (budgetStatus === -1 && iudStatus === -1)) return "Pending";
+    if (budgetStatus === 1 && iudStatus === 0) return "Rejected";
+    if (budgetStatus === 0 && iudStatus === -1) return "Rejected";
+    if (budgetStatus === 0 && iudStatus === 0) return "Rejected";
+    return "Pending";
+  };
 
 
   // Fetch club data for the specific club_id to get president_id
@@ -202,7 +192,7 @@ const ClubEvent = ({ club }) => {
           image: event.event_image ? event.event_image : rac1, 
           date: `${event.date[0]}/${event.date[1]}/${event.date[2]}`,
           venue: event.venue,
-          status: "Approved",
+          status: getEventStatus(event.budget_status, event.iud_status),
           link: "https://example.com/join-oc"
         })
       });
