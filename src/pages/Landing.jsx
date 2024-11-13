@@ -15,10 +15,7 @@ const Landing = () => {
           <HeroSection />
           <Clubsforu />
           <UpcomingEvent />
-<<<<<<<<< Temporary merge branch
-=========
-         {/*  <MainCarousel /> */}
->>>>>>>>> Temporary merge branch 2
+
           <Footer />
         </div>
       </h1>
