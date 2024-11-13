@@ -163,66 +163,59 @@ const Recruitment = () => {
 
     return (
         <div>
-            <table className="min-w-full bg-black text-white rounded-xl text-center">
-                <thead>
-                    <tr>
-                        <th className="py-2 px-4">ID</th>
-                        
-                        <th className="py-2 px-4">Profile</th> {/* Added Profile Column */}<th className="py-2 px-4">Email</th>
-                        <th className="py-2 px-4">Team</th>
-                        <th className="py-2 px-4">Reason</th>
-                        <th className="py-2 px-4">Action</th>
-                    </tr>
-                </thead>
-                <tbody 
-           className="min-w-full bg-black text-white rounded-xl text-center">
-                    {filteredRegistrations.length > 0 ? (
-                        filteredRegistrations.map((reg) => (
-                            <tr key={reg.registrationId} className={selectedId === reg.registrationId ? 'bg-gray-100' : ''}>
-                                <td className="py-2 px-4">{reg.registrationId}</td>
-                                
-                                <td className="py-2 px-4 flex items-center">
-    {userProfiles[reg.email] ? (
-        <>
-            <img
-                src={userProfiles[reg.email].profileImage || '/default-profile.png'}
-                alt={`${userProfiles[reg.email].name}'s profile`}
-                className="w-28 h-28 rounded-full object-cover mr-2"
-            />
-            <span>{userProfiles[reg.email].name || 'Unknown'}</span>
-        </>
-    ) : (
-        <span>Loading...</span>
-    )}
-</td>
-<td className="py-2 px-4">{reg.email}</td>
-                                <td className="py-2 px-4">{reg.team}</td>
-                                <td className="py-2 px-4">{reg.reason}</td>
-                                <td className="py-2 px-4">
-                                    <button
-                                        onClick={() => handleSelect(reg.registrationId)}
-                                        className="flex items-center p-2 text-[#AEC90A] border-2 border-[#AEC90A] text-lg rounded-full hover:text-white hover:border-white"
-                                    >
-                                        Select
-                                    </button>
-                                    <button
-                                        onClick={() => handleReject(reg.registrationId)}
-                                        className="flex items-center p-2 text-red-500 border-2 border-red-500 text-lg rounded-full hover:text-white hover:border-white"
-                                    >
-                                        Reject
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="6" className="py-2 px-4 text-center">No records found</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+            {filteredRegistrations.length > 0 ? (
+                filteredRegistrations.map((reg) => (
+                    <div
+                        key={reg.registrationId}
+                        className="bg-black text-white rounded-xl p-4 mb-4 flex flex-col"
+                    >
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                            <div className="flex flex-col items-center w-full sm:w-1/4">
+                                {userProfiles[reg.email] ? (
+                                    <>
+                                        <img
+                                            src={userProfiles[reg.email].profileImage || '/default-profile.png'}
+                                            alt={`${userProfiles[reg.email].name}'s profile`}
+                                            className="w-28 h-28 rounded-full object-cover mb-2"
+                                        />
+                                        <span>{userProfiles[reg.email].name || 'Unknown'}</span>
+                                    </>
+                                ) : (
+                                    <span>Loading...</span>
+                                )}
+                            </div>
+    
+                            <div className="flex flex-col w-full sm:w-2/4 text-left">
+                                <p><strong>ID:</strong> {reg.registrationId}</p>
+                                <p><strong>Email:</strong> {reg.email}</p>
+                                <p><strong>Team:</strong> {reg.team}</p>
+                                <p><strong>How can they make a change:</strong> {reg.reason}</p>
+                                <p><strong>How can they make a change:</strong> {reg.created_at}</p>
+                            </div>
+    
+                            <div className="flex flex-col items-center justify-center w-full sm:w-1/4 space-y-2">
+                                <button
+                                    onClick={() => handleSelect(reg.registrationId)}
+                                    className="flex items-center p-2 text-[#AEC90A] border-2 border-[#AEC90A] text-lg rounded-full hover:text-white hover:border-white"
+                                >
+                                    Select
+                                </button>
+                                <button
+                                    onClick={() => handleReject(reg.registrationId)}
+                                    className="flex items-center p-2 text-red-500 border-2 border-red-500 text-lg rounded-full hover:text-white hover:border-white"
+                                >
+                                    Reject
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <div className="py-2 px-4 text-center">No records found</div>
+            )}
         </div>
     );
+    
 };
 
 export default Recruitment;
