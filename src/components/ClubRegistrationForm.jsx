@@ -196,7 +196,7 @@ const ClubRegistrationForm = () => {
 
           {/* Reason field */}
           <div className="flex flex-col mb-6 gap-3">
-            <label htmlFor="reason" className="block mb-2">Reason</label>
+            <label htmlFor="reason" className="block mb-2">How Can You Make a change?</label>
             <textarea
               id="reason"
               name="reason"

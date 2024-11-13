@@ -116,7 +116,6 @@ const Votestab = () => {
         >
           Release Results to Club
         </button>
-        <span className="ml-4 text-white">{releasedStatus === 1 ? "Results Released" : "Results Not Released"}</span>
       </div>
 
       {/* President Position */}
