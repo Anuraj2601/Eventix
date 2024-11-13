@@ -189,6 +189,7 @@ const Member = () => {
                       <h3 className="text-xl font-semibold mb-2">{userProfiles[reg.email]?.name || 'Unknown'}</h3>
                       <p className="mb-2"><strong>Team:</strong> {reg.team}</p>
                       <p className="mb-4"><strong>Email:</strong> {reg.email}</p>
+                      <p className="mb-4"> {reg.reason} </p>
                       {isPresidentView && (
                         <div className="flex justify-end">
                           <button
