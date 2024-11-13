@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCheck, FaTimes } from "react-icons/fa"; // Import icons for tick and wrong mark
 import { IoMdClose } from "react-icons/io";
 import { MdAdd } from "react-icons/md";
@@ -10,54 +10,134 @@ import farewellImage from "../assets/farewell.jpg";
 import esalaImage from "../assets/esala.jpg";
 import posonImage from "../assets/poson.jpg";
 import { useNavigate } from 'react-router-dom';
+import EditDeleteButton from './EditDeleteButton'; // Import the EditDeleteButton component
+import PostService from '../service/PostService';
+import UsersService from '../service/UsersService';
 
-const Posts = ({ post }) => {
-    const location = useLocation(); // Get the current path
-    const isPresidentPage = location.pathname.startsWith('/president'); // Check if the path starts with /president
-    const isSecretaryPage = location.pathname.startsWith('/secretary'); // Check if the path starts with /secretary
 
-    const showButtons = (isPresidentPage || isSecretaryPage) && post.category === 'pending';
+const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) => {
+
+    const navigate = useNavigate();
+    const session_id = localStorage.getItem('session_id');
+    const editablePerson = session_id == post.published_user_id? true: false;
+    const [userImage, setuserImage] = useState('');
+
+    const fetchUser = async (post) => {
+
+        try{
+            const token = localStorage.getItem('token');
+            const response = await UsersService.getUserById(post.published_user_id ,token);
+            //console.log("user details in post", response);
+            const userImageUrl = response.users.photoUrl;
+            setuserImage(userImageUrl);
+            // const User = response.content || [];
+            // console.log("all posts", postsArray);
+            // setPosts(postsArray);
+
+        }catch(error){
+            console.log("Error fetching user details for posts", error);
+        }
+            
+    }
+
+    useEffect(() =>{
+
+        fetchUser(post);
+
+    }, [])
+
+    const updatePost = (post_id) => {
+        navigate(`/club/edit-post/${post_id}`)
+    }
+
+
+    const deletePost = async (post_id) => {
+        try{
+            const confirmDelete = window.confirm(
+                "Are you sure you want to delete this Post?"
+            );
+    
+            const token = localStorage.getItem("token");
+            if(confirmDelete){
+                await PostService.deletePost(post_id, token);
+
+                setPosts(prevPosts => prevPosts.filter(post => post.post_id !== post_id));
+            }
+
+        }catch(error){
+            console.error("Error fetching posts:", error);
+        }
+    }
+
+    const updatePostStatus = async (post_id, status) => {
+
+        try{
+            const token = localStorage.getItem("token");
+            const response = await PostService.updatePostStatus(post_id, status, token);
+
+            setPosts(prevPosts =>
+                prevPosts.map(post =>
+                    post.post_id === post_id ? { ...post, post_status: status } : post
+                )
+            );
+
+
+        }catch(error){
+            console.error("Error updating post status:", error);
+        }
+
+    }
 
     return (
-        <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4 custom-3d-shadow " style={{ 
+        <div className="bg-[#0b0b0b] p-10 rounded-2xl mb-4 custom-3d-shadow" style={{ 
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
           }}>
             <div className="flex flex-row items-center justify-between mb-6">
                 <div className="flex items-center gap-2 custom-card">
-                    <img src={post.userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
+                    <img src={userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
                     <div className="flex flex-col">
-                        <p>{post.userName}</p>
+                        <p>{post.name}</p>
                         <p className="text-[#AEC90A]">{post.position}</p>
                     </div>
                 </div>
-                {showButtons && (
+                {showApprovalButtons && (
                     <div className="flex items-center gap-4">
-                        <FaCheck className='text-[#AEC90A] custom-card' size={30} />
-                        <FaTimes className='text-red-500 custom-card' size={30} />
+                        <FaCheck className='text-[#AEC90A] custom-card hover:cursor-pointer' onClick={() => updatePostStatus(post.post_id, 'APPROVED')} size={30} />
+                        <FaTimes className='text-red-500 custom-card hover:cursor-pointer' onClick={() => updatePostStatus(post.post_id, 'REJECTED')} size={30} />
+                    </div>
+                )}
+                {showEditDeleteButton && editablePerson && (
+                    <div className="flex items-right gap-1">
+                        <EditDeleteButton onEdit={()=> updatePost(post.post_id)} onDelete={()=> deletePost(post.post_id)} />
                     </div>
                 )}
             </div>
             <div className="flex flex-col w-full mb-4">
                 <p>
-                    {post.caption}
+                    {post.description}
                     {post.link && <a href={post.link} className='text-[#AEC90A] underline' target="_blank" rel="noopener noreferrer">{post.link}</a>}
                 </p>
-                {post.image && <img src={post.image} alt="" className='w-auto h-100 object-cover mt-3 ' />}
+                {post.post_image && <img src={post.post_image} alt="" className='w-auto h-100 object-cover mt-3 ' />}
                 <LikeButton initialLikes={320} className="absolute bottom-4 right-4 custom-card" />
             </div>
         </div>
     );
 };
 
-const NewsFeed = ({ posts }) => {
+const NewsFeed = ({ posts, club, setPosts }) => {
     const location = useLocation(); // Get the current path
-    const isMemberPage = location.pathname.startsWith('/member'); // Check if the path starts with /member
-    const isPresidentPage = location.pathname.startsWith('/president'); // Check if the path starts with /president
-    const isSecretaryPage = location.pathname.startsWith('/secretary'); // Check if the path starts with /secretary
+    const isPresidentPage = location.pathname.startsWith('/president');
+    const isSecretaryPage = location.pathname.startsWith('/secretary');
+    const isMemberPage = location.pathname.startsWith('/member');
+    const isOCPage = location.pathname.startsWith('/oc');
+
+    const showCategorizedPosts = isPresidentPage || isSecretaryPage || isMemberPage || isOCPage;
+    const showApprovalButtons = (isPresidentPage || isSecretaryPage);
+    const showEditDeleteButton = isMemberPage || isOCPage;
 
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const navigate = useNavigate();
-    
+
     const events = [
         {
             joinLink: "/club/new-post",
@@ -65,23 +145,24 @@ const NewsFeed = ({ posts }) => {
     ];
 
     const navigateToForm = (link) => {
-        navigate(link);
+        navigate(link, { state: { club } });
     };
 
     const categorizePosts = (posts, category) => {
-        return posts.filter(post => post.category === category);
+        return posts.filter(post => post.post_status === category);
     };
 
     const renderPosts = (filteredPosts) => {
         return filteredPosts.map((post, index) => (
-            <Posts key={index} post={post} />
+            <Posts key={index} post={post} showEditDeleteButton={showEditDeleteButton} showApprovalButtons={showApprovalButtons} setPosts={setPosts}/>
         ));
     };
+
 
     return (
         <div className="bg-neutral-900 text-white min-h-screen relative">
             <div className='relative'>
-                {(isMemberPage || isPresidentPage || isSecretaryPage) && (
+                {(isMemberPage  || isOCPage) && (
                     <div className='flex justify-end mb-2'>
                         {events.map((event, index) => (
                             <div key={index} className="w-full rounded-full p-2 flex flex-col mb-4 -mt-8" style={{ backgroundColor: '#171717' }}>
@@ -95,25 +176,25 @@ const NewsFeed = ({ posts }) => {
                         ))}
                     </div>
                 )}
-                {isPresidentPage || isSecretaryPage ? (
-                    <div>
+                {showCategorizedPosts ? (
+                    <>
                         <h2 className="text-2xl mb-4">Pending</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                            {renderPosts(categorizePosts(posts, 'pending'))}
+                            {renderPosts(categorizePosts(posts, 'PENDING'))}
                         </div>
                         <h2 className="text-2xl mb-4">Approved</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                            {renderPosts(categorizePosts(posts, 'approved'))}
+                            {renderPosts(categorizePosts(posts, 'APPROVED'))}
                         </div>
                         <h2 className="text-2xl mb-4">Rejected</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                            {renderPosts(categorizePosts(posts, 'rejected'))}
+                            {renderPosts(categorizePosts(posts, 'REJECTED'))}
                         </div>
-                    </div>
+                    </>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
                         {posts.map((post, index) => (
-                            <Posts key={index} post={post} />
+                            <Posts key={index} post={post} showEditDeleteButton={false} showApprovalButtons={false} setPosts={setPosts}/>
                         ))}
                     </div>
                 )}
@@ -122,7 +203,7 @@ const NewsFeed = ({ posts }) => {
     );
 };
 
-const App = () => {
+const App = ({ club }) => {
     const samplePosts = [
         {
             position: 'Secretary',
@@ -160,15 +241,37 @@ const App = () => {
             position: 'Secretary',
             userName: 'Jane Smith',
             userImage: "https://randomuser.me/api/portraits/men/9.jpg",
-            caption: 'On this sacred Poson Full Moon Poya Day, we pay homage to the significant moment when Arahat Maha Mahinda Thera brought the teachings of Buddhism to our beloved Sri Lanka. May the blessings of this auspicious day guide us towards greater wisdom, unity, and peace. Wishing you a blissful Poson Poya Day, filled with peace, harmony, and spiritual growth!',
+            caption: 'This Poson Poya Day, let’s reflect upon the essence of Buddhism and its timeless message of peace, tolerance, and compassion for all living beings. Happy Poson Poya Day!',
             image: posonImage,
             category: 'rejected'
         },
-        // Add more posts here
     ];
 
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+
+        const fetchPosts = async () => {
+            try{
+                const token = localStorage.getItem('token');
+                const response = await PostService.getAllPosts(token);
+                const postsArray = response.content.filter(post => post.club_id === club.club_id) || [];
+                console.log("all posts", postsArray);
+                setPosts(postsArray);
+    
+            }catch(error){
+                console.error("Error fetching posts", error);
+            }
+
+        }
+
+        fetchPosts();
+
+      
+    }, [])
+
     return (
-        <NewsFeed posts={samplePosts} />
+        <NewsFeed posts={posts} club={club} setPosts = {setPosts}/>
     );
 };
 

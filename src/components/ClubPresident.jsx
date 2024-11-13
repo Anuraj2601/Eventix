@@ -1,157 +1,150 @@
-import React, { useState } from "react";
-import { Card, CardBody, Typography, Avatar, Textarea } from "@material-tailwind/react";
+import React, { useState, useEffect } from "react";
+import { Card, CardBody, Typography, Avatar, Textarea, Dialog } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
-import { Dialog } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
-
-import rotaractImage from '../assets/clubs/rotaract.png';
-import acmImage from '../assets/clubs/acm.png';
-import pahasaraImage from '../assets/clubs/pahasara1.png';
-import isacaImage from '../assets/clubs/isaca1.png';
-import wieImage from '../assets/clubs/wie.png';
-import ieeeImage from '../assets/clubs/ieee.png';
-import msImage from '../assets/clubs/ms.png';
-import wicysImage from '../assets/clubs/wicys.png';
-import rekhaImage from '../assets/clubs/rekha.png';
-
+import ClubsService from '../service/ClubsService';
+import RegistrationService from '../service/registrationService'; // Adjust the path as needed
+import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function is correctly implemented
 
 const ClubPresident = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [clubDetails, setClubDetails] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
+  const userId = getUserEmailFromToken();
 
-  const handleOpen = () => setOpen((cur) => !cur);
+  useEffect(() => {
+    fetchClubs();
+    fetchRegistrations();
+  }, [token]);
 
-  const getClubDetails = (club)  => {
+  const fetchClubs = async () => {
+    try {
+      const clubs = await ClubsService.getAllClubs(token);
+      const clubsArray = clubs.content || [];
+      setClubDetails(clubsArray);
+    } catch (error) {
+      console.error("Failed to fetch clubs", error);
+    }
+  };
+
+  const fetchRegistrations = async () => {
+    try {
+      const response = await RegistrationService.getAllRegistrations(token);
+      const fetchedRegistrations = response.data || response.content || [];
+      setRegistrations(fetchedRegistrations);
+    } catch (error) {
+      console.error("Error fetching registrations:", error);
+    }
+  };
+
+  // Filter registrations based on user ID, accepted status, and specified positions
+  const validPositions = ["president", "member", "secretary", "treasurer", "oc"];
+  const filteredRegistrations = registrations.filter(
+    (reg) =>
+      reg.email.toLowerCase() === userId.toLowerCase() &&
+      reg.accepted === 1 &&
+      validPositions.includes(reg.position.toLowerCase())
+  );
+
+  // Filter clubs based on the filtered registrations' club IDs
+  const filteredClubs = clubDetails.filter((club) =>
+    filteredRegistrations.some((reg) => reg.clubId === club.club_id)
+  );
+
+  const handleOpen = () => setOpen(!open);
+
+  const handleExploreClick = (club) => {
     let basePath;
     switch (true) {
-        case location.pathname.startsWith('/president'):
-            basePath = '/president';
-            break;
-        case location.pathname.startsWith('/oc'):
-            basePath = '/oc';
-            break;
-        case location.pathname.startsWith('/admin'):
-            basePath = '/admin';
-            break;
-            case location.pathname.startsWith('/secretary'):
-            basePath = '/secretary';
-            break;
-        case location.pathname.startsWith('/member'):
-            basePath = '/member';
-            break;
-        case location.pathname.startsWith('/treasurer'):
-            basePath = '/treasurer';
-            break;
-        default:
-            basePath = ''; // Default base path or handle other cases
+      case location.pathname.startsWith('/president'):
+        basePath = '/president';
+        break;
+      case location.pathname.startsWith('/student'):
+        basePath = '/student';
+        break;
+      case location.pathname.startsWith('/oc'):
+        basePath = '/oc';
+        break;
+      case location.pathname.startsWith('/secretary'):
+        basePath = '/secretary';
+        break;
+      case location.pathname.startsWith('/admin'):
+        basePath = '/admin';
+        break;
+      case location.pathname.startsWith('/member'):
+        basePath = '/member';
+        break;
+      case location.pathname.startsWith('/treasurer'):
+        basePath = '/treasurer';
+        break;
+      default:
+        basePath = ''; // Default base path or handle other cases
     }
-    navigate(`${basePath}/club/${club.sname}`, { state: { club, image: club.image } });
-};
+    navigate(`${basePath}/club/${club.club_id}`, { state: { club, image: club.club_image } });
+  };
 
-  const clubs = [
-    {
-      id: "6",
-      name: "IEEE Student Chapter",
-      reg_status: "yes",
-      description: "The IEEE Student Chapter promotes the advancement of technology. Members can participate in technical seminars, project exhibitions, and networking events.",
-      image: ieeeImage,
-      sname: "ieee",
-  },
-    {
-        id: "1",
-        name: "Rotaract Club of UCSC",
-        reg_status: "yes",
-        description: "The Rotaract Club of UCSC, part of Rotary International District 3220, empowers youth to enact positive change locally and globally.",
-        image: rotaractImage,
-        sname: "rotract",
-    },
-    {
-        id: "2",
-        name: "ACM Student Chapter",
-        reg_status: "yes",
-        description: "The ACM Student Chapter aims to advance computing as a science and profession. Activities include coding competitions, guest lectures, and career development workshops.",
-        image: acmImage,
-        sname: "acm",
-    },
-    {
-        id: "3",
-        name: "Pahasara Club (Innovation and Creativity)",
-        reg_status: "yes",
-        description: "The Pahasara Club offers a platform for photography enthusiasts to enhance their skills through workshops, photo walks, and exhibitions.",
-        image: pahasaraImage,
-        sname: "pahasara",
-    },
-    {
-        id: "4",
-        name: "ISACA Student Group",
-        reg_status: "yes",
-        description: "The Debate Society aims to improve public speaking and critical thinking skills through regular debates, public speaking workshops, and competitions.",
-        image: isacaImage,
-        sname: "isaca",
-    },
-    {
-        id: "5",
-        name: "(IEEE WIE) IEEE Women in Engineering",
-        reg_status: "yes",
-        description: "The IEEE Women in Engineering (WIE) Student Branch at the University of Colombo School of Computing strives to enhance women’s participation and empowerment in electrical and electronic engineering.",
-        image: wieImage,
-        sname: "wie",
-    },
-    
-    
-];
+
   return (
-    <>
+    <div>
+
+     
+
       <Card className="w-full bg-neutral-900">
         <CardBody>
           <div>
-            {clubs.map((club) => (
-              <div
-                key={club.id}
-                className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4 " style={{ 
-                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-                }}
-              >
-                <div className="flex items-center gap-x-3 custom-3d-shadow">
-                  <Avatar
-                    size="sm"
-                    src={club.image}
-                    alt={club.name}
-                    className=" rounded-md w-20 h-10 custom-card" style={{ 
-                      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-                    }}
-                  />
-                  <Typography color="white" className="font-medium">
-                    {club.name}
-                  </Typography>
+            {filteredClubs.length === 0 ? (
+              <Typography color="white" className="text-center">No clubs found.</Typography>
+            ) : (
+              filteredClubs.map((club) => (
+                <div
+                  key={club.club_id}
+                  className="flex items-center justify-between p-4 bg-[#1E1E1E] rounded-xl mb-4"
+                  style={{
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)'
+                  }}
+                >
+                  <div className="flex items-center gap-x-3 custom-3d-shadow">
+                    <Avatar
+                      size="sm"
+                      src={club.club_image || 'path/to/default-image.jpg'}
+                      alt={club.club_name}
+                      className="rounded-md w-20 h-10"
+                    />
+                    <Typography color="white" className="font-medium">
+                      {club.club_name}
+                    </Typography>
+                  </div>
+                  <div className="flex gap-4">
+                    <Button
+                      className="bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
+                      onClick={handleOpen}
+                    >
+                      Leave
+                    </Button>
+                    <Button
+                      className="bg-[#AEC90A] text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium"
+                      onClick={() => handleExploreClick(club)}
+                    >
+                      Explore
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex gap-4">
-                  <Button
-                    className="bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm custom-card"
-                    onClick={handleOpen}
-                  >
-                    Leave
-                  </Button>
-                  <Button
-                    className={` custom-card pt-1 pb-1 pl-5 pr-5 rounded-2xl font-medium text-sm ${club.reg_status === 'yes' ? 'bg-[#AEC90A] text-black' : 'bg-[#AEC90A80] text-[#1E1E1E] cursor-not-allowed'}`}
-                    onClick={() => getClubDetails(club)}
-                    disabled={club.reg_status !== 'yes'}
-                  >
-                    Explore
-                  </Button>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </CardBody>
       </Card>
+
+      {/* Leave Club Modal */}
       <Dialog
         size="xs"
         open={open}
         handler={handleOpen}
-        className="bg-transparent w-screen h-screen bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-200 flex items-center"
+        className="fixed inset-0 flex items-center justify-center bg-opacity-60 backdrop-blur-sm transition-opacity duration-200 z-50"
       >
         <Card className="mx-auto w-full max-w-[24rem] p-3 relative">
           <IoIosCloseCircle
@@ -178,7 +171,7 @@ const ClubPresident = () => {
           </CardBody>
         </Card>
       </Dialog>
-    </>
+    </div>
   );
 };
 

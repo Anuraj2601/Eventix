@@ -39,6 +39,9 @@ import acm6 from "../assets/events/reid2.jpg";
 
 import LikeButton from './LikeButton';
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
+import ClubsService from "../service/ClubsService";
+import { Token } from "@mui/icons-material";
+import EventService from "../service/EventService";
 
 ReactModal.setAppElement('#root');
 
@@ -50,6 +53,7 @@ const ClubEvent = ({ club }) => {
   const location = useLocation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  
   
   // Check if the current path matches the specified routes
   const isAuthorizedUser = () => {

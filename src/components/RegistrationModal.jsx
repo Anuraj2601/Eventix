@@ -1,95 +1,256 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Menu, MenuHandler, MenuList, MenuItem, Button } from "@material-tailwind/react";
+import { HiChevronDown } from "react-icons/hi";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from 'date-fns';
+import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function is correctly implemented
+import RegistrationService from '../service/registrationService';
+import { Typography } from "@material-tailwind/react";
+
+const menuItems = [
+  { title: "Design Team" },
+  { title: "Program Team" },
+  { title: "Finance Team" },
+  { title: "Marketing Team" },
+];
 
 const RegistrationModal = ({ event, isOpen, onClose }) => {
-  const [mobile, setMobile] = useState('');
-  const [reason, setReason] = useState('');
-  const [isMobileValid, setIsMobileValid] = useState(true);
+  const { club_id } = useParams();
+  const [openMenu, setOpenMenu] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [formData, setFormData] = useState({
+    club_id: club_id || '',
+    email: '',
+    team: '',
+    reason: '',
+    interviewSlot: '',
+    position: 'student', // Default value for position
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  if (!isOpen) return null;
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add form submission logic here
-    if (!/^(07\d{8})$/.test(mobile)) {
-      setIsMobileValid(false);
-      return;
+  useEffect(() => {
+    if (event && event.club_id) {
+      setFormData((prevState) => ({
+        ...prevState,
+        club_id: event.club_id,  // Populate club_id with the event's club_id
+      }));
     }
-    setIsMobileValid(true);
-    onClose();
+  }, [event]);
+
+  
+  useEffect(() => {
+    const fetchUserEmail = async () => {
+      try {
+        const email = getUserEmailFromToken(); // Utility function to fetch user email from token
+        setFormData(prevState => ({ ...prevState, email }));
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchUserEmail();
+  }, [club_id]);
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    setFormData(prevState => ({
+      ...prevState,
+      interviewSlot: date ? format(date, "yyyy-MM-dd'T'HH:mm:ss") : ''
+    }));
   };
 
-  const handleMobileChange = (e) => {
-    const value = e.target.value;
-    setMobile(value);
-    setIsMobileValid(/^(07\d{8})$/.test(value));
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const handleMenuItemClick = (title) => {
+    setFormData(prevState => ({ ...prevState, team: title }));
+    setOpenMenu(false);
+  };
+
+  const isFormValid = () => {
+    return Object.values(formData).every(value => value.trim() !== '') && selectedDate !== null;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const missingFields = [];
+
+    // Check if each field is empty or not selected
+    if (!formData.team || formData.team.trim() === '') {
+        missingFields.push('Team');
+    }
+    if (!formData.reason || formData.reason.trim() === '') {
+        missingFields.push('Reason');
+    }
+    if (!selectedDate) {
+        missingFields.push('Interview Slot');
+    }
+
+    if (missingFields.length > 0) {
+        alert(`Please fill in the following fields: ${missingFields.join(', ')}`);
+        return;
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('User not authenticated.');
+        return;
+    }
+
+    try {
+        setLoading(true);
+        await RegistrationService.saveRegistration(
+            formData.email,
+            formData.club_id,
+            formData.team,
+            formData.interviewSlot,
+            formData.reason,
+            formData.position, // Include position in the request
+            token
+        );
+        alert('Registration successful!');
+        onClose(); // Close the modal after submission
+    } catch (error) {
+        const errorMessage = error.message || 'Failed to submit the form.';
+        console.error(errorMessage);
+        alert(errorMessage);
+    } finally {
+        setLoading(false);
+    }
+};
+
+
+  if (!isOpen) return null; // If modal is not open, return nothing
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-black p-6 rounded-md shadow-md border-[#AEC90A] w-96">
-        <h2 className="text-xl font-bold mb-4">{`Register for ${event.name}`}</h2>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]">
+      <div className="bg-black p-6 rounded-md shadow-md border-[#AEC90A] w-[600px] z-[99999] mt-10">
+        <div className="relative w-full h-full text-white">
+          <button
+            type="button"
+            className="absolute top-0 right-2 px-4 py-2 text-white rounded-md"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </div>
+        <h2 className="text-xl text-white font-bold mb-4">
+          {event.club_name ? `Register for ${event.club_name}` : 'Register Now!'}
+        </h2>
+
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-white text-sm font-bold mb-2">
-              Name
-            </label>
+          <div className="grid gap-x-10 gap-y-6 mb-6 md:grid-cols-2 text-white">
             <input
-              type="text"
-              value="John Doe" // Replace with the actual user name
-              className="w-full px-3 py-2 border-[#AEC90A] rounded-md bg-black text-white"
+              type="number"
+              name="club_id"
+              value={formData.club_id}
+              className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+              style={{
+                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
+                display: 'none',
+              }}              placeholder={event.club_id}
               readOnly
             />
+
+            <div className="flex flex-col gap-3 w-full">
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                style={{
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
+                  display: 'none',
+                }}                placeholder="Email"
+                readOnly
+              />
+            </div>
           </div>
-          <div className="mb-4">
-            <label className="block text-white text-sm font-bold mb-2">
-              Student Email
-            </label>
-            <input
-              type="email"
-              value="2021is013@stu.ucsc.cmb.ac.lk" // Replace with the actual user email
-              className="w-full px-3 py-2 border-[#AEC90A] rounded-md bg-black text-white"
-              readOnly
-            />
+
+          <div className="grid gap-10 mb-6 md:grid-cols-2">
+            {/* Team menu */}
+            <div className="flex flex-col gap-3">
+              <label htmlFor="team" className="block mb-2 text-white">Select a Team</label>
+              <Menu open={openMenu} handler={setOpenMenu} allowHover>
+                <MenuHandler>
+                  <Button
+                    variant="text"
+                    className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                  >
+                    {formData.team || "Team"}{" "}
+                    <HiChevronDown
+                      strokeWidth={2.5}
+                      className={`h-3.5 w-3.5 transition-transform ${openMenu ? "rotate-180" : ""}`}
+                    />
+                  </Button>
+                </MenuHandler>
+                <MenuList className='bg-[#0B0B0B] p-0 border-[#AEC90A]'>
+                  <ul className="col-span-4 flex w-80 flex-col gap-1 text-white">
+                    {menuItems.map(({ title }) => (
+                      <MenuItem
+                        key={title}
+                        className='hover:bg-slate-900 p-2'
+                        onClick={() => handleMenuItemClick(title)}
+                      >
+                        {title}
+                      </MenuItem>
+                    ))}
+                  </ul>
+                </MenuList>
+              </Menu>
+            </div>
+
+            {/* Interview Slot */}
+            <div className="flex flex-col gap-3">
+              <label htmlFor="interviewSlot" className="block mb-2 text-white">Select Interview Slot</label>
+              <DatePicker
+                selected={selectedDate}
+                onChange={handleDateChange}
+                className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                placeholderText="Pick a date"
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                dateFormat="MMMM d, yyyy h:mm aa"
+                withPortal
+              />
+            </div>
           </div>
-          <div className="mb-4">
-            <label className="block text-white text-sm font-bold mb-2">
-              Mobile No
-            </label>
-            <input
-              type="tel"
-              value={mobile}
-              onChange={handleMobileChange}
-              className="w-full px-3 py-2 border-[#AEC90A] rounded-md  bg-black"
-              required
-            />
-            {!isMobileValid && (
-              <p className="text-red-500 text-sm mt-1">Invalid mobile number format. It should start with 07 and have 10 digits.</p>
-            )}
-          </div>
-          <div className="mb-4">
-            <label className="block text-white text-sm font-bold mb-2">
-              Reason to Join
-            </label>
+
+          {/* Reason field */}
+          <div className="flex flex-col mb-6 gap-3">
+            <label htmlFor="reason" className="block mb-2 text-white">Reason</label>
             <textarea
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              className="w-full h-32 px-3 py-2 border-[#AEC90A] rounded-md bg-black"
-              required
-            />
+              id="reason"
+              name="reason"
+              value={formData.reason}
+              onChange={handleChange}
+              rows="4"
+              className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+              style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+              placeholder="Enter the reason you want to join this club"
+            ></textarea>
           </div>
-          <div className="flex justify-end">
-            <button
-              type="button"
-              className="mr-4 px-4 py-2 text-black bg-white rounded-md"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
+
+          {/* Submit Button */}
+          <div className="text-center">
             <button
               type="submit"
-              className="px-4 py-2 bg-[#AEC90A] text-black rounded-md"
+              className="text-white px-6 py-2 rounded-md text-xl font-medium"
+              style={{
+                backgroundColor: '#AEC90A',
+                transition: 'all 0.3s ease-in-out',
+                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)'
+              }}
             >
-              Register
+              {loading ? "Submitting..." : "Submit"}
             </button>
           </div>
         </form>

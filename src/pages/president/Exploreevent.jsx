@@ -29,7 +29,7 @@ ReactModal.setAppElement("#root"); // For accessibility
 const Exploreevent = () => {
   const location = useLocation();
   console.log(location);
-  const { name, image, date, clubName, clubImage, venue } = location.state;
+  const { name, image, date, clubName, clubImage, venue } = location.state || {} ;
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -75,16 +75,20 @@ const Exploreevent = () => {
         "Are you sure you want to delete this Sponsor?"
       );
 
-      const token = localStorage.getItem("token");
       if (confirmDelete) {
+        const token = localStorage.getItem("token");
         await SponsorsService.deleteSponsor(sponsorId, token);
 
-        navigate("/president/club");
+        //navigate("/president/club")
+        // Remove the deleted sponsor from the state
+        //setEventSponsonsors(prevSponsors => prevSponsors.filter(sponsor => sponsor.id !== sponsorId));
+
       }
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error deleting sponsor:", error);
     }
   };
+
 
   const [isFormValid, setIsFormValid] = useState(false);
 
