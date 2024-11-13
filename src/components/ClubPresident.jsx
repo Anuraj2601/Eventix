@@ -10,10 +10,13 @@ import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function 
 
 const ClubPresident = () => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // Confirmation dialog
+  const [openReasonDialog, setOpenReasonDialog] = useState(false);
   const [clubDetails, setClubDetails] = useState([]);
   const [registrations, setRegistrations] = useState([]);
   const [token, setToken] = useState(localStorage.getItem('token') || '');
+  const [reason, setReason] = useState(''); // State for storing the reason for leaving
+  const [selectedClubId, setSelectedClubId] = useState(null); // State to track selected club ID for leaving
   const userId = getUserEmailFromToken();
 
   useEffect(() => {
@@ -55,7 +58,60 @@ const ClubPresident = () => {
     filteredRegistrations.some((reg) => reg.clubId === club.club_id)
   );
 
-  const handleOpen = () => setOpen(!open);
+  const handleToggleDialog = (clubId) => {
+    setSelectedClubId(clubId);
+    setOpen((prev) => !prev);
+  };
+
+  const handleConfirmLeave = () => {
+    setOpen(false);
+    setOpenReasonDialog(true);
+  };
+
+  const handleCancelLeave = () => {
+    setOpen(false);
+  };
+
+  const handleSendReason = async () => {
+    if (!reason) {
+      console.log('Reason is required!');
+      return;
+    }
+
+    try {
+      const registration = registrations.find((reg) => reg.clubId === selectedClubId && reg.email === userId);
+      if (!registration) {
+        console.log('Registration not found!');
+        return;
+      }
+
+      const updates = {
+        accepted: 0,
+        position: 'Left',
+        registrationId: registration.registrationId,
+        email: registration.email,
+        clubId: registration.clubId,
+        team: registration.team,
+        interviewSlot: registration.interviewSlot,
+        reason: reason,
+      };
+
+      await RegistrationService.updateRegistration(registration.registrationId, updates, token);
+
+      setRegistrations((prev) =>
+        prev.map((reg) =>
+          reg.registrationId === registration.registrationId
+            ? { ...reg, accepted: 0, position: 'Left' }
+            : reg
+        )
+      );
+
+      setOpenReasonDialog(false);
+      setReason('');
+    } catch (error) {
+      console.error('Error updating registration:', error);
+    }
+  };
 
   const handleExploreClick = (club) => {
     // Find the user's registration in the filtered registrations list
@@ -130,7 +186,7 @@ const ClubPresident = () => {
                   <div className="flex gap-4">
                     <Button
                       className="bg-white pt-1 pb-1 pl-5 pr-5 rounded-2xl text-black font-medium text-sm"
-                      onClick={handleOpen}
+                      onClick={() => handleToggleDialog(club.club_id)}
                     >
                       Leave
                     </Button>
@@ -148,18 +204,18 @@ const ClubPresident = () => {
         </CardBody>
       </Card>
 
-      {/* Leave Club Modal */}
+      {/* Confirmation Dialog */}
       <Dialog
         size="xs"
         open={open}
-        handler={handleOpen}
-        className=" flex items-center justify-end bg-opacity-0  transition-opacity duration-200 z-50"
-        style={{ right: '-20rem' }} // Adjust this for the distance from the right edge
+        handler={() => setOpen(false)}
+        className="flex items-center justify-end bg-opacity-0 transition-opacity duration-200 z-50"
+        style={{ right: '-20rem' }}
       >
         <Card className="mx-auto w-full max-w-[24rem] p-3 relative">
           <IoIosCloseCircle
             className="absolute text-xl top-1 right-1 cursor-pointer"
-            onClick={handleOpen}
+            onClick={() => setOpen(false)}
           />
           <CardBody className="flex flex-col">
             <Typography
@@ -167,16 +223,58 @@ const ClubPresident = () => {
               variant="paragraph"
               color="gray"
             >
-              Why are you leaving? Let us know your reason:
+              Are you sure you want to leave the club?
             </Typography>
-            <div className="relative">
-              <Textarea
-                size="lg"
-                className="h-16 border-2 bg-slate-100"
-                placeholder="Type your reason"
-                required
-              />
-              <MdSend className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer" />
+            <div className="flex gap-4">
+              <Button
+                onClick={handleConfirmLeave}
+                className="bg-[#AEC90A] text-[#0B0B0B] rounded-3xl"
+              >
+                Confirm
+              </Button>
+              <Button
+                onClick={handleCancelLeave}
+                className="bg-[#B7B7B7] text-[#0B0B0B] rounded-3xl"
+              >
+                Cancel
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+      </Dialog>
+
+      {/* Reason Dialog */}
+      <Dialog
+        size="sm"
+        open={openReasonDialog}
+        handler={() => setOpenReasonDialog(false)}
+        className="flex items-center justify-end bg-opacity-0 transition-opacity duration-200 z-50"
+      >
+        <Card className="mx-auto w-full max-w-[24rem] p-3">
+          <CardBody className="flex flex-col">
+            <Typography color="gray" className="mb-4">
+              Please provide a reason for leaving:
+            </Typography>
+            <Textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              
+              rows={4}
+              className="mb-8"
+            />
+            <div className="flex justify-between mt-4">
+              <Button
+                className="bg-[#AEC90A] text-[#0B0B0B] px-6 rounded-3xl"
+                onClick={handleSendReason}
+              >
+                Submit
+              </Button>
+              <Button
+                className="bg-[#B7B7B7] text-[#0B0B0B] px-6 rounded-3xl "
+                onClick={() => setOpenReasonDialog(false)}
+              >
+                Cancel
+              </Button>
             </div>
           </CardBody>
         </Card>

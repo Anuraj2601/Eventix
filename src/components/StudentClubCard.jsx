@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from "@mui/material"; // Update this import
+import { Button } from "@material-tailwind/react"; // Update this import
 import { RiOpenArmLine } from "react-icons/ri";
 import { IoMdBookmark } from "react-icons/io";
 import { FaPlus } from "react-icons/fa"; // Import the plus icon
@@ -7,7 +7,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import RegistrationModal from './RegistrationModal';
 import RegistrationService from '../service/registrationService'; // Adjust the path as needed
 import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function is correctly implemented
-import { Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { format, differenceInMonths } from 'date-fns'; // For date formatting and comparison
 
 import ClubsService from '../service/ClubsService';
@@ -31,6 +31,30 @@ const StudentClubCard = () => {
     fetchRegistrations();
   }, [token]);
 
+
+  function formatDate(dateString) {
+    try {
+        // Check if dateString is a Date object or array
+        if (Array.isArray(dateString)) {
+            // If it's an array, construct a new Date object directly
+            const [year, month, day, hours, minutes, seconds] = dateString;
+            return new Date(year, month - 1, day, hours, minutes, seconds);
+        } else if (typeof dateString === 'string') {
+            // If it's a string, ensure it can be parsed
+            return new Date(dateString.replace(' ', 'T').split('.')[0]);
+        } else if (dateString instanceof Date) {
+            // If it's already a Date object, return it directly
+            return dateString;
+        } else {
+            // Handle any unexpected format
+            console.warn('Unexpected date format:', dateString);
+            return null; // Return null in case of an invalid date
+        }
+    } catch (error) {
+        console.error('Error parsing date:', error, '\nOriginal date string:', dateString);
+        return null; // Return null in case of an error
+    }
+}
 
   const fetchClubs = async () => {
     try {
@@ -67,47 +91,46 @@ const StudentClubCard = () => {
 
   const handleRegisterClick = (club) => {
     const userRegistration = registrations.find(
-      (reg) => reg.clubId === club.club_id && reg.email.toLowerCase() === userId.toLowerCase()
+        (reg) => reg.clubId === club.club_id && reg.email.toLowerCase() === userId.toLowerCase()
     );
   
     // Condition 1: User is already a part of the club with accepted position
     if (userRegistration && userRegistration.accepted === 1 && 
         ["president", "member", "secretary", "treasurer", "oc"].includes(userRegistration.position.toLowerCase())) {
-      setDialogMessage("You are already a part of this club.");
-      setIsDialogOpen(true);
-      return;
+        setDialogMessage("You are already a part of this club.");
+        setIsDialogOpen(true);
+        return;
     }
   
     // Condition 2: User has a rejected application or not selected in the last 6 months
     if (userRegistration && userRegistration.accepted === 0) {
-      const registrationDate = new Date(userRegistration.createdAt);
-      const monthsSinceRegistration = differenceInMonths(new Date(), registrationDate);
+        const registrationDate = formatDate(userRegistration.createdAt); // Use the updated formatDate function
+        const currentDate = new Date();
+        const monthsSinceRegistration = differenceInMonths(currentDate, registrationDate);
   
-      if (userRegistration.position.toLowerCase() === 'student' && monthsSinceRegistration < 6) {
-        setDialogMessage("Unfortunately, you were not selected. Please wait for the next recruitment opportunity.");
-        setIsDialogOpen(true);
-        return;
-      } else if (userRegistration.position.toLowerCase() === 'rejected' && monthsSinceRegistration < 6) {
-        setDialogMessage("Unfortunately, you were rejected. Wait for the next recruitment to apply again.");
-        setIsDialogOpen(true);
-        return;
-      } else if (userRegistration.position.toLowerCase() === 'removed') {
-        setDialogMessage("Unfortunately, you were removed by the club and cannot reapply.");
-        setIsDialogOpen(true);
-        return;
-      }
+        if (monthsSinceRegistration < 6) {
+            // Show rejection message based on position
+            if (userRegistration.position.toLowerCase() === 'student') {
+                setDialogMessage("Unfortunately, you have already applied. Please wait for the next recruitment opportunity.");
+            } else if (userRegistration.position.toLowerCase() === 'rejected') {
+                setDialogMessage("Unfortunately, you have already applied. Please wait for the next recruitment to apply again.");
+            } else if (userRegistration.position.toLowerCase() === 'removed') {
+                setDialogMessage("Unfortunately, you were removed by the club and cannot reapply.");
+            }
+            setIsDialogOpen(true);
+            return;
+        }
     }
   
     // If no record matches the conditions above, allow the user to register
     const event = {
-      club_id: club.club_id,
-      club_name: club.club_name,
+        club_id: club.club_id,
+        club_name: club.club_name,
     };
     setSelectedEvent(event);
     setIsModalOpen(true);
-  };
-  
-  
+};
+
   
 
   const handleRegisterClickks = (club) => {
@@ -183,6 +206,8 @@ const StudentClubCard = () => {
       console.log('User is not accepted or does not have the required position');
     }
   };
+
+  
 
   return (
     <div className="flex flex-col">
@@ -260,13 +285,12 @@ className="bg-white text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card
             </div>
           </div>
         ))}
-        <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
-  <DialogTitle>Notice</DialogTitle>
+        <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}  className="bg-black bg-opacity-60"> 
   <DialogContent>
     <p>{dialogMessage}</p>
   </DialogContent>
   <DialogActions>
-    <Button onClick={() => setIsDialogOpen(false)} color="primary">
+    <Button onClick={() => setIsDialogOpen(false)} color="black"  className="text-black bg-[#AEC90A]" >
       OK
     </Button>
   </DialogActions>
