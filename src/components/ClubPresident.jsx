@@ -58,36 +58,45 @@ const ClubPresident = () => {
   const handleOpen = () => setOpen(!open);
 
   const handleExploreClick = (club) => {
-    let basePath;
-    switch (true) {
-      case location.pathname.startsWith('/president'):
-        basePath = '/president';
-        break;
-      case location.pathname.startsWith('/student'):
-        basePath = '/student';
-        break;
-      case location.pathname.startsWith('/oc'):
-        basePath = '/oc';
-        break;
-      case location.pathname.startsWith('/secretary'):
-        basePath = '/secretary';
-        break;
-      case location.pathname.startsWith('/admin'):
-        basePath = '/admin';
-        break;
-      case location.pathname.startsWith('/member'):
-        basePath = '/member';
-        break;
-      case location.pathname.startsWith('/treasurer'):
-        basePath = '/treasurer';
-        break;
-      default:
-        basePath = ''; // Default base path or handle other cases
+    // Find the user's registration in the filtered registrations list
+    const userRegistration = filteredRegistrations.find(
+      (reg) => reg.clubId === club.club_id
+    );
+  
+    // Check if the registration is accepted and the position is president or member
+    if (userRegistration && userRegistration.accepted === 1) {
+      let basePath = '';
+      
+      // Set the basePath based on the user's position
+      switch (userRegistration.position.toLowerCase()) {
+        case 'president':
+          basePath = '/president';
+          break;
+        case 'member':
+          basePath = '/member';
+          break;
+
+        case 'treasurer':
+          basePath = '/president';
+          break;
+
+          case 'secretary':
+            basePath = '/president';
+            break;
+        // Add other cases if needed for other positions (e.g., secretary, treasurer, etc.)
+        default:
+          basePath = '/student'; // Handle other cases or default behavior
+          break;
+      }
+  
+      // Navigate to the appropriate path based on the position and club
+      navigate(`${basePath}/club/${club.club_id}`, { state: { club, image: club.club_image } });
+    } else {
+      // Optionally, handle cases where the user is not accepted or doesn't have the right position
+      console.log('User is not accepted or does not have the required position');
     }
-    navigate(`${basePath}/club/${club.club_id}`, { state: { club, image: club.club_image } });
   };
-
-
+  
   return (
     <div>
 
@@ -144,7 +153,8 @@ const ClubPresident = () => {
         size="xs"
         open={open}
         handler={handleOpen}
-        className="fixed inset-0 flex items-center justify-center bg-opacity-60 backdrop-blur-sm transition-opacity duration-200 z-50"
+        className=" flex items-center justify-end bg-opacity-0  transition-opacity duration-200 z-50"
+        style={{ right: '-20rem' }} // Adjust this for the distance from the right edge
       >
         <Card className="mx-auto w-full max-w-[24rem] p-3 relative">
           <IoIosCloseCircle

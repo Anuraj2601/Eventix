@@ -5,6 +5,8 @@ import { IoMdBookmark } from "react-icons/io";
 import { FaPlus } from "react-icons/fa"; // Import the plus icon
 import { useNavigate, useLocation } from 'react-router-dom';
 import RegistrationModal from './RegistrationModal';
+import RegistrationService from '../service/registrationService'; // Adjust the path as needed
+import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function is correctly implemented
 
 import ClubsService from '../service/ClubsService';
 
@@ -16,11 +18,15 @@ const StudentClubCard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null); // Selected event state
   const [clubDetails, setClubDetails] = useState([]);
-
+  const [registrations, setRegistrations] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
+  const userId = getUserEmailFromToken();
 
   useEffect(() => {
     fetchClubs();
-  }, []);
+    fetchRegistrations();
+  }, [token]);
+
 
   const fetchClubs = async () => {
     try {
@@ -36,6 +42,24 @@ const StudentClubCard = () => {
       console.error("Failed to fetch clubs", error);
     }
   };
+
+  const fetchRegistrations = async () => {
+    try {
+      const response = await RegistrationService.getAllRegistrations(token);
+      const fetchedRegistrations = response.data || response.content || [];
+      setRegistrations(fetchedRegistrations);
+    } catch (error) {
+      console.error("Error fetching registrations:", error);
+    }
+  };
+
+  const validPositions = ["president", "member", "secretary", "treasurer", "oc"];
+  const filteredRegistrations = registrations.filter(
+    (reg) =>
+      reg.email.toLowerCase() === userId.toLowerCase() &&
+      reg.accepted === 1 &&
+      validPositions.includes(reg.position.toLowerCase())
+  );
 
   const handleRegisterClick = (club) => {
     const event = {
@@ -80,33 +104,47 @@ const StudentClubCard = () => {
   };
 
   const handleExploreClick = (club) => {
-    let basePath;
-    switch (true) {
-      case location.pathname.startsWith('/president'):
-        basePath = '/president';
-        break;
-      case location.pathname.startsWith('/student'):
-        basePath = '/student';
-        break;
-      case location.pathname.startsWith('/oc'):
-        basePath = '/oc';
-        break;
-      case location.pathname.startsWith('/secretary'):
-        basePath = '/secretary';
-        break;
-      case location.pathname.startsWith('/admin'):
-        basePath = '/admin';
-        break;
-      case location.pathname.startsWith('/member'):
-        basePath = '/member';
-        break;
-      case location.pathname.startsWith('/treasurer'):
-        basePath = '/treasurer';
-        break;
-      default:
-        basePath = ''; // Default base path or handle other cases
+    // Find the user's registration in the filtered registrations list
+    const userRegistration = filteredRegistrations.find(
+      (reg) => reg.clubId === club.club_id
+    );
+  
+    if (!userRegistration) {
+      navigate(`/student/club/${club.club_id}`, { state: { club, image: club.club_image } });
+      return; // Exit the function early to prevent further code execution
     }
-    navigate(`${basePath}/club/${club.club_id}`, { state: { club, image: club.club_image } });
+    // Check if the registration is accepted and the position is president or member
+    if (userRegistration && userRegistration.accepted === 1) {
+      let basePath = '';
+      
+      // Set the basePath based on the user's position
+      switch (userRegistration.position.toLowerCase()) {
+        case 'president':
+          basePath = '/president';
+          break;
+        case 'member':
+          basePath = '/member';
+          break;
+
+        case 'treasurer':
+          basePath = '/president';
+          break;
+
+          case 'secretary':
+            basePath = '/president';
+            break;
+        // Add other cases if needed for other positions (e.g., secretary, treasurer, etc.)
+        default:
+          basePath = '/student'; // Handle other cases or default behavior
+          break;
+      }
+  
+      // Navigate to the appropriate path based on the position and club
+      navigate(`${basePath}/club/${club.club_id}`, { state: { club, image: club.club_image } });
+    } else {
+      // Optionally, handle cases where the user is not accepted or doesn't have the right position
+      console.log('User is not accepted or does not have the required position');
+    }
   };
 
   return (
@@ -166,9 +204,7 @@ const StudentClubCard = () => {
                 </div>
               </div>
               <div className="flex items-center justify-end gap-4">
-                <Button className="bg-white text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card">
-                  Ignore
-                </Button>
+               
                 <Button
                   className={`text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card ${
                     club.state ? 'bg-[#AEC90A]' : 'bg-[#AEC90A80] cursor-not-allowed'
@@ -179,8 +215,7 @@ const StudentClubCard = () => {
                   Register
                 </Button>
                 <Button
-                  className="bg-[#AEC90A] text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card"
-                  onClick={() => handleExploreClick(club)}
+className="bg-white text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card"                  onClick={() => handleExploreClick(club)}
                 >
                   Explore
                 </Button>
