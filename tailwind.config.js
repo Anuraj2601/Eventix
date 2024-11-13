@@ -8,23 +8,35 @@ export default {
     extend: {
       colors: {
         primary: '#AEC90A',
-        secondary: 'white',
+        secondary: '#DBFF00',
         dark: {
           background: '#171717',
           400: '#1E1E1E',
           500: '#0F0F0F',
         },
       },
-       boxShadow: {
-        'custom-white': '-4px 0px 4px rgba(0, 0, 0, 0.2), 0px -4px 4px rgba(0, 0, 0, 0.2), 0px 4px 4px rgba(0, 0, 0, 0.2), 4px 0px 4px rgba(0, 0, 0, 0.2)'
+      boxShadow: {
+        'custom': '0 4px 6px rgba(219, 255, 0, 0.5)', 
       },
       height: {
-        '256': '64rem', // Adding custom height class
+        '256': '64rem',
       },
     },
   },
   darkMode: 'class',
   plugins: [
     require('@tailwindcss/forms'),
+    function ({ addUtilities }) {
+      addUtilities({
+        '.scrollbar-hide': {
+          '-webkit-overflow-scrolling': 'touch',
+          '-ms-overflow-style': 'none',
+          'scrollbar-width': 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none'
+          }
+        }
+      });
+    }
   ],
 }
