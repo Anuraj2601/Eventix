@@ -58,6 +58,7 @@ const FullCalendar = () => {
 
   const renderCalendar = () => {
     const daysInMonth = getCalendarDays();
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
     return (
       <div
@@ -68,6 +69,20 @@ const FullCalendar = () => {
           gap: "10px",
         }}
       >
+        {/* Render day names as column headers */}
+        {dayNames.map((day, index) => (
+          <div
+            key={index}
+            style={{
+              textAlign: "center",
+              fontWeight: "bold",
+              color: "white",
+            }}
+          >
+            {day}
+          </div>
+        ))}
+
         {daysInMonth.map((date, index) => {
           const formattedDate = date ? format(date, "yyyy-MM-dd") : null;
           const eventsForDay = date ? eventsByDate[formattedDate] || [] : [];
@@ -88,7 +103,7 @@ const FullCalendar = () => {
                 backgroundColor: date ? "black" : "transparent",
                 color: date ? "white" : "transparent",
                 position: "relative",
-                borderRadius: "5px",
+                borderRadius: "25px",
                 cursor: "pointer", // Allow clicks
                 ...cardHighlightStyle,
               }}
@@ -99,6 +114,7 @@ const FullCalendar = () => {
               {date && (
                 <div className="day-number" style={{ fontWeight: "bold", fontSize: "16px" }}>
                   {date.getDate()}
+                  {isCurrentDate && <span style={{ fontSize: "10px", color: "#AEC90A" }}> Today</span>}
                 </div>
               )}
               <div className="events-summary">
@@ -145,64 +161,67 @@ const FullCalendar = () => {
         className="event-cards-container"
         style={{
           display: "flex",
-          overflowX: "scroll",
-          gap: "10px",
-          marginTop: "20px",
-          paddingBottom: "20px",
-          justifyContent: "center", // Center the cards horizontally
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          borderRadius: "10px",
+          padding: "20px",
+          zIndex: 9999, // Ensure this is on top
         }}
       >
-        {eventsForDay.map((event, i) => (
-          <div
-            key={i}
-            className="event-card"
-            style={{
-              minWidth: "150px",
-              height: "200px",
-              backgroundImage: `url(${event.event_image})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              borderRadius: "5px",
-              position: "relative",
-              cursor: "pointer",
-              transformStyle: "preserve-3d",
-              transition: "transform 0.5s",
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = "rotateY(180deg)"}
-            onMouseLeave={(e) => e.currentTarget.style.transform = "rotateY(0deg)"}
-          >
+        {eventsForDay.length === 0 ? (
+          <p style={{ color: "white" }}>No events available for this date.</p>
+        ) : (
+          eventsForDay.map((event, i) => (
             <div
-              className="event-info"
+              key={i}
+              className="event-card"
               style={{
-                position: "absolute",
-                bottom: "0",
-                width: "100%",
-                padding: "10px",
-                backgroundColor: "rgba(0, 0, 0, 0.7)",
-                color: "white",
-                textAlign: "center",
-                transform: "rotateY(180deg)",
-                opacity: "0",
-                transition: "opacity 0.5s",
+                minWidth: "250px",
+                height: "200px",
+                backgroundImage: `url(${event.event_image})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                borderRadius: "10px",
+                position: "relative",
+                marginBottom: "10px",
               }}
             >
-              <div style={{ fontWeight: "bold" }}>{event.name}</div>
-              <div>Venue: {event.venue}</div>
-              <button
+              <div
+                className="event-info"
                 style={{
-                  marginTop: "5px",
-                  padding: "5px 10px",
-                  backgroundColor: "darkorange",
+                  position: "absolute",
+                  bottom: "0",
+                  width: "100%",
+                  padding: "10px",
+                  backgroundColor: "rgba(0, 0, 0, 0.7)",
                   color: "white",
-                  border: "none",
-                  borderRadius: "3px",
+                  textAlign: "center",
                 }}
               >
-                Register Now
-              </button>
+                <div style={{ fontWeight: "bold" }}>{event.name}</div>
+                <div>Venue: {event.venue}</div>
+                <button
+                  style={{
+                    marginTop: "5px",
+                    padding: "5px 10px",
+                    backgroundColor: "darkorange",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "3px",
+                  }}
+                >
+                  Register Now
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     );
   };
@@ -215,6 +234,7 @@ const FullCalendar = () => {
         color: "white",
         padding: "20px",
         borderRadius: "10px",
+        position: "relative", // Ensure that event cards can be positioned over this
       }}
     >
       {error && <p className="error">{error}</p>}
@@ -223,37 +243,15 @@ const FullCalendar = () => {
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          gap: "10px",
           marginBottom: "20px",
         }}
       >
-        <button
-          onClick={handlePreviousMonth}
-          style={{
-            backgroundColor: "#333",
-            color: "white",
-            padding: "10px",
-            borderRadius: "5px",
-            marginRight: "10px",
-          }}
-        >
-          &lt;
-        </button>
-        <h1 style={{ fontSize: "1.5em", color: "white" }}>
+        <button onClick={handlePreviousMonth}>Previous</button>
+        <div style={{ fontSize: "24px", fontWeight: "bold" }}>
           {format(currentMonth, "MMMM yyyy")}
-        </h1>
-        <button
-          onClick={handleNextMonth}
-          style={{
-            backgroundColor: "#333",
-            color: "white",
-            padding: "10px",
-            borderRadius: "5px",
-            marginLeft: "10px",
-          }}
-        >
-          &gt;
-        </button>
+        </div>
+        <button onClick={handleNextMonth}>Next</button>
       </div>
 
       {renderCalendar()}
