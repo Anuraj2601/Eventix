@@ -161,7 +161,9 @@ const ClubEvent = ({ club }) => {
     }
 
     const clubDetails = {
-      clubImage: club.image,
+      clubImage: club.club_image,
+      //clubId: club.club_id,
+      clubId: club.club_id,
       ...event,
     };
 
@@ -185,6 +187,7 @@ const ClubEvent = ({ club }) => {
       const formattedData = [];
       eventsData.content.forEach((event) => {
         formattedData.push({
+          event_id: event.event_id,
           name: event.name,
           image: event.event_image ? event.event_image : rac1, 
           date: `${event.date[0]}/${event.date[1]}/${event.date[2]}`,

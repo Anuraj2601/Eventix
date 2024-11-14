@@ -202,7 +202,8 @@ const App = () => {
         <Route path='/student/dashboard' element={<StudentDashboard/>}></Route>
         <Route path='/:role/clubregister/:club_id' element={<ClubRegistration />} />
         <Route path='/eventregister/:event' element={<EventRegistration/>}></Route>
-        <Route path='/student/club/event' element={<Exploreeventstudent />}></Route>
+        {/* <Route path='/student/club/event' element={<Exploreeventstudent />}></Route> */}
+        <Route path='/student/club/event' element={<Exploreevent />}></Route>
         <Route path='/student/calendar' element={<StudentEventCalendar />}></Route>
         <Route path='/student' element={<StudentDashboard/>}></Route>
         <Route path='/student/inquiry' element={<Inquiriesstudent/>}></Route>

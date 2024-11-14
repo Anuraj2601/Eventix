@@ -14,23 +14,26 @@ import Posts from "./Posts";
 import Oc from "./Oc";
 import YourRegistration from "./YourRegistration"; // Import YourRegistration component
 
-const EventNav = () => {
+const EventNav = ({clubId , event}) => {
   const [activeTab, setActiveTab] = React.useState("Posts");
   const [isDropdownVisible, setDropdownVisible] = React.useState(false);
 
   const location = useLocation(); // Get the current path
   const isStudentPage = location.pathname.startsWith('/student'); // Check if the path starts with /student
 
+  //console.log("club id in event nav", clubId);
+  
+
   const data = [
     {
       label: "Posts",
       value: "Posts",
-      desc: <Posts />,
+      desc: <Posts clubId = {clubId}/>,
     },
     {
       label: "Organizing Committee",
       value: "OC",
-      desc: <Oc />,
+      desc: <Oc clubId = {clubId} event = {event}/>,
     },
    
   ];
