@@ -111,6 +111,7 @@ const App = ({clubId, event}) => {
 
     const [allClubMembers, setAllClubMembers] = useState([]);
     const [currentOcMembers, setCurrentOcMembers] = useState([]);
+    const [error, setError] = useState("");
 
     const location = useLocation(); // Get the current path
 
@@ -128,7 +129,7 @@ const App = ({clubId, event}) => {
         const token = localStorage.getItem('token'); 
 
         try{
-            const response1 = await EventOcService.removeEventOC(oc_id, token);
+            const response1 = await EventOcService.deleteEventOc(oc_id, token);
 
             alert('Event OC removed successfully');
             console.log('Event OC removed:', response1);
@@ -238,8 +239,19 @@ const App = ({clubId, event}) => {
                 const token = localStorage.getItem('token');
                 const response = await EventOcService.getAllEventOcs(token) ;
                 //console.log("oc array", response);
-                const ocArray = response.content.filter(oc => oc.event_id === event.event_id && oc._removed == false) || [];
+                const ocArray = response.content ? response.content.filter(oc => oc.event_id === event.event_id && oc._removed == false) : [];
                 console.log("oc array", ocArray);
+
+                // Check if ocArray is empty and set the default state if it is
+                if (ocArray.length === 0) {
+                   
+                    const emptyTeams = allTeams.reduce((acc, team) => {
+                        acc[team] = []; // Each team gets an empty array of members
+                        return acc;
+                    }, {});
+                    setCurrentOcMembers(emptyTeams);  // Set state with empty teams
+                    return;
+                }
 
                 // Map through ocArray to fetch user details for each user
                 const detailedOCMembers = await Promise.all(
@@ -281,6 +293,7 @@ const App = ({clubId, event}) => {
     
             }catch(error){
                 console.error("Error fetching event OCs", error);
+                setError(error);
             }
 
         }
@@ -356,6 +369,7 @@ const App = ({clubId, event}) => {
             <div className="w-full bg-[#1A1A1A] rounded-md p-2"                   style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
 >
                 <h2 className="text-2xl font-bold mb-4"></h2>
+                {/* {error && <div>Error while fetching OC members</div>} */}
                 {Object.keys(teams).map((teamName, index) => (
                     <TeamSection
                         key={index}
