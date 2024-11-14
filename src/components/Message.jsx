@@ -312,15 +312,15 @@ return (
         {/* Middle panel for conversations */}
         <div className="flex-1 flex flex-col">
           {selectedUser && (
-            <div className="flex-1 overflow-y-auto p-4 bg-neutral-900">
-              <div className="flex items-center mb-4">
-                <img
-                  src={selectedUser.image}
-                  alt=""
-                  className="w-12 h-12 rounded-full"
-                />
-                <span className="text-xl ml-4">{selectedUser.name.toUpperCase()}</span>
-              </div>
+            <div className="flex-1 overflow-y-auto p-0 bg-neutral-900">
+               <div className="sticky top-0 bg-neutral-900 z-10 shadow-md  flex items-center -mt-8">
+        <img
+          src={selectedUser.image}
+          alt=""
+          className="w-12 h-12 rounded-full"
+        />
+        <span className="text-sm ml-4">{selectedUser.name.toUpperCase()}</span>
+      </div>
               {currentConversation
                 .filter(
                   (message) =>
@@ -332,7 +332,7 @@ return (
                 .map((message, index) => (
                   <div
                     key={index}
-                    className={`relative flex ${
+                    className={`relative flex  mt-4 ${
                       message.sender === currentUserId ? 'justify-end' : 'justify-start'
                     } mb-4`}
                   >
