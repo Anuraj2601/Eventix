@@ -33,12 +33,21 @@ const ClubDetails = () => {
   
   useEffect(() => {
     fetchClubDetails(id);
-
-    // Check if the URL contains 'president'
-    if (location.pathname.includes('president')) {
-      setIsPresidentView(true);
+  
+    // Check if the URL contains any of the specified roles
+    if (
+      location.pathname.includes('president') ||
+      location.pathname.includes('treasurer') ||
+      location.pathname.includes('secretary') ||
+      location.pathname.includes('oc') ||
+      location.pathname.includes('member')
+    ) {
+      setIsPresidentView(true);  // Set isPresidentView to true for any matching role
+    } else {
+      setIsPresidentView(false); // Reset isPresidentView if no role matches
     }
   }, [id, location.pathname]);
+  
 
   const fetchClubDetails = async (clubId) => {
     try {
@@ -118,15 +127,15 @@ const ClubDetails = () => {
     {getRandomMembers()} Members Community
   </Typography>
 </div>
+{location.pathname.includes('president') && (
+  <div className="flex items-center ml-4">
+    <Typography variant="body1" className="text-white mr-2">
+      Recruitment
+    </Typography>
+    <ClubToggle clubId={id} /> {/* Pass the club ID to ClubToggle */}
+  </div>
+)}
 
-                  {isPresidentView && (
-                   <div className="flex items-center ml-4">
-                   <Typography variant="body1" className="text-white mr-2">
-                     Recruitment
-                   </Typography>
-                   <ClubToggle clubId={id} /> {/* Pass the club ID to ClubToggle */}
-                 </div>
-                  )}
                 </div>
               </div>
             </div>
