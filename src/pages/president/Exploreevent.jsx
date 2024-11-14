@@ -22,6 +22,8 @@ import SponsorsService from "../../service/SponsorsService";
 import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import AddSponsorModal from "../../components/AddSponsorModal"; // Import your modal
+import RegistrationModal from '../../components/RegistrationModal';
+import EventRegistrationModal from "../../components/EventRegistrationModal";
 
 
 ReactModal.setAppElement("#root"); // For accessibility
@@ -53,6 +55,12 @@ const Exploreevent = () => {
   const navigate = useNavigate();
 
   const [eventSponsor, setEventSponsonsors] = useState([]);
+
+   // Function to check if the path starts with one of the specified paths
+  const isMatchingPage = () => {
+    const paths = ['/president', '/secretary'];
+    return paths.some(path => location.pathname.startsWith(path));
+  };
 
   useEffect(() => {
     fetchSponsors();
@@ -182,6 +190,16 @@ const Exploreevent = () => {
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
+  const [isRegModalOpen, setIsRegModalOpen] = useState(false);
+
+  const handleRegister = () => {
+    setIsRegModalOpen(true);
+  };
+
+  const closeRegModal = () => {
+    setIsRegModalOpen(false);
+};
+
   return (
     <div className="fixed inset-0 flex">
       <Sidebar className="flex-shrink-0" />
@@ -244,7 +262,7 @@ const Exploreevent = () => {
                       >
                         Venue - {venue}
                       </Typography>
-                      <button
+                      {/* <button
                         onClick={openModal}
                         className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
                         style={{
@@ -253,7 +271,32 @@ const Exploreevent = () => {
                         }}
                       >
                         View Details
+                      </button> */}
+
+                      {isMatchingPage() ? (
+                        <button
+                        onClick={openModal}
+                        className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
+                        style={{
+                          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                        }}
+                      >
+                        View Details
                       </button>
+                       
+                      ) : (
+                        
+                        <button
+                          onClick={handleRegister}
+                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
+                          style={{
+                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                          }}
+                        >
+                          Register Now
+                        </button>
+                      )}
+
                     </div>
                     <Typography color="white" variant="body1" className="mb-4">
                       An event designed to inspire and empower students. Join us
@@ -284,12 +327,17 @@ const Exploreevent = () => {
             >
               <CardBody className="h-full relative">
                 <div className="absolute top-2 right-2">
-                  <Link
-                    to="/president/AddSponsor"
-                    className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
-                  >
-                    <AiOutlinePlus size={24} />
-                  </Link>
+                  
+                    {isMatchingPage() && (
+                      <Link
+                      to="/president/AddSponsor"
+                      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
+                    >
+                        <AiOutlinePlus size={24} />
+                      </Link>
+                    )}
+                    {/* <AiOutlinePlus size={24} /> */}
+                  
                 </div>
                 <div className="relative h-full flex flex-col justify-center">
                   <Typography
@@ -305,7 +353,7 @@ const Exploreevent = () => {
                         className="flex flex-col items-center "
                         key={eventS.sponsor_id}
                       >
-                        <div className="flex flex-row gap-1 top-1">
+                        {/* <div className="flex flex-row gap-1 top-1">
                           <Button
                             onClick={() => updateSponsor(eventS.sponsor_id)}
                           >
@@ -322,7 +370,22 @@ const Exploreevent = () => {
                               <AiOutlineDelete size={24} />
                             </Link>
                           </button>
-                        </div>
+                        </div> */}
+                        {isMatchingPage() && (
+                          <div className="flex flex-row gap-1 top-1">
+                            <Button onClick={() => updateSponsor(eventS.sponsor_id)}>
+                              <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                                <AiOutlineEdit size={24} />
+                              </Link>
+                            </Button>
+                            <button onClick={() => handleDeleteSponsor(eventS.sponsor_id)}>
+                              <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                                <AiOutlineDelete size={24} />
+                              </Link>
+                            </button>
+                          </div>
+                        )}
+
                         <img
                           src={eventS.company_logo}
                           alt="Platinum Sponsor"
@@ -345,7 +408,11 @@ const Exploreevent = () => {
           </div>
 
           <div className="w-full p-10">
+          {isMatchingPage() && (
             <RegisterNav className="w-full h-96" />
+          )}
+
+            {/* <RegisterNav className="w-full h-96" /> */}
           </div>
         </div>
       </div>
@@ -474,6 +541,12 @@ const Exploreevent = () => {
           </button>
         </div>
       </ReactModal>
+
+      <EventRegistrationModal
+                event={event}
+                isOpen={isRegModalOpen}
+                onClose={closeRegModal}
+            /> 
     </div>
   );
 };
