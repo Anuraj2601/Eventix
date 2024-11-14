@@ -26,7 +26,7 @@ const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick, showAddButto
                         {showAddButton && (
                             <Button
                                 className="text-red-500 mt-2 custom-card"
-                                onClick={() => onRemove(index, title)}
+                                onClick={() => onRemove(member.oc_id, title, index)}
                             >
                                 Remove
                             </Button>
@@ -123,10 +123,35 @@ const App = ({clubId, event}) => {
         return paths.some(path => location.pathname.startsWith(path));
     };
 
-    const handleRemove = (index, teamName) => {
+    const handleRemove = async (oc_id, teamName, memberIndex) => {
+
+        const token = localStorage.getItem('token'); 
+
+        try{
+            const response1 = await EventOcService.removeEventOC(oc_id, token);
+
+            alert('Event OC removed successfully');
+            console.log('Event OC removed:', response1);
+
+
+        }catch(error){
+            console.error("Error removing Event Oc:", error);
+            return;
+
+        }
+
+        // const newTeams = { ...teams };
+        // newTeams[teamName].splice(index, 1);
+        // setTeams(newTeams);
+
         const newTeams = { ...teams };
-        newTeams[teamName].splice(index, 1);
+        const removedMember = newTeams[teamName][memberIndex];
+
+        newTeams[teamName].splice(memberIndex, 1);
         setTeams(newTeams);
+    
+      
+        
     };
 
     // const handleAddNewClick = (teamName) => {
@@ -187,7 +212,7 @@ const App = ({clubId, event}) => {
 
         }catch(err){
 
-            console.error("Error processing Event Oc:", err);
+            console.error("Error adding Event Oc:", err);
             
             // const errorMessages = err.response ? err.response.data.errors : { global: err.message };
             // setErrors(errorMessages);
@@ -275,6 +300,8 @@ const App = ({clubId, event}) => {
                 //console.log("response array", response);
                 const regArray = response.content.filter(reg => reg.clubId === clubId && reg.accepted == 1) || [];
                 //console.log("reg array", regArray);
+
+               
 
                 // Map through regArray to fetch user details for each user
                 const detailedMembers = await Promise.all(
