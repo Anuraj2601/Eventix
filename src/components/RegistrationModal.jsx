@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function is correctly implemented
 import RegistrationService from '../service/registrationService';
 import { Typography } from "@material-tailwind/react";
+import { AiOutlineClose } from "react-icons/ai";  // Cross icon from react-icons
 
 const menuItems = [
   { title: "Design Team" },
@@ -129,17 +130,17 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]">
-      <div className="bg-black p-6 rounded-md shadow-md border-[#AEC90A] w-[600px] z-[99999] mt-10">
+      <div className="bg-black p-6 rounded-md shadow-md  border-2 border-opacity-40 border-[#AEC90A] w-[600px] z-[99999] mt-10">
         <div className="relative w-full h-full text-white">
           <button
             type="button"
             className="absolute top-0 right-2 px-4 py-2 text-white rounded-md"
             onClick={onClose}
           >
-            Close
+             <AiOutlineClose />
           </button>
         </div>
-        <h2 className="text-xl text-white font-bold mb-4">
+        <h2 className="text-xl text-white font-bold mb-4 text-center">
           {event.club_name ? `Register for ${event.club_name}` : 'Register Now!'}
         </h2>
 
@@ -175,15 +176,15 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
           <div className="grid gap-10 mb-6 md:grid-cols-2">
             {/* Team menu */}
             <div className="flex flex-col gap-3">
-              <label htmlFor="team" className="block mb-2 text-white">Select a Team</label>
-              <Menu open={openMenu} handler={setOpenMenu} allowHover>
+              <label htmlFor="team" className="block mb-2 text-[#AEC90A]">Select a Team</label>
+              <Menu open={openMenu} handler={setOpenMenu} allowHover className='border-[#AEC90A] border-2'>
                 <MenuHandler>
                   <Button
                     variant="text"
-                    className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                    className="w-full h-16 bg-black text-white p-2 rounded-2xl  border-white"
                     style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
                   >
-                    {formData.team || "Team"}{" "}
+                    {formData.team || "Click here to Select a Team"}{" "}
                     <HiChevronDown
                       strokeWidth={2.5}
                       className={`h-3.5 w-3.5 transition-transform ${openMenu ? "rotate-180" : ""}`}
@@ -208,7 +209,7 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
 
             {/* Interview Slot */}
             <div className="flex flex-col gap-3">
-              <label htmlFor="interviewSlot" className="block mb-2 text-white">Select Interview Slot</label>
+              <label htmlFor="interviewSlot" className="block mb-2 text-[#AEC90A]">Select Interview Slot</label>
               <DatePicker
                 selected={selectedDate}
                 onChange={handleDateChange}
@@ -226,7 +227,7 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
 
           {/* Reason field */}
           <div className="flex flex-col mb-6 gap-3">
-            <label htmlFor="reason" className="block mb-2 text-white">Reason</label>
+            <label htmlFor="reason" className="block mb-2 text-[#AEC90A]">Why do you want to join us?</label>
             <textarea
               id="reason"
               name="reason"
