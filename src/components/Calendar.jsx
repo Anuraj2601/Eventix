@@ -19,6 +19,7 @@ import { Fragment, useState } from "react";
 import AddEvent from './AddEvent';
 import { FaPlus } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
+import EventService from "../service/EventService";
 
 
 
