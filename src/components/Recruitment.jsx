@@ -249,7 +249,7 @@ const Recruitment = () => {
                     );
                 })
             ) : (
-                <div className="py-2 px-4 text-center">No records found</div>
+                <div className="py-2 px-4 text-white text-center">No Users have registered new</div>
             )}
         </div>
     );
