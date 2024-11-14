@@ -23,6 +23,7 @@ import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import AddSponsorModal from "../../components/AddSponsorModal"; // Import your modal
 import RegistrationModal from '../../components/RegistrationModal';
+import EventRegistrationModal from "../../components/EventRegistrationModal";
 
 
 ReactModal.setAppElement("#root"); // For accessibility
@@ -541,7 +542,7 @@ const Exploreevent = () => {
         </div>
       </ReactModal>
 
-      <RegistrationModal
+      <EventRegistrationModal
                 event={event}
                 isOpen={isRegModalOpen}
                 onClose={closeRegModal}
