@@ -7,6 +7,8 @@ import { format, differenceInMonths } from 'date-fns'; // For date formatting an
 
 const MessagePage = () => {
   const [userProfiles, setUserProfiles] = useState([]);
+  const [InteractedUserProfiles, setInteractedUserProfiles] = useState([]);
+
   const [messages, setMessages] = useState([]);
   const [currentConversation, setCurrentConversation] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -18,6 +20,25 @@ const MessagePage = () => {
   const [messageToDeleteId, setMessageToDeleteId] = useState(null); // For tracking message to delete
   const messageEndRef = useRef(null); 
   const currentUserId = localStorage.getItem('session_id');
+  const [showUsers, setShowUsers] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+
+ const filterUsers = (users) => {
+  if (!searchQuery) return users;  // If no search query, return all users
+  return users.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+};
+
+// Users to display: first show searched users, if search is empty or has no results, show interacted users
+const usersToDisplay = searchQuery
+  ? filterUsers(userProfiles).length > 0  // Check if there are matching users
+    ? filterUsers(userProfiles)          // If there are, show those
+    : []                                  // If no matches, show an empty array
+  : InteractedUserProfiles;               // If no search query, show interacted users
+
+
 
   console.log('Current User ID:', currentUserId);
 
@@ -223,8 +244,21 @@ return (
       <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
         {/* Left panel for users */}
         <div className="w-1/6 p-2 custom-3d-shadow rounded-2xl overflow-y-auto">
-          <h2 className="text-xl mb-4 text-center">Your inbox</h2>
-          <div className="flex flex-col space-y-2">
+      <h2 className="text-xl mb-4 text-center">Your inbox</h2>
+
+      {/* Search Box */}
+      <div className="w-full max-w-xs mx-auto mb-4">
+        <input
+          type="text"
+          placeholder="Search users..."
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
+{!searchQuery && interactedUserProfiles.length > 0 && (
+    <div className="flex flex-col space-y-2">
             {interactedUserProfiles.map((user) => (
               <div
                 key={user.id}
@@ -247,8 +281,33 @@ return (
                 <span className="text-md">{user.name}</span>
               </div>
             ))}
+          </div> )}
+          
+      {/* Display user profiles */}
+      <div className="flex flex-col space-y-2">
+        {usersToDisplay.map((user) => (
+          <div
+            key={user.id}
+            className={`relative flex items-center p-2 rounded-lg cursor-pointer ${
+              selectedUser?.id === user.id
+                ? 'border-[#AEC90A] bg-opacity-50 bg-black text-white'
+                : 'border-[#AEC90A]'
+            }`}
+            onClick={() => handleSelectUser(user)}
+            style={{
+              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
+            }}
+          >
+            <img
+              src={user.image}
+              alt="User"
+              className="w-10 h-10 rounded-full mr-3"
+            />
+            <span className="text-md">{user.name}</span>
           </div>
-        </div>
+        ))}
+      </div>
+    </div>
 
         {/* Middle panel for conversations */}
         <div className="flex-1 flex flex-col">
@@ -309,7 +368,8 @@ return (
 </div>
 
 
-                     
+<div ref={messageEndRef}></div>
+
                     </div>
                   </div>
                 ))}
