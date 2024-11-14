@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import axios from 'axios';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import Sidebar from '../components/Sidebar';
@@ -10,54 +10,50 @@ const MessagePage = () => {
   const [messages, setMessages] = useState([]);
   const [currentConversation, setCurrentConversation] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [interactedUsers, setInteractedUsers] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [messageToEdit, setMessageToEdit] = useState('');
+  const [messageToEditId, setMessageToEditId] = useState(null); // For tracking the message being edited
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [messageToDeleteId, setMessageToDeleteId] = useState(null); // For tracking message to delete
+  const messageEndRef = useRef(null); 
   const currentUserId = localStorage.getItem('session_id');
+
   console.log('Current User ID:', currentUserId);
-    function formatDate(dateString) {
+
+  // Function to format date as MM/DD/YYYY, HH:MM:SS
+  function formatDate(dateString) {
     try {
-        let date;
-
-        // Check if dateString is a Date object, an array, or a string
-        if (Array.isArray(dateString)) {
-            // If it's an array, construct a new Date object directly
-            const [year, month, day, hours, minutes, seconds] = dateString;
-            date = new Date(year, month - 1, day, hours, minutes, seconds);
-        } else if (typeof dateString === 'string') {
-            // If it's a string, ensure it can be parsed
-            date = new Date(dateString.replace(' ', 'T').split('.')[0]);
-        } else if (dateString instanceof Date) {
-            // If it's already a Date object, use it directly
-            date = dateString;
-        } else {
-            console.warn('Unexpected date format:', dateString);
-            return "Invalid Date"; // Return "Invalid Date" for an unexpected format
-        }
-
-        // Check if the resulting date is valid
-        if (isNaN(date.getTime())) {
-            return "Invalid Date";
-        }
-
-        // Return formatted date string in "MM/DD/YYYY, HH:MM:SS" format
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        });
+      let date;
+      if (Array.isArray(dateString)) {
+        const [year, month, day, hours, minutes, seconds] = dateString;
+        date = new Date(year, month - 1, day, hours, minutes, seconds);
+      } else if (typeof dateString === 'string') {
+        date = new Date(dateString.replace(' ', 'T').split('.')[0]);
+      } else if (dateString instanceof Date) {
+        date = dateString;
+      } else {
+        console.warn('Unexpected date format:', dateString);
+        return 'Invalid Date';
+      }
+      if (isNaN(date.getTime())) {
+        return 'Invalid Date';
+      }
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      });
     } catch (error) {
-        console.error('Error parsing date:', error, '\nOriginal date string:', dateString);
-        return "Invalid Date"; // Return "Invalid Date" in case of an error
+      console.error('Error parsing date:', error, '\nOriginal date string:', dateString);
+      return 'Invalid Date';
     }
-}
+  }
 
-
-  
   // Fetch all messages
   useEffect(() => {
     axios
@@ -96,9 +92,10 @@ const MessagePage = () => {
   }, []);
 
   const interactedUserProfiles = userProfiles.filter((user) =>
-    messages.some((message) =>
-    (String(message.sender) === String(currentUserId) && String(message.receiver) === String(user.id)) ||
-  (String(message.receiver) === String(currentUserId) && String(message.sender) === String(user.id))
+    messages.some(
+      (message) =>
+        (String(message.sender) === String(currentUserId) && String(message.receiver) === String(user.id)) ||
+        (String(message.receiver) === String(currentUserId) && String(message.sender) === String(user.id))
     )
   );
 
@@ -153,29 +150,44 @@ const MessagePage = () => {
     }
   };
 
-  // Handle deleting a message
-  const handleDeleteMessage = (messageId) => {
-    axios
-      .delete(`http://localhost:8080/api/messages/delete/${messageId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
-      .then(() => {
-        setCurrentConversation((prevConversation) =>
-          prevConversation.filter((msg) => msg.id !== messageId)
-        );
-      })
-      .catch((error) => {
-        console.error('Error deleting message:', error);
-      });
-  };
 
-  const handleEditMessage = (messageId, newText) => {
+
+const handleOpenEditDialog = (messageId, content) => {
+  setMessageToEdit(content);
+  setMessageToEditId(messageId);
+  setIsEditDialogOpen(true);
+};
+
+// Trigger the delete dialog
+const handleOpenDeleteDialog = (messageId) => {
+  setMessageToDeleteId(messageId);
+  setIsDeleteDialogOpen(true);
+};
+
+const handleDeleteMessage = () => {
+  axios
+    .delete(`http://localhost:8080/api/messages/delete/${messageToDeleteId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+    .then(() => {
+      setCurrentConversation((prevConversation) =>
+        prevConversation.filter((msg) => msg.id !== messageToDeleteId)
+      );
+      setIsDeleteDialogOpen(false); // Close the delete dialog after deleting
+    })
+    .catch((error) => {
+      console.error('Error deleting message:', error);
+    });
+};
+
+const handleSaveEdit = () => {
+  if (messageToEdit.trim()) {
     axios
       .put(
-        `http://localhost:8080/api/messages/edit/${messageId}`,
-        newText,
+        `http://localhost:8080/api/messages/edit/${messageToEditId}`,
+        messageToEdit,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -183,162 +195,197 @@ const MessagePage = () => {
           },
         }
       )
-      .then((response) => {
+      .then(() => {
         setCurrentConversation((prevConversation) =>
           prevConversation.map((msg) =>
-            msg.id === messageId ? { ...msg, content: newText } : msg
+            msg.id === messageToEditId ? { ...msg, content: messageToEdit } : msg
           )
         );
+        setIsEditDialogOpen(false); // Close the edit dialog after saving
       })
       .catch((error) => {
         console.error('Error editing message:', error);
       });
-  };
+  }
+};
 
-  return (
-    <div className="flex h-screen">
-      <Sidebar className="flex-shrink-0" />
-      <div className="flex-1 flex flex-col">
-        <Navbar className="sticky top-0 z-10 bg-neutral-900 text-white" />
-        <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
-          {/* Left panel for users */}
-          <div className="w-1/6 p-2 custom-3d-shadow rounded-2xl overflow-y-auto">
-            <h2 className="text-xl mb-4 text-center">All Users</h2>
-            <div className="flex flex-col space-y-2">
+useEffect(() => {
+  if (messageEndRef.current) {
+    messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  }
+}, [currentConversation]);
+
+return (
+  <div className="flex h-screen">
+    <Sidebar className="flex-shrink-0" />
+    <div className="flex-1 flex flex-col">
+      <Navbar className="sticky top-0 z-10 bg-neutral-900 text-white" />
+      <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
+        {/* Left panel for users */}
+        <div className="w-1/6 p-2 custom-3d-shadow rounded-2xl overflow-y-auto">
+          <h2 className="text-xl mb-4 text-center">Your inbox</h2>
+          <div className="flex flex-col space-y-2">
             {interactedUserProfiles.map((user) => (
-                <div
-                  key={user.id}
-                  className={`relative flex items-center p-2 rounded-lg cursor-pointer ${
-                    selectedUser?.id === user.id
-                      ? 'border-[#AEC90A] bg-opacity-50 bg-black text-white'
-                      : 'border-[#AEC90A]'
-                  }`}
-                  onClick={() => handleSelectUser(user)}
-                  style={{
-                    boxShadow:
-                      '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
-                  }}
-                >
-                  <img
-                    src={user.image}
-                    alt="User"
-                    className="w-10 h-10 rounded-full mr-3"
-                  />
-                  <span className="text-md">{user.name}</span>
-                </div>
-              ))}
-            </div>
+              <div
+                key={user.id}
+                className={`relative flex items-center p-2 rounded-lg cursor-pointer ${
+                  selectedUser?.id === user.id
+                    ? 'border-[#AEC90A] bg-opacity-50 bg-black text-white'
+                    : 'border-[#AEC90A]'
+                }`}
+                onClick={() => handleSelectUser(user)}
+                style={{
+                  boxShadow:
+                    '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
+                }}
+              >
+                <img
+                  src={user.image}
+                  alt="User"
+                  className="w-10 h-10 rounded-full mr-3"
+                />
+                <span className="text-md">{user.name}</span>
+              </div>
+            ))}
           </div>
+        </div>
 
-          {/* Middle panel for conversations */}
-          <div className="flex-1 flex flex-col">
-            {selectedUser && (
-              <div className="flex-1 overflow-y-auto p-4 bg-neutral-900">
-                <div className="flex items-center mb-4">
-                  <img
-                    src={selectedUser.image}
-                    alt=""
-                    className="w-12 h-12 rounded-full"
-                  />
-                  <span className="text-xl ml-4">
-                    {selectedUser.name.toUpperCase()}
-                    {selectedUser.id}
-                  </span>
-                </div>
-                {currentConversation
-   .filter((message) =>
-   (String(message.sender) === String(currentUserId) && String(message.receiver) === String(selectedUser.id)) ||
-   (String(message.sender) === String(selectedUser.id) && String(message.receiver) === String(currentUserId))
- )
-  .map((message, index) => (
-    <div
-      key={index}
-      className={`flex ${
-        message.sender === currentUserId ? 'justify-end' : 'justify-start'
-      } mb-4`}
-    >
-      <div
-        className="p-5 rounded-2xl"
-        style={{
-          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
-          backgroundColor: '#AEC90A',
-        }}
-      >
-        <p>{message.content}</p>
-        {message.sender === currentUserId && (
-          <div className="flex mt-2">
-            <button
-              onClick={() =>
-                handleEditMessage(
-                  message.id,
-                  prompt('Edit message:', message.content)
+        {/* Middle panel for conversations */}
+        <div className="flex-1 flex flex-col">
+          {selectedUser && (
+            <div className="flex-1 overflow-y-auto p-4 bg-neutral-900">
+              <div className="flex items-center mb-4">
+                <img
+                  src={selectedUser.image}
+                  alt=""
+                  className="w-12 h-12 rounded-full"
+                />
+                <span className="text-xl ml-4">{selectedUser.name.toUpperCase()}</span>
+              </div>
+              {currentConversation
+                .filter(
+                  (message) =>
+                    (String(message.sender) === String(currentUserId) &&
+                      String(message.receiver) === String(selectedUser.id)) ||
+                    (String(message.sender) === String(selectedUser.id) &&
+                      String(message.receiver) === String(currentUserId))
                 )
-              }
-              aria-label="Edit message"
-            >
-              <MdEdit className="text-black" />
-            </button>
-            <button
-              onClick={() => handleDeleteMessage(message.id)}
-              aria-label="Delete message"
-            >
-              <MdDelete className="text-black" />
-            </button>
-          </div>
-        )}
+                .map((message, index) => (
+                  <div
+                    key={index}
+                    className={`relative flex ${
+                      message.sender === currentUserId ? 'justify-end' : 'justify-start'
+                    } mb-4`}
+                  >
+                    <div
+                      className={`max-w-xs rounded-lg px-4 py-2 text-black ${
+                        message.sender === currentUserId ? 'bg-white' : 'bg-[#AEC90A]'
+                      }`}
+                    >
+                      <p>{message.content}</p>
+                      <div className="flex justify-between items-center text-xs text-gray-500">
+  {/* Time on the right */}
+  <div className="text-right">
+    {formatDate(message.timestamp)}
+  </div>
+
+  {/* Edit and Delete buttons on the left */}
+  {message.sender === currentUserId && (
+    <div className="flex space-x-2">
+      <button
+        onClick={() => handleOpenDeleteDialog(message.id)}
+        className="bg- text-black p-2 rounded"
+      >
+        <MdDelete size={20} />
+      </button>
+      <button
+        onClick={() => handleOpenEditDialog(message.id, message.content)}
+        className="bg- text-black p-2 rounded"
+      >
+        <MdEdit size={20} />
+      </button>
+    </div>
+  )}
+</div>
+
+
+                     
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
+          {selectedUser && (
+            <div className="flex items-center p-4">
+              <input
+                type="text"
+                className="w-full p-2 bg-neutral-800 text-white rounded-lg"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder="Type your message..."
+              />
+              <button
+                onClick={handleSendMessage}
+                className="ml-2 p-2 bg-[#AEC90A] text-white rounded-lg"
+              >
+                Send
+              </button>
+            </div>
+          )}
+        {isEditDialogOpen && (
+  <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+    <div className="bg-white p-5 rounded-lg max-w-sm w-full text-black">
+      <h3>Edit Message</h3>
+      <textarea
+        className="w-full p-2 mt-2 text-black"
+        value={messageToEdit}
+        onChange={(e) => setMessageToEdit(e.target.value)}
+      /><div className="flex space-x-4 mt-3">
+      <button
+        onClick={handleSaveEdit}
+        className="mt-3 bg-[#AEC90A] justify-center text-white p-2 rounded-md"
+      >
+        Save Changes
+      </button>
+      <button
+        onClick={() => setIsEditDialogOpen(false)}
+        className="mt-3 bg-gray-800 text-white p-2 rounded-md"
+      >
+        Cancel
+      </button>
+    </div></div>
+  </div>
+)}
+
+{/* Delete Confirmation Dialog */}
+{isDeleteDialogOpen && (
+  <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+    <div className="bg-white text-black p-5 rounded-lg max-w-sm w-full">
+      <h3>Are you sure you want to delete this message?</h3>
+      <div className="flex space-x-4 mt-3">
+        <button
+          onClick={handleDeleteMessage}
+          className="bg-red-600 text-white p-2 rounded-md"
+        >
+          Yes, Delete
+        </button>
+        <button
+          onClick={() => setIsDeleteDialogOpen(false)}
+          className="bg-gray-800 text-white p-2 rounded-md"
+        >
+          Cancel
+        </button>
       </div>
     </div>
-  ))}
-
-                <div className="p-4 bg-neutral-900 flex items-center p-5">
-                  <input
-                    type="text"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Type your message..."
-                    className="flex-1 p-5 rounded-lg bg-neutral-900 text-white"
-                  />
-                  <button
-                    onClick={handleSendMessage}
-                    className="p-2 rounded-full bg-[#AEC90A] ml-4"
-                  >
-                    Send
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Right panel for interacted users */}
-        {/* Right panel for messages table */}
-          <div className="w-1/6 p-2 custom-3d-shadow rounded-2xl overflow-y-auto">
-            <h2 className="text-xl mb-4 text-center">All Messages</h2>
-            <table className="min-w-full bg-neutral-800 rounded-lg text-white">
-              <thead>
-                <tr>
-                  <th className="p-2">Sender</th>
-                  <th className="p-2">Receiver</th>
-                  <th className="p-2">Message</th>
-                  <th className="p-2">Timestamp</th>
-                </tr>
-              </thead>
-              <tbody>
-                {messages.map((message) => (
-                  <tr key={message.id}>
-                    <td className="p-2">{message.sender}</td>
-                    <td className="p-2">{message.receiver}</td>
-                    <td className="p-2">{message.content}</td>
-                    <td className="p-2">{formatDate(message.timestamp)}</td> {/* Usage of formatDate */}
-                    
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+  </div>
+)}
         </div>
       </div>
     </div>
-  );
+  </div>
+  
+);
+
 };
 
 export default MessagePage;
