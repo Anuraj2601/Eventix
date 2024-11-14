@@ -312,7 +312,7 @@ return (
         {/* Middle panel for conversations */}
         <div className="flex-1 flex flex-col">
           {selectedUser && (
-            <div className="flex-1 overflow-y-auto p-0 bg-neutral-900">
+            <div className="flex-1 overflow-y-auto p-0  bg-neutral-900">
                <div className="sticky top-0 bg-neutral-900 z-10 shadow-md  flex items-center -mt-8">
         <img
           src={selectedUser.image}
@@ -332,7 +332,7 @@ return (
                 .map((message, index) => (
                   <div
                     key={index}
-                    className={`relative flex  mt-4 ${
+                    className={`relative flex  mt-8 ${
                       message.sender === currentUserId ? 'justify-end' : 'justify-start'
                     } mb-4`}
                   >

@@ -161,3 +161,63 @@
   backface-visibility: hidden;
   transform: rotateY(180deg);
 }
+
+
+.full-calendar {
+  background-color: black;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+.calendar-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+.today {
+  border: 2px solid yellow;
+  border-radius: 5px;
+}
+.hover-card {
+  position: absolute;
+  background-color: black;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+.hover-card-event {
+  display: flex;
+  align-items: start;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #222;
+  border-radius: 8px;
+}
+.event-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+.register-btn {
+  background-color: #AEC90A;
+  color: black;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.feedback-btn {
+  background-color: #888;
+  color: black;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
