@@ -12,10 +12,8 @@ import { getUserIdFromToken } from '../utils/utils'; // Utility function for get
 const Sidebar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
-  const [users, setUsers] = useState([]); // State to store the users
+  const [UserProfiles, setUserProfiles] = useState([]); // State to store all user profiles
   const [userRole, setUserRole] = useState(''); // State to store the user's role
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
 
   // Retrieve the user ID from the token
   const userId = getUserIdFromToken();
@@ -26,35 +24,35 @@ const Sidebar = () => {
   // Function to determine if the item should be selected
   const isSelected = (path) => currentPath.includes(path);
 
+  // Fetch users
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        // Call the backend API to fetch the users
-        const response = await axios.get('http://localhost:8080/api/users/getAllUsersIncludingCurrent', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-          },
-        });
+    axios
+      .get('http://localhost:8080/api/users', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((response) => {
+        const fetchedUsers = response.data.map((user) => ({
+          image: user.photoUrl || 'default-image-url.jpg',
+          name: `${user.firstname} ${user.lastname}`,
+          id: user.id,
+          email: user.email,
+          role: user.role, // Assuming role is part of the response
+        }));
+        setUserProfiles(fetchedUsers);
 
-        // Check if the response is successful and update the users state
-        if (response.status === 200) {
-          setUsers(response.data); // Assuming response.data contains the list of users
-        } else {
-          console.error('Error fetching users:', response.status);
-          setError('Error fetching users.');
+        // Set userRole based on the current user's ID
+        const currentUser = fetchedUsers.find(user => user.id === userId);
+        if (currentUser) {
+          setUserRole(currentUser.role);
         }
-      } catch (err) {
-        console.error('Error fetching users:', err);
-        setError('Error fetching users.');
-      } finally {
-        setLoading(false); // Set loading to false after the request is completed
-      }
-    };
+      })
+      .catch((error) => {
+        console.error('Error fetching users:', error);
+      });
+  }, [userId]);
 
-    fetchUsers(); // Call the function to fetch the users when the component mounts
-  }, []);
-
-  // To determine the link style
   const linkClass = (path) => {
     const fullPath = `/${baseUrl}${path}`;
     const isSelected = currentPath.startsWith(fullPath) || currentPath.includes(fullPath);
@@ -120,23 +118,28 @@ const Sidebar = () => {
 
         {/* Display user details */}
         <div className="mt-4 w-full px-4">
-          <p>User ID: {userId}</p>
+          <p>userid {userId}</p>
           <p>User Role: {userRole}</p>
 
-          <h2 className="text-center text-lg font-bold mb-2">User Profile</h2>
-          <ul>
-            {loading ? (
-              <p>Loading users...</p>
-            ) : error ? (
-              <p>{error}</p>
-            ) : (
-              users.map((user) => (
-                <li key={user.id}>
-                  {user.firstname} {user.lastname} - {user.email}
-                </li>
-              ))
-            )}
-          </ul>
+          <h2 className="text-center text-lg font-bold mb-2">User Profiles</h2>
+          {UserProfiles.length > 0 ? (
+            UserProfiles.map((user) => (
+              <div key={user.id} className="mb-4 flex items-center">
+                <img
+                  src={user.image}
+                  alt={user.name}
+                  className="w-12 h-12 rounded-full mr-4"
+                />
+                <div>
+                  <p className="font-semibold">{user.name}</p>
+                  <p>{user.email}</p>
+                  <p>{user.role}</p> {/* Display role here */}
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>Loading user details...</p>
+          )}
         </div>
       </div>
 
