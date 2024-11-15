@@ -1,20 +1,19 @@
-// export default ProfileUpdatePage;
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Sidebar from "../components/Sidebar"; // Adjust the path as needed
-import Navbar from "../components/Navbar"; // Adjust the path as needed
 import { FaUpload } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
-import ClubsService from '../service/ClubsService';
-import RegistrationService from '../service/registrationService'; // Adjust the path as needed
-import { getUserEmailFromToken } from '../utils/utils';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import EventOcService from '../service/EventOcService';
 import EventService from "../service/EventService";
-import UsersService from '../service/UsersService'; // Adjust the path as needed
-
-
+import { getUserEmailFromToken } from '../utils/utils'; // Assuming this function is correctly defined
+import { getUserIdFromToken } from '../utils/utils'; // Assuming this function is correctly defined
+import EventsParticipated from "./EventsParticipated"; 
+import axios from 'axios';
+import ClubsService from '../service/ClubsService';
+import RegistrationService from '../service/registrationService';
+import Sidebar from './Sidebar'; // Update the path as needed
+import Navbar from './Navbar';   // Update the path as needed
+import UsersService from '../service/UsersService';
 
 const ProfileUpdatePage = () => {
   const [profileImage, setProfileImage] = useState(null);
@@ -32,47 +31,34 @@ const ProfileUpdatePage = () => {
   const [clubDetails, setClubDetails] = useState([]);
   const [registrations, setRegistrations] = useState([]);
   const [token, setToken] = useState(localStorage.getItem('token') || '');
-  const [selectedClubId, setSelectedClubId] = useState(null); // State to track selected club ID for leaving
+  const [selectedClubId, setSelectedClubId] = useState(null);
   const userId = getUserEmailFromToken();
   const [events, setEvents] = useState([]);
   const [currentOcMembers, setCurrentOcMembers] = useState([]);
-  const allTeams = ['design', 'marketing', 'finance', 'content', 'oc']; // List of possible teams
-  const [modalIsOpen, setModalIsOpen] = useState(false); // For controlling modal visibility
+  const [eventOCData, setEventOCData] = useState([]);
+  const [eventsData, setEventsData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [userrId, setUserId] = useState(null);
+
 
   useEffect(() => {
-    console.log("User ID from Token:", userId);  // Log to console for debugging
+    console.log("User ID from Token:", userId);
   }, [userId]);
 
   useEffect(() => {
     fetchClubs();
     fetchRegistrations();
-    fetchEvents();
 
   }, [token]);
+ 
+  useEffect(() => {
+    // Get userId from token
+    const userrIdFromToken = getUserIdFromToken();
+    setUserId(userrIdFromToken);
 
-  const fetchEvents = async () => {
-    try {
-      const token = localStorage.getItem("token");
-  
-      // Fetch all event_oc data
-      const ocResponse = await EventOcService.getAllEventOcs(token);
-      const ocArray = ocResponse.content || [];
-  
-      // Fetch all events
-      const eventsResponse = await EventService.getAllEvents(token);
-      const allEvents = eventsResponse.data || eventsResponse.content || [];
-  
-      // Set all event_oc records in the state
-      setCurrentOcMembers(ocArray);
-  
-      // Set all events records in the state
-      setEvents(allEvents);
-    } catch (error) {
-      console.error("Error fetching events:", error);
-    }
-  };
-  
-  
+    // Fetch events based on userId
+  }, []);
+
 
   const fetchClubs = async () => {
     try {
@@ -98,7 +84,7 @@ const ProfileUpdatePage = () => {
    const validPositions = ["president", "member", "secretary", "treasurer", "oc"];
    const filteredRegistrations = registrations.filter(
      (reg) =>
-       reg.email.toLowerCase() === userId.toLowerCase() &&
+       reg.email === userId &&
        reg.accepted === 1 &&
        validPositions.includes(reg.position.toLowerCase())
    );
@@ -199,6 +185,11 @@ const ProfileUpdatePage = () => {
         alert("Failed to update bio. Please try again.");
       });
   };
+
+  const userEvents = participatedEvents.filter((event) =>
+  filteredClubs.some((club) => event.clubId === club.club_id)
+);
+
 
   return (
     <div className="fixed inset-0 flex">
@@ -341,33 +332,8 @@ const ProfileUpdatePage = () => {
                 </div>
               </div>
               <div className="bg-neutral-900 rounded-lg shadow-md p-6">
-  <h2 className="text-xl font-semibold mb-4">Events Participated</h2>
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-  {participatedEvents.length > 0 ? (
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-    {participatedEvents.map((event, index) => {
-      console.log("Current User ID:", currentUserId); // Log the current user ID
-      console.log("Event ID:", event.id); // Log the event ID
-
-      return (
-        <div key={index} className="p-4 bg-black rounded-lg shadow-md">
-          <img
-            src={event.event_image}
-            alt={event.event_name}
-            className="w-full h-40 object-cover rounded-lg"
-          />
-          <h3 className="text-lg font-semibold mt-2">
-            {event.event_name}
-          </h3>
-        </div>
-      );
-    })}
-  </div>
-) : (
-  <p>No events participated yet.</p>
-)}
-
-  </div>
+  <h2 className="text-xl font-semibold mb-4">Participated Event OCs </h2>
+  <EventsParticipated /> 
 </div>
 
            
