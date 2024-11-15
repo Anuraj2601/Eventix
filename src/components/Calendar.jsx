@@ -140,8 +140,12 @@ const FullCalendar = () => {
               }}
               onClick={() => date && handleDateClick(date)}
             >
-              {date && <div style={{ fontWeight: "bold", fontSize: "20px" }}>{date.getDate()}</div>}
-              {eventsForDay.map((event, i) => {
+ {date && (
+                <div className="day-number" style={{ fontWeight: "bold", fontSize: "16px" }}>
+                  {date.getDate()}
+                  {isCurrentDate && <span style={{ fontSize: "10px", color: "#AEC90A" }}> Today</span>}
+                </div>
+              )}              {eventsForDay.map((event, i) => {
                 const club = clubDetails.find((club) => club.club_id === event.club_id);
                 return (
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "5px" ,fontSize: "12px", color: "#AEC90A" ,fontWeight: "bold"}}>
@@ -234,14 +238,14 @@ const FullCalendar = () => {
       >
         <div
           style={{
-            width: "80%",
-            maxWidth: "600px",
+            width: "100%",
+            maxWidth: "800px",
             backgroundColor: "black",
             padding: "20px",
             borderRadius: "10px",
             position: "relative",
             color: "white",
-            border: "0.5px solid rgba(174, 201, 10, 0.5)",
+            border: "0.5px solid rgba(130, 201, 10, 0.5)",
             overflowY: "auto",
             maxHeight: "80vh",
           }}
@@ -314,7 +318,7 @@ const FullCalendar = () => {
                                   Register
                                 </button>
                               ) : (
-                                <button className="text-[#AEC90A] py-2 px-2 rounded-full text-black border-2 border-[#AEC90A]">
+                                <button className="text-[#AEC90A] py-2 px-2 rounded-full  border-2 border-[#AEC90A]">
                                   Feedback
                                 </button>
                               )}
