@@ -73,7 +73,7 @@ const Exploreevent = () => {
     try{
       const response2 = await EventRegistrationService.getAllEventRegistrations(token);
       const eventRegArray = response2.content ? response2.content.filter(eReg => eReg.event_id == eventDetails.event_id && eReg.user_id == session_id) : [];
-      console.log("event reg array ",eventRegArray);
+      //console.log("event reg array ",eventRegArray);
 
       if(eventRegArray.length > 0){
         setIsEventRegistered(true);
@@ -481,7 +481,7 @@ const Exploreevent = () => {
 
           <div className="w-full p-10">
           {isMatchingPage() && (
-            <RegisterNav className="w-full h-96" />
+            <RegisterNav className="w-full h-96" clubId={club_id} eventDetails={eventDetails}/>
           )}
 
             {/* <RegisterNav className="w-full h-96" /> */}

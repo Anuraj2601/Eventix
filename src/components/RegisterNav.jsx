@@ -14,20 +14,23 @@ import Reports from "./Reports";
 import Proposal from "./Proposal";
 
 
-const EventNav = () => {
+const EventNav = ({clubId, eventDetails}) => {
   const [activeTab, setActiveTab] = React.useState("Registrations");
+
+  //console.log("event details in eventNav",  eventDetails);
+  //console.log("club id in eventNav", clubId);
 
   const data = [
    
     {
       label: "Registrations",
       value: "Registrations",
-      desc: <Registrations />,
+      desc: <Registrations clubId={clubId} event={eventDetails}/>,
     },
     {
       label: "Budget",
       value: "Budget",
-      desc: <Budget />,
+      desc: <Budget clubId={clubId} event={eventDetails}/>,
     },
     {
       label: "Reports",
