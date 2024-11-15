@@ -24,6 +24,7 @@ import { Link } from "react-router-dom";
 import AddSponsorModal from "../../components/AddSponsorModal"; // Import your modal
 import RegistrationModal from '../../components/RegistrationModal';
 import EventRegistrationModal from "../../components/EventRegistrationModal";
+import EventRegistrationService from "../../service/EventRegistrationService";
 
 
 ReactModal.setAppElement("#root"); // For accessibility
@@ -61,6 +62,32 @@ const Exploreevent = () => {
     const paths = ['/president', '/secretary'];
     return paths.some(path => location.pathname.startsWith(path));
   };
+
+  const [isEventRegistered, setIsEventRegistered] = useState(false);
+
+  const isRegistered = async () => {
+
+    const token = localStorage.getItem("token");
+    const session_id = localStorage.getItem('session_id');
+
+    try{
+      const response2 = await EventRegistrationService.getAllEventRegistrations(token);
+      const eventRegArray = response2.content ? response2.content.filter(eReg => eReg.event_id == eventDetails.event_id && eReg.user_id == session_id) : [];
+      console.log("event reg array ",eventRegArray);
+
+      if(eventRegArray.length > 0){
+        setIsEventRegistered(true);
+      }
+
+    }catch(err){
+      console.log("Error while fetching event registration details", err);
+    }
+
+  }
+
+  useEffect(() => {
+    isRegistered();
+  }, [isEventRegistered]);
 
   useEffect(() => {
     fetchSponsors();
@@ -273,7 +300,7 @@ const Exploreevent = () => {
                         View Details
                       </button> */}
 
-                      {isMatchingPage() ? (
+                      {/* {isMatchingPage() ? (
                         <button
                         onClick={openModal}
                         className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
@@ -296,6 +323,51 @@ const Exploreevent = () => {
                           Register Now
                         </button>
                       )}
+                      {
+                        isEventRegistered && 
+                        <button
+                          disabled
+                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
+                          style={{
+                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                          }}
+                        >
+                          Registered
+                        </button>
+                      } */}
+
+                      {isMatchingPage() ? (
+                        <button
+                          onClick={openModal}
+                          className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
+                          style={{
+                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                          }}
+                        >
+                          View Details
+                        </button>
+                      ) : isEventRegistered ? (
+                        <button
+                          disabled
+                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full cursor-not-allowed"
+                          style={{
+                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                          }}
+                        >
+                          Registered
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleRegister}
+                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
+                          style={{
+                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                          }}
+                        >
+                          Register Now
+                        </button>
+                      )}
+
 
                     </div>
                     <Typography color="white" variant="body1" className="mb-4">

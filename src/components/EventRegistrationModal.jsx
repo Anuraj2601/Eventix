@@ -33,7 +33,7 @@ const EventRegistrationModal = ({clubId, eventDetails, event, isOpen, onClose })
   const [error, setError] = useState(null);
 
  // console.log('club id in event reg', clubId);
- console.log('event details in event reg', eventDetails);
+ //console.log('event details in event reg', eventDetails);
 
   useEffect(() => {
     if (event && event.club_id) {
