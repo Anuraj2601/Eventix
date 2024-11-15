@@ -373,7 +373,7 @@ const FullCalendar = () => {
                                   height: "10px",
                                   borderRadius: "50%",
                                   backgroundColor:
-                                    meeting.meeting_type === "ONLINE" ? "green" : "yellow",
+                                    meeting.meeting_type === "ONLINE" ? "green" : "red",
                                   display: "inline-block",
                                   marginLeft: "10px",
                                 }}
