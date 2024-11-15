@@ -110,7 +110,7 @@ const FullCalendar = () => {
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
     return (
-      <div className="calendar-grid" style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "10px" }}>
+      <div className="calendar-grid  " style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "10px" }}>
         {dayNames.map((day, index) => (
           <div key={index} style={{ textAlign: "center", fontWeight: "bold", color: "white" }}>{day}</div>
         ))}
@@ -262,7 +262,7 @@ const FullCalendar = () => {
             ✕
           </button>
   
-          <h2>
+          <h2 className="text-center">
             {isToday(new Date(selectedDate))
               ? "Schedule for Today"
               : `Schedule for ${format(new Date(selectedDate), "eeee, MMMM do yyyy")}`}
@@ -401,7 +401,7 @@ const FullCalendar = () => {
   
 
   return (
-    <div style={{ padding: "5px", color: "white" }}>
+    <div  className="bg-black bg-opacity-30 rounded-md p-5" style={{  color: "white" }}>
       <div
         style={{
           display: "flex",
@@ -409,7 +409,7 @@ const FullCalendar = () => {
           alignItems: "center",
           gap: "20px",
 
-          borderRadius: "20px",
+          borderRadius: "5px",
           marginBottom: "7px",
           padding: "5px",
           background: "black",
