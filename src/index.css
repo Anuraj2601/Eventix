@@ -184,40 +184,48 @@
   border: 2px solid yellow;
   border-radius: 5px;
 }
-.hover-card {
+/* Calendar cell wrapper */
+.calendar-cell {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.flip-card {
+  perspective: 1000px;
+  position: relative;
+}
+
+.flip-card-inner {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
   position: absolute;
-  background-color: black;
-  color: white;
-  padding: 20px;
+  backface-visibility: hidden;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 10;
 }
-.hover-card-event {
-  display: flex;
-  align-items: start;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #222;
-  border-radius: 8px;
+
+.flip-card-front {
+  background-size: cover;
+  background-position: center;
 }
-.event-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-.register-btn {
-  background-color: #AEC90A;
-  color: black;
-  padding: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.feedback-btn {
-  background-color: #888;
-  color: black;
-  padding: 5px;
-  border-radius: 5px;
-  cursor: pointer;
+
+.flip-card-back {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  transform: rotateY(180deg);
 }
