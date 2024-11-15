@@ -9,6 +9,7 @@ import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function 
 import RegistrationService from '../service/registrationService';
 import { Typography } from "@material-tailwind/react";
 import { AiOutlineClose } from "react-icons/ai";  // Cross icon from react-icons
+import EventRegistrationService from '../service/EventRegistrationService';
 
 const menuItems = [
   { title: "Design Team" },
@@ -17,12 +18,12 @@ const menuItems = [
   { title: "Marketing Team" },
 ];
 
-const EventRegistrationModal = ({ event, isOpen, onClose }) => {
+const EventRegistrationModal = ({clubId, eventDetails, event, isOpen, onClose }) => {
   const { club_id } = useParams();
   const [openMenu, setOpenMenu] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [formData, setFormData] = useState({
-    club_id: club_id || '',
+    club_id: clubId || '',
     email: '',
     mobile: '',
     reason: '',
@@ -31,7 +32,8 @@ const EventRegistrationModal = ({ event, isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  console.log('club id in event reg', club_id);
+ // console.log('club id in event reg', clubId);
+ console.log('event details in event reg', eventDetails);
 
   useEffect(() => {
     if (event && event.club_id) {
@@ -56,13 +58,13 @@ const EventRegistrationModal = ({ event, isOpen, onClose }) => {
     fetchUserEmail();
   }, [club_id]);
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    setFormData(prevState => ({
-      ...prevState,
-      interviewSlot: date ? format(date, "yyyy-MM-dd'T'HH:mm:ss") : ''
-    }));
-  };
+  // const handleDateChange = (date) => {
+  //   setSelectedDate(date);
+  //   setFormData(prevState => ({
+  //     ...prevState,
+  //     interviewSlot: date ? format(date, "yyyy-MM-dd'T'HH:mm:ss") : ''
+  //   }));
+  // };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -74,8 +76,10 @@ const EventRegistrationModal = ({ event, isOpen, onClose }) => {
   };
 
   const isFormValid = () => {
-    return Object.values(formData).every(value => value.trim() !== '') && selectedDate !== null;
+    return Object.values(formData).every(value => value.trim() !== '') ;
   };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,15 +87,25 @@ const EventRegistrationModal = ({ event, isOpen, onClose }) => {
     const missingFields = [];
 
     // Check if each field is empty or not selected
-    if (!formData.team || formData.team.trim() === '') {
-        missingFields.push('Team');
+    if (!formData.email || formData.email.trim() === '') {
+        missingFields.push('Email');
     }
+
+    if (!formData.mobile || formData.mobile.trim() === '') {
+      missingFields.push('Mobile Number');
+    }else if (!/^\d{10}$/.test(formData.mobile)) { // Validate mobile number has exactly 10 digits
+      alert('Mobile number must be exactly 10 digits.');
+      return;
+    }
+
+
     if (!formData.reason || formData.reason.trim() === '') {
         missingFields.push('Reason');
     }
-    if (!selectedDate) {
-        missingFields.push('Interview Slot');
-    }
+
+    // if (!selectedDate) {
+    //     missingFields.push('Interview Slot');
+    // }
 
     if (missingFields.length > 0) {
         alert(`Please fill in the following fields: ${missingFields.join(', ')}`);
@@ -99,6 +113,9 @@ const EventRegistrationModal = ({ event, isOpen, onClose }) => {
     }
 
     const token = localStorage.getItem('token');
+    const session_id = localStorage.getItem('session_id');
+    //console.log("session id in event reg", session_id);
+
     if (!token) {
         alert('User not authenticated.');
         return;
@@ -106,13 +123,14 @@ const EventRegistrationModal = ({ event, isOpen, onClose }) => {
 
     try {
         setLoading(true);
-        await RegistrationService.saveRegistration(
+        await EventRegistrationService.saveEventRegistration(
             formData.email,
-            formData.club_id,
-            formData.team,
-            formData.interviewSlot,
+            formData.mobile,
             formData.reason,
-            formData.position, // Include position in the request
+            false,
+            formData.club_id,
+            eventDetails.event_id,
+            session_id,
             token
         );
         alert('Registration successful!');
@@ -142,7 +160,7 @@ const EventRegistrationModal = ({ event, isOpen, onClose }) => {
           </button>
         </div>
         <h2 className="text-xl text-white font-bold mb-4 text-center">
-          {event.club_name ? `Register for ${event.club_name}` : 'Register Now!'}
+          {eventDetails.name ? `Register for ${eventDetails.name}` : 'Register Now!'}
         </h2>
 
         <form onSubmit={handleSubmit}>
@@ -155,11 +173,11 @@ const EventRegistrationModal = ({ event, isOpen, onClose }) => {
               style={{
                 boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
                 display: 'none',
-              }}              placeholder={event.club_id}
+              }}              placeholder={eventDetails.clubId}
               readOnly
             />
 
-            <div className="flex flex-col gap-3 w-full">
+            {/* <div className="flex flex-col gap-3 w-full">
               <input
                 type="email"
                 name="email"
@@ -171,13 +189,13 @@ const EventRegistrationModal = ({ event, isOpen, onClose }) => {
                 }}                placeholder="Email"
                 readOnly
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="grid gap-10 mb-6 md:grid-cols-2">
             {/* Team menu */}
             <div className="flex flex-col gap-3">
-              <label htmlFor="name" className="block mb-2 text-[#AEC90A]">Email</label>
+              <label htmlFor="email" className="block mb-2 text-[#AEC90A]">Email</label>
               {/* <Menu open={openMenu} handler={setOpenMenu} allowHover className='border-[#AEC90A] border-2'>
                 <MenuHandler>
                   <Button
@@ -207,8 +225,8 @@ const EventRegistrationModal = ({ event, isOpen, onClose }) => {
                 </MenuList>
               </Menu> */}
               <input
-                type="text"
-                name="name"
+                type="email"
+                name="email"
                 value={formData.email}
                 className="w-full h-16 bg-black text-white p-2 rounded-2xl"
                 style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}               
@@ -236,7 +254,8 @@ const EventRegistrationModal = ({ event, isOpen, onClose }) => {
                 type="number"
                 id='mobile'
                 name="mobile"
-                value={formData.club_id}
+                value={formData.mobile}
+                onChange={handleChange}
                 className="w-full h-16 bg-black text-white p-2 rounded-2xl"
                 style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
                               placeholder='0751671824'

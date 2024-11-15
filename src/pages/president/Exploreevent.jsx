@@ -543,6 +543,8 @@ const Exploreevent = () => {
       </ReactModal>
 
       <EventRegistrationModal
+                clubId={club_id} 
+                eventDetails={eventDetails}
                 event={event}
                 isOpen={isRegModalOpen}
                 onClose={closeRegModal}
