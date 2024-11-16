@@ -522,7 +522,8 @@ const AddSponsor = () => {
           );
           alert("Sponsor added successfully");
           console.log("Sponsor added:", response);
-          navigate("/president/club");
+          navigate(-1);
+
         }
       } catch (error) {
         console.error("Error processing Sponsor:", error);
