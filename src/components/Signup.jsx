@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 import UsersService from "../service/UsersService";
 
 const Signup = () => {
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [firstname, setFirstname] = useState("");
@@ -18,23 +18,24 @@ const Signup = () => {
   const [confirmpassword, setConfirmpassword] = useState("");
   const [role, setRole] = useState("student");
   const [errors, setErrors] = useState({
-    firstname: "",
-    lastname: "",
-    regNo: "",
-    email: "",
-    password: "",
-    confirmpassword: "",
-    role: "student",
+    firstname: '',
+    lastname: '',
+    regNo: '',
+    email: '',
+    password: '',
+    confirmpassword: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
   const token = localStorage.getItem("token");
+  
   const emailRegex = /^[\d{4}(cs|is)\d{3}]+@stu\.ucsc\.cmb\.ac\.lk$/;
   const regNoRegex = /^(\d{4}(cs|is)\d{3})$/;
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
   const [emailExists, setEmailExists] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
+
   useEffect(() => {
     if (isSubmitted) {
       validateField("firstname", firstname);
@@ -120,13 +121,12 @@ const Signup = () => {
     }
     return error;
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitted(true);
   
-    // Validate all fields and check if email exists
+    // Validate all fields
     const newErrors = {
       firstname: validateField("firstname", firstname),
       lastname: validateField("lastname", lastname),
@@ -138,6 +138,10 @@ const Signup = () => {
   
     setErrors(newErrors);
   
+    // Log the errors to debug validation
+    console.log("Validation Errors: ", newErrors);
+  
+    // Check if any field has an error or if any required field is empty
     const hasValidationErrors = Object.values(newErrors).some((error) => error !== "");
     const allFieldsFilled = Object.values({
       firstname,
@@ -148,51 +152,68 @@ const Signup = () => {
       confirmpassword,
     }).every((field) => field !== "");
   
-    // If there are validation errors or email exists, show error message
-    if (hasValidationErrors || !allFieldsFilled ) {
+    console.log("Has Validation Errors: ", hasValidationErrors);
+    console.log("All Fields Filled: ", allFieldsFilled);
+  
+    if (hasValidationErrors || !allFieldsFilled) {
       setDialogMessage("Please fix the errors before submitting.");
       setShowDialog(true);
       return;
     }
   
-    // Check if the email already exists in the system (via API call)
+    // Check if the email already exists in the system
     try {
       const emailCheckResponse = await UsersService.getUserByEmailforsignup(email);
-  
-      // If email already exists, set emailExists flag to true and show an error
+      console.log("Email Check Response: ", emailCheckResponse);  // Log the email check response
       if (emailCheckResponse) {
-        setEmailExists(true);  // Set emailExists flag to true
+        setEmailExists(true);
         setEmailErrorMessage("Email already exists.");
         setDialogMessage("This email is already registered. Please use a different one.");
         setShowDialog(true);
-        return; // Exit the function to prevent registration if email exists
+        return;
       }
   
+      // If email does not exist, proceed to registration
       try {
         const response = await UsersService.register(firstname, lastname, email, password, regNo, role);
-        console.log("Registration successful", response);
+        console.log("Registration Response: ", response);  // Log the registration response
+      
+        // Check if response contains statusCode 200 indicating successful registration
+        if (response.statusCode === 200) {
+          console.log("User Registered Successfully");
+          // Set dialog message first
+          setDialogMessage(`You have successfully registered. An OTP has been sent to your email to verify within 5 minutes`);
+          setShowDialog(true);
+      
+          // Use a timeout to navigate after the dialog state is updated
+          setTimeout(() => {
+            navigate("/"); // Navigate to home page or success page
+          }, 1500); // Adjust the timeout duration if necessary
+        } else {
+          setDialogMessage(`Registration failed: ${response.message || "Unknown error"}`);
+          setShowDialog(true);
+        }
       } catch (error) {
         console.error("Registration error", error);
+        setDialogMessage(`An error occurred during registration: ${error.message || "Unknown error"}`);
+        setShowDialog(true);
       }
-  
-      setTimeout(() => {
-        navigate("/"); // Navigate after a delay to ensure the dialog is shown
-      }, 12000); // Delay navigation slightly to show dialog
+      
+      
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error("Error checking email:", error);
       setDialogMessage("An error occurred during registration.");
       setShowDialog(true);
     }
   };
   
-  
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Clear errors when user starts typing again
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
 
+    if (name === "firstname") setFirstname(value);
+    if (name === "lastname") setLastname(value);
     if (name === "regNo") setRegNo(value);
     if (name === "email") setEmail(value);
     if (name === "password") setPassword(value);
