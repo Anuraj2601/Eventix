@@ -390,6 +390,29 @@ const Signup = () => {
           </div>
         </div>
       )}
+
+{showPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup}
+            >
+              &times;
+            </span>
+            <h2 className="text-[15px] font-semibold text-dark-400 mb-4">
+              Leave without Signup?
+            </h2>
+            <button
+              className="bg-primary text-white px-4 py-2 w-32 text-[14px] rounded font-medium mr-2 hover:bg-dark-400"
+              onClick={handleOkClick}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
