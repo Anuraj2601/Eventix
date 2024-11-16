@@ -14,6 +14,7 @@ const Sidebar = () => {
   const currentPath = location.pathname;
   const [UserProfiles, setUserProfiles] = useState([]); // State to store all user profiles
   const [userRole, setUserRole] = useState(''); // State to store the user's role
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false); // State for the logout dialog
 
   // Retrieve the user ID from the token
   const userId = getUserIdFromToken();
@@ -62,11 +63,12 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    const confirmDelete = window.confirm('Are you sure you want to Logout?');
-    if (confirmDelete) {
-      localStorage.removeItem('token');
-      window.location.href = '/';
-    }
+    localStorage.removeItem('token');
+    window.location.href = '/';
+  };
+
+  const handleDialogClose = () => {
+    setShowLogoutDialog(false);
   };
 
   return (
@@ -107,31 +109,50 @@ const Sidebar = () => {
             </Link>
           </li>
 
-          {(['admin', 'treasurer'].includes(userRole.toLowerCase()) || 
-  currentPath.startsWith('/admin') || 
-  currentPath.startsWith('/treasurer')) && (
-  <li className={linkClass('/requests')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
-    <Link to={`/${baseUrl}/requests`} className="px-3">
-      <MdSettings className="inline-block w-9 h-9 mt-1 -ml-0.5" />
-    </Link>
-  </li>
-)}
-
+          {(['admin', 'treasurer'].includes(userRole.toLowerCase()) ||
+            currentPath.startsWith('/admin') ||
+            currentPath.startsWith('/treasurer')) && (
+            <li className={linkClass('/requests')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
+              <Link to={`/${baseUrl}/requests`} className="px-3">
+                <MdSettings className="inline-block w-9 h-9 mt-1 -ml-0.5" />
+              </Link>
+            </li>
+          )}
         </ul>
-
-       
       </div>
 
       <ul className="mb-0">
         <li className="w-28 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2">
-          <a className="px-3">
-            <Link to="/" onClick={handleLogout}>
-              <span className="hover:bg-[#AEC90A] hover:text-black mr-2 mt-2 mb-2">Logout</span>
-              <IoExitOutline className="inline-block w-6 h-6 mt-0" />
-            </Link>
-          </a>
+          <button className="px-3" onClick={() => setShowLogoutDialog(true)}>
+            <span className="hover:bg-[#AEC90A] hover:text-black mr-2 mt-2 mb-2">Logout</span>
+            <IoExitOutline className="inline-block w-6 h-6 mt-0" />
+          </button>
         </li>
       </ul>
+
+      {/* Logout Dialog */}
+      {showLogoutDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+            <p className="mb-4 text-black ">Are you sure you want to logout?</p>
+            <div className="flex space-x-2 justify-center">
+  <button
+    className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-red-700"
+    onClick={handleLogout}
+  >
+    Yes
+  </button>
+  <button
+    className="px-4 py-2 bg-[#AEC90A] rounded hover:bg-gray-400"
+    onClick={handleDialogClose}
+  >
+    No
+  </button>
+</div>
+
+          </div>
+        </div>
+      )}
     </aside>
   );
 };
