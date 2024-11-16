@@ -120,32 +120,13 @@ const Signup = () => {
     }
     return error;
   };
-  useEffect(() => {
-    const checkEmail = async () => {
-      if (email && emailRegex.test(email)) {
-        const response = await UsersService.getUserByEmailforsignup(email);
-        if (response.statusCode === 200 && response.data.content) {
-          setEmailExists(true);
-          setEmailErrorMessage("Email already exists.");
-        } else {
-          setEmailExists(false);
-          setEmailErrorMessage("");
-        }
-      } else {
-        setEmailExists(false);
-        setEmailErrorMessage("");  // Reset if email is invalid
-      }
-    };
-
-    const timeoutId = setTimeout(checkEmail, 500); // Debounce to avoid excessive API calls
-    return () => clearTimeout(timeoutId); // Cleanup on every email change
-  }, [email]);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitted(true);
   
-    // Validate all fields and email exists check
+    // Validate all fields and check if email exists
     const newErrors = {
       firstname: validateField("firstname", firstname),
       lastname: validateField("lastname", lastname),
@@ -167,26 +148,43 @@ const Signup = () => {
       confirmpassword,
     }).every((field) => field !== "");
   
-    if (hasValidationErrors || !allFieldsFilled || emailExists) {
+    // If there are validation errors or email exists, show error message
+    if (hasValidationErrors || !allFieldsFilled ) {
       setDialogMessage("Please fix the errors before submitting.");
       setShowDialog(true);
       return;
     }
   
+    // Check if the email already exists in the system (via API call)
     try {
-      await UsersService.register(firstname, lastname, email, password, regNo, role);
-      setDialogMessage("You have registered successfully. An OTP has been sent to your email. Please verify within 5 minutes.");
-      setShowDialog(true);
-      
+      const emailCheckResponse = await UsersService.getUserByEmailforsignup(email);
+  
+      // If email already exists, set emailExists flag to true and show an error
+      if (emailCheckResponse) {
+        setEmailExists(true);  // Set emailExists flag to true
+        setEmailErrorMessage("Email already exists.");
+        setDialogMessage("This email is already registered. Please use a different one.");
+        setShowDialog(true);
+        return; // Exit the function to prevent registration if email exists
+      }
+  
+      try {
+        const response = await UsersService.register(firstname, lastname, email, password, regNo, role);
+        console.log("Registration successful", response);
+      } catch (error) {
+        console.error("Registration error", error);
+      }
+  
       setTimeout(() => {
         navigate("/"); // Navigate after a delay to ensure the dialog is shown
       }, 12000); // Delay navigation slightly to show dialog
     } catch (error) {
-      console.error("Error registering user:", error);
-      setDialogMessage("An error occurred while registering the user.");
+      console.error("Error during registration:", error);
+      setDialogMessage("An error occurred during registration.");
       setShowDialog(true);
     }
   };
+  
   
   
   const handleChange = (e) => {

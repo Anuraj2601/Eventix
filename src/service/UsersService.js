@@ -166,23 +166,23 @@ class UsersService{
         }
     }
 
-    static async getUserByEmailforsignup(email){
-        try{
-
-            const response = await axios.get(`${UsersService.BASE_URL}/api/users/getUserByEmail`,
-                {
-                    
-                    params: { email }
-                }
-            )
-            return response.data;
-
-            
-
-        }catch(err){
-            throw err;
+    static async getUserByEmailforsignup(email) {
+        try {
+          const response = await axios.get(`${UsersService.BASE_URL}/api/users/getUserByEmail`, {
+            params: { email },
+          });
+      
+          // Make sure the response has the expected data
+          if (response.data && response.data.content) {
+            return response.data.content;  // Return the content part if it exists
+          }
+          return null;  // If no content is available, return null
+        } catch (err) {
+          console.error("Error checking email:", err);
+          throw err;  // Re-throw the error to be caught in handleSubmit
         }
-    }
+      }
+      
     
 }
 
