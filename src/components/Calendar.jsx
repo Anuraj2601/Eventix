@@ -218,6 +218,7 @@ const FullCalendar = () => {
     if (!selectedDate) return null;
     const eventsForDay = eventsByDate[selectedDate] || [];
     const meetingsForDay = meetingsByDate[selectedDate] || [];
+    const hasMeetings = meetingsForDay.length > 0;
   
     return (
       <div
@@ -265,134 +266,148 @@ const FullCalendar = () => {
             ✕
           </button>
   
-          <h2 className="text-center">
+          <h2 className="text-center font-bold">
             {isToday(new Date(selectedDate))
               ? "Schedule for Today"
               : `Schedule for ${format(new Date(selectedDate), "eeee, MMMM do yyyy")}`}
           </h2>
   
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={{ marginTop: "20px" }}>
-            {eventsForDay.length === 0 && meetingsForDay.length === 0 ? (
-              <p>No events or meetings scheduled for{" "}
+          {/* Main Content Grid */}
+          <div
+            className={`grid ${
+              hasMeetings && eventsForDay.length > 0 ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
+            } gap-6`}
+            style={{ marginTop: "20px" }}
+          >
+            {/* Empty State */}
+            {eventsForDay.length === 0 && meetingsForDay.length === 0 && (
+              <p>
+                No events or meetings scheduled for{" "}
                 {isToday(new Date(selectedDate))
                   ? "Today"
                   : format(new Date(selectedDate), "eeee, MMMM do yyyy")}
               </p>
-            ) : (
-              <>
-                {/* Events Section */}
-                {eventsForDay.length > 0 && (
-                  <div style={{ padding: "20px 0" }}>
-                    <h3 className="text-lg font-semibold text-[#AEC90A]">Events</h3>
-                    {eventsForDay.map((event, i) => {
-                      const club = clubDetails.find((club) => club.club_id === event.club_id);
-                      return (
-                        <div key={i} className="relative custom-3d-shadow custom-card" style={{ padding: "20px" }}>
+            )}
+  
+            {/* Events Section */}
+            {eventsForDay.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold text-[#AEC90A]">Events</h3>
+                {eventsForDay.map((event, i) => {
+                  const club = clubDetails.find((club) => club.club_id === event.club_id);
+                  return (
+                    <div
+                      key={i}
+                      className="relative custom-3d-shadow custom-card"
+                      style={{ padding: "20px" }}
+                    >
+                      <img
+                        src={event.event_image}
+                        className="w-full h-72 object-cover rounded-lg"
+                        style={{ marginBottom: "20px" }}
+                      />
+                      {club && club.club_image && (
+                        <div className="absolute top-2 right-2 w-16 h-16 border-2 border-white rounded-full overflow-hidden shadow-md">
                           <img
-                            src={event.event_image}
-                            className="w-full h-72 object-cover rounded-lg"
-                            style={{ marginBottom: "20px" }}
+                            src={club.club_image}
+                            alt={club.club_name}
+                            className="w-full h-full object-cover"
                           />
-   {club && club.club_image && (
-    <div className="absolute top-2 right-2 w-16 h-16 border-2 border-white rounded-full overflow-hidden shadow-md">
-      <img
-        src={club.club_image}
-        alt={club.club_name}
-        className="w-full h-full object-cover"
-      />
-    </div>
-  )}
-                          {/* Event Details Below Image */}
-                          <div className="text-white">
-                            <h3 className="text-lg font-semibold">{event.name}</h3>
-                            <p className="text-sm">
-                              {format(event.date, "PP")} | <strong>{format(event.date, "EEEE")}</strong>
-                            </p>
-                            <p className="text-sm">Venue: {event.venue}</p>
-  
-                            {/* Buttons */}
-                            <div className="flex gap-2 mt-4">
-                              {new Date(event.date) > new Date() ? (
-                                <button className="text-[#AEC90A] py-2 px-2 rounded-full border-2 border-[#AEC90A]">
-                                  Register
-                                </button>
-                              ) : (
-                                <button className="text-[#AEC90A] py-2 px-2 rounded-full  border-2 border-[#AEC90A]">
-                                  Feedback
-                                </button>
-                              )}
-                              <button className="text-white py-2 px-2 rounded-full text-black border-2 border-white">
-                                Explore
-                              </button>
-                            </div>
-                          </div>
                         </div>
-                      );
-                    })}
-                  </div>
-                )}
+                      )}
+                     <div className="text-white flex justify-between">
+  {/* Event Details Section */}
+  <div className="flex-1">
+    <h3 className="text-lg font-semibold">{event.name}</h3>
+    <ul className="list-disc pl-5">
+      <li className="text-sm">
+        {format(event.date, "PP")} | <strong>{format(event.date, "EEEE")}</strong>
+      </li>
+      <li className="text-sm">Venue: {event.venue}</li>
+    </ul>
+  </div>
+
+  {/* Buttons Section */}
+  <div className="flex flex-col items-end gap-2">
+    {new Date(event.date) > new Date() ? (
+      <button className="text-[#AEC90A] py-2 px-2 rounded-full border-2 border-[#AEC90A]">
+        Register
+      </button>
+    ) : (
+      <button className="text-[#AEC90A] py-2 px-2 rounded-full border-2 border-[#AEC90A]">
+        Feedback
+      </button>
+    )}
+    <button className="text-white py-2 px-2 rounded-full text-black border-2 border-white">
+      Explore
+    </button>
+  </div>
+</div>
+
+                    </div>
+                  );
+                })}
+              </div>
+            )}
   
-                {/* Meetings Section */}
-                {meetingsForDay.length > 0 && (
-                  <div style={{ padding: "20px 0" }}>
-                    <h3 className="text-lg font-semibold text-[#AEC90A]">Meetings</h3>
-                    {meetingsForDay.map((meeting, i) => {
-                      const club = clubDetails.find((club) => club.club_id === meeting.clubId);
-                      return (
-                        <div
-                          key={i}
+            {/* Meetings Section */}
+            {hasMeetings && (
+              <div>
+                <h3 className="text-lg font-semibold text-[#AEC90A]">Meetings</h3>
+                {meetingsForDay.map((meeting, i) => {
+                  const club = clubDetails.find((club) => club.club_id === meeting.clubId);
+                  return (
+                    <div
+                      key={i}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        padding: "10px",
+                        fontSize: "12px",
+                        color: "white",
+                      }}
+                    >
+                      {club && club.club_image && (
+                        <img
+                          src={club.club_image}
+                          alt={club.club_name}
                           style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "10px",
-                            padding: "10px",
-                            fontSize: "12px",
-                            color: "#AEC90A",
+                            width: "20px",
+                            height: "20px",
+                            borderRadius: "50%",
                           }}
-                        >
-                          {club && club.club_image && (
-                            <img
-                              src={club.club_image}
-                              alt={club.club_name}
-                              style={{
-                                width: "20px",
-                                height: "20px",
-                                borderRadius: "50%",
-                              }}
-                            />
-                          )}
-                          <div>
-                            <h3>{meeting.meeting_type}  <span
-                               
-                              />
-                              {meeting.meeting_name}
-                              <span
-                                style={{
-                                  width: "10px",
-                                  height: "10px",
-                                  borderRadius: "50%",
-                                  backgroundColor:
-                                    meeting.meeting_type === "ONLINE" ? "green" : "red",
-                                  display: "inline-block",
-                                  marginLeft: "10px",
-                                }}
-                                title={
-                                  meeting.meeting_type === "ONLINE"
-                                    ? "Online Meeting"
-                                    : "Physical Meeting"
-                                }
-                              />
-                            </h3>
-                            <p>Date: {format(meeting.date, "PP")}</p>
-                           
-                            <p>Organized by: {meeting.clubId}</p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </>
+                        />
+                      )}
+                      <div>
+                        <h3>
+                          {meeting.meeting_type}{" "}
+                          <span />
+                          {meeting.meeting_name}
+                          <span
+                            style={{
+                              width: "10px",
+                              height: "10px",
+                              borderRadius: "50%",
+                              backgroundColor:
+                                meeting.meeting_type === "ONLINE" ? "green" : "red",
+                              display: "inline-block",
+                              marginLeft: "10px",
+                            }}
+                            title={
+                              meeting.meeting_type === "ONLINE"
+                                ? "Online Meeting"
+                                : "Physical Meeting"
+                            }
+                          />
+                        </h3>
+                        <p>Date: {format(meeting.date, "PP")}</p>
+                        <p>Organized by: {meeting.clubId}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             )}
           </div>
         </div>

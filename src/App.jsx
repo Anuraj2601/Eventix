@@ -153,6 +153,10 @@ import AddNewAnnouncementForm from './pages/president/AddNewAnnouncementForm';
 import AddNewMeetingForm from './pages/president/AddNewMeetingForm';
 import AddNewClubForm from './pages/admin/AddNewClubForm';
 
+
+import CheckEmail from './components/CheckEmail';
+
+
 // Import other pages if necessary
 
 const App = () => {
@@ -164,6 +168,7 @@ const App = () => {
         <Route exact path="/" element={<Landing />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/Signup" element={<Signup />}></Route>
+        <Route path="/CheckEmail" element={<CheckEmail />}></Route>
 
       
 
