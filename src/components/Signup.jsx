@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
@@ -19,52 +18,56 @@ const Signup = () => {
   const [confirmpassword, setConfirmpassword] = useState("");
   const [role, setRole] = useState("student");
   const [errors, setErrors] = useState({
-    firstname: '',
-    lastname: '',
-    regNo: '',
-    email: '',
-    password: '',
-    confirmpassword: ''
+    firstname: "",
+    lastname: "",
+    regNo: "",
+    email: "",
+    password: "",
+    confirmpassword: "",
+    role: "student",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [showDialog, setShowDialog] = useState(false);
+  const token = localStorage.getItem("token");
   const emailRegex = /^[\d{4}(cs|is)\d{3}]+@stu\.ucsc\.cmb\.ac\.lk$/;
   const regNoRegex = /^(\d{4}(cs|is)\d{3})$/;
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-
+  const [emailExists, setEmailExists] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
   useEffect(() => {
     if (isSubmitted) {
-      validateField('firstname', firstname);
+      validateField("firstname", firstname);
     }
   }, [firstname]);
 
   useEffect(() => {
     if (isSubmitted) {
-      validateField('lastname', lastname);
+      validateField("lastname", lastname);
     }
   }, [lastname]);
 
   useEffect(() => {
     if (isSubmitted) {
-      validateField('regNo', regNo);
+      validateField("regNo", regNo);
     }
   }, [regNo]);
 
   useEffect(() => {
     if (isSubmitted) {
-      validateField('email', email);
+      validateField("email", email);
     }
   }, [email]);
 
   useEffect(() => {
     if (isSubmitted) {
-      validateField('password', password);
+      validateField("password", password);
     }
   }, [password]);
 
   useEffect(() => {
     if (isSubmitted) {
-      validateField('confirmpassword', confirmpassword);
+      validateField("confirmpassword", confirmpassword);
     }
   }, [confirmpassword]);
 
@@ -85,59 +88,121 @@ const Signup = () => {
     navigate("/");
   };
 
+ 
   const validateField = (field, value) => {
-    let error = '';
+    let error = "";
     switch (field) {
-      case 'firstname':
+      case "firstname":
         if (!value) error = "First Name is required";
         break;
-      case 'lastname':
+      case "lastname":
         if (!value) error = "Last Name is required";
         break;
-      case 'regNo':
+      case "regNo":
         if (!value) error = "Registration Number is required";
         else if (!regNoRegex.test(value)) error = "Invalid Registration Number format";
         break;
-      case 'email':
+      case "email":
         if (!value) error = "Student Email is required";
         else if (!emailRegex.test(value)) error = "Invalid Email format";
         else if (!value.startsWith(regNo)) error = "Email must start with the Registration Number";
         break;
-      case 'password':
+      case "password":
         if (!value) error = "Password is required";
         else if (!passwordRegex.test(value)) error = "Password must be at least 8 characters long and contain both letters and numbers";
         break;
-      case 'confirmpassword':
+      case "confirmpassword":
         if (!value) error = "Confirm Password is required";
         else if (value !== password) error = "Passwords do not match";
         break;
       default:
         break;
     }
-    setErrors(prevErrors => ({ ...prevErrors, [field]: error }));
+    return error;
   };
+  useEffect(() => {
+    const checkEmail = async () => {
+      if (email && emailRegex.test(email)) {
+        const response = await UsersService.getUserByEmailforsignup(email);
+        if (response.statusCode === 200 && response.data.content) {
+          setEmailExists(true);
+          setEmailErrorMessage("Email already exists.");
+        } else {
+          setEmailExists(false);
+          setEmailErrorMessage("");
+        }
+      } else {
+        setEmailExists(false);
+        setEmailErrorMessage("");  // Reset if email is invalid
+      }
+    };
+
+    const timeoutId = setTimeout(checkEmail, 500); // Debounce to avoid excessive API calls
+    return () => clearTimeout(timeoutId); // Cleanup on every email change
+  }, [email]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitted(true);
-
-    validateField('firstname', firstname);
-    validateField('lastname', lastname);
-    validateField('regNo', regNo);
-    validateField('email', email);
-    validateField('password', password);
-    validateField('confirmpassword', confirmpassword);
-
-    if (Object.values(errors).every(error => error === '') && Object.values({ firstname, lastname, regNo, email, password, confirmpassword }).every(field => field !== '')) {
-      try {
-        const userData = await UsersService.register(firstname, lastname, email, password, regNo, role);
-        alert("User registered successfully\nAn OTP sent to your Email verify that within 5 minutes");
-        navigate("/");
-      } catch (error) {
-        console.error("Error registering user:", error);
-        alert("An error occurred while registering user");
-      }
+  
+    // Validate all fields and email exists check
+    const newErrors = {
+      firstname: validateField("firstname", firstname),
+      lastname: validateField("lastname", lastname),
+      regNo: validateField("regNo", regNo),
+      email: validateField("email", email),
+      password: validateField("password", password),
+      confirmpassword: validateField("confirmpassword", confirmpassword),
+    };
+  
+    setErrors(newErrors);
+  
+    const hasValidationErrors = Object.values(newErrors).some((error) => error !== "");
+    const allFieldsFilled = Object.values({
+      firstname,
+      lastname,
+      regNo,
+      email,
+      password,
+      confirmpassword,
+    }).every((field) => field !== "");
+  
+    if (hasValidationErrors || !allFieldsFilled || emailExists) {
+      setDialogMessage("Please fix the errors before submitting.");
+      setShowDialog(true);
+      return;
     }
+  
+    try {
+      await UsersService.register(firstname, lastname, email, password, regNo, role);
+      setDialogMessage("You have registered successfully. An OTP has been sent to your email. Please verify within 5 minutes.");
+      setShowDialog(true);
+      
+      setTimeout(() => {
+        navigate("/"); // Navigate after a delay to ensure the dialog is shown
+      }, 12000); // Delay navigation slightly to show dialog
+    } catch (error) {
+      console.error("Error registering user:", error);
+      setDialogMessage("An error occurred while registering the user.");
+      setShowDialog(true);
+    }
+  };
+  
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // Clear errors when user starts typing again
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+
+    if (name === "regNo") setRegNo(value);
+    if (name === "email") setEmail(value);
+    if (name === "password") setPassword(value);
+    if (name === "confirmpassword") setConfirmpassword(value);
+  };
+
+  const handleCloseDialog = () => {
+    setShowDialog(false);
   };
 
   return (
@@ -163,6 +228,7 @@ const Signup = () => {
       {/* Right Side */}
       <div className="w-1/2 bg-dark-background flex flex-col justify-center px-10 border-l border-white border-opacity-30">
         <div className="space-y-2 mx-auto w-[50%] py-10">
+          {/* Form Fields */}
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label
@@ -214,7 +280,7 @@ const Signup = () => {
               id="regNo"
               name="regNo"
               className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
-              placeholder="2021cs100"
+              placeholder="2021is100"
               value={regNo}
               onChange={(e) => setRegNo(e.target.value)}
             />
@@ -224,17 +290,23 @@ const Signup = () => {
           </div>
           <div>
             <label htmlFor="email" className="block text-white text-sm mb-2">
-              Student Email
+              Email
             </label>
             <input
               type="text"
               id="email"
               name="email"
               className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
-              placeholder="2021cs100@stu.ucsc.cmb.ac.lk"
+              placeholder="2021is100@stu.ucsc.cmb.ac.lk"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {/* Email Existence Error Above */}
+            {emailExists && (
+              <div className="text-red-600 text-center">
+                <p>Email already exists. Please use a different email.</p>
+              </div>
+            )}
             {isSubmitted && errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
@@ -249,13 +321,13 @@ const Signup = () => {
                 id="password"
                 name="password"
                 className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
-                placeholder="Password"
+                placeholder="********"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <span
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-white cursor-pointer"
                 onClick={togglePasswordVisibility}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-white"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
@@ -265,10 +337,7 @@ const Signup = () => {
             )}
           </div>
           <div>
-            <label
-              htmlFor="confirmpassword"
-              className="block text-white text-sm mb-2"
-            >
+            <label htmlFor="confirmpassword" className="block text-white text-sm mb-2">
               Confirm Password
             </label>
             <div className="relative">
@@ -277,13 +346,13 @@ const Signup = () => {
                 id="confirmpassword"
                 name="confirmpassword"
                 className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
-                placeholder="Confirm your password"
+                placeholder="********"
                 value={confirmpassword}
                 onChange={(e) => setConfirmpassword(e.target.value)}
               />
               <span
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-white cursor-pointer"
                 onClick={togglePasswordVisibility}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-white"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
@@ -292,38 +361,32 @@ const Signup = () => {
               <p className="text-red-500 text-sm mt-1">{errors.confirmpassword}</p>
             )}
           </div>
-
           <div>
             <button
-              className="w-full bg-primary text-black py-2 h-[50px] rounded-full font-bold hover:bg-secondary"
               onClick={handleSubmit}
+              className="w-full bg-[#AEC90A] rounded-full text-white py-2 px-4 rounded mt-5"
             >
-              SIGNUP
+              Sign Up
             </button>
           </div>
         </div>
       </div>
-
-      {/* Popup */}
-      {showPopup && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
-          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
-          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative">
-            <span
-              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
-              onClick={handleClosePopup}
-            >
-              &times;
-            </span>
-            <h2 className="text-[15px] font-semibold text-dark-400 mb-4">
-              Leave without SignUp?
-            </h2>
-            <button
-              className="bg-primary text-white px-4 py-2 w-32 text-[14px] rounded font-medium mr-2 hover:bg-dark-400"
-              onClick={handleOkClick}
-            >
-              OK
-            </button>
+      {showDialog && (
+        <div
+          className="fixed top-0 left-0 w-full h-full bg-opacity-60 bg-black flex justify-center items-center z-50"
+        >
+          <div
+            className="bg-white p-6 rounded-lg w-[80%] max-w-lg"
+          >
+            <div>
+              <p className="text-black text-xl mb-4">{dialogMessage}</p>
+              <button
+                className="w-full bg-[#AEC90A] text-white py-2 px-4 rounded mt-3"
+                onClick={handleCloseDialog}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

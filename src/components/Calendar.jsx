@@ -112,7 +112,7 @@ const FullCalendar = () => {
     return (
       <div className="calendar-grid  " style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "10px" }}>
         {dayNames.map((day, index) => (
-          <div key={index} style={{ textAlign: "center", fontWeight: "bold", color: "white" }}>{day}</div>
+          <div key={index} style={{ textAlign: "center", fontWeight: "bold", color: "white",fontSize: "22px" }}>{day}</div>
         ))}
         {daysInMonth.map((date, index) => {
           const formattedDate = date ? format(date, "yyyy-MM-dd") : null;
@@ -129,11 +129,10 @@ const FullCalendar = () => {
               className="calendar-day"
               style={{
                 padding: "10px",
-                border: "1px solid #555",
                 minHeight: "100px",
                 backgroundColor: date ? "black" : "transparent",
                 color: date ? "white" : "transparent",
-                borderRadius: "25px",
+                borderRadius: "50px",
                 cursor: "pointer",
                 ...cardHighlightStyle,
                 ...selectedStyle,
@@ -141,14 +140,14 @@ const FullCalendar = () => {
               onClick={() => date && handleDateClick(date)}
             >
  {date && (
-                <div className="day-number" style={{ fontWeight: "bold", fontSize: "16px" }}>
+                <div className="day-number" style={{ fontWeight: "bold", fontSize: "26px",padding : "16px"}}>
                   {date.getDate()}
                   {isCurrentDate && <span style={{ fontSize: "10px", color: "#AEC90A" }}> Today</span>}
                 </div>
               )}              {eventsForDay.map((event, i) => {
                 const club = clubDetails.find((club) => club.club_id === event.club_id);
                 return (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "5px" ,fontSize: "12px", color: "#AEC90A" ,fontWeight: "bold"}}>
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "5px" ,fontSize: "12px", color: "white" ,fontWeight: "bold"}}>
                    
                    {club && club.club_image && (
                       <img
@@ -405,7 +404,7 @@ const FullCalendar = () => {
   
 
   return (
-    <div  className="bg-black bg-opacity-30 rounded-md p-5" style={{  color: "white" }}>
+    <div  className="bg-black bg-opacity-30 rounded-md px-24 onset-0 " style={{  color: "white" }}>
       <div
         style={{
           display: "flex",

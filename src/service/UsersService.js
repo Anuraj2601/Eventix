@@ -165,6 +165,24 @@ class UsersService{
             throw err;
         }
     }
+
+    static async getUserByEmailforsignup(email){
+        try{
+
+            const response = await axios.get(`${UsersService.BASE_URL}/api/users/getUserByEmail`,
+                {
+                    
+                    params: { email }
+                }
+            )
+            return response.data;
+
+            
+
+        }catch(err){
+            throw err;
+        }
+    }
     
 }
 
