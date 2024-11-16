@@ -173,7 +173,8 @@ const App = () => {
 
          {/*  member routes */}
          <Route exact path="/member/club" element={<Exploreclub />} />
-        <Route exact path="/member/club/event" element={<Exploreeventstudent />} />
+        {/* <Route exact path="/member/club/event" element={<Exploreeventstudent />} /> */}
+        <Route path='/member/club/event' element={<Exploreevent />}></Route>
         <Route path='/member/club/:id' element={<ClubDetails />} />
         <Route path='/member/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
