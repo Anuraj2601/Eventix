@@ -302,8 +302,8 @@ const App = () => {
         <Route path='/admin/club/event' element={<Exploreeventstudentadmin />}></Route>
         <Route path='/admin/calendar' element={<StudentEventCalendaradmin />}></Route>
         <Route path='/admin' element={<StudentDashboardadmin/>}></Route>
-        <Route path='/admin/requests' element={<EventRequests/>}></Route>
-        <Route path='/admin/users' element={<NewUsers/>}></Route>
+        <Route path='/student/requests' element={<EventRequests/>}></Route>
+        <Route path='/student/users' element={<NewUsers/>}></Route>
         <Route path='/admin/notifications' element={<AdminNotifications  />} ></Route>
         <Route path='/admin/announcement' element={<Announcementadmin />}></Route> 
         <Route path='/admin/inquiry' element={<Inquiriesadmin/>}></Route>

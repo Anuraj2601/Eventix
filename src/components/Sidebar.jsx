@@ -27,7 +27,7 @@ const Sidebar = () => {
   // Fetch users
   useEffect(() => {
     axios
-      .get('http://localhost:8080/api/users', {
+      .get('http://localhost:8080/api/users/getAllUsersIncludingCurrent', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -72,7 +72,7 @@ const Sidebar = () => {
   return (
     <aside className="bg-stone-950 shadow-2xl text-white w-52 h-full p-4 flex flex-col justify-between items-center overflow-y-auto">
       <div className="p-2 flex justify-center">
-        <img src={Logo} alt="logo" className="w-70 h-24 ml-2 mb-4" />
+        <img src={Logo} alt="logo" className="w-70 h-24 ml-2 mb-2" />
       </div>
 
       <div className="flex flex-col items-center space-y-1 flex-grow">
@@ -107,47 +107,26 @@ const Sidebar = () => {
             </Link>
           </li>
 
-          {['admin', 'treasurer'].includes(userRole.toLowerCase()) && (
-            <li className={linkClass('/requests')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
-              <Link to={`/${baseUrl}/requests`} className="px-3">
-                <MdSettings className="inline-block w-9 h-9 mt-1 -ml-0.5" />
-              </Link>
-            </li>
-          )}
+          {(['admin', 'treasurer'].includes(userRole.toLowerCase()) || 
+  currentPath.startsWith('/admin') || 
+  currentPath.startsWith('/treasurer')) && (
+  <li className={linkClass('/requests')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
+    <Link to={`/${baseUrl}/requests`} className="px-3">
+      <MdSettings className="inline-block w-9 h-9 mt-1 -ml-0.5" />
+    </Link>
+  </li>
+)}
+
         </ul>
 
-        {/* Display user details */}
-        <div className="mt-4 w-full px-4">
-          <p>userid {userId}</p>
-          <p>User Role: {userRole}</p>
-
-          <h2 className="text-center text-lg font-bold mb-2">User Profiles</h2>
-          {UserProfiles.length > 0 ? (
-            UserProfiles.map((user) => (
-              <div key={user.id} className="mb-4 flex items-center">
-                <img
-                  src={user.image}
-                  alt={user.name}
-                  className="w-12 h-12 rounded-full mr-4"
-                />
-                <div>
-                  <p className="font-semibold">{user.name}</p>
-                  <p>{user.email}</p>
-                  <p>{user.role}</p> {/* Display role here */}
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>Loading user details...</p>
-          )}
-        </div>
+       
       </div>
 
       <ul className="mb-0">
         <li className="w-28 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2">
           <a className="px-3">
             <Link to="/" onClick={handleLogout}>
-              <span className="hover:bg-[#AEC90A] hover:text-black mr-2 mt-6">Logout</span>
+              <span className="hover:bg-[#AEC90A] hover:text-black mr-2 mt-2 mb-2">Logout</span>
               <IoExitOutline className="inline-block w-6 h-6 mt-0" />
             </Link>
           </a>
