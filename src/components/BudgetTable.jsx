@@ -3,7 +3,7 @@ import { Card, CardBody, Typography, Button, Input } from "@material-tailwind/re
 import EditButton from "./EditButton"; // Import your EditDeleteButton component
 
 
-const BudgetTable = ({ onUpdate, showTable = true, estimatedBudget = 4000 }) => {
+const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudget = 4000 }) => {
   const [budgetItems, setBudgetItems] = useState([
     { id: 1, description: "Venue Rental", type: "cost", amount: 500 },
     { id: 2, description: "Sponsorship", type: "income", amount: 1000 },
@@ -35,6 +35,59 @@ const BudgetTable = ({ onUpdate, showTable = true, estimatedBudget = 4000 }) => 
       onUpdate(totalCosts, totalIncome, estimatedBudget);
     }
   }, [totalCosts, totalIncome, estimatedBudget, onUpdate]);
+
+  useEffect(() => {
+
+    const fetchBudgetItems = async () => {
+        try{
+            const token = localStorage.getItem('token');
+            const response = await RegistrationService.getAllRegistrations(token) ;
+            //console.log("response array", response);
+            const regArray = response.content.filter(reg => reg.clubId === clubId && reg.accepted == 1) || [];
+            //console.log("reg array", regArray);
+
+           
+
+            // Map through regArray to fetch user details for each user
+            const detailedMembers = await Promise.all(
+                regArray.map(async reg => {
+                    const userResponse = await UsersService.getUserById(reg.userId, token);
+                    //console.log("user details in oc",userResponse);
+                    return { 
+                        ...reg, 
+                        memberName: userResponse.users.firstname, 
+                        memberImage: userResponse.users.photoUrl
+                        
+                    };
+                })
+            );
+
+            //console.log("detailed members ", detailedMembers);
+
+            // Group members by team
+            const categorizedMembers = detailedMembers.reduce((acc, member) => {
+                const team = member.team || "No Team"; 
+                if (!acc[team]) {
+                    acc[team] = [];
+                }
+                acc[team].push(member);
+                return acc;
+            }, {});
+
+            console.log("Categorized members by team", categorizedMembers);
+            setAllClubMembers(categorizedMembers);
+            
+
+        }catch(error){
+            console.error("Error fetching registrations", error);
+        }
+
+    }
+
+    fetchBudgetItems();
+
+  
+}, [])
 
   return (
     <div>
