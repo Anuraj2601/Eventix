@@ -25,6 +25,7 @@ import AddSponsorModal from "../../components/AddSponsorModal"; // Import your m
 import RegistrationModal from '../../components/RegistrationModal';
 import EventRegistrationModal from "../../components/EventRegistrationModal";
 import EventRegistrationService from "../../service/EventRegistrationService";
+import EventOcService from "../../service/EventOcService";
 
 
 ReactModal.setAppElement("#root"); // For accessibility
@@ -62,6 +63,33 @@ const Exploreevent = () => {
     const paths = ['/president', '/secretary'];
     return paths.some(path => location.pathname.startsWith(path));
   };
+
+  const [isOc, setIsOcMember] = useState(false);
+
+  const isOcMember = async () => {
+
+    const token = localStorage.getItem("token");
+    const session_id = localStorage.getItem('session_id');
+
+    try{
+      const response2 = await EventOcService.getAllEventOcs(token);
+      const isOcArray = response2.content ? response2.content.filter(oc => oc.event_id == eventDetails.event_id && oc.user_id == session_id) : [];
+      //console.log("is oc array ",isOcArray);
+
+      if(isOcArray.length > 0){
+        setIsOcMember(true);
+      }
+
+    }catch(err){
+      console.log("Error while fetching event OCs details", err);
+    }
+
+
+  }
+
+  useEffect(() => {
+    isOcMember();
+  }, []);
 
   const [isEventRegistered, setIsEventRegistered] = useState(false);
 
@@ -480,7 +508,7 @@ const Exploreevent = () => {
           </div>
 
           <div className="w-full p-10">
-          {isMatchingPage() && (
+          {(isOc || isMatchingPage()) && (
             <RegisterNav className="w-full h-96" clubId={club_id} eventDetails={eventDetails}/>
           )}
 
