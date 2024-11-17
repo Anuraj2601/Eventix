@@ -93,7 +93,11 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
                 {allBudgets.map(item => (
                   <tr key={item.budget_id}>
                     <td className="p-2">{item.budget_name}</td>
-                    <td className="p-2">{item.budget_type}</td>
+                    <td className="p-2"
+                     style={{
+                      color: item.budget_type === "COST" ? "red" : item.budget_type === "INCOME" ? "green" : "white",
+                    }}
+                    >{item.budget_type}</td>
                     {/* <td className="p-2">${item.amount.toFixed(2)}</td> */}
                     <td className="p-2">Rs. {item.budget_amount.toFixed(2)}</td>
                   </tr>
