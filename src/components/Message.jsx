@@ -264,7 +264,7 @@ return (
                 key={user.id}
                 className={`relative flex items-center p-2 rounded-lg cursor-pointer ${
                   selectedUser?.id === user.id
-                    ? 'border-[#AEC90A] bg-opacity-50 bg-black text-white'
+                    ? 'borderAEC9-[#0A] bg-opacity-50 bg-[#AEC90A] text-white'
                     : 'border-[#AEC90A]'
                 }`}
                 onClick={() => handleSelectUser(user)}
@@ -290,12 +290,13 @@ return (
             key={user.id}
             className={`relative flex items-center p-2 rounded-lg cursor-pointer ${
               selectedUser?.id === user.id
-                ? 'border-[#AEC90A] bg-opacity-50 bg-black text-white'
+                ? 'border-[#AEC90A] bg-opacity-50 bg-[#AEC90A] text-white'
                 : 'border-[#AEC90A]'
             }`}
             onClick={() => handleSelectUser(user)}
             style={{
               boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
+             
             }}
           >
             <img
