@@ -66,7 +66,8 @@ const EventNav = ({clubId, eventDetails}) => {
       <TabsBody className="h-[1200px] overflow-auto"> {/* Adjust height as needed */}
         {data.map(({ value, desc }) => (
           <TabPanel key={value} value={value}>
-            {desc}
+            {/* {desc} */}
+            {activeTab === value && desc}
           </TabPanel>
         ))}
       </TabsBody>
