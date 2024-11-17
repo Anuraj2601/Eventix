@@ -11,29 +11,107 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
     { id: 3, description: "Catering", type: "cost", amount: 300 },
   ]);
 
-  const [newItem, setNewItem] = useState({ description: "", type: "cost", amount: 0 });
+  const [newItem, setNewItem] = useState({ description: "", type: "COST", amount: 0 });
 
   const [allBudgets, setAllBudgets] = useState([]);
 
   //console.log("clubID in budget", clubId);
   //console.log("event in budget", event);
 
-  const handleAddItem = (e) => {
-    e.preventDefault();
-    setBudgetItems([...budgetItems, { id: budgetItems.length + 1, ...newItem }]);
-    setNewItem({ description: "", type: "cost", amount: 0 });
+  // const handleAddItem = (e) => {
+  //   e.preventDefault();
+  //   setBudgetItems([...budgetItems, { id: budgetItems.length + 1, ...newItem }]);
+  //   setNewItem({ description: "", type: "cost", amount: 0 });
+  // };
+
+  const handleAddItem = async (e) => {
+      e.preventDefault();
+
+
+      const missingFields = [];
+
+      // Check if each field is empty or not selected
+      if (!newItem.description || newItem.description.trim() === '') {
+          missingFields.push('Description');
+      }
+
+
+
+      if (!newItem.amount || newItem.amount.trim() === '') {
+          missingFields.push('Amount');
+      }
+
+      // if (!selectedDate) {
+      //     missingFields.push('Interview Slot');
+      // }
+
+      if (missingFields.length > 0) {
+          alert(`Please fill in the following fields: ${missingFields.join(', ')}`);
+          return;
+      }
+
+      const token = localStorage.getItem('token');
+      const session_id = localStorage.getItem('session_id');
+      //console.log("session id in event reg", session_id);
+
+      if (!token) {
+          alert('User not authenticated.');
+          return;
+      }
+
+      //const token = localStorage.getItem('token'); 
+
+      try{
+
+          const response = await BudgetService.saveBudget(
+              newItem.description,
+              newItem.amount,
+              newItem.type,
+              event.event_id,
+              token
+          );
+
+          
+          alert('Event Budget added successfully');
+          console.log('Event Budget added:', response);
+          //navigate(-1);
+
+
+      }catch(err){
+
+          console.error("Error adding Event Budget:", err);
+          
+          // const errorMessages = err.response ? err.response.data.errors : { global: err.message };
+          // setErrors(errorMessages);
+          // setTimeout(() => setErrors({}), 5000);
+
+      }
+
+      //setBudgetItems([...budgetItems, { id: budgetItems.length + 1, ...newItem }]);
+      setAllBudgets([...allBudgets, { id: allBudgets.length + 1, ...newItem }]);
+      setNewItem({ description: "", type: "cost", amount: 0 });
   };
+
+ 
+ 
 
   const handleNewItemChange = (field, value) => {
     setNewItem({ ...newItem, [field]: value });
   };
 
-  const totalCosts = budgetItems
-    .filter(item => item.type === "cost")
-    .reduce((acc, item) => acc + parseFloat(item.amount), 0);
-  const totalIncome = budgetItems
-    .filter(item => item.type === "income")
-    .reduce((acc, item) => acc + parseFloat(item.amount), 0);
+  // const totalCosts = budgetItems
+  //   .filter(item => item.type === "cost")
+  //   .reduce((acc, item) => acc + parseFloat(item.amount), 0);
+  // const totalIncome = budgetItems
+  //   .filter(item => item.type === "income")
+  //   .reduce((acc, item) => acc + parseFloat(item.amount), 0);
+
+  const totalCosts = allBudgets
+    .filter(item => item.budget_type === "COST")
+    .reduce((acc, item) => acc + parseFloat(item.budget_amount), 0);
+  const totalIncome = allBudgets
+    .filter(item => item.budget_type === "INCOME")
+    .reduce((acc, item) => acc + parseFloat(item.budget_amount), 0);
 
   // Notify parent component about the updated totals
   useEffect(() => {
@@ -65,7 +143,7 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
     fetchBudgetItems();
 
   
-}, [])
+  }, [allBudgets])
 
   return (
     <div>
@@ -74,7 +152,7 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
           <CardBody>
           <Typography color="white" className="mb-4 flex items-center">
             
-            Estimated Budget: $40,000<span className="mr-2">
+            Estimated Budget: Rs. 40,000<span className="mr-2">
                 <EditButton />
             </span>
         </Typography>
@@ -95,11 +173,11 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
                     <td className="p-2">{item.budget_name}</td>
                     <td className="p-2"
                      style={{
-                      color: item.budget_type === "COST" ? "red" : item.budget_type === "INCOME" ? "green" : "white",
+                      color: item.budget_type === "COST" ? "red" : item.budget_type === "INCOME" ? "#2ecc71" : "white",
                     }}
                     >{item.budget_type}</td>
                     {/* <td className="p-2">${item.amount.toFixed(2)}</td> */}
-                    <td className="p-2">Rs. {item.budget_amount.toFixed(2)}</td>
+                    <td className="p-2">Rs. {item.budget_amount}</td>
                   </tr>
                 ))}
               </tbody>
@@ -118,8 +196,8 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
                   onChange={(e) => handleNewItemChange("type", e.target.value)}
                   className="bg-gray-800 text-white p-2 rounded-full mr-2 w-28"
                 >
-                  <option value="cost">Cost</option>
-                  <option value="income">Income</option>
+                  <option value="COST">Cost</option>
+                  <option value="INCOME">Income</option>
                 </select>
                 <Input
                   type="number"
@@ -129,16 +207,16 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
                   className="bg-gray-800 text-white p-2 rounded-lg mr-2 w-28"
                 />
               </div>
-              <Button type="submit" className="bg-[#AEC90A] text-black p-2 rounded-full">
+              <Button type="submit" className="bg-[#AEC90A] text-black p-2 rounded-full cursor-pointer">
                 Add Item
               </Button>
             </form>
             <div className="flex justify-between text-white mb-4">
               <Typography variant="h5">
-                Total Costs: ${totalCosts.toFixed(2)}
+                Total Costs: Rs. {totalCosts.toFixed(2)}
               </Typography>
               <Typography variant="h5">
-                Total Income: ${totalIncome.toFixed(2)}
+                Total Income: Rs. {totalIncome.toFixed(2)}
               </Typography>
             </div>
           </CardBody>
