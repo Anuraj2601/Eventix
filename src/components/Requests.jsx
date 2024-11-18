@@ -71,11 +71,11 @@ const RequestTable = ({ type, events, onAccept, onReject }) => {
                 className="w-24 h-24 rounded-full mb-4"
               /> 
               <img
-                src={row.president_image}
+                src={row.club_president_image}
                 alt="President"
                 className="w-24 h-24 rounded-full mb-2"
               /> 
-              <span className="text-white">President {row.president}</span>
+              <span className="text-white">President {row.club_president_name}</span>
             </div>
 
             <div className="flex flex-col items-center mb-4">
@@ -133,7 +133,7 @@ const Requests = () => {
   
         try {
           // Fetch all events
-          const events = await EventService.getAllEvents(token);
+          const events = await EventService.getAllEventsWithClubs(token);
           console.log("Events:", events);
   
           // Format data without fetching club details
@@ -147,6 +147,9 @@ const Requests = () => {
             budget_status: event.budget_status,
             iud_status: event.iud_status,
             club_id: event.club_id,
+            club_image: event.clubImage,
+            club_president_image: event.clubPresidentImage,
+            club_president_name: event.clubPresidentName,
           }));
   
           // Categorize events
