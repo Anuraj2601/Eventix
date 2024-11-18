@@ -41,7 +41,7 @@ const Dashboard = () => {
     },
     {
       id: "1",
-      publisher_name: "Lori Kletzer",
+      publisher_name: "Lori Kletzerrrrrrrrrrrrrrr",
       publisher_position: "President of Club Rotaract",
       publisher_img: dp,
       event: "2025 Career Fair",

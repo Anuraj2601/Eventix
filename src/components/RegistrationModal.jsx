@@ -26,7 +26,7 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
       <div className="bg-black p-6 rounded-md shadow-md border-[#AEC90A] w-96">
       <div className="relative w-full h-full">
   <button
