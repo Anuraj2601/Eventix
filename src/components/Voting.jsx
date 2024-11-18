@@ -4,6 +4,9 @@ import Modal from "react-modal";
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import { getAllCandidates,incrementVotes } from "../service/candidateService";
+import { addVoter } from "../service/VoterService";  // Importing the service
+import { getUserIdFromToken } from '../utils/utils';
+
 
 // Ensure you set the modal app element (usually the root element of your app)
 Modal.setAppElement('#root');
@@ -77,6 +80,14 @@ const Voting = () => {
         // Call the service to increment votes
         await incrementVotes(candidateIds);
         console.log("Voting completed and votes incremented");
+
+        const userId = getUserIdFromToken();
+        if (!electionIdFromUrl) throw new Error("Election ID is missing.");
+  
+        await addVoter({
+          electionId: electionIdFromUrl,
+          userId
+        });
   
         // Show success modal with the same design
         setIsThankYouModalOpen(true); // Reuse the modal state to show the success message
