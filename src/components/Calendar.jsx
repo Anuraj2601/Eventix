@@ -132,7 +132,7 @@ const FullCalendar = () => {
                 minHeight: "100px",
                 backgroundColor: date ? "black" : "transparent",
                 color: date ? "white" : "transparent",
-                borderRadius: "50px",
+                borderRadius: "20px",
                 cursor: "pointer",
                 ...cardHighlightStyle,
                 ...selectedStyle,
@@ -153,7 +153,7 @@ const FullCalendar = () => {
                       <img
                         src={club.club_image}
                         alt={club.club_name}
-                        style={{ width: "20px", height: "20px", borderRadius: "50%" }}
+                        style={{ width: "30px", height: "30px", borderRadius: "50%" }}
                       />
                     )} 
                     <span >{event.name}</span>
@@ -181,7 +181,7 @@ const FullCalendar = () => {
         <img
           src={club.club_image}
           alt={club.club_name}
-          style={{ width: "20px", height: "20px", borderRadius: "50%" }}
+          style={{ width: "30px", height: "30px", borderRadius: "50%" }}
         />
       )}
       
@@ -307,7 +307,7 @@ const FullCalendar = () => {
                         style={{ marginBottom: "20px" }}
                       />
                       {club && club.club_image && (
-                        <div className="absolute top-2 right-2 w-16 h-16 border-2 border-white rounded-full overflow-hidden shadow-md">
+                        <div className="absolute top-2 right-2 w-20 h-20 border-2 border-white rounded-full overflow-hidden shadow-md">
                           <img
                             src={club.club_image}
                             alt={club.club_name}

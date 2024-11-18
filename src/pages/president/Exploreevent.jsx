@@ -317,16 +317,7 @@ const Exploreevent = () => {
                       >
                         Venue - {venue}
                       </Typography>
-                      {/* <button
-                        onClick={openModal}
-                        className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
-                        style={{
-                          boxShadow:
-                            "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-                        }}
-                      >
-                        View Details
-                      </button> */}
+                     
 
                       {/* {isMatchingPage() ? (
                         <button
@@ -430,7 +421,7 @@ const Exploreevent = () => {
                   
                     {isMatchingPage() && (
                       <Link
-                      to="/president/AddSponsor"
+                      to={`/president/AddSponsor/${eventDetails.id}`}
                       className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
                     >
                         <AiOutlinePlus size={24} />
@@ -453,24 +444,7 @@ const Exploreevent = () => {
                         className="flex flex-col items-center "
                         key={eventS.sponsor_id}
                       >
-                        {/* <div className="flex flex-row gap-1 top-1">
-                          <Button
-                            onClick={() => updateSponsor(eventS.sponsor_id)}
-                          >
-                            <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
-                              <AiOutlineEdit size={24} />
-                            </Link>
-                          </Button>
-                          <button
-                            onClick={() =>
-                              handleDeleteSponsor(eventS.sponsor_id)
-                            }
-                          >
-                            <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
-                              <AiOutlineDelete size={24} />
-                            </Link>
-                          </button>
-                        </div> */}
+                      
                         {isMatchingPage() && (
                           <div className="flex flex-row gap-1 top-1">
                             <Button onClick={() => updateSponsor(eventS.sponsor_id)}>
