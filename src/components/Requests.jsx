@@ -146,6 +146,7 @@ const Requests = () => {
             budget: event.budget_pdf,
             budget_status: event.budget_status,
             iud_status: event.iud_status,
+            club_id: event.club_id,
           }));
   
           // Categorize events
