@@ -76,16 +76,18 @@ const Board = () => {
   }, [registrations]);
 
   const clubIdFromUrl = window.location.pathname.split('/').pop();
-
   const filteredRegistrations = registrations.filter(
-    (reg) =>  reg.accepted === 1 &&
-    ['President', 'Secretary', 'Treasurer'].includes(reg.position) && String(reg.clubId) === String(clubIdFromUrl)
+    (reg) =>
+      reg.accepted === 1 &&
+      ['President', 'president', 'Secretary', 'secretary', 'Treasurer', 'treasurer'].includes(reg.position) &&
+      String(reg.clubId) === String(clubIdFromUrl)
   );
 
-  const president = filteredRegistrations.find((reg) => reg.position === 'President');
-const secretary = filteredRegistrations.find((reg) => reg.position === 'Secretary');
-const treasurer = filteredRegistrations.find((reg) => reg.position === 'Treasurer');
+  const president = filteredRegistrations.find((reg) => reg.position.toLowerCase() === 'president');
+  const secretary = filteredRegistrations.find((reg) => reg.position.toLowerCase() === 'secretary');
+  const treasurer = filteredRegistrations.find((reg) => reg.position.toLowerCase() === 'treasurer');
 
+ 
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;

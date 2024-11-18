@@ -18,3 +18,18 @@ export const getUserEmailFromToken = () => {
         throw new Error("Failed to decode token.");
     }
 };
+
+
+
+// utils.js
+// utils.js
+export const getUserIdFromToken = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = JSON.parse(atob(token.split('.')[1])); // Decode the JWT token
+      return decoded?.user_id || null; // Ensure user_id exists in the payload
+    }
+    return null;
+  };
+  
+

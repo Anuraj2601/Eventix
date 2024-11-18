@@ -35,6 +35,7 @@ class RegistrationService {
 
             const response = await axios.get(`${RegistrationService.BASE_URL}/getAllRegistrations`, { headers });
             return response.data;
+            
         } catch (err) {
             const errorMessage = err.response?.data?.message || err.message || 'Error fetching registrations';
             throw new Error(errorMessage);

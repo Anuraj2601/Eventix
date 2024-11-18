@@ -22,14 +22,19 @@ import SponsorsService from "../../service/SponsorsService";
 import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import AddSponsorModal from "../../components/AddSponsorModal"; // Import your modal
+import RegistrationModal from '../../components/RegistrationModal';
+import EventRegistrationModal from "../../components/EventRegistrationModal";
+import EventRegistrationService from "../../service/EventRegistrationService";
+import EventOcService from "../../service/EventOcService";
 
 
 ReactModal.setAppElement("#root"); // For accessibility
 
 const Exploreevent = () => {
   const location = useLocation();
-  console.log(location);
+  
   const { name, image, date, clubName, clubImage, venue } = location.state || {} ;
+  //console.log("explore events location", location.state);
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -45,9 +50,72 @@ const Exploreevent = () => {
     /* benefits: "Increased engagement in club activities and better preparation for industry challenges." */ // Dummy benefits value
   });
 
+  const club_id = location.state.clubId;
+  //console.log("explore events location", club_id);
+  const eventDetails = location.state;
+  
   const navigate = useNavigate();
 
   const [eventSponsor, setEventSponsonsors] = useState([]);
+
+   // Function to check if the path starts with one of the specified paths
+  const isMatchingPage = () => {
+    const paths = ['/president', '/secretary'];
+    return paths.some(path => location.pathname.startsWith(path));
+  };
+
+  const [isOc, setIsOcMember] = useState(false);
+
+  const isOcMember = async () => {
+
+    const token = localStorage.getItem("token");
+    const session_id = localStorage.getItem('session_id');
+
+    try{
+      const response2 = await EventOcService.getAllEventOcs(token);
+      const isOcArray = response2.content ? response2.content.filter(oc => oc.event_id == eventDetails.event_id && oc.user_id == session_id) : [];
+      //console.log("is oc array ",isOcArray);
+
+      if(isOcArray.length > 0){
+        setIsOcMember(true);
+      }
+
+    }catch(err){
+      console.log("Error while fetching event OCs details", err);
+    }
+
+
+  }
+
+  useEffect(() => {
+    isOcMember();
+  }, []);
+
+  const [isEventRegistered, setIsEventRegistered] = useState(false);
+
+  const isRegistered = async () => {
+
+    const token = localStorage.getItem("token");
+    const session_id = localStorage.getItem('session_id');
+
+    try{
+      const response2 = await EventRegistrationService.getAllEventRegistrations(token);
+      const eventRegArray = response2.content ? response2.content.filter(eReg => eReg.event_id == eventDetails.event_id && eReg.user_id == session_id) : [];
+      //console.log("event reg array ",eventRegArray);
+
+      if(eventRegArray.length > 0){
+        setIsEventRegistered(true);
+      }
+
+    }catch(err){
+      console.log("Error while fetching event registration details", err);
+    }
+
+  }
+
+  useEffect(() => {
+    isRegistered();
+  }, [isEventRegistered]);
 
   useEffect(() => {
     fetchSponsors();
@@ -177,6 +245,16 @@ const Exploreevent = () => {
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
+  const [isRegModalOpen, setIsRegModalOpen] = useState(false);
+
+  const handleRegister = () => {
+    setIsRegModalOpen(true);
+  };
+
+  const closeRegModal = () => {
+    setIsRegModalOpen(false);
+};
+
   return (
     <div className="fixed inset-0 flex">
       <Sidebar className="flex-shrink-0" />
@@ -239,7 +317,7 @@ const Exploreevent = () => {
                       >
                         Venue - {venue}
                       </Typography>
-                      <button
+                      {/* <button
                         onClick={openModal}
                         className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
                         style={{
@@ -248,7 +326,77 @@ const Exploreevent = () => {
                         }}
                       >
                         View Details
+                      </button> */}
+
+                      {/* {isMatchingPage() ? (
+                        <button
+                        onClick={openModal}
+                        className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
+                        style={{
+                          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                        }}
+                      >
+                        View Details
                       </button>
+                       
+                      ) : (
+                        
+                        <button
+                          onClick={handleRegister}
+                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
+                          style={{
+                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                          }}
+                        >
+                          Register Now
+                        </button>
+                      )}
+                      {
+                        isEventRegistered && 
+                        <button
+                          disabled
+                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
+                          style={{
+                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                          }}
+                        >
+                          Registered
+                        </button>
+                      } */}
+
+                      {isMatchingPage() ? (
+                        <button
+                          onClick={openModal}
+                          className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
+                          style={{
+                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                          }}
+                        >
+                          View Details
+                        </button>
+                      ) : isEventRegistered ? (
+                        <button
+                          disabled
+                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full cursor-not-allowed"
+                          style={{
+                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                          }}
+                        >
+                          Registered
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleRegister}
+                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
+                          style={{
+                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                          }}
+                        >
+                          Register Now
+                        </button>
+                      )}
+
+
                     </div>
                     <Typography color="white" variant="body1" className="mb-4">
                       An event designed to inspire and empower students. Join us
@@ -264,7 +412,7 @@ const Exploreevent = () => {
             </div>
 
             <div className="order-3 md:order-2 flex w-full">
-              <EventNav className="w-full h-full" />
+              <EventNav className="w-full h-full" clubId={club_id} event={eventDetails}/>
             </div>
           </div>
 
@@ -279,12 +427,17 @@ const Exploreevent = () => {
             >
               <CardBody className="h-full relative">
                 <div className="absolute top-2 right-2">
-                  <Link
-                    to="/president/AddSponsor"
-                    className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
-                  >
-                    <AiOutlinePlus size={24} />
-                  </Link>
+                  
+                    {isMatchingPage() && (
+                      <Link
+                      to="/president/AddSponsor"
+                      className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]"
+                    >
+                        <AiOutlinePlus size={24} />
+                      </Link>
+                    )}
+                    {/* <AiOutlinePlus size={24} /> */}
+                  
                 </div>
                 <div className="relative h-full flex flex-col justify-center">
                   <Typography
@@ -300,7 +453,7 @@ const Exploreevent = () => {
                         className="flex flex-col items-center "
                         key={eventS.sponsor_id}
                       >
-                        <div className="flex flex-row gap-1 top-1">
+                        {/* <div className="flex flex-row gap-1 top-1">
                           <Button
                             onClick={() => updateSponsor(eventS.sponsor_id)}
                           >
@@ -317,7 +470,22 @@ const Exploreevent = () => {
                               <AiOutlineDelete size={24} />
                             </Link>
                           </button>
-                        </div>
+                        </div> */}
+                        {isMatchingPage() && (
+                          <div className="flex flex-row gap-1 top-1">
+                            <Button onClick={() => updateSponsor(eventS.sponsor_id)}>
+                              <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                                <AiOutlineEdit size={24} />
+                              </Link>
+                            </Button>
+                            <button onClick={() => handleDeleteSponsor(eventS.sponsor_id)}>
+                              <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                                <AiOutlineDelete size={24} />
+                              </Link>
+                            </button>
+                          </div>
+                        )}
+
                         <img
                           src={eventS.company_logo}
                           alt="Platinum Sponsor"
@@ -340,7 +508,11 @@ const Exploreevent = () => {
           </div>
 
           <div className="w-full p-10">
-            <RegisterNav className="w-full h-96" />
+          {(isOc || isMatchingPage()) && (
+            <RegisterNav className="w-full h-96" clubId={club_id} eventDetails={eventDetails}/>
+          )}
+
+            {/* <RegisterNav className="w-full h-96" /> */}
           </div>
         </div>
       </div>
@@ -469,6 +641,14 @@ const Exploreevent = () => {
           </button>
         </div>
       </ReactModal>
+
+      <EventRegistrationModal
+                clubId={club_id} 
+                eventDetails={eventDetails}
+                event={event}
+                isOpen={isRegModalOpen}
+                onClose={closeRegModal}
+            /> 
     </div>
   );
 };

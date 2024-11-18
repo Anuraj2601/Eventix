@@ -44,21 +44,19 @@ class EventService{
         }
     }
 
-
-    static async getAllEvents(token){
-        try{
-            const response = await axios.get(`${EventService.BASE_URL}/event/getAllEvents`,
-                {
-                    headers: {Authorization: `Bearer ${token}`}
-                }
-            )
-            return response.data;
-        }catch(err){
-            throw err;
+   
+    static async getAllEvents(token) {
+        try {
+          const response = await axios.get(`${EventService.BASE_URL}/event/getAllEvents`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          return response.data; // Return the response data from the API
+        } catch (error) {
+          console.error("Error fetching events:", error);
+          throw error; // Throw the error if request fails
         }
-    }
-
-
+      }
+      
     static logout() {
         localStorage.removeItem("token");
         localStorage.removeItem("role");

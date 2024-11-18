@@ -241,6 +241,10 @@ const ElectionCard = ({ election, isOcOrMember, isEditable, handleEdit, handleDe
           <Button onClick={() => openvotingform(election.election_id)} className={`rounded-full ${election.is_voting_closed ? "bg-gray-500 text-gray-700 opacity-50" : "bg-[#AEC90A] text-black"}`} disabled={election.is_voting_closed === 1}>
             Vote
           </Button>
+
+          <Button onClick={() => openvotingform(election.election_id)} className={`rounded-full ${election.is_voting_closed ? "bg-gray-500 text-gray-700 opacity-50" : "bg-[#AEC90A] text-black"}`} disabled={election.is_voting_closed === 1}>
+            View Winners
+          </Button>
         </div>
       ) : (
         <>

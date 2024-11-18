@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardBody, Typography, Avatar } from "@material-tailwind/react";
 import { FaCheck } from "react-icons/fa";
 import CustomSwitch from "./Customswitch"; // Updated import path
 import EditButton from "./EditButton"; // Import your EditButton component
+import EventRegistrationService from "../service/EventRegistrationService";
+import UsersService from "../service/UsersService";
 
 // Predefined teams and events
 const teams = ["Content", "Design", "Marketing", "Finance"];
@@ -48,7 +50,7 @@ const members = Array.from({ length: 20 }, (_, index) => {
   };
 });
 
-const Registrations = () => {
+const Registrations = ({clubId, event}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [checkedInStatus, setCheckedInStatus] = useState(
     members.reduce((acc, member) => {
@@ -57,6 +59,9 @@ const Registrations = () => {
     }, {})
   );
   const [searchTerm, setSearchTerm] = useState("");
+
+  //console.log("event details in registrations",  event);
+ //console.log("club id in registrations", clubId);
 
   const handleSwitchChange = () => {
     setIsOpen(!isOpen);
@@ -78,6 +83,56 @@ const Registrations = () => {
     member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     member.registrationNumber.includes(searchTerm)
   );
+
+  const [eventRegistrations, setEventRegisterations] = useState([]);
+
+  const fetchEventRegistrations = async () => {
+
+    const token = localStorage.getItem("token");
+    const session_id = localStorage.getItem('session_id');
+
+    try{
+      const response2 = await EventRegistrationService.getAllEventRegistrations(token);
+      const eventRegArray = response2.content ? response2.content.filter(eReg => eReg.event_id == event.event_id) : [];
+      console.log("event reg array ",eventRegArray);
+
+
+      // if(eventRegArray.length > 0){
+      //   setEventRegisterations(eventRegArray);
+      // }
+
+
+      // Fetch user details for each registration
+      const registrationsWithUserDetails = await Promise.all(
+        eventRegArray.map(async (evReg) => {
+          try {
+            const userResponse = await UsersService.getUserById(evReg.user_id, token);
+            return { ...evReg, user: userResponse.users }; 
+
+          } catch (userError) {
+
+            console.error(`Error fetching details for user_id ${evReg.user_id}:`, userError);
+            return { ...evReg, user: null };
+          }
+        })
+      );
+
+      console.log("event reg array with user details",registrationsWithUserDetails);
+      setEventRegisterations(registrationsWithUserDetails);
+
+     
+
+    }catch(err){
+      console.log("Error while fetching event registration details", err);
+    }
+
+  }
+
+  useEffect(() => {
+
+    fetchEventRegistrations();
+
+  }, []);
 
   return (
     <Card className="w-full bg-neutral-900">
@@ -112,9 +167,9 @@ const Registrations = () => {
         </div>
         
         {/* Registered Members Section */}
-        {filteredMembers.map((member) => (
+        {eventRegistrations.map((member) => (
           <div
-            key={member.id}
+            key={member.ereg_id}
             className="relative flex items-start justify-between p-4 mb-4 bg-black rounded-xl"
             style={{ 
               boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
@@ -123,19 +178,19 @@ const Registrations = () => {
             <div className="flex items-center gap-4 w-1/3">
               <Avatar
                 size="xl"
-                src={member.image}
-                alt={member.name}
+                src={member.user.photoUrl}
+                alt={member.user.firstname}
                 className="border-2 border-white rounded-full w-24 h-24"
               />
               <div className="text-[#AEC90A]">
                 <Typography color="white" variant="h5" className="mb-1">
-                  {member.name}
+                  {member.user.firstname}
                 </Typography>
                 <Typography variant="subtitle1" className="mb-1">
-                  Reg No: {member.registrationNumber}
+                  Reg No: {member.user.regNo}
                 </Typography>
                 <Typography variant="subtitle1" className="mb-1">
-                  Mobile: {member.mobile}
+                  Mobile: {member.mobile_no}
                 </Typography>
                 <Typography variant="subtitle1" className="mb-1">
                   Email: {member.email}
@@ -146,14 +201,14 @@ const Registrations = () => {
               <Typography color="white" variant="subtitle1" className="mb-1">
                 The reason to join:
               </Typography>
-              {member.why}
+              {member.reason}
             </div>
             <div className="flex items-center w-1/3 justify-end gap-4">
               <label className="flex items-center">
                 <input
                   type="checkbox"
-                  checked={checkedInStatus[member.id] || false}
-                  onChange={() => handleCheckboxChange(member.id)}
+                  checked={checkedInStatus[member.ereg_id] || false}
+                  onChange={() => handleCheckboxChange(member.ereg_id)}
                   className="form-checkbox h-5 w-5 text-[#AEC90A]"
                 />
                 <span className="ml-2 text-white">Check-in</span>

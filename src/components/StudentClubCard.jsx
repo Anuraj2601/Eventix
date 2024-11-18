@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from "@material-tailwind/react";
+import { Button } from "@material-tailwind/react"; // Update this import
 import { RiOpenArmLine } from "react-icons/ri";
 import { IoMdBookmark } from "react-icons/io";
 import { FaPlus } from "react-icons/fa"; // Import the plus icon
 import { useNavigate, useLocation } from 'react-router-dom';
 import RegistrationModal from './RegistrationModal';
+import RegistrationService from '../service/registrationService'; // Adjust the path as needed
+import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function is correctly implemented
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { format, differenceInMonths } from 'date-fns'; // For date formatting and comparison
 
 import ClubsService from '../service/ClubsService';
 
@@ -16,11 +20,41 @@ const StudentClubCard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null); // Selected event state
   const [clubDetails, setClubDetails] = useState([]);
-
-
+  const [registrations, setRegistrations] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
+  const userId = getUserEmailFromToken();
+  const [dialogMessage, setDialogMessage] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
   useEffect(() => {
     fetchClubs();
-  }, []);
+    fetchRegistrations();
+  }, [token]);
+
+
+  function formatDate(dateString) {
+    try {
+        // Check if dateString is a Date object or array
+        if (Array.isArray(dateString)) {
+            // If it's an array, construct a new Date object directly
+            const [year, month, day, hours, minutes, seconds] = dateString;
+            return new Date(year, month - 1, day, hours, minutes, seconds);
+        } else if (typeof dateString === 'string') {
+            // If it's a string, ensure it can be parsed
+            return new Date(dateString.replace(' ', 'T').split('.')[0]);
+        } else if (dateString instanceof Date) {
+            // If it's already a Date object, return it directly
+            return dateString;
+        } else {
+            // Handle any unexpected format
+            console.warn('Unexpected date format:', dateString);
+            return null; // Return null in case of an invalid date
+        }
+    } catch (error) {
+        console.error('Error parsing date:', error, '\nOriginal date string:', dateString);
+        return null; // Return null in case of an error
+    }
+}
 
   const fetchClubs = async () => {
     try {
@@ -37,16 +71,66 @@ const StudentClubCard = () => {
     }
   };
 
-  const handleRegisterClick = (club) => {
-    const event = {
-      club_id: club.club_id,
-      club_name: club.club_name,
-    };
-    console.log("Event Object: ", event); // Log event object here
-    setSelectedEvent(event); // Set the event (club details)
-    setIsModalOpen(true); // Open the modal with the selected club data
+  const fetchRegistrations = async () => {
+    try {
+      const response = await RegistrationService.getAllRegistrations(token);
+      const fetchedRegistrations = response.data || response.content || [];
+      setRegistrations(fetchedRegistrations);
+    } catch (error) {
+      console.error("Error fetching registrations:", error);
+    }
   };
+
+  const validPositions = ["president", "member", "secretary", "treasurer", "oc"];
+  const filteredRegistrations = registrations.filter(
+    (reg) =>
+      reg.email.toLowerCase() === userId.toLowerCase() &&
+      reg.accepted === 1 &&
+      validPositions.includes(reg.position.toLowerCase())
+  );
+
+  const handleRegisterClick = (club) => {
+    const userRegistration = registrations.find(
+        (reg) => reg.clubId === club.club_id && reg.email.toLowerCase() === userId.toLowerCase()
+    );
   
+    // Condition 1: User is already a part of the club with accepted position
+    if (userRegistration && userRegistration.accepted === 1 && 
+        ["president", "member", "secretary", "treasurer", "oc"].includes(userRegistration.position.toLowerCase())) {
+        setDialogMessage("You are already a part of this club.");
+        setIsDialogOpen(true);
+        return;
+    }
+  
+    // Condition 2: User has a rejected application or not selected in the last 6 months
+    if (userRegistration && userRegistration.accepted === 0) {
+        const registrationDate = formatDate(userRegistration.createdAt); // Use the updated formatDate function
+        const currentDate = new Date();
+        const monthsSinceRegistration = differenceInMonths(currentDate, registrationDate);
+  
+        if (monthsSinceRegistration < 6) {
+            // Show rejection message based on position
+            if (userRegistration.position.toLowerCase() === 'student') {
+                setDialogMessage("Unfortunately, you have already applied. Please wait for the next recruitment opportunity.");
+            } else if (userRegistration.position.toLowerCase() === 'rejected') {
+                setDialogMessage("Unfortunately, you have already applied. Please wait for the next recruitment to apply again.");
+            } else if (userRegistration.position.toLowerCase() === 'removed') {
+                setDialogMessage("Unfortunately, you were removed by the club and cannot reapply.");
+            }
+            setIsDialogOpen(true);
+            return;
+        }
+    }
+  
+    // If no record matches the conditions above, allow the user to register
+    const event = {
+        club_id: club.club_id,
+        club_name: club.club_name,
+    };
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+};
+
   
 
   const handleRegisterClickks = (club) => {
@@ -80,34 +164,50 @@ const StudentClubCard = () => {
   };
 
   const handleExploreClick = (club) => {
-    let basePath;
-    switch (true) {
-      case location.pathname.startsWith('/president'):
-        basePath = '/president';
-        break;
-      case location.pathname.startsWith('/student'):
-        basePath = '/student';
-        break;
-      case location.pathname.startsWith('/oc'):
-        basePath = '/oc';
-        break;
-      case location.pathname.startsWith('/secretary'):
-        basePath = '/secretary';
-        break;
-      case location.pathname.startsWith('/admin'):
-        basePath = '/admin';
-        break;
-      case location.pathname.startsWith('/member'):
-        basePath = '/member';
-        break;
-      case location.pathname.startsWith('/treasurer'):
-        basePath = '/treasurer';
-        break;
-      default:
-        basePath = ''; // Default base path or handle other cases
+    // Find the user's registration in the filtered registrations list
+    const userRegistration = filteredRegistrations.find(
+      (reg) => reg.clubId === club.club_id
+    );
+  
+    if (!userRegistration) {
+      navigate(`/student/club/${club.club_id}`, { state: { club, image: club.club_image } });
+      return; // Exit the function early to prevent further code execution
     }
-    navigate(`${basePath}/club/${club.club_id}`, { state: { club, image: club.club_image } });
+    // Check if the registration is accepted and the position is president or member
+    if (userRegistration && userRegistration.accepted === 1) {
+      let basePath = '';
+      
+      // Set the basePath based on the user's position
+      switch (userRegistration.position.toLowerCase()) {
+        case 'president':
+          basePath = '/president';
+          break;
+        case 'member':
+          basePath = '/member';
+          break;
+
+        case 'treasurer':
+          basePath = '/president';
+          break;
+
+          case 'secretary':
+            basePath = '/president';
+            break;
+        // Add other cases if needed for other positions (e.g., secretary, treasurer, etc.)
+        default:
+          basePath = '/student'; // Handle other cases or default behavior
+          break;
+      }
+  
+      // Navigate to the appropriate path based on the position and club
+      navigate(`${basePath}/club/${club.club_id}`, { state: { club, image: club.club_image } });
+    } else {
+      // Optionally, handle cases where the user is not accepted or doesn't have the right position
+      console.log('User is not accepted or does not have the required position');
+    }
   };
+
+  
 
   return (
     <div className="flex flex-col">
@@ -166,9 +266,7 @@ const StudentClubCard = () => {
                 </div>
               </div>
               <div className="flex items-center justify-end gap-4">
-                <Button className="bg-white text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card">
-                  Ignore
-                </Button>
+               
                 <Button
                   className={`text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card ${
                     club.state ? 'bg-[#AEC90A]' : 'bg-[#AEC90A80] cursor-not-allowed'
@@ -179,8 +277,7 @@ const StudentClubCard = () => {
                   Register
                 </Button>
                 <Button
-                  className="bg-[#AEC90A] text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card"
-                  onClick={() => handleExploreClick(club)}
+className="bg-white text-[#0B0B0B] px-4 py-2 rounded-3xl font-medium custom-card"                  onClick={() => handleExploreClick(club)}
                 >
                   Explore
                 </Button>
@@ -188,6 +285,17 @@ const StudentClubCard = () => {
             </div>
           </div>
         ))}
+        <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}  className="bg-black bg-opacity-60"> 
+  <DialogContent>
+    <p>{dialogMessage}</p>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => setIsDialogOpen(false)} color="black"  className="text-black bg-[#AEC90A]" >
+      OK
+    </Button>
+  </DialogActions>
+</Dialog>
+
       </div>
       <RegistrationModal
         event={selectedEvent}
@@ -195,6 +303,7 @@ const StudentClubCard = () => {
         onClose={() => setIsModalOpen(false)}
       />
     </div>  
+    
   );
 };
 
