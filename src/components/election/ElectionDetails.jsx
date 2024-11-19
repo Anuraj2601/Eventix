@@ -88,6 +88,10 @@ const ElectionDetails = ({ club }) => {
     navigate(`/member/club/election/voting/${electionId}`, { state: { club } });
   };
 
+  const openwinners = (electionId) => {
+    navigate(`/member/club/election/winners/${electionId}`, { state: { club } });
+  };
+
   const openapplyform = (electionId) => {
     navigate(`/member/club/election/apply/${electionId}`, { state: { club } });
   };
@@ -229,6 +233,8 @@ const ElectionDetails = ({ club }) => {
     openvotingform={openvotingform}
     openapplyform={openapplyform}
     openElectionForm={openElectionForm}
+    openwinners={openwinners}
+
     hasVoted={votedStatus[election.election_id] || false} // Pass hasVoted here
   />
 ))}
@@ -250,7 +256,7 @@ const ElectionDetails = ({ club }) => {
               viewfinalists={viewfinalists}
               openvotingform={openvotingform}
               openapplyform={openapplyform}
-
+              openwinners={openwinners}
               openElectionForm={openElectionForm}
               isPastElection
             />
@@ -271,6 +277,7 @@ const ElectionCard = ({
   fromUTC,
   viewfinalists,
   openvotingform,
+  openwinners,
   openapplyform,
   openElectionForm,
   isPastElection,
@@ -281,68 +288,95 @@ const ElectionCard = ({
     style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.8)' }}
   >
     <div className="col-span-2 flex justify-center items-center">
+     
       <Typography color={isPastElection ? "gray" : "white"} variant="h6">
         {election.election_name}
       </Typography>
     </div>
-    <div className="col-span-2 flex justify-center items-center">
+    <div className="col-span-2 flex justify-center items-center"> <p className="text-white">Application - </p>
       <Typography className={`text-[#AEC90A] inline-block ${isPastElection ? 'text-gray-500' : ''}`} variant="h6">
-        {fromUTC(election.appOpens)} - {fromUTC(election.appCloses)}
+         {fromUTC(election.appOpens)} - {fromUTC(election.appCloses)}
       </Typography>
     </div>
-    <div className="col-span-1 flex justify-center items-center">
+    <div className="col-span-1 flex justify-center items-center"> <p className="text-white"> Voting - </p>
       <Typography className={`text-[#AEC90A] inline-block ${isPastElection ? 'text-gray-500' : ''}`} variant="h6">
-        {fromUTC(election.votingOpens)} - {fromUTC(election.votingCloses)}
+      {fromUTC(election.votingOpens)} - {fromUTC(election.votingCloses)}
       </Typography>
     </div>
     <div className="col-span-6 flex flex-col items-end gap-2 p-5">
-      {isOcOrMember ? (
-        <div className="flex gap-2 mb-4">
-        
-            <>
-              <Button onClick={() => openapplyform(election.election_id)} className="bg-[#AEC90A] text-gray-700 rounded-full">
-                Apply
-              </Button>
-              <Button onClick={() => viewfinalists(election.election_id)} className="bg-gray-500 text-gray-700 rounded-full opacity-50">
-                View Final Candidates
-              </Button>
-              {hasVoted ? (
-            <Typography className="bg-gray-500 rounded-full p-5 text-black font-bold">You have already voted</Typography>
-          ) : (
-          <div>
-              <Button
-                onClick={() => openvotingform(election.election_id)}
-                className={`rounded-full ${election.is_voting_closed ? "bg-gray-500 text-gray-700 opacity-50" : "bg-[#AEC90A] text-black"}`}
-                disabled={election.is_voting_closed === 1}
-              >
-                Vote
-              </Button></div> )}
-
-              <Button
-                onClick={() => openvotingform(election.election_id)}
-                className={`rounded-full ${election.is_voting_closed ? "bg-gray-500 text-gray-700 opacity-50" : "bg-[#AEC90A] text-black"}`}
-                disabled={election.is_voting_closed === 1}
-              >
-                View Winners
-              </Button>
-            </>
+  {isOcOrMember ? (
+    <div className="flex gap-2 mb-4">
+      {isPastElection ? (
+        <>
+          <Button
+            onClick={() => viewfinalists(election.election_id)}
+            className="bg-[#AEC90A] text-black rounded-full"
+          >
+            View Finalists
+          </Button>
          
-        </div>
+        </>
       ) : (
         <>
-          {isEditable && (
-            <EditDeleteButton
-              onEdit={() => handleEdit(election.election_id)}
-              onDelete={() => handleDelete(election.election_id)}
-              disabled={election.is_voting_closed === 1}
-            />
-          )}
-          <Button onClick={() => handleViewDetails(election.election_id)} className="bg-[#AEC90A] text-gray-700 rounded-full mt-2">
-            View Details
+          <Button
+            onClick={() => openapplyform(election.election_id)}
+            className="bg-[#AEC90A] text-gray-700 rounded-full"
+          >
+            Apply
           </Button>
+          <Button
+            onClick={() => viewfinalists(election.election_id)}
+            className="bg-gray-500 text-gray-700 rounded-full opacity-50"
+          >
+            View Final Candidates
+          </Button>
+          {hasVoted ? (
+            <Typography className="bg-gray-500 rounded-full p-5 text-black font-bold">
+              You have already voted
+            </Typography>
+          ) : (
+            <Button
+              onClick={() => openvotingform(election.election_id)}
+              className={`rounded-full ${
+                election.is_voting_closed
+                  ? "bg-gray-500 text-gray-700 opacity-50"
+                  : "bg-[#AEC90A] text-black"
+              }`}
+              disabled={election.is_voting_closed === 1}
+            >
+              Vote
+            </Button>
+          )}
         </>
       )}
+      {/* Winners button is always visible */}
+      <Button
+        onClick={() => openwinners(election.election_id)}
+        className="bg-[#AEC90A] text-black rounded-full"
+      >
+        View Winners
+      </Button>
     </div>
+  ) : (
+    <>
+      {isEditable && (
+        <EditDeleteButton
+          onEdit={() => handleEdit(election.election_id)}
+          onDelete={() => handleDelete(election.election_id)}
+          disabled={election.is_voting_closed === 1}
+        />
+      )}
+      <Button
+        onClick={() => handleViewDetails(election.election_id)}
+        className="bg-[#AEC90A] text-gray-700 rounded-full mt-2"
+      >
+        View Details
+      </Button>
+    </>
+  )}
+</div>
+
+
   </div>
 );
 
