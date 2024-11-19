@@ -22,9 +22,10 @@ const PresidentClubNav = ({ club }) => {
 
   const data = [
     { label: "Current Board", value: "Current Board", desc: <Board /> },
+    { label: "Members", value: "Members", desc: <Member /> },
     { label: "Posts", value: "Posts", desc: <ClubPosts club={club} /> },
     { label: "Events", value: "Events", desc: <ClubEvent club={club} /> },
-    { label: "Members", value: "Members", desc: <Member /> },
+    
     { label: "Elections", value: "Elections", desc: <ElectionDetails club={club} /> },
     { label: "Meetings", value: "Meetings", desc: <Meeting club={club} /> },
     { label: "Announcement", value: "Announcement", desc: <Announcement club={club} /> },
