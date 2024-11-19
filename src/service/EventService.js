@@ -69,6 +69,23 @@ class EventService{
           throw error; // Throw the error if request fails
         }
     }
+
+
+    static async updateBudgetStatus(eventId, status, role, token) {
+        try {
+          const response = await axios.put(`${EventService.BASE_URL}/event/updateBudgetStatus/${eventId}`, null,
+            {
+              params: { status, role },
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          return response.data; 
+        } catch (error) {
+          console.error("Error updating budget status:", error);
+          throw error; 
+        }
+      }
+
       
     static logout() {
         localStorage.removeItem("token");

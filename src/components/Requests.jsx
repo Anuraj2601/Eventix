@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
-import { Tabs, TabsHeader, TabsBody, Tab, TabPanel } from "@material-tailwind/react";
+import {
+  Tabs,
+  TabsHeader,
+  TabsBody,
+  Tab,
+  TabPanel,
+} from "@material-tailwind/react";
 import { FaDownload } from "react-icons/fa";
-import { IconButton } from '@material-tailwind/react';
+import { IconButton } from "@material-tailwind/react";
 
 import EventService from "../service/EventService";
-import ClubsService from "../service/ClubsService";
 
-const Dialog = ({ children, isOpen, onClose, title, primaryAction, secondaryAction, primaryActionClass, icon }) => (
+const Dialog = ({
+  children,
+  isOpen,
+  onClose,
+  title,
+  primaryAction,
+  secondaryAction,
+  primaryActionClass,
+  icon,
+}) =>
   isOpen ? (
     <div className="dialog fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-black bg-opacity-70 absolute inset-0" onClick={onClose}></div>
+      <div
+        className="bg-black bg-opacity-70 absolute inset-0"
+        onClick={onClose}
+      ></div>
       <div className="relative bg-black border-2 border-[#AEC90A] p-6 rounded-lg shadow-lg w-1/3">
         <div className="dialog-title flex justify-between items-center">
           {icon && <span className={`dialog-icon ${icon}`}></span>}
@@ -37,8 +54,7 @@ const Dialog = ({ children, isOpen, onClose, title, primaryAction, secondaryActi
         </div>
       </div>
     </div>
-  ) : null
-);
+  ) : null;
 
 const RequestTable = ({ type, events, onAccept, onReject }) => {
   return (
@@ -48,17 +64,19 @@ const RequestTable = ({ type, events, onAccept, onReject }) => {
           <div
             key={row.id}
             className="bg-black rounded-2xl p-4 flex flex-col items-center"
-            style={{ 
-              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+            style={{
+              boxShadow:
+                "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
             }}
           >
             <div className="relative flex flex-col items-center mb-4">
               <img
-                src={row.image}
+                src={row.image || row.club_image}
                 alt="Event"
                 className="w-72 h-64 rounded-2xl mb-2 p-2"
-                style={{ 
-                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+                style={{
+                  boxShadow:
+                    "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
                 }}
               />
               <span className="text-white mb-2">{row.event}</span>
@@ -69,13 +87,15 @@ const RequestTable = ({ type, events, onAccept, onReject }) => {
                 src={row.club_image}
                 alt="Club Logo"
                 className="w-24 h-24 rounded-full mb-4"
-              /> 
+              />
               <img
                 src={row.club_president_image}
                 alt="President"
                 className="w-24 h-24 rounded-full mb-2"
-              /> 
-              <span className="text-white">President {row.club_president_name}</span>
+              />
+              <span className="text-white">
+                President {row.club_president_name}
+              </span>
             </div>
 
             <div className="flex flex-col items-center mb-4">
@@ -83,10 +103,19 @@ const RequestTable = ({ type, events, onAccept, onReject }) => {
               <span className="text-white">Venue: {row.venue}</span>
             </div>
 
-            <div className="flex items-center mb-4">
+            {/* <div className="flex items-center mb-4">
               <IconButton>
                 <FaDownload size={20} className="text-white cursor-pointer mr-4" />
               </IconButton>
+            </div> */}
+
+            <div className="flex items-center mb-4">
+              <button
+                onClick={() => window.open(row.budget, "_blank")}
+                className="px-4 py-2 rounded-lg border-[#AEC90A] border text-white hover:bg-[#AEC90A] transition-all"
+              >
+                View Event Budget
+              </button>
             </div>
 
             <div className="flex flex-col space-y-2">
@@ -113,10 +142,11 @@ const RequestTable = ({ type, events, onAccept, onReject }) => {
 const Requests = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentAction, setCurrentAction] = useState('');
+  const [currentAction, setCurrentAction] = useState("");
   const [currentRow, setCurrentRow] = useState(null);
   const [events, setEvents] = useState({ all: [], accepted: [], rejected: [] });
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState(null);
 
   const subTabs = [
     { label: "All", value: "all" },
@@ -127,22 +157,33 @@ const Requests = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       const token = localStorage.getItem("token");
-  
+
       if (token) {
+        const role = localStorage.getItem("role");
+        console.log("Local Storage Role:", role);
+
+        setUserRole(role);
+
+        if (role.toLowerCase() !== "treasurer") {
+          alert("You are not authorized to view this page.");
+          return; // Prevent further execution if not treasurer
+        }
+
         setLoading(true);
-  
+
         try {
+          console.log("Authorized Role");
           // Fetch all events
           const events = await EventService.getAllEventsWithClubs(token);
           console.log("Events:", events);
-  
+
           // Format data without fetching club details
           const formattedEvents = events.content.map((event) => ({
             id: event.event_id,
             event: event.name,
-            date: event.date.join("-"), // Assuming `event.date` is an array like [YYYY, MM, DD]
+            date: event.date.join("-"), // an array like [YYYY, MM, DD]
             venue: event.venue,
-            image: event.event_image, 
+            image: event.event_image,
             budget: event.budget_pdf,
             budget_status: event.budget_status,
             iud_status: event.iud_status,
@@ -151,45 +192,48 @@ const Requests = () => {
             club_president_image: event.clubPresidentImage,
             club_president_name: event.clubPresidentName,
           }));
-  
+
           // Categorize events
           const allEvents = formattedEvents.filter(
             (event) => event.budget_status === -1 && event.iud_status === -1
           );
-          const acceptedEvents = formattedEvents.filter((event) => event.budget_status === 1);
-          const rejectedEvents = formattedEvents.filter((event) => event.budget_status === 0);
-  
+          const acceptedEvents = formattedEvents.filter(
+            (event) => event.budget_status === 1
+          );
+          const rejectedEvents = formattedEvents.filter(
+            (event) => event.budget_status === 0
+          );
+
           // Update state with categorized events
           setEvents({
             all: allEvents,
             accepted: acceptedEvents,
             rejected: rejectedEvents,
           });
-  
+
           console.log("All Events:", allEvents);
           console.log("Accepted Events:", acceptedEvents);
           console.log("Rejected Events:", rejectedEvents);
+
         } catch (error) {
           console.error("Error fetching events:", error);
         }
-  
+
         setLoading(false);
       }
     };
-  
+
     fetchEvents();
   }, []);
-  
-  
 
   const handleAccept = (row) => {
-    setCurrentAction('accept');
+    setCurrentAction("accept");
     setCurrentRow(row);
     setIsDialogOpen(true);
   };
 
   const handleReject = (row) => {
-    setCurrentAction('reject');
+    setCurrentAction("reject");
     setCurrentRow(row);
     setIsDialogOpen(true);
   };
@@ -198,14 +242,64 @@ const Requests = () => {
     setIsDialogOpen(false);
   };
 
-  const handleDialogConfirm = () => {
-    if (currentAction === 'accept') {
-      console.log(`Accepted event: ${currentRow.event}`);
-    } else if (currentAction === 'reject') {
-      console.log(`Rejected event: ${currentRow.event}`);
+  // const handleDialogConfirm = () => {
+  //   if (currentAction === "accept") {
+  //     console.log(`Accepted event: ${currentRow.event}`);
+  //   } else if (currentAction === "reject") {
+  //     console.log(`Rejected event: ${currentRow.event}`);
+  //   }
+  //   handleDialogClose();
+  // };
+
+
+  const handleDialogConfirm = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("You must be logged in as a treasurer to perform this action.");
+      return;
     }
+
+    try {
+      const newStatus = currentAction === "accept" ? 1 : 0;
+      const response = await EventService.updateBudgetStatus(
+        currentRow.id,
+        newStatus,
+        "treasurer",
+        token
+      );
+
+      if (response.statusCode === "RSP_SUCCESS") {
+        alert(`Event ${currentAction === "accept" ? "accepted" : "rejected"} successfully!`);
+        setEvents((prev) => {
+          const updatedAll = prev.all.filter((event) => event.id !== currentRow.id);
+          const updatedAccepted =
+            currentAction === "accept"
+              ? [...prev.accepted, { ...currentRow, budget_status: 1 }]
+              : prev.accepted;
+          const updatedRejected =
+            currentAction === "reject"
+              ? [...prev.rejected, { ...currentRow, budget_status: 0 }]
+              : prev.rejected;
+
+          return {
+            all: updatedAll,
+            accepted: updatedAccepted,
+            rejected: updatedRejected,
+          };
+        });
+      } else {
+        alert(response.message || "Failed to update the budget status.");
+      }
+    } catch (error) {
+      console.error("Error updating budget status:", error);
+      alert("An error occurred. Please try again.");
+    }
+
     handleDialogClose();
   };
+
+
 
   return (
     <div className="flex flex-col mt-6">
@@ -221,7 +315,11 @@ const Requests = () => {
               key={value}
               value={value}
               onClick={() => setActiveTab(value)}
-              className={activeTab === value ? "text-[#AEC90A] bg-black rounded-full" : ""}
+              className={
+                activeTab === value
+                  ? "text-[#AEC90A] bg-black rounded-full"
+                  : ""
+              }
             >
               {label}
             </Tab>
@@ -234,8 +332,17 @@ const Requests = () => {
             </div>
           ) : (
             subTabs.map(({ value }) => (
-              <TabPanel key={value} value={value} className={` ${activeTab === value ? 'block' : 'hidden'}`}>
-                <RequestTable type={value} events={events[value]} onAccept={handleAccept} onReject={handleReject} />
+              <TabPanel
+                key={value}
+                value={value}
+                className={` ${activeTab === value ? "block" : "hidden"}`}
+              >
+                <RequestTable
+                  type={value}
+                  events={events[value]}
+                  onAccept={handleAccept}
+                  onReject={handleReject}
+                />
               </TabPanel>
             ))
           )}
@@ -245,15 +352,21 @@ const Requests = () => {
       <Dialog
         isOpen={isDialogOpen}
         onClose={handleDialogClose}
-        title={currentAction === 'accept' ? 'Accept Event' : 'Reject Event'}
-        primaryAction={{ label: currentAction === 'accept' ? 'Confirm Accept' : 'Confirm Reject', onClick: handleDialogConfirm }}
+        title={currentAction === "accept" ? "Accept Budget" : "Reject Budget"}
+        primaryAction={{
+          label:
+            currentAction === "accept" ? "Confirm Accept" : "Confirm Reject",
+          onClick: handleDialogConfirm,
+        }}
         secondaryAction={{ label: "Cancel", onClick: handleDialogClose }}
-        primaryActionClass={currentAction === 'accept' ? 'bg-[#AEC90A]' : 'bg-[#D32F2F]' }
+        primaryActionClass={
+          currentAction === "accept" ? "bg-[#AEC90A]" : "bg-[#D32F2F]"
+        }
       >
-        <p className="text-black">
-          {currentAction === 'accept'
-            ? "Are you sure you want to accept this event?"
-            : "Are you sure you want to reject this event?"}
+        <p className="text-white">
+          {currentAction === "accept"
+            ? "Are you sure you want to accept this event budget?"
+            : "Are you sure you want to reject this event budget?"}
         </p>
       </Dialog>
     </div>
