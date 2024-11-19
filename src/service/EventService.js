@@ -55,7 +55,37 @@ class EventService{
           console.error("Error fetching events:", error);
           throw error; // Throw the error if request fails
         }
+    }
+
+
+    static async getAllEventsWithClubs(token) {
+        try {
+          const response = await axios.get(`${EventService.BASE_URL}/event/getAllEventsWithClubs`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          return response.data; // Return the response data from the API
+        } catch (error) {
+          console.error("Error fetching events:", error);
+          throw error; // Throw the error if request fails
+        }
+    }
+
+
+    static async updateBudgetStatus(eventId, status, role, token) {
+        try {
+          const response = await axios.put(`${EventService.BASE_URL}/event/updateBudgetStatus/${eventId}`, null,
+            {
+              params: { status, role },
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          return response.data; 
+        } catch (error) {
+          console.error("Error updating budget status:", error);
+          throw error; 
+        }
       }
+
       
     static logout() {
         localStorage.removeItem("token");

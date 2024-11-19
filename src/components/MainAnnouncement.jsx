@@ -24,83 +24,9 @@ const MainAnnouncement = () => {
 
     let unionClubId;
 
-    const clubAnnouncements = [
-        {
-            id: 1,
-            name: 'IEEE Student Group',
-            image: ieeeImage,
-            totalAnnouncements: 38,
-            oldAnnouncements: 30,
-            newAnnouncements: 8,
-            announcements: [
-                { id: 1, title: 'Tech Talk on AI', description: 'Join us for a tech talk on Artificial Intelligence and its impact on future technologies.', type: 'Event', date: '2024-08-01', time: '10:00 AM', location: 'S104', postedDate: '2024-07-25', postedTime: '10:00 AM' },
-                { id: 2, title: 'IEEE General Meeting', description: 'Monthly general meeting to discuss upcoming projects and events.', type: 'Meeting', date: '2024-08-05', time: '02:00 PM', location: 'S202', postedDate: '2024-07-26', postedTime: '02:00 PM' },
-                { id: 3, title: 'New Workshop on IoT', description: 'Hands-on workshop on Internet of Things and smart devices.', type: 'Event', date: '2024-08-10', time: '09:00 AM', location: '4th floor', postedDate: '2024-07-27', postedTime: '09:00 AM' },
-                { id: 4, title: 'Fundraising Drive', description: 'Help us raise funds for our next big project. Your support matters!', type: 'Update', date: '2024-08-15', time: '01:00 PM', location: 'S104', postedDate: '2024-07-28', postedTime: '01:00 PM' },
-                { id: 5, title: 'Weekly Coding Challenge', description: 'Participate in our weekly coding challenges and win exciting prizes.', type: 'Event', date: '2024-08-20', time: '03:00 PM', location: 'E401', postedDate: '2024-07-29', postedTime: '03:00 PM' },
-                { id: 6, title: 'IEEE Club Elections', description: 'Vote for the new club officers in our annual elections.', type: 'Meeting', date: '2024-08-25', time: '12:00 PM', location: 'Room 505', postedDate: '2024-07-30', postedTime: '12:00 PM' },
-                { id: 7, title: 'Networking Event', description: 'Connect with industry professionals and fellow students at our networking event.', type: 'Event', date: '2024-08-30', time: '06:00 PM', location: 'S203', postedDate: '2024-07-31', postedTime: '06:00 PM' },
-                { id: 8, title: 'Guest Lecture Series', description: 'Attend our guest lecture series featuring prominent speakers in tech.', type: 'Event', date: '2024-09-02', time: '05:00 PM', location: 'Auditorium', postedDate: '2024-08-01', postedTime: '05:00 PM' },
-            ],
-        },
-        {
-            id: 2,
-            name: 'ISACA',
-            image: isacaImage,
-            totalAnnouncements: 22,
-            oldAnnouncements: 20,
-            newAnnouncements: 2,
-            announcements: [
-                { id: 1, title: 'Cybersecurity Workshop', description: 'Workshop on the latest trends and practices in cybersecurity.', type: 'Event', date: '2024-08-02', time: '11:00 AM' },
-                { id: 2, title: 'Monthly Security Meeting', description: 'Discuss recent security threats and solutions in our monthly meeting.', type: 'Meeting', date: '2024-08-07', time: '03:00 PM' },
-                { id: 3, title: 'New Data Privacy Policy', description: 'Update on new data privacy regulations and compliance.', type: 'Update', date: '2024-08-12', time: '10:00 AM' ,location: 'Auditorium'},
-                { id: 4, title: 'ISACA Certification Seminar', description: 'Seminar on ISACA certification and career advancement.', type: 'Event', date: '2024-08-17', time: '02:00 PM',location: 'Auditorium' },
-                { id: 5, title: 'Annual Security Conference', description: 'Join us for our annual conference on cybersecurity and industry trends.', type: 'Event', date: '2024-08-22', time: '09:00 AM',location: 'Auditorium' },
-                { id: 6, title: 'ISACA Community Outreach', description: 'Participate in community outreach programs and help raise awareness.', type: 'Update', date: '2024-08-28', time: '01:00 PM', location: 'Auditorium'},
-            ],
-        },
-        {
-            id: 3,
-            name: 'Rotract',
-            image: rotaractImage,
-            totalAnnouncements: 15,
-            oldAnnouncements: 10,
-            newAnnouncements: 5,
-            announcements: [
-                { id: 1, title: 'Volunteering Opportunity', description: 'Volunteer for various community service projects organized by Rotract.', type: 'Event', date: '2024-08-03', time: '10:00 AM' },
-                { id: 2, title: 'Rotract Club Meeting', description: 'Monthly meeting to plan and discuss upcoming events.', type: 'Meeting', date: '2024-08-08', time: '02:00 PM' },
-                { id: 3, title: 'Charity Fundraiser', description: 'Help raise funds for charity through various events and activities.', type: 'Event', date: '2024-08-13', time: '12:00 PM' },
-                { id: 4, title: 'Guest Speaker Event', description: 'Attend a talk by a guest speaker on community service and leadership.', type: 'Event', date: '2024-08-18', time: '05:00 PM' },
-                { id: 5, title: 'Rotract Social Event', description: 'Join us for a social gathering to meet new members and have fun.', type: 'Event', date: '2024-08-23', time: '07:00 PM' },
-            ],
-        }
-    ];
+   
 
-    const unionAnnouncements = [
-        {
-            announcements: [
-                { id: 1, title: 'Union Meeting', description: 'Monthly meeting for all university students.', type: 'Meeting', date: '2024-08-05', time: '04:00 PM', location: 'Conference Room A', postedDate: '2024-07-25', postedTime: '04:00 PM' },
-                { id: 2, title: 'Community Outreach Program', description: 'Participate in our community outreach program.', type: 'Event', date: '2024-08-12', time: '01:00 PM', location: 'Community Center', postedDate: '2024-07-26', postedTime: '01:00 PM' },
-                { id: 3, title: 'Community Outreach Program', description: 'Participate in our community outreach program.', type: 'Event', date: '2024-08-12', time: '01:00 PM', location: 'Community Center', postedDate: '2024-07-26', postedTime: '01:00 PM' },
-
-            ],
-        },
-    ];
-
-    const allAnnouncements = [
-        ...clubAnnouncements.flatMap(club => club.announcements.map(announcement => ({ ...announcement, clubImage: club.image, clubName: club.name }))),
-        ...unionAnnouncements.flatMap(union => union.announcements)
-    ];
-    
-    const shuffledAnnouncements = shuffleArray(allAnnouncements);
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
-
+ 
     
     const formatDate = (dateArray) => {
         
@@ -200,17 +126,7 @@ const MainAnnouncement = () => {
 
 
     const fetchAllAnnouncements = async () => {
-        // const token = localStorage.getItem('token');
-        // const response = await AnnouncementService.getAllAnnouncements(token);
-        // console.log("fetch all announcemnts", response);    
-        // const AnnouncementsArray = response.content;
-        // getUnionClubId();
-        // console.log("union club id function", unionClubId);
-        // const unionAnnouncementsArray = response.content.filter(announcement => announcement.club_id == unionClubId);
-        // console.log("union announcements:" , unionAnnouncementsArray);
-        
-        // setUnionAnnouncements(unionAnnouncementsArray);
-        // setAllAnnouncements(AnnouncementsArray || []);
+       
         const token = localStorage.getItem('token');
         try {
             const response = await AnnouncementService.getAllAnnouncements(token);
@@ -243,55 +159,7 @@ const MainAnnouncement = () => {
         fetchAllAnnouncements();
     }, []);
 
-    // useEffect(() => {
-    //     if (registeredClubs.length > 0 || AllAnnouncements.length > 0) {
-    //         // Combine public announcements and those that match the user's registered clubs
-    //         const matchingAnnouncements = AllAnnouncements.filter(announcement =>
-    //             announcement.type === 'PUBLIC' || // Public announcements
-    //             registeredClubs.some(club => club.clubId === announcement.club_id) // Announcements relevant to the user's clubs
-    //         );
-    //         setFilteredAllAnnouncements(matchingAnnouncements);
-    //         console.log("Filtered Announcements", matchingAnnouncements);
-
-
-    //         // Group announcements by club_id and categorize them as 'new' or 'old'
-    //         const groupedAnnouncementsByClubId = matchingAnnouncements.reduce((acc, announcement) => {
-    //             // Get the club_id of the current announcement
-    //             const clubId = announcement.club_id;
-
-    //             // Initialize the club group if not already present
-    //             if (!acc[clubId]) {
-    //                 acc[clubId] = { new: [], old: [] };
-    //             }
-
-    //             // Check if the announcement is new or old
-    //             if (isNewAnnouncement(announcement.date_posted)) {
-    //                 acc[clubId].new.push(announcement);
-    //             } else {
-    //                 acc[clubId].old.push(announcement);
-    //             }
-
-    //             return acc;
-    //         }, {});
-
-    //         console.log("Grouped announcements by club_id with new/old:", groupedAnnouncementsByClubId);
-
-    //         // Fetch club details for each club_id and combine with announcements
-    //         const clubsWithAnnouncements = await Promise.all(
-    //             Object.keys(groupedByClubId).map(async (clubId) => {
-    //                 // Fetch club details by clubId
-    //                 const clubDetails = await ClubsService.getclubByid(clubId, token);
-    //                 return {
-    //                     clubId,
-    //                     clubDetails, // This contains club image and other club details
-    //                     announcements: groupedByClubId[clubId] // New and old announcements
-    //                 };
-    //             })
-    //         );
-
-    //         console.log("Clubs with announcements:", clubsWithAnnouncements);
-    //     }
-    // }, [registeredClubs, AllAnnouncements]);
+   
 
     useEffect(() => {
         const fetchAnnouncementsAndClubDetails = async () => {
@@ -305,9 +173,7 @@ const MainAnnouncement = () => {
                 );
 
 
-                // matchingAnnouncements.sort((a, b) => new Date(b.date_posted) - new Date(a.date_posted));
-
-                // console.log("Sorted Filtered Announcements", matchingAnnouncements);
+             
     
                 //setFilteredAllAnnouncements(matchingAnnouncements);
                 console.log("Filtered Announcements", matchingAnnouncements);
@@ -355,36 +221,7 @@ const MainAnnouncement = () => {
     
                 console.log("Grouped announcements by club_id with new/old:", groupedAnnouncementsByClubId);
     
-                // Fetch club details for each club_id and combine with announcements
-                // const clubsWithAnnouncements = await Promise.all(
-                //     Object.keys(groupedAnnouncementsByClubId).map(async (clubId) => {
-                //         // Fetch club details by clubId
-                //         const clubDetails = await ClubsService.getClubById(clubId, token);
-                //         console.log(`Fetched club details for ${clubId}:`, clubDetails);
-                //         return {
-                //             clubId,
-                //             clubDetails, // This contains club image and other club details
-                //             announcements: groupedAnnouncementsByClubId[clubId] // New and old announcements
-                //         };
-                //     })
-                // );
-
-                // const clubsWithAnnouncements = [];
-                // for (let clubId of Object.keys(groupedAnnouncementsByClubId)) {
-                //     const clubDetails = await ClubsService.getClubById(clubId, token);
-
-                //     const announcementsForClub = groupedAnnouncementsByClubId[clubId];
-
-                //     // Calculate the total count of announcements (new + old)
-                //     const announcementCount = announcementsForClub.new.length + announcementsForClub.old.length;
-
-                //     clubsWithAnnouncements.push({
-                //         clubId,
-                //         clubDetails,
-                //         announcements: announcementsForClub,
-                //         announcementCount
-                //     });
-                // }
+             
 
                 const clubsWithAnnouncements = Object.keys(groupedAnnouncementsByClubId).map(clubId => {
                     const clubDetails = clubDetailsMap[clubId]; // Reuse fetched club details
@@ -432,18 +269,7 @@ const MainAnnouncement = () => {
                         </button>
                         <h2 className="text-xl font-medium mb-10">{club.name} </h2>
                         <div className="grid grid-cols-1 gap-4">
-                            {/* {announcementsToShow.map((announcement) => (
-                                <div key={announcement.id} className="relative p-4 bg-dark-500 rounded-lg flex flex-col">
-                                    <div>
-                                        <p className="text-sm text-primary font-semibold">{announcement.title}</p>
-                                        <p className="text-sm">{announcement.description} <span className='ml-5 text-primary opacity-60'>{announcement.date} | {announcement.time} | {announcement.location}</span></p>
-                                    </div>
-                                    <div className="absolute bottom-2 right-2 text-xs text-gray-400">
-                                        <span className="mx-2">{announcement.postedDate}</span>
-                                        <span className="mx-2">{announcement.postedTime}</span>
-                                    </div>
-                                </div>
-                            ))} */}
+                           
                             {announcementsToShow.length > 0 ? (
                                 announcementsToShow.map((announcement) => (
                                     <div key={announcement.announcement_id} className="relative p-4 bg-dark-500 rounded-lg flex flex-col">

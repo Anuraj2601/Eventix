@@ -40,6 +40,8 @@ import Messagesoc from './components/Message';
 import Profileoc from './components/Profile';
 import Finalistsoc from './components/Finalists';
 import Votingoc from './components/Voting';
+import Winners from './components/Winners';
+
 import Apply from './components/Apply';
 import MainMeetingoc from './components/MainMeeting';
 
@@ -196,7 +198,8 @@ const App = () => {
         <Route path='/member/club/election/finalists/:electionId' element={<Finalistsoc/>}></Route>
         <Route path='/member/club/election/voting/:electionId' element={<Votingoc/>}></Route>
         <Route path='/member/club/election/apply/:electionId' element={<Apply/>}></Route>
-        <Route path='/member/meeting' element={<MainMeetingmember />}></Route> 
+        <Route path='/member/meeting' element={<MainMeetingmember />}></Route> /member/club/election/voting/
+        <Route path='/member/club/election/winners/:electionId' element={<Winners/>}></Route>
 
 
         
@@ -243,9 +246,9 @@ const App = () => {
         <Route path='/president/announcement' element={<Announcementpresident />}></Route> 
         <Route path='/president/inquiry' element={<Inquiriespresident/>}></Route>
         <Route path='/president/messages' element={<Messagespresident/>}></Route>
-        <Route path='/president/profile' element={<Profilepresident/>}></Route>MainMeetingPresident
+        <Route path='/president/profile' element={<Profilepresident/>}></Route>
         <Route path='/president/meeting' element={<MainMeetingPresident />}></Route> 
-        <Route path='/president/AddSponsor' element={<AddSponsor />}></Route> 
+        <Route path='/president/AddSponsor/:id' element={<AddSponsor />}></Route> 
         <Route path='/president/EditSponsor/:id' element={<AddSponsor />}></Route>
 
         <Route path="/president/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>

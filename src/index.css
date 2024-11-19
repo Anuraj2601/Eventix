@@ -229,3 +229,8 @@
   color: white;
   transform: rotateY(180deg);
 }
+
+.glow-winner {
+  box-shadow: 0px 0px 15px 5px rgba(255, 223, 0, 0.7);
+  border-color: #AEC90A;
+}
