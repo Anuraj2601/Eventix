@@ -369,7 +369,6 @@ const ElectionCard = ({
     <Typography className={`text-[#AEC90A] inline-block ${isPastElection ? 'text-gray-500' : ''}`} variant="h6">
       {fromUTC(election.votingOpens)} - {fromUTC(election.votingCloses)}
     </Typography>
-    <p>user{userEmail}</p>
   </div>
   {/* Button section - Span all 12 columns */}
   <div className="col-span-12 flex justify-end gap-2 p-5">
@@ -387,7 +386,7 @@ const ElectionCard = ({
         ) : (
           <>
               {hasApplied ? (
-        <Typography color="white" variant="h6">You have already applied</Typography>
+        <Typography className="bg-gray-500 rounded-full p-5 text-black font-bold">You have already applied</Typography>
       ) : (
             <Button
               onClick={() => openapplyform(election.election_id)}
@@ -397,8 +396,7 @@ const ElectionCard = ({
             </Button>)}
             <Button
               onClick={() => viewfinalists(election.election_id)}
-              className="bg-gray-500 text-gray-700 rounded-full opacity-50"
-            >
+              className="bg-[#AEC90A] text-gray-700 rounded-full"            >
               View Final Candidates
             </Button>
             {hasVoted ? (

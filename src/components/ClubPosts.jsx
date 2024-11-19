@@ -21,6 +21,9 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) =>
     const session_id = localStorage.getItem('session_id');
     const editablePerson = session_id == post.published_user_id? true: false;
     const [userImage, setuserImage] = useState('');
+    const [showDeleteModal, setShowDeleteModal] = useState(false); // Modal for delete confirmation
+    const [showStatusModal, setShowStatusModal] = useState(false); // Modal for status change confirmation
+    const [modalMessage, setModalMessage] = useState('');
 
     const fetchUser = async (post) => {
 
@@ -97,7 +100,7 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) =>
                     <img src={userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
                     <div className="flex flex-col">
                         <p>{post.name}</p>
-                        <p className="text-[#AEC90A]">{post.position}</p>
+                        <p className="text-[#AEC90A]">member</p>
                     </div>
                 </div>
                 {showApprovalButtons && (
@@ -204,48 +207,8 @@ const NewsFeed = ({ posts, club, setPosts }) => {
 };
 
 const App = ({ club }) => {
-    const samplePosts = [
-        {
-            position: 'Secretary',
-            userName: 'Jane Smith',
-            userImage: "https://randomuser.me/api/portraits/men/9.jpg",
-            caption: 'Embracing the light of wisdom and compassion on this Vesak Full Moon Poya Day. May peace and enlightenment shine upon us all. Happy Vesak!',
-            image: vesakImage,
-            category: 'pending'
-        },
-        {
-            position: 'President',
-            userName: 'Veron',
-            userImage: "https://randomuser.me/api/portraits/men/2.jpg",
-            caption: 'On this blessed day of Eid-al-Adha, may our hearts be filled with peace, harmony, and contentment. Wishing you and your loved ones a joyous Eid filled with cherished moments and memories. Eid Mubarak!',
-            image: eidImage,
-            category: 'approved'
-        }, 
-        {
-            position: 'President',
-            userName: 'Veron',
-            userImage: "https://randomuser.me/api/portraits/men/2.jpg",
-            caption: '🌟 A big thank you to our amazing outgoing leaders for your dedication and hard work! You’ve set the bar high and inspired us all. 🎉 Welcome to our new Executive Committee! We’re excited to innovate, collaborate, and achieve new milestones together. Here’s to a year full of success and endless possibilities! 🚀✨',
-            image: farewellImage,
-            category: 'rejected'
-        },
-        {
-            position: 'Secretary',
-            userName: 'Jane Smith',
-            userImage: "https://randomuser.me/api/portraits/men/9.jpg",
-            caption: 'The Esala Full Moon Poya Day signifies the commemoration of the First Sermon by the Buddha and celebrates the arrival of the Tooth Relic in Sri Lanka. May the blessings of this years Esala Poya bring peace and prosperity to our motherland. Wishing You a Blessed & Peaceful Esala Poya Day!',
-            image: esalaImage,
-            category: 'approved'
-        },
-        {
-            position: 'Secretary',
-            userName: 'Jane Smith',
-            userImage: "https://randomuser.me/api/portraits/men/9.jpg",
-            caption: 'This Poson Poya Day, let’s reflect upon the essence of Buddhism and its timeless message of peace, tolerance, and compassion for all living beings. Happy Poson Poya Day!',
-            image: posonImage,
-            category: 'rejected'
-        },
-    ];
+    
+      
 
     const [posts, setPosts] = useState([]);
 
