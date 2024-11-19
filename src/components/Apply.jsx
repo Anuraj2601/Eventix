@@ -157,7 +157,7 @@ const ApplyForm = () => {
                         <button
                             onClick={handleSubmit}
                             disabled={!isFormValid}
-                            className={`p-2 rounded-2xl ${isFormValid ? 'bg-green-500' : 'bg-gray-500'} text-white`}
+                            className={`p-2 rounded-2xl ${isFormValid ? 'bg-[#AEC90A]' : 'bg-gray-500'} text-white`}
                             style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
                         >
                             Apply

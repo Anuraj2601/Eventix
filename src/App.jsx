@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './css/globals.css'
 import Exploreclub from './pages/president/Exploreclub';
 import Exploreevent from './pages/president/Exploreevent';
-import ClubDetails from './pages/president/ClubDetails';
+import ClubDetails from './pages/student/StudentClubDetails';
 import Election from './pages/president/Election';
 import Dashboard from './pages/president/Dashboard';
 import Calendar from './pages/president/Calendar';
@@ -40,6 +40,8 @@ import Messagesoc from './components/Message';
 import Profileoc from './components/Profile';
 import Finalistsoc from './components/Finalists';
 import Votingoc from './components/Voting';
+import Winners from './components/Winners';
+
 import Apply from './components/Apply';
 import MainMeetingoc from './components/MainMeeting';
 
@@ -153,6 +155,10 @@ import AddNewAnnouncementForm from './pages/president/AddNewAnnouncementForm';
 import AddNewMeetingForm from './pages/president/AddNewMeetingForm';
 import AddNewClubForm from './pages/admin/AddNewClubForm';
 
+
+import CheckEmail from './components/CheckEmail';
+
+
 // Import other pages if necessary
 
 const App = () => {
@@ -164,6 +170,7 @@ const App = () => {
         <Route exact path="/" element={<Landing />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/Signup" element={<Signup />}></Route>
+        <Route path="/CheckEmail" element={<CheckEmail />}></Route>
 
       
 
@@ -173,7 +180,8 @@ const App = () => {
 
          {/*  member routes */}
          <Route exact path="/member/club" element={<Exploreclub />} />
-        <Route exact path="/member/club/event" element={<Exploreeventstudent />} />
+        {/* <Route exact path="/member/club/event" element={<Exploreeventstudent />} /> */}
+        <Route path='/member/club/event' element={<Exploreevent />}></Route>
         <Route path='/member/club/:id' element={<ClubDetails />} />
         <Route path='/member/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
@@ -190,7 +198,8 @@ const App = () => {
         <Route path='/member/club/election/finalists/:electionId' element={<Finalistsoc/>}></Route>
         <Route path='/member/club/election/voting/:electionId' element={<Votingoc/>}></Route>
         <Route path='/member/club/election/apply/:electionId' element={<Apply/>}></Route>
-        <Route path='/member/meeting' element={<MainMeetingmember />}></Route> 
+        <Route path='/member/meeting' element={<MainMeetingmember />}></Route> /member/club/election/voting/
+        <Route path='/member/club/election/winners/:electionId' element={<Winners/>}></Route>
 
 
         
@@ -202,7 +211,8 @@ const App = () => {
         <Route path='/student/dashboard' element={<StudentDashboard/>}></Route>
         <Route path='/:role/clubregister/:club_id' element={<ClubRegistration />} />
         <Route path='/eventregister/:event' element={<EventRegistration/>}></Route>
-        <Route path='/student/club/event' element={<Exploreeventstudent />}></Route>
+        {/* <Route path='/student/club/event' element={<Exploreeventstudent />}></Route> */}
+        <Route path='/student/club/event' element={<Exploreevent />}></Route>
         <Route path='/student/calendar' element={<StudentEventCalendar />}></Route>
         <Route path='/student' element={<StudentDashboard/>}></Route>
         <Route path='/student/inquiry' element={<Inquiriesstudent/>}></Route>
@@ -236,9 +246,9 @@ const App = () => {
         <Route path='/president/announcement' element={<Announcementpresident />}></Route> 
         <Route path='/president/inquiry' element={<Inquiriespresident/>}></Route>
         <Route path='/president/messages' element={<Messagespresident/>}></Route>
-        <Route path='/president/profile' element={<Profilepresident/>}></Route>MainMeetingPresident
+        <Route path='/president/profile' element={<Profilepresident/>}></Route>
         <Route path='/president/meeting' element={<MainMeetingPresident />}></Route> 
-        <Route path='/president/AddSponsor' element={<AddSponsor />}></Route> 
+        <Route path='/president/AddSponsor/:id' element={<AddSponsor />}></Route> 
         <Route path='/president/EditSponsor/:id' element={<AddSponsor />}></Route>
 
         <Route path="/president/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
@@ -301,8 +311,8 @@ const App = () => {
         <Route path='/admin/club/event' element={<Exploreeventstudentadmin />}></Route>
         <Route path='/admin/calendar' element={<StudentEventCalendaradmin />}></Route>
         <Route path='/admin' element={<StudentDashboardadmin/>}></Route>
-        <Route path='/admin/requests' element={<EventRequests/>}></Route>
-        <Route path='/admin/users' element={<NewUsers/>}></Route>
+        <Route path='/student/requests' element={<EventRequests/>}></Route>
+        <Route path='/student/users' element={<NewUsers/>}></Route>
         <Route path='/admin/notifications' element={<AdminNotifications  />} ></Route>
         <Route path='/admin/announcement' element={<Announcementadmin />}></Route> 
         <Route path='/admin/inquiry' element={<Inquiriesadmin/>}></Route>

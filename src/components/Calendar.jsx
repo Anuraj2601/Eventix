@@ -1,346 +1,469 @@
-import { Menu, MenuButton, Transition } from "@headlessui/react";
-import { DotsVerticalIcon } from "@heroicons/react/outline";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
+import { useState, useEffect } from "react";
+import MeetingService from "../service/MeetingService";
+import EventService from "../service/EventService";
+import ClubsService from "../service/ClubsService";  // Import ClubsService
+
 import {
-  add,
-  eachDayOfInterval,
-  endOfMonth,
   format,
-  getDay,
-  isEqual,
-  isSameDay,
-  isSameMonth,
+  eachDayOfInterval,
+  addMonths,
+  subMonths,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
   isToday,
-  parse,
-  parseISO,
-  startOfToday,
 } from "date-fns";
-import { Fragment, useState } from "react";
-import AddEvent from './AddEvent';
-import { FaPlus } from 'react-icons/fa';
-import { useLocation } from 'react-router-dom';
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
+const FullCalendar = () => {
+  const [events, setEvents] = useState([]);
+  const [meetings, setMeetings] = useState([]);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [error, setError] = useState(null);
+  const [clubDetails, setClubDetails] = useState([]);
 
+  useEffect(() => {
+    fetchEvents();
+    fetchMeetings();
+    fetchClubs();
+  }, []);
 
-const clubColors = {
-  "IEEE": "#008EDE",
-  "ISACA": "#FFFFFF",
-  "Rekha": "#8c181b", 
-  "Pahasara": "#FFE500",  
-  "Rotaract" : "#4a093c",
-};
-
-const ColorPalette = ({ clubColors }) => {
-  return (
-    <div className="mt-4 p-4 border border-[#AEC90A] rounded-lg">
-      <div className="flex flex-wrap justify-center space-x-8">
-        {Object.entries(clubColors).map(([club, color]) => (
-          <div key={club} className="flex items-center space-x-2 mb-2">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: color }}
-            ></div>
-            <span className="text-white">{club}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const meetings = [
-  {
-    id: 1,
-    eventName: "MadHack 3.0",
-    club: "IEEE",
-    startDatetime: "2024-08-01T13:00",
-    endDatetime: "2024-08-01T14:30",
-    eventLocation: "UCSC Main Hall",
-  },
-  {
-    id: 2,
-    eventName: "CodeGen",
-    club: "Pahasara",
-    startDatetime: "2024-08-01T09:00",
-    endDatetime: "2024-08-01T11:30",
-    eventLocation: "UCSC Main Hall",
-  },
-  {
-    id: 3,
-    eventName: "MadHack 3.0",
-    club: "IEEE",
-    startDatetime: "2024-08-20T17:00",
-    endDatetime: "2024-08-20T18:30",
-    eventLocation: "UCSC Main Hall",
-  },
-  {
-    id: 4,
-    eventName: "CodeGen",
-    club: "Pahasara",
-    startDatetime: "2024-08-09T13:00",
-    endDatetime: "2024-08-09T14:30",
-    eventLocation: "UCSC Main Hall",
-  },
-  {
-    id: 5,
-    eventName: "Welocome",
-    club: "Rekha ",
-    startDatetime: "2024-08-10T14:00",
-    endDatetime: "2024-08-12T14:30",
-    eventLocation: "UCSC Main Hall",
-  },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-const Calendar = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const location = useLocation();
-
-  const handleOpenModal = () => {
-      setIsModalOpen(true);
+  const fetchClubs = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const clubs = await ClubsService.getAllClubs(token);
+      const clubsArray = clubs.content || [];
+      setClubDetails(clubsArray);
+    } catch (error) {
+      console.error("Failed to fetch clubs", error);
+    }
   };
 
-  const handleCloseModal = () => {
-      setIsModalOpen(false);
+  const fetchEvents = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await EventService.getAllEvents(token);
+      const eventsArray = response.data || response.content || [];
+      const formattedEvents = eventsArray.map((event) => ({
+        ...event,
+        date: new Date(event.date),
+      }));
+      setEvents(formattedEvents);
+    } catch (error) {
+      setError("Error fetching events");
+      console.error("Error fetching events:", error);
+    }
+  };
+
+  const fetchMeetings = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await MeetingService.getAllMeetings(token);
+      const meetingsArray = response.content || [];
+      const formattedMeetings = meetingsArray
+        .filter((meeting) => meeting.participant_type === "EVERYONE")
+        .map((meeting) => ({
+          ...meeting,
+          date: new Date(meeting.date), // Ensure date formatting is consistent
+        }));
+      setMeetings(formattedMeetings);
+    } catch (error) {
+      setError("Error fetching meetings");
+      console.error("Error fetching meetings:", error);
+    }
   };
   
-  let today = startOfToday();
-  let [selectedDay, setSelectedDay] = useState(today);
-  let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
-  let firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
 
-  let days = eachDayOfInterval({
-    start: firstDayCurrentMonth,
-    end: endOfMonth(firstDayCurrentMonth),
-  });
+  const eventsByDate = events.reduce((acc, event) => {
+    const eventDate = format(event.date, "yyyy-MM-dd");
+    if (!acc[eventDate]) acc[eventDate] = [];
+    acc[eventDate].push(event);
+    return acc;
+  }, {});
 
-  function previousMonth() {
-    let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 });
-    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
-  }
+  const meetingsByDate = meetings.reduce((acc, meeting) => {
+    const meetingDate = format(meeting.date, "yyyy-MM-dd");
+    if (!acc[meetingDate]) acc[meetingDate] = [];
+    acc[meetingDate].push(meeting);
+    return acc;
+  }, {});
 
-  function nextMonth() {
-    let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
-    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
-  }
+  const getCalendarDays = () => {
+    const start = startOfWeek(startOfMonth(currentMonth), { weekStartsOn: 0 });
+    const end = endOfMonth(currentMonth);
+    const daysInMonth = eachDayOfInterval({ start, end });
+    const daysBeforeStart = daysInMonth[0].getDay();
+    return Array.from({ length: daysBeforeStart }).fill(null).concat(daysInMonth);
+  };
 
-  let selectedDayMeetings = meetings.filter((meeting) =>
-    isSameDay(parseISO(meeting.startDatetime), selectedDay)
-  );
+  const handleNextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
+  const handlePreviousMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
 
-  return (
-    <div className="pt-5">
-      <div className="w-full h-full p-4 sm:px-7 md:max-w-full md:px-6 bg-[#050505] rounded-lg"  style={{ 
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-          }}>
-        <div className="md:grid md:grid-cols-2 md:divide-x md:divide-[#050505]" >
-          <div className="md:pr-14">
-            <div className="flex items-center">
-              <h2 className="flex-auto font-semibold text-white">
-                {format(firstDayCurrentMonth, "MMMM yyyy")}
-              </h2>
-              <button
-                type="button"
-                onClick={previousMonth}
-                className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-              >
-                <span className="sr-only">Previous month</span>
-                <ChevronLeftIcon
-                  className="w-5 h-5 text-white"
-                  aria-hidden="true"
-                />
-              </button>
-              <button
-                onClick={nextMonth}
-                type="button"
-                className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-              >
-                <span className="sr-only">Next month</span>
-                <ChevronRightIcon
-                  className="w-5 h-5 text-white"
-                  aria-hidden="true"
-                />
-              </button>
-            </div>
-            <div className="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-white">
-              <div>Sun</div>
-              <div>Mon</div>
-              <div>Tue</div>
-              <div>Wed</div>
-              <div>Thu</div>
-              <div>Fri</div>
-              <div>Sat</div>
-            </div>
-            <div className="grid grid-cols-7 mt-2 text-sm">
-              {days.map((day, dayIdx) => {
-                const dayMeetings = meetings.filter((meeting) =>
-                  isSameDay(parseISO(meeting.startDatetime), day)
-                );
-                const dayColors = Array.from(new Set(dayMeetings.map(meeting => clubColors[meeting.club])));
+  const handleDateClick = (date) => {
+    const formattedDate = format(date, "yyyy-MM-dd");
+    setSelectedDate(formattedDate === selectedDate ? null : formattedDate);
+  };
 
+  const renderCalendar = () => {
+    const daysInMonth = getCalendarDays();
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    return (
+      <div className="calendar-grid  " style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "10px" }}>
+        {dayNames.map((day, index) => (
+          <div key={index} style={{ textAlign: "center", fontWeight: "bold", color: "white",fontSize: "22px" }}>{day}</div>
+        ))}
+        {daysInMonth.map((date, index) => {
+          const formattedDate = date ? format(date, "yyyy-MM-dd") : null;
+          const eventsForDay = date ? eventsByDate[formattedDate] || [] : [];
+          const meetingsForDay = date ? meetingsByDate[formattedDate] || [] : [];
+          const isCurrentDate = date && isToday(date);
+          const cardHighlightStyle = isCurrentDate ? { border: "3px solid rgba(174, 201, 10, 0.5)", color: "#AEC90A" } : {};
+          const isSelectedDate = date && selectedDate === formattedDate;
+          const selectedStyle = isSelectedDate ? { backgroundColor: "rgba(255, 255, 0, 0.3)" } : {};
+
+          return (
+            <div
+              key={index}
+              className="calendar-day"
+              style={{
+                padding: "10px",
+                minHeight: "100px",
+                backgroundColor: date ? "black" : "transparent",
+                color: date ? "white" : "transparent",
+                borderRadius: "20px",
+                cursor: "pointer",
+                ...cardHighlightStyle,
+                ...selectedStyle,
+              }}
+              onClick={() => date && handleDateClick(date)}
+            >
+ {date && (
+                <div className="day-number " style={{ fontWeight: "bold", fontSize: "26px",padding : "16px"}}>
+                  {date.getDate()}
+                  {isCurrentDate && <span style={{ fontSize: "10px", color: "#AEC90A" }}> Today</span>}
+                </div>
+              )}              {eventsForDay.map((event, i) => {
+                const club = clubDetails.find((club) => club.club_id === event.club_id);
                 return (
-                  <div
-                    key={day.toString()}
-                    className={classNames(
-                      dayIdx === 0 && colStartClasses[getDay(day)],
-                      "py-1.5"
-                    )}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setSelectedDay(day)}
-                      className={classNames(
-                        isEqual(day, selectedDay) && "text-[#050505]",
-                        dayMeetings.length > 0 &&
-                          !isToday(day) &&
-                          "bg-[#AEC90A] hover:bg-[#171717] hover:text-black",
-                        !isEqual(day, selectedDay) &&
-                          isToday(day) &&
-                          "text-[#050505] bg-white hover:text-[#AEC90A]",
-                        !isEqual(day, selectedDay) &&
-                          !isToday(day) &&
-                          isSameMonth(day, firstDayCurrentMonth) &&
-                          "text-white",
-                        !isEqual(day, selectedDay) &&
-                          !isToday(day) &&
-                          !isSameMonth(day, firstDayCurrentMonth) &&
-                          "text-white",
-                        isEqual(day, selectedDay) &&
-                          isToday(day) &&
-                          "bg-white text-[#050505]",
-                        isEqual(day, selectedDay) &&
-                          !isToday(day) &&
-                          "bg-[#AEC90A] text-black",
-                        !isEqual(day, selectedDay) &&
-                          "hover:bg-gray-200 hover:text-black",
-                        (isEqual(day, selectedDay) || isToday(day)) &&
-                          "font-semibold",
-                        "mx-auto flex h-8 w-8 items-center justify-center rounded-full"
-                      )}
-                    >
-                      <time dateTime={format(day, "yyyy-MM-dd")}>
-                        {format(day, "d")}
-                      </time>
-                    </button>
-                    <div className="w-full h-1 mx-auto mt-1 flex justify-center space-x-1">
-                      {dayColors.map((color, index) => (
-                        <div
-                          key={index}
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ backgroundColor: color }}
-                        ></div>
-                      ))}
-                    </div>
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "5px" ,fontSize: "12px", color: "white" ,fontWeight: "bold"}}>
+                   
+                   {club && club.club_image && (
+                      <img
+                        src={club.club_image}
+                        alt={club.club_name}
+                        style={{ width: "30px", height: "30px", borderRadius: "50%" }}
+                      />
+                    )} 
+                    <span >{event.name}</span>
+                   
                   </div>
                 );
               })}
-            </div>
-            <ColorPalette clubColors={clubColors} />
-          </div>
-          <section className="mt-12 md:mt-0 md:pl-14 bg-black">
-            <h2 className="font-semibold text-[#AEC90A] mt-4 text-center">
-            {isToday(selectedDay) ? (
-                <>Schedule for Today</>
-              ) : (
-                <>Schedule for{" "}
-                  <time dateTime={format(selectedDay, "yyyy-MM-dd")}>
-                    {format(selectedDay, "MMM dd, yyyy")}
-                  </time>
-                </>
-              )}
-            </h2>
-            {selectedDayMeetings.length > 0 ? (
-              <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
-                {selectedDayMeetings.map((meeting) => (
-                  <li
-                  key={meeting.id}
-                  className="flex items-center justify-between px-4 py-2 border rounded-lg"
-                  style={{ borderColor: clubColors[meeting.club] }}
-                >
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-white">
-                      {meeting.eventName}
-                    </h3>
-                    <p className="text-white">
-                      <time dateTime={meeting.startDatetime}>
-                        {format(parseISO(meeting.startDatetime), "hh:mm a")}
-                      </time>{" "}
-                      -{" "}
-                      <time dateTime={meeting.endDatetime}>
-                        {format(parseISO(meeting.endDatetime), "hh:mm a")}
-                      </time>
-                    </p>
-                    <p className="text-white">
-                      {meeting.eventLocation}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    className="ml-4 py-2 px-4 text-white rounded-full"
-                    style={{ backgroundColor: clubColors[meeting.club], borderColor: clubColors[meeting.club] }}
-                  >
-                    Remind Me
-                  </button>
-                </li>
-                
-                ))} <div className="mt-4 space-y-1 text-sm leading-6 text-center text-gray-500">
-                {(location.pathname.startsWith('/president') || location.pathname.startsWith('/secretary')) && (
-                  <button
-                    className="mt-4 p-2 bg-[#AEC90A] text-black rounded-full"
-                    onClick={handleOpenModal}
-                  >
-                    Schedule Event
-                  </button>
-                )}
-              </div>
-              </ol>
-            ) : (
-              <div className="mt-4 space-y-1 text-sm leading-6 text-center text-gray-500">
-              <p className="text-white">No upcoming events at the moment. Stay tuned for exciting updates!</p>
-              {(location.pathname.startsWith('/president') || location.pathname.startsWith('/secretary')) && (
-                <button
-                  className="mt-4 p-2 bg-[#AEC90A] text-black rounded-full"
-                  onClick={handleOpenModal}
-                >
-                  Schedule Event
-                </button>
-              )}
-            </div>
+      {meetingsForDay.map((meeting, i) => {
+  const club = clubDetails.find((club) => club.club_id === meeting.clubId);  // Correct club matching
 
-            )}
-          </section>
-          {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white rounded-lg overflow-hidden shadow-xl max-w-lg w-full">
-                        <div className="flex justify-end p-4">
-                            <button onClick={handleCloseModal} className="text-black">
-                                <FaTimes />
-                            </button>
-                        </div>
-                        <div className="p-4">
-                            <AddEvent />
-                        </div>
-                    </div>
-                </div>
-            )}
-        </div>
+  return (
+    <div
+      key={i}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        padding: "10px",
+        fontSize: "12px",
+        color: "#AEC90A",
+      }}
+    >
+      {/* Display club image before meeting name */}
+      {club && club.club_image && (
+        <img
+          src={club.club_image}
+          alt={club.club_name}
+          style={{ width: "30px", height: "30px", borderRadius: "50%" }}
+        />
+      )}
+      
+      {/* Meeting name and type dot with tooltip */}
+      <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+        <span style={{ fontWeight: "bold" }}>{meeting.meeting_name}</span>
+        
+        {/* Dot representing meeting type */}
+        <span
+          style={{
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+            backgroundColor: meeting.meeting_type === "ONLINE" ? "green" : "yellow",
+            display: "inline-block",
+            cursor: "pointer",
+          }}
+          title={meeting.meeting_type}  // Tooltip for meeting type
+        ></span>
       </div>
     </div>
   );
+})}
+
+
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const renderEventModal = () => {
+    if (!selectedDate) return null;
+    const eventsForDay = eventsByDate[selectedDate] || [];
+    const meetingsForDay = meetingsByDate[selectedDate] || [];
+    const hasMeetings = meetingsForDay.length > 0;
+  
+    return (
+      <div
+        className="modal-overlay"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.7)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1000,
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "800px",
+            backgroundColor: "black",
+            padding: "20px",
+            borderRadius: "10px",
+            position: "relative",
+            color: "white",
+            border: "0.5px solid rgba(130, 201, 10, 0.5)",
+            overflowY: "auto",
+            maxHeight: "80vh",
+          }}
+        >
+          <button
+            onClick={() => setSelectedDate(null)}
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "10px",
+              background: "transparent",
+              border: "none",
+              fontSize: "20px",
+              color: "white",
+              cursor: "pointer",
+            }}
+          >
+            ✕
+          </button>
+  
+          <h2 className="text-center font-bold">
+            {isToday(new Date(selectedDate))
+              ? "Schedule for Today"
+              : `Schedule for ${format(new Date(selectedDate), "eeee, MMMM do yyyy")}`}
+          </h2>
+  
+          {/* Main Content Grid */}
+          <div
+            className={`grid ${
+              hasMeetings && eventsForDay.length > 0 ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
+            } gap-6`}
+            style={{ marginTop: "20px" }}
+          >
+            {/* Empty State */}
+            {eventsForDay.length === 0 && meetingsForDay.length === 0 && (
+              <p>
+                No events or meetings scheduled for{" "}
+                {isToday(new Date(selectedDate))
+                  ? "Today"
+                  : format(new Date(selectedDate), "eeee, MMMM do yyyy")}
+              </p>
+            )}
+  
+            {/* Events Section */}
+            {eventsForDay.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold text-[#AEC90A]">Events</h3>
+                {eventsForDay.map((event, i) => {
+                  const club = clubDetails.find((club) => club.club_id === event.club_id);
+                  return (
+                    <div
+                      key={i}
+                      className="relative custom-3d-shadow custom-card"
+                      style={{ padding: "20px" }}
+                    >
+                      <img
+                        src={event.event_image}
+                        className="w-full h-72 object-cover rounded-lg"
+                        style={{ marginBottom: "20px" }}
+                      />
+                      {club && club.club_image && (
+                        <div className="absolute top-2 right-2 w-20 h-20 border-2 border-white rounded-full overflow-hidden shadow-md">
+                          <img
+                            src={club.club_image}
+                            alt={club.club_name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                     <div className="text-white flex justify-between">
+  {/* Event Details Section */}
+  <div className="flex-1">
+    <h3 className="text-lg font-semibold">{event.name}</h3>
+    <ul className="list-disc pl-5">
+      <li className="text-sm">
+        {format(event.date, "PP")} | <strong>{format(event.date, "EEEE")}</strong>
+      </li>
+      <li className="text-sm">Venue: {event.venue}</li>
+    </ul>
+  </div>
+
+  {/* Buttons Section */}
+  <div className="flex flex-col items-end gap-2">
+    {new Date(event.date) > new Date() ? (
+      <button className="text-[#AEC90A] py-2 px-2 rounded-full border-2 border-[#AEC90A]">
+        Register
+      </button>
+    ) : (
+      <button className="text-[#AEC90A] py-2 px-2 rounded-full border-2 border-[#AEC90A]">
+        Feedback
+      </button>
+    )}
+    <button className="text-white py-2 px-2 rounded-full text-black border-2 border-white">
+      Explore
+    </button>
+  </div>
+</div>
+
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+  
+            {/* Meetings Section */}
+            {hasMeetings && (
+              <div>
+                <h3 className="text-lg font-semibold text-[#AEC90A]">Meetings</h3>
+                {meetingsForDay.map((meeting, i) => {
+                  const club = clubDetails.find((club) => club.club_id === meeting.clubId);
+                  return (
+                    <div
+                      key={i}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        padding: "10px",
+                        fontSize: "12px",
+                        color: "white",
+                      }}
+                    >
+                      {club && club.club_image && (
+                        <img
+                          src={club.club_image}
+                          alt={club.club_name}
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            borderRadius: "50%",
+                          }}
+                        />
+                      )}
+                      <div>
+                        <h3>
+                          {meeting.meeting_type}{" "}
+                          <span />
+                          {meeting.meeting_name}
+                          <span
+                            style={{
+                              width: "10px",
+                              height: "10px",
+                              borderRadius: "50%",
+                              backgroundColor:
+                                meeting.meeting_type === "ONLINE" ? "green" : "red",
+                              display: "inline-block",
+                              marginLeft: "10px",
+                            }}
+                            title={
+                              meeting.meeting_type === "ONLINE"
+                                ? "Online Meeting"
+                                : "Physical Meeting"
+                            }
+                          />
+                        </h3>
+                        <p>Date: {format(meeting.date, "PP")}</p>
+                        <p>Organized by: {meeting.clubId}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+  
+  
+
+  return (
+    <div  className="bg-black bg-opacity-30 rounded-md px-24 onset-0 " style={{  color: "white" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "20px",
+
+          borderRadius: "5px",
+          marginBottom: "7px",
+          padding: "5px",
+          background: "black",
+        }}
+      >
+        <FaArrowLeft
+          onClick={handlePreviousMonth}
+          style={{
+            cursor: "pointer",
+            background: "black",
+            borderRadius: "50%",
+           
+            color: "#AEC90A",
+          }}
+        />
+        <h2 style={{ margin: 0, fontSize: 30, color: "#AEC90A" }}>
+          {format(currentMonth, "MMMM yyyy")}
+        </h2>
+        <FaArrowRight
+          onClick={handleNextMonth}
+          style={{
+            cursor: "pointer",
+            background: "black",
+            borderRadius: "50%",
+           
+            color: "#AEC90A",
+          }}
+        />
+      </div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {renderCalendar()}
+      {renderEventModal()}
+    </div>
+  );
+  
+  
 };
 
-export default Calendar;
-
-
-let colStartClasses = [
-  "",
-  "col-start-2",
-  "col-start-3",
-  "col-start-4",
-  "col-start-5",
-  "col-start-6",
-  "col-start-7",
-];
+export default FullCalendar;

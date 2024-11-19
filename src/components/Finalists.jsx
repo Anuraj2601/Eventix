@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getAllCandidates } from "../service/candidateService";
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import { Card, CardBody, Typography, Avatar } from "@material-tailwind/react";
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, Tooltip, Legend, ArcElement } from 'chart.js';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Finalists = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
   const electionIdFromUrl = currentPath.split('/').pop();
 
@@ -21,6 +26,8 @@ const Finalists = () => {
   });
 
   const [activeTab, setActiveTab] = useState("president");
+  const [openModal, setOpenModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   useEffect(() => {
     const fetchCandidates = async () => {
@@ -36,6 +43,21 @@ const Finalists = () => {
           };
 
           setCandidates(categorizedCandidates);
+
+          // Modal logic: Check if there are no accepted candidates
+          const acceptedCandidates = [
+            ...categorizedCandidates.president,
+            ...categorizedCandidates.secretary,
+            ...categorizedCandidates.treasurer
+          ];
+
+          if (acceptedCandidates.length === 0) {
+            setModalMessage("Sorry, the selection process isn't completed yet.");
+            setOpenModal(true);
+          } else if (acceptedCandidates.length === 1) {
+            setModalMessage("One candidate has been selected. Proceeding...");
+            setOpenModal(true);
+          }
         } else {
           console.error("Fetched data is not an array:", data);
         }
@@ -46,6 +68,11 @@ const Finalists = () => {
 
     fetchCandidates();
   }, [electionIdFromUrl]);
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    navigate(-1); // Navigate back to the previous page
+  };
 
   const renderOCList = (ocList) => {
     let parsedOCList = [];
@@ -121,7 +148,6 @@ const Finalists = () => {
       ))}
     </div>
   );
-  
 
   return (
     <div className="flex h-screen">
@@ -131,28 +157,28 @@ const Finalists = () => {
         <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
           <div className="flex w-full">
             {/* Vertical Tabs */}
-            <div className="w-1/6  p-4 text-white">
-            <Typography variant="h5" className="mb-4 text-center">
-              Positions
-            </Typography>
-            <ul>
-              {["president", "secretary", "treasurer"].map(position => (
-                <li
-                  key={position}
-                  className={`cursor-pointer mb-2 p-2 rounded-lg ${activeTab === position ? 'bg-[#AEC90A] text-black' : 'hover:bg-gray-700'}`}
-                  onClick={() => setActiveTab(position)}
-                >
-                  {position.charAt(0).toUpperCase() + position.slice(1)}
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className="w-1/6 p-4 text-white">
+              <Typography variant="h5" className="mb-4 text-center">
+                Positions
+              </Typography>
+              <ul>
+                {["president", "secretary", "treasurer"].map(position => (
+                  <li
+                    key={position}
+                    className={`cursor-pointer mb-2 p-2 rounded-lg ${activeTab === position ? 'bg-[#AEC90A] text-black' : 'hover:bg-gray-700'}`}
+                    onClick={() => setActiveTab(position)}
+                  >
+                    {position.charAt(0).toUpperCase() + position.slice(1)}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
             {/* Candidates Display */}
             <div className="w-3/4 bg-neutral-900">
               <div className="relative mb-12 w-full ">
-                <div className="absolute  z-10 w-full flex justify-center mb-16">
-                  <div className="py-2 px-4 rounded-lg  -mt-20">
+                <div className="absolute z-10 w-full flex justify-center mb-16">
+                  <div className="py-2 px-4 rounded-lg -mt-20">
                     <h2 className="text-3xl text-center">{`${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Position`}</h2>
                   </div>
                 </div>
@@ -164,6 +190,17 @@ const Finalists = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogTitle>Notice</DialogTitle>
+        <DialogContent>
+          <Typography>{modalMessage}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <button onClick={handleCloseModal} className="bg-[#AEC90A] text-white px-4 py-2 rounded-md">OK</button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

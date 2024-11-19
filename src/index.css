@@ -161,3 +161,76 @@
   backface-visibility: hidden;
   transform: rotateY(180deg);
 }
+
+
+.full-calendar {
+  background-color: black;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+.calendar-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+.today {
+  border: 2px solid yellow;
+  border-radius: 5px;
+}
+/* Calendar cell wrapper */
+.calendar-cell {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.flip-card {
+  perspective: 1000px;
+  position: relative;
+}
+
+.flip-card-inner {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  backface-visibility: hidden;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 10px;
+}
+
+.flip-card-front {
+  background-size: cover;
+  background-position: center;
+}
+
+.flip-card-back {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.glow-winner {
+  box-shadow: 0px 0px 15px 5px rgba(255, 223, 0, 0.7);
+  border-color: #AEC90A;
+}

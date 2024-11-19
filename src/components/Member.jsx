@@ -162,47 +162,85 @@ const Member = () => {
     );
     console.log('Filtered Registrations:', filteredRegistrations); // Log filtered registrations
 
+    const leftMembers = registrations.filter(
+        (reg) => reg.accepted === 0 && reg.position.toLowerCase().includes('left') && String(reg.clubId) === String(clubIdFromUrl)
+    );
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p className="text-red-500">Error: {error}</p>;
 
     return (
-      <div className="flex flex-wrap gap-4">
-          {filteredRegistrations.length > 0 ? (
+        <div>
+          <div className="flex flex-wrap gap-4">
+            {filteredRegistrations.length > 0 ? (
               filteredRegistrations.map((reg) => (
-                  <div key={reg.registrationId} className="flex justify-center gap-3 p-3 text-white">
-                      <div className="flex flex-col items-center p-2 bg-black rounded-2xl custom-card text-center">
-                          {/* Image Section */}
-                          <div style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
-                              <img
-                                  src={userProfiles[reg.email]?.profileImage || '/default-profile.png'}
-                                  alt={`${userProfiles[reg.email]?.name || 'Unknown'}'s profile`}
-                                  className="w-48 h-48 object-cover rounded-full p-2 custom-card"
-                              />
-                          </div>
-                          {/* Details Section */}
-                          <div className="w-full h-1/2 p-4 flex flex-col text-center">
-                              <h3 className="text-xl font-semibold mb-2">{userProfiles[reg.email]?.name || 'Unknown'}</h3>
-                              <p className="mb-2"><strong>Team:</strong> {reg.team}</p>
-                              <p className="mb-4"><strong>Email:</strong> {reg.email}</p>
-                              {isPresidentView && (
-                                  <div className="flex justify-end">
-                                      <button
-                                          onClick={() => handleReject(reg.registrationId)}
-                                          className="w-1/2 border border-red-500 text-red-500 rounded-full hover:bg-red-600 hover:text-white text-sm border-opacity-50"
-                                      >
-                                          Remove
-                                      </button>
-                                  </div>
-                              )}
-                          </div>
-                      </div>
+                <div key={reg.registrationId} className="flex justify-center gap-3 p-3 text-white">
+                  <div className="flex flex-col items-center p-2 bg-black rounded-2xl custom-card text-center">
+                    {/* Image Section */}
+                    <div style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
+                      <img
+                        src={userProfiles[reg.email]?.profileImage || '/default-profile.png'}
+                        alt={`${userProfiles[reg.email]?.name || 'Unknown'}'s profile`}
+                        className="w-48 h-48 object-cover rounded-full p-2 custom-card"
+                      />
+                    </div>
+                    {/* Details Section */}
+                    <div className="w-full h-1/2 p-4 flex flex-col text-center">
+                      <h3 className="text-xl font-semibold mb-2">{userProfiles[reg.email]?.name || 'Unknown'}</h3>
+                      <p className="mb-2"><strong>Team:</strong> {reg.team}</p>
+                      <p className="mb-4"><strong>Email:</strong> {reg.email}</p>
+                      <p className="mb-4"> {reg.reason} </p>
+                      {isPresidentView && (
+                        <div className="flex justify-end">
+                          <button
+                            onClick={() => handleReject(reg.registrationId)}
+                            className="w-1/2 border border-red-500 text-red-500 rounded-full hover:bg-red-600 hover:text-white text-sm border-opacity-50"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
+                </div>
               ))
-          ) : (
+            ) : (
               <p className="text-center w-full">No records found</p>
+            )}
+          </div>
+      
+          {/* Left Members Section */}
+          {leftMembers.length > 0 && (
+            <div>
+              <h2 className="text-2xl font-semibold text-cr text-white mb-4 mt-20">Left Members</h2>
+              <div className="flex flex-wrap gap-4">
+                {leftMembers.map((reg) => (
+                  <div key={reg.registrationId} className="flex justify-center gap-3 p-3 text-white">
+                    <div className="flex flex-col items-center p-2 bg-black  rounded-2xl custom-card text-center">
+                      {/* Image Section */}
+                      <div style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
+                        <img
+                          src={userProfiles[reg.email]?.profileImage || '/default-profile.png'}
+                          alt={`${userProfiles[reg.email]?.name || 'Unknown'}'s profile`}
+                          className="w-48 h-48 object-cover rounded-full p-2 custom-card"
+                        />
+                      </div>
+                      {/* Details Section */}
+                      <div className="w-full h-1/2 p-4 flex flex-col text-center">
+                        <h3 className="text-xl font-semibold mb-2">{userProfiles[reg.email]?.name || 'Unknown'}</h3>
+                        <p className="mb-2"><strong>Team:</strong> {reg.team}</p>
+                        <p className="mb-4"><strong>Email:</strong> {reg.email}</p>
+                        <p className="text-red-500"><strong>Reason for Leaving:</strong> {reg.reason} 😞</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
-      </div>
-  );
+        </div>
+      );
+      
 };
 
 export default Member;
