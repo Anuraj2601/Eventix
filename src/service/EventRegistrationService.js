@@ -133,6 +133,23 @@ class EventRegistrationService{
 
     }
 
+    static async registrationCheckIn(eReg_id, token){
+        try {
+            const response1 = await axios.put(`${EventRegistrationService.BASE_URL}/student/registrationCheckIn/${eReg_id}`,
+                {},
+              {
+                headers: { Authorization: `Bearer ${token}` }
+              }
+            );
+
+            return response1.data;
+
+        } catch (err) {
+            throw err;
+        }
+
+    }
+
 
     static logout() {
         localStorage.removeItem("token");
