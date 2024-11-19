@@ -140,7 +140,7 @@ const FullCalendar = () => {
               onClick={() => date && handleDateClick(date)}
             >
  {date && (
-                <div className="day-number" style={{ fontWeight: "bold", fontSize: "26px",padding : "16px"}}>
+                <div className="day-number " style={{ fontWeight: "bold", fontSize: "26px",padding : "16px"}}>
                   {date.getDate()}
                   {isCurrentDate && <span style={{ fontSize: "10px", color: "#AEC90A" }}> Today</span>}
                 </div>

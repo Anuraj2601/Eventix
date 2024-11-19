@@ -17,6 +17,7 @@ const Voting = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); // New state for error modal
   const [isThankYouModalOpen, setIsThankYouModalOpen] = useState(false);
+  const [isNoCandidatesModalOpen, setIsNoCandidatesModalOpen] = useState(false);  // New state for the no candidates modal
 
   const electionIdFromUrl = currentPath.split('/').pop(); // Extract the last part of the URL (electionId)
 
@@ -46,6 +47,9 @@ const Voting = () => {
           };
 
           setCandidates(categorizedCandidates);
+          if (categorizedCandidates.president.length === 0 && categorizedCandidates.secretary.length === 0 && categorizedCandidates.treasurer.length === 0) {
+            setIsNoCandidatesModalOpen(true);
+          }
         } else {
           console.error("Fetched data is not an array:", data);
         }
@@ -118,6 +122,25 @@ const Voting = () => {
         <Navbar className="sticky top-0 z-10 bg-neutral-900 text-white " />
         <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
           <div className="w-full flex flex-col items-center py-2 px-20 overflow-y-auto">
+              {/* Modal for No Candidates */}
+              <Modal
+              isOpen={isNoCandidatesModalOpen}
+              onRequestClose={() => setIsNoCandidatesModalOpen(false)}
+              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70"
+            >
+              <div className="bg-white p-6 rounded-lg max-w-md w-full text-center">
+                <h2 className="text-2xl font-bold mb-4">Selection Process Not Completed</h2>
+                <p className="mb-4">The selection process hasn't completed yet. Please wait to start voting.</p>
+                <button
+onClick={() => {
+  setIsNoCandidatesModalOpen(false);
+  window.history.go(-1); // Navigate one step back in the history
+}}                  className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+                >
+                  OK
+                </button>
+              </div>
+            </Modal>
             <Modal
               isOpen={isModalOpen}
               onRequestClose={() => setIsModalOpen(false)}
