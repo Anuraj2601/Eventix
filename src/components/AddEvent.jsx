@@ -35,6 +35,7 @@ const AddEvent = () => {
     purpose: "",
     benefits: "",
     eventImage: null, // New field for the event image
+    public_status: false, // Default to "Private"
   });
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -164,6 +165,7 @@ const AddEvent = () => {
     formData.append("time", formFields.time.format("HH:mm")); // Format time
     formData.append("purpose", formFields.purpose);
     formData.append("benefits", formFields.benefits);
+    formData.append("public_status", formFields.public_status); // Convert boolean to 1/0
 
     //formData.append("club_id", club_id);
 
@@ -188,6 +190,7 @@ const AddEvent = () => {
         formFields.benefits,
         formFields.eventImage,
         formFields.budgetFile,
+        formFields.public_status,
         club_id,
         token
       );
@@ -206,10 +209,11 @@ const AddEvent = () => {
           purpose: "",
           benefits: "",
           eventImage: null,
+          public_status: false,
         });
         setIsFormValid(false); // Optionally reset form validation
-         // Navigate to the previous page
-         navigate(-1); // Go back to the previous page
+        // Navigate to the previous page
+        navigate(-1); // Go back to the previous page
       });
     } catch (error) {
       console.error("Error submitting form", error);
@@ -227,21 +231,70 @@ const AddEvent = () => {
           </Typography>
 
           <div className="grid grid-cols-1 gap-4">
-            {/* Event Image Upload */}
-            <div className="mb-4">
-              <label className="block mb-2">Event Image:</label>
-              <div className="flex flex-col items-center">
+            {/* Event Image Upload and Toggle */}
+            <div className="mb-4 flex items-center justify-between space-x-4">
+              {/* Event Image Upload */}
+              <div className="flex flex-col w-1/2">
+                <label className="block mb-2 text-gray-300">Event Image:</label>
                 <input
                   type="file"
                   name="eventImage"
                   onChange={handleFileChange}
-                  className="w-full h-12 bg-black text-white p-2 rounded-2xl"
+                  className="bg-black text-white p-2 rounded-xl"
                   style={{
                     boxShadow:
                       "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
                   }}
                 />
                 <FaUpload className="text-white mt-2" />
+              </div>
+
+              {/* Public/Private Radio Buttons */}
+              <div className="mb-4">
+                <label className="block mb-2 font-medium text-white">
+                  Is this event public or private?
+                </label>
+                <div className="flex items-center space-x-8">
+                  {/* Private Option */}
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      name="public_status"
+                      value="private"
+                      checked={!formFields.public_status}
+                      onChange={() =>
+                        setFormFields((prev) => ({
+                          ...prev,
+                          public_status: false,
+                        }))
+                      }
+                      className="form-radio text-[#AEC90A] focus:ring-[#AEC90A]"
+                    />
+                    <span className="text-sm font-medium text-white">
+                      Private
+                    </span>
+                  </label>
+
+                  {/* Public Option */}
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      name="public_status"
+                      value="public"
+                      checked={formFields.public_status}
+                      onChange={() =>
+                        setFormFields((prev) => ({
+                          ...prev,
+                          public_status: true,
+                        }))
+                      }
+                      className="form-radio text-[#AEC90A] focus:ring-[#AEC90A]"
+                    />
+                    <span className="text-sm font-medium text-white">
+                      Public
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -340,7 +393,7 @@ const AddEvent = () => {
                   </div>
                 </LocalizationProvider>
               </ThemeProvider>
-              
+
               {/* <div>
                 <label className="block mb-2">Budget of the Event:</label>
                 <input
