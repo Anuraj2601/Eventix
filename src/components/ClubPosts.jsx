@@ -100,7 +100,20 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) =>
                     <img src={userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
                     <div className="flex flex-col">
                         <p>{post.name}</p>
-                        <p className="text-[#AEC90A]">member</p>
+                        <p className="text-[#AEC90A]">
+  {post.position === "student"
+    ? "Member"
+    : post.position === "president"
+    ? "President"
+    : post.position === "member"
+    ? "Member"
+    : post.position === "secretary"
+    ? "Secretary"
+    : post.position === "treasurer"
+    ? "Treasurer"
+    : post.position}
+</p>
+
                     </div>
                 </div>
                 {showApprovalButtons && (

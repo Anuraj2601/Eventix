@@ -175,9 +175,11 @@ const Registrations = ({clubId, event}) => {
     onChange={handleSearchChange}
     className="w-1/2 p-2 border border-gray-300 bg-black rounded-full text-white"
   />
+  
 </div>
 
-        
+
+
         {/* Custom Switch and Duration Section */}
         <div>
           <div className="flex items-center mb-4">
@@ -193,6 +195,16 @@ const Registrations = ({clubId, event}) => {
             </Typography>
             <EditButton className="ml-4" /> {/* Display only the delete button */}
           </div>
+          <div className="flex items-center justify-between mb-4">
+  <div className="flex items-center gap-4">
+  <Typography style={{ color: '#AEC90A' }} variant="h6">
+      Total Registrations: {eventRegistrations.length}
+    </Typography>
+    <Typography style={{ color: '#AEC90A' }} variant="h6">
+      Checked-In: {Object.values(checkedInStatus).filter(status => status).length}
+    </Typography>
+  </div>
+</div>
         </div>
         
         {/* Registered Members Section */}
