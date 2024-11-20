@@ -181,27 +181,47 @@ const ClubEvent = ({ club }) => {
   };
 
   const getEvents = async () => {
-      // axios.get() TODO :: YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-      const eventsData = await EventService.getAllEventsById(club.club_id, storedToken)
-      console.log(eventsData)
-      const formattedData = [];
+    try {
+      // Fetch the events data from the API
+      const eventsData = await EventService.getAllEventsById(club.club_id, storedToken);
+      console.log(eventsData);
+  
+      const today = new Date(); // Get the current date
+      const formattedData = {
+        upcoming: [],
+        past: [],
+      };
+  
+      // Process and format each event
       eventsData.content.forEach((event) => {
-        formattedData.push({
+        const eventDate = new Date(event.date[0], event.date[1] - 1, event.date[2]); // Convert event.date to a Date object
+  
+        const eventDetails = {
           event_id: event.event_id,
           name: event.name,
-          image: event.event_image ? event.event_image : rac1, 
+          image: event.event_image ? event.event_image : rac1,
           date: `${event.date[0]}/${event.date[1]}/${event.date[2]}`,
           venue: event.venue,
           status: getEventStatus(event.budget_status, event.iud_status),
-          link: "https://example.com/join-oc"
-        })
+          link: "https://example.com/join-oc",
+        };
+  
+        // Categorize the event as upcoming or past
+        if (eventDate >= today) {
+          formattedData.upcoming.push(eventDetails);
+        } else {
+          formattedData.past.push(eventDetails);
+        }
       });
-      setUpcomingEvents(formattedData);
-      setPastEvents([
-        { name: "G-Tech", image: rac5, date: "01.09.2023", venue: "A101 Hall", status: "Completed", link: "https://example.com/join-oc" },
-        { name: "Training Session", image: rac6, date: "15.12.2023", venue: "B202 Hall", status: "Completed", link: "https://example.com/join-oc" },
-      ]);
+  
+      // Update state with categorized events
+      setUpcomingEvents(formattedData.upcoming);
+      setPastEvents(formattedData.past);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
   };
+  
 
 
   // const { upcoming, past } = getEvents(); Commented hereeeee
@@ -239,7 +259,15 @@ const ClubEvent = ({ club }) => {
       <div className="w-full max-w-screen-lg">
         <h2 className="text-2xl font-bold text-white mb-4">Upcoming</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        {upcomingEvents.map((event, index) => (
+        {upcomingEvents
+  .filter((event) => {
+    // Show all events if they're not rejected
+    if (event.status !== "Rejected") return true;
+
+    // Show rejected events only for the president's path
+    return location.pathname.includes('/president');
+  })
+  .map((event, index) => (
             <div
               key={index}
               className="relative rounded-lg p-4 custom-card"
@@ -311,8 +339,15 @@ const ClubEvent = ({ club }) => {
       <div className="w-full max-w-screen-lg mt-8">
         <h2 className="text-2xl font-bold text-white mb-4">Past Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        {pastEvents.map((event, index) => (
-            <div key={index} className="relative rounded-lg p-4 custom-card">
+        {pastEvents
+  .filter((event) => {
+    // Show all events if they're not rejected
+    if (event.status !== "Rejected") return true;
+
+    // Show rejected events only for the president's path
+    return location.pathname.includes('/president');
+  })
+  .map((event, index) => (            <div key={index} className="relative rounded-lg p-4 custom-card">
               <div className="relative custom-3d-shadow custom-card">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
                 <div className="absolute top-0 left-0 m-2 bg-black bg-opacity-50 rounded-full flex items-center justify-center">

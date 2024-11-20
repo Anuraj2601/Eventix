@@ -133,6 +133,8 @@ const FullCalendar = () => {
                 backgroundColor: date ? "black" : "transparent",
                 color: date ? "white" : "transparent",
                 borderRadius: "20px",
+                border: "1px solid rgba(255, 255, 255, 0.2)", // Light white with low opacity
+
                 cursor: "pointer",
                 ...cardHighlightStyle,
                 ...selectedStyle,
