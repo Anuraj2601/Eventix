@@ -7,7 +7,7 @@ import ieee from '../assets/ieee.jpeg';
 import isaca from '../assets/isaca.png';
 import rotract from '../assets/rotract.jpeg';
 import { useLocation } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 
 const MainMeeting = () => {
     const [selectedFilter, setSelectedFilter] = useState('physical');
@@ -22,7 +22,7 @@ const MainMeeting = () => {
     const location = useLocation();
     const path = location.pathname;
     const shouldShowForm = path.startsWith('/admin') || path.startsWith('/president') || path.startsWith('/secretary');
-
+    const navigate = useNavigate();
 
     const meetingAnnouncements = [
         {
@@ -81,7 +81,7 @@ const MainMeeting = () => {
             date: '2024-09-10',
             time: '01:00 PM',
             location: 'Conference Room A',
-            postedDate: '2024-07-26',
+            postedDate: '2024-12-26',
             postedTime: '11:00 AM'
         },
         {
@@ -91,7 +91,7 @@ const MainMeeting = () => {
             date: '2024-09-15',
             time: '09:00 AM',
             location: 'Main Hall',
-            postedDate: '2024-07-27',
+            postedDate: '2024-12-27',
             postedTime: '09:00 AM'
         },
         {
@@ -101,12 +101,13 @@ const MainMeeting = () => {
             date: '2024-09-20',
             time: '02:00 PM',
             location: 'Event Center',
-            postedDate: '2024-07-28',
+            postedDate: '2024-12-28',
             postedTime: '10:00 AM'
         },
     ];
     const handleJoinMeeting = (id) => {
         console.log('Join Meeting for meeting ID:', id);
+        navigate(`${id}`);
     };
 
     const handleDeclineMeeting = (id) => {
@@ -273,7 +274,7 @@ const MainMeeting = () => {
                                 <div className="flex space-x-2 mb-10 w-full">
                                     <button
                                         onClick={() => handleJoinMeeting(announcement.id)}
-                                        className="px-4 py-2 w-full cursor-not-allowed text-white opacity-50 rounded font-medium bg-dark-400 hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                                        className="px-4 py-2 w-full text-white opacity-50 rounded font-medium bg-dark-400 hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
                                     >
                                         Join Meeting
                                     </button>
@@ -374,7 +375,7 @@ const renderUnionAnnouncements = () => {
                         ) : (
                             <button
                                 onClick={() => handleJoinMeeting(announcement.id)}
-                                className="px-4 py-2 bg-dark-400 cursor-not-allowed text-white opacity-50 rounded font-medium w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
+                                className="px-4 py-2 bg-dark-400 text-white opacity-50 rounded font-medium w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
                             >
                                 Join Meeting
                             </button>
