@@ -3,7 +3,8 @@ import { BsCalendar2EventFill } from 'react-icons/bs';
 import { GrTechnology } from 'react-icons/gr';
 import { RiDiscountPercentFill } from 'react-icons/ri';
 import ClubsService from '../service/ClubsService';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useRef  } from 'react';
+import { FaHeart } from "react-icons/fa"; // For the heart icon
 
 const Clubsforu = () => {
     const [clubDetails, setClubDetails] = useState([]);
@@ -14,103 +15,87 @@ const Clubsforu = () => {
 
     const fetchClubs = async () => {
         try {
-            const token = localStorage.getItem('token');
-            console.log("Token used:", token); // Debugging token
-            const clubs = await ClubsService.getAllClubs(token);
-            const clubsArray = clubs.content || [];
-            console.log("Clubs fetched:", clubsArray); // Debugging data
-            setClubDetails(clubsArray);
+           
+            const clubs = await ClubsService.getAllClubslanding();
+            setClubDetails(clubs.content || []);
         } catch (error) {
-            console.error("Failed to fetch clubs", error.response || error.message);
+            console.error("Failed to fetch clubs:", error);
+            if (error.response) {
+                console.error("Server response:", error.response.data);
+            }
+        }
+        
+    };
+
+    const scrollRef = useRef(null); // Reference for scrolling
+
+    // Function to handle horizontal scrolling
+    const handleScroll = (direction) => {
+        if (scrollRef.current) {
+            const scrollAmount = direction === "left" ? -300 : 300;
+            scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
         }
     };
 
     return (
         <div className="flex flex-col items-center mt-20">
-            {/* Title Section */}
-            <div className="flex items-center bg-dark-background p-4 rounded-lg">
-                <HiMiniUserGroup className="text-primary bg-dark-background rounded-full w-10 h-10 shadow-lg" />
-                <span className="text-lg font-normal pl-3 text-primary uppercase">Clubs for you</span>
-            </div>
+        {/* Title Section */}
+        <div className="flex items-center bg-dark-background p-4 rounded-lg">
+            <HiMiniUserGroup className="text-primary bg-dark-background rounded-full w-10 h-10 shadow-lg" />
+            <span className="text-lg font-normal pl-3 text-primary uppercase">Clubs for You</span>
+        </div>
 
-            {/* Horizontal Carousel */}
-            <div className="flex overflow-x-auto gap-6 mt-6 px-4">
-                {clubDetails.length > 0 ? (
-                    clubDetails.map((club) => (
-                        <div
-                            key={club.club_id}
-                            className="bg-dark-400 p-6 rounded-lg shadow-lg flex-none w-72"
-                            style={{ minWidth: '280px' }}
-                        >
-                            <img
-                                src={club.club_image}
-                                alt={club.club_name}
-                                className="w-full h-40 object-cover rounded-lg"
-                            />
-                            <h2 className="text-white text-lg mt-4">{club.club_name}</h2>
-                            <p className="text-sm text-gray-300 mt-2">
-                                Opportunities for career advancement through workshops and resources.
-                            </p>
-                            <div className="flex justify-between mt-4">
-                                <button className="bg-primary text-dark-400 font-bold px-4 py-2 rounded">
-                                    Join
-                                </button>
-                                <button className="bg-gray-800 text-white font-bold px-4 py-2 rounded">
-                                    View
-                                </button>
+        {/* Horizontal Carousel */}
+        <div className="relative bg-dark-500 w-full mt-3"  style={{
+                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+              }}>
+            <div
+                ref={scrollRef}
+                className="flex overflow-x-auto gap-6 px-8 scrollbar-hide scroll-smooth"
+            >
+                {clubDetails.slice(0, 6).map((club) => (
+                    <div
+                        key={club.club_id}
+                        className="bg- p-6 rounded-lg shadow-lg flex-none w-96 custom-card"
+                        style={{ minWidth: "280px" }}
+                    >
+                        <img
+                            src={club.club_image}
+                            alt={club.club_name}
+                            className="w-full h-40 object-cover relative rounded-lg "
+                            style={{
+                                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                              }}
+                        />
+                        <h2 className="text-white text-lg mt-4">{club.club_name}</h2>
+                        <p className="text-sm text-gray-300 mt-2">
+                            {club.club_description || "An amazing club for your interests!"}
+                        </p>
+                        <div className="flex justify-between items-center mt-4">
+                            <div className="flex items-center text-gray-300">
+                                <FaHeart className="text-red-500 mr-2" />
+                                <span>{Math.floor(Math.random() * 100) + 1} Likes</span>
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <p className="text-white mt-6">No clubs available to display.</p>
-                )}
+                    </div>
+                ))}
             </div>
 
-            {/* Career Advancement Section */}
-            <div className="bg-dark-400 w-[82vw] h-auto mt-12 p-6 rounded-lg grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <div className="flex items-center text-white bg-dark-background p-4 rounded-lg hover:shadow-xl">
-                    <div className="bg-secondary w-12 h-12 rounded-full flex items-center justify-center mr-3">
-                        <BsCalendar2EventFill className="text-2xl text-dark-background" />
-                    </div>
-                    <div>
-                        <span className="font-base tracking-wider text-lg ml-4 leading-[30px] text-primary uppercase">
-                            Career Development
-                        </span>
-                        <p className="text-[14px] leading-[30px] tracking-wider ml-4 font-normal">
-                            Opportunities for career advancement through workshops.
-                        </p>
-                    </div>
-                </div>
-
-                <div className="flex items-center text-white bg-dark-background p-4 rounded-lg hover:shadow-xl">
-                    <div className="bg-secondary w-12 h-12 rounded-full flex items-center justify-center mr-3">
-                        <GrTechnology className="text-2xl text-dark-background" />
-                    </div>
-                    <div>
-                        <span className="font-base tracking-wider text-lg ml-4 leading-[30px] text-primary uppercase">
-                            Innovation and Research
-                        </span>
-                        <p className="text-[14px] leading-[30px] tracking-wider ml-4 font-normal">
-                            Stay updated with the latest advancements in technology and engineering.
-                        </p>
-                    </div>
-                </div>
-
-                <div className="flex items-center text-white bg-dark-background p-4 rounded-lg hover:shadow-xl">
-                    <div className="bg-secondary w-12 h-12 rounded-full flex items-center justify-center mr-3">
-                        <RiDiscountPercentFill className="text-3xl text-dark-background" />
-                    </div>
-                    <div>
-                        <span className="font-base tracking-wider text-lg ml-4 leading-[30px] text-primary uppercase">
-                            Discounts
-                        </span>
-                        <p className="text-[14px] leading-[30px] tracking-wider ml-4 font-normal">
-                            Reduced fees for IEEE events, publications, and courses.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            {/* Navigation Buttons */}
+            <button
+                onClick={() => handleScroll("left")}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-dark-background text-3xl text-[#AEC90A] p-2 rounded-full shadow-lg hover:bg-primary hover:text-dark-background"
+            >
+                {"<"}
+            </button>
+            <button
+                onClick={() => handleScroll("right")}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-dark-background text-3xl text-[#AEC90A] p-2 rounded-full shadow-lg hover:bg-primary hover:text-dark-background"
+            >
+                {">"}
+            </button>
         </div>
+    </div>
     );
 };
 

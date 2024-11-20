@@ -57,6 +57,17 @@ class EventService{
         }
     }
 
+    static async getAllEventslanding() {
+      try {
+        const response = await axios.get(`${EventService.BASE_URL}/event/getAllEvents`, {
+        });
+        return response.data; // Return the response data from the API
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        throw error; // Throw the error if request fails
+      }
+  }
+
 
     static async getAllEventsWithClubs(token) {
         try {
