@@ -13,10 +13,14 @@ import {
   LocalizationProvider,
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
+import TextField from "@mui/material/TextField";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 const AddEvent = () => {
+  const navigate = useNavigate(); // Initialize navigate hook
+
   // <Route path='/club/454/add-event' element={<AddEvent />} ></Route>
   const id = useParams(); // Get club_id from the URL
   const club_id = id.name;
@@ -204,6 +208,8 @@ const AddEvent = () => {
           eventImage: null,
         });
         setIsFormValid(false); // Optionally reset form validation
+         // Navigate to the previous page
+         navigate(-1); // Go back to the previous page
       });
     } catch (error) {
       console.error("Error submitting form", error);
@@ -285,7 +291,6 @@ const AddEvent = () => {
                   }}
                 />
               </div> */}
-
               <ThemeProvider theme={darkTheme}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <div className="mb-4">
@@ -297,16 +302,19 @@ const AddEvent = () => {
                       onChange={(newValue) =>
                         setFormFields((prev) => ({ ...prev, date: newValue }))
                       }
-                      renderInput={(params) => (
-                        <input
-                          {...params.inputProps}
-                          className="w-full h-16 bg-black text-white p-2 rounded-2xl"
-                          style={{
-                            boxShadow:
-                              "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-                          }}
-                        />
-                      )}
+                      minDate={dayjs()} // Prevent selecting past dates
+                      slots={{
+                        textField: (props) => (
+                          <TextField
+                            {...props}
+                            className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                            sx={{
+                              boxShadow:
+                                "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                            }}
+                          />
+                        ),
+                      }}
                     />
                   </div>
                   <div className="mb-4">
@@ -316,21 +324,23 @@ const AddEvent = () => {
                       onChange={(newValue) =>
                         setFormFields((prev) => ({ ...prev, time: newValue }))
                       }
-                      renderInput={(params) => (
-                        <input
-                          {...params.inputProps}
-                          className="w-full h-16 bg-black text-white p-2 rounded-2xl"
-                          style={{
-                            boxShadow:
-                              "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-                          }}
-                        />
-                      )}
+                      slots={{
+                        textField: (props) => (
+                          <TextField
+                            {...props}
+                            className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                            sx={{
+                              boxShadow:
+                                "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                            }}
+                          />
+                        ),
+                      }}
                     />
                   </div>
                 </LocalizationProvider>
               </ThemeProvider>
-
+              
               {/* <div>
                 <label className="block mb-2">Budget of the Event:</label>
                 <input
@@ -346,7 +356,6 @@ const AddEvent = () => {
                 />
               </div>
             </div> */}
-
               <div>
                 <label className="block mb-2">Upload Budget File (PDF):</label>
                 <div className="flex flex-col items-center">
