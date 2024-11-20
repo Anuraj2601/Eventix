@@ -3,12 +3,12 @@ import axios from "axios";
 class EventService{
     static BASE_URL = "http://localhost:8080"
 
-    static async saveEvent(name, venue, date, time, purpose, benefits, eventImage, budgetFile, club_id, token){
+    static async saveEvent(name, venue, date, time, purpose, benefits, eventImage, budgetFile, public_status, club_id, token){
         try{
 
           
             const formData = new FormData();
-            formData.append('data', new Blob([JSON.stringify({ name, venue, date, time, purpose, benefits, club_id })], { type: 'application/json' }));
+            formData.append('data', new Blob([JSON.stringify({ name, venue, date, time, purpose, benefits, public_status, club_id })], { type: 'application/json' }));
             if (eventImage) formData.append('eventImage', eventImage);
             if (budgetFile) formData.append('budgetFile', budgetFile);
 
