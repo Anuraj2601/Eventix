@@ -20,6 +20,7 @@ import Inquiriespresident from './components/Inquiry';
 import Messagespresident from './components/Message';
 import Profilepresident from './components/Profile';
 import MainMeetingPresident from './components/MainMeeting';
+import MeetingLandingPage from './MeetingLandingPage'
 import AddSponsor from './components/AddSponsor';
 
 
@@ -247,8 +248,10 @@ const App = () => {
         <Route path='/president/inquiry' element={<Inquiriespresident/>}></Route>
         <Route path='/president/messages' element={<Messagespresident/>}></Route>
         <Route path='/president/profile' element={<Profilepresident/>}></Route>
-        <Route path='/president/meeting' element={<MainMeetingPresident />}></Route> 
-        <Route path='/president/AddSponsor/:id' element={<AddSponsor />}></Route> 
+
+        <Route path='/president/meeting' element={<MainMeetingPresident />}></Route>
+        <Route path='/president/meeting/:id' element={<MeetingLandingPage />}></Route>
+        <Route path='/president/AddSponsor' element={<AddSponsor />}></Route> 
         <Route path='/president/EditSponsor/:id' element={<AddSponsor />}></Route>
 
         <Route path="/president/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
