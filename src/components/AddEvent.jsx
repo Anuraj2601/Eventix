@@ -368,7 +368,7 @@ const AddEvent = () => {
               onClick={handleSubmit}
               disabled={!isFormValid}
               className={`p-2 rounded-2xl ${
-                isFormValid ? "bg-green-500" : "bg-gray-500"
+                isFormValid ? "bg-[#AEC90A]" : "bg-gray-500"
               } text-white`}
               style={{
                 boxShadow:

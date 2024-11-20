@@ -109,7 +109,7 @@ const ClubEvent = ({ club }) => {
     if (status === "Approved") {
       return "";
     } else {
-      return "bg-gray-400 text-white cursor-not-allowed";
+      return " text- ";
     }
   };
   
@@ -244,7 +244,8 @@ const ClubEvent = ({ club }) => {
   return (
     <>
     {loading ? <h1 className="text-white">New Loading ....</h1> :   <div className="flex justify-center items-center flex-col p-4 rounded-2xl bg-black opacity-70">
-      {userId == presidentId && (
+    { 
+  (location.pathname.includes('/president') || location.pathname.includes('/secretary')) &&  (
         <div className='flex justify-end mb-2'>
           <button
             className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute top-10 right-32 z-10"
@@ -282,7 +283,7 @@ const ClubEvent = ({ club }) => {
             > 
               <div className="relative custom-3d-shadow custom-card">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
-                <div className="absolute top-0 left-0 m-2 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
+                <div className="absolute top-0 left-0 m-2 bg- bg-opacity-50 rounded-full flex items-center justify-center">
                   <div className="relative group">
                     {isAuthorizedUser() && getStatusIcon(event.status)}
                     {event.status === "Rejected" && hoveredEvent === event && (
@@ -295,17 +296,17 @@ const ClubEvent = ({ club }) => {
                 </div>
                 {event.status === "Approved" && (
   <div
-    className={`w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center ${getButtonStyles(event.status)}`}
-    style={{ backgroundColor: '#AEC90A', color: '#000' }}
+  className={`w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center ${getButtonStyles(event.status)}`}
+>
+  <IconButton
+    onClick={() => handleExploreEvent(event)}
+    className="font-extrabold text-lg t p-5 rounded-full   bg-[#AEC90A]"  // Ensure no extra background color
+    disabled={getButtonDisabled(event.status)}
   >
-    <IconButton
-      onClick={() => handleExploreEvent(event)}
-      className="p-1"
-      disabled={getButtonDisabled(event.status)}
-    >
-      <FaArrowRight className="text-lg text-black" />
-    </IconButton>
-  </div>
+    <FaArrowRight className="text-black font-extrabold" />
+  </IconButton>
+</div>
+
 )}
 
 
@@ -345,18 +346,20 @@ const ClubEvent = ({ club }) => {
     if (event.status !== "Rejected") return true;
 
     // Show rejected events only for the president's path
-    return location.pathname.includes('/president');
-  })
+    return location.pathname.includes('/president') || 
+    location.pathname.includes('/secretary') || 
+    location.pathname.includes('/treasurer');
+})
   .map((event, index) => (            <div key={index} className="relative rounded-lg p-4 custom-card">
               <div className="relative custom-3d-shadow custom-card">
                 <img src={event.image} alt={event.name} className="w-full h-72 object-cover rounded-lg" />
                 <div className="absolute top-0 left-0 m-2 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
                   {getStatusIcon(event.status)}
                 </div>
-                <div className="w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center custom-card" style={{ backgroundColor: '#AEC90A', color: '#000' }}>
+                <div className="w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center custom-card" style={{ backgroundColor: '#black', color: 'black' }}>
                   <IconButton
-                    className="font-extrabold text-lg text-black"
-                    onClick={() => handleExploreEvent(event)}
+    className="font-extrabold text-lg t p-5 rounded-full    text-black bg-[#AEC90A]"  // Ensure no extra background color
+    onClick={() => handleExploreEvent(event)}
                   >
                     <FaArrowRight />
                   </IconButton>
