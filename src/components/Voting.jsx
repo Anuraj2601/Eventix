@@ -4,6 +4,9 @@ import Modal from "react-modal";
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import { getAllCandidates,incrementVotes } from "../service/candidateService";
+import { addVoter } from "../service/VoterService";  // Importing the service
+import { getUserIdFromToken } from '../utils/utils';
+
 
 // Ensure you set the modal app element (usually the root element of your app)
 Modal.setAppElement('#root');
@@ -14,6 +17,7 @@ const Voting = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); // New state for error modal
   const [isThankYouModalOpen, setIsThankYouModalOpen] = useState(false);
+  const [isNoCandidatesModalOpen, setIsNoCandidatesModalOpen] = useState(false);  // New state for the no candidates modal
 
   const electionIdFromUrl = currentPath.split('/').pop(); // Extract the last part of the URL (electionId)
 
@@ -43,6 +47,9 @@ const Voting = () => {
           };
 
           setCandidates(categorizedCandidates);
+          if (categorizedCandidates.president.length === 0 && categorizedCandidates.secretary.length === 0 && categorizedCandidates.treasurer.length === 0) {
+            setIsNoCandidatesModalOpen(true);
+          }
         } else {
           console.error("Fetched data is not an array:", data);
         }
@@ -77,6 +84,14 @@ const Voting = () => {
         // Call the service to increment votes
         await incrementVotes(candidateIds);
         console.log("Voting completed and votes incremented");
+
+        const userId = getUserIdFromToken();
+        if (!electionIdFromUrl) throw new Error("Election ID is missing.");
+  
+        await addVoter({
+          electionId: electionIdFromUrl,
+          userId
+        });
   
         // Show success modal with the same design
         setIsThankYouModalOpen(true); // Reuse the modal state to show the success message
@@ -107,10 +122,29 @@ const Voting = () => {
         <Navbar className="sticky top-0 z-10 bg-neutral-900 text-white " />
         <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
           <div className="w-full flex flex-col items-center py-2 px-20 overflow-y-auto">
+              {/* Modal for No Candidates */}
+              <Modal
+              isOpen={isNoCandidatesModalOpen}
+              onRequestClose={() => setIsNoCandidatesModalOpen(false)}
+              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
+            >
+              <div className="bg-white p-6 rounded-lg max-w-md w-full text-center">
+                <h2 className="text-2xl font-bold mb-4">Selection Process Not Completed</h2>
+                <p className="mb-4">The selection process hasn't completed yet. Please wait to start voting.</p>
+                <button
+onClick={() => {
+  setIsNoCandidatesModalOpen(false);
+  window.history.go(-1); // Navigate one step back in the history
+}}                  className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+                >
+                  OK
+                </button>
+              </div>
+            </Modal>
             <Modal
               isOpen={isModalOpen}
               onRequestClose={() => setIsModalOpen(false)}
-              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70"
+              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
             >
               <div className="bg-white p-6 rounded-lg max-w-md w-full text-center">
                 <h2 className="text-2xl font-bold mb-4">Voting Instructions</h2>
@@ -127,7 +161,7 @@ const Voting = () => {
             <Modal
               isOpen={isErrorModalOpen}
               onRequestClose={() => setIsErrorModalOpen(false)}
-              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70"
+              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
             >
               <div className="bg-white p-6 rounded-lg max-w-md w-full text-center">
                 <h2 className="text-2xl font-bold mb-4">Incomplete Voting</h2>
@@ -144,7 +178,7 @@ const Voting = () => {
             <Modal
   isOpen={isThankYouModalOpen}
   onRequestClose={() => setIsThankYouModalOpen(false)}
-  className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70"
+  className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
 >
   <div className="bg-white p-6 rounded-lg max-w-md w-full text-center">
     <h2 className="text-2xl font-bold mb-4">Thank you for voting!</h2>
@@ -160,7 +194,7 @@ const Voting = () => {
 
             {/* President Position */}
             <div className="relative mb-12 w-full p-5">
-              <div className="absolute left-0 z-10 w-full flex justify-center">
+              <div className="absolute left-0  w-full flex justify-center">
                 <div className="py-2 px-4 rounded-lg">
                   <h2 className="text-3xl text-center">President Position</h2>
                 </div>
@@ -205,7 +239,7 @@ const Voting = () => {
 
             {/* Secretary Position */}
             <div className="relative mb-12 w-full p-5">
-              <div className="absolute left-0 z-10 w-full flex justify-center">
+              <div className="absolute left-0  w-full flex justify-center">
                 <div className="py-2 px-4 rounded-lg">
                   <h2 className="text-3xl text-center">Secretary Position</h2>
                 </div>
@@ -249,7 +283,7 @@ const Voting = () => {
 
             {/* Treasurer Position */}
             <div className="relative mb-28 w-full p-5">
-              <div className="absolute left-0 z-10 w-full flex justify-center">
+              <div className="absolute left-0  w-full flex justify-center">
                 <div className="py-2 px-4 rounded-lg">
                   <h2 className="text-3xl text-center">Treasurer Position</h2>
                 </div>

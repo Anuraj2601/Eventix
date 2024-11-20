@@ -64,7 +64,7 @@ class EventOcService{
     static async getEventOcById(eventOc_id,token) {
         try{
     
-            const response1 = await axios.get(`${AnnouncementService.BASE_URL}/president/getEventOc/${eventOc_id}`,
+            const response1 = await axios.get(`${EventOcService.BASE_URL}/president/getEventOc/${eventOc_id}`,
                 {
                     headers: {Authorization: `Bearer ${token}`}
                 }
@@ -104,7 +104,7 @@ class EventOcService{
             };
 
 
-            const response1 = await axios.post(`${EventOcService.BASE_URL}/president/updateEventOc`, data, { headers });
+            const response1 = await axios.put(`${EventOcService.BASE_URL}/president/updateEventOc/${eventOc_id}`, data, { headers });
 
 
             return response1.data;

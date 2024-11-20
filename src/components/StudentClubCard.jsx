@@ -9,7 +9,8 @@ import RegistrationService from '../service/registrationService'; // Adjust the 
 import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function is correctly implemented
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { format, differenceInMonths } from 'date-fns'; // For date formatting and comparison
-
+import axios from 'axios';
+import { getUserIdFromToken } from '../utils/utils';
 import ClubsService from '../service/ClubsService';
 
 
@@ -25,6 +26,38 @@ const StudentClubCard = () => {
   const userId = getUserEmailFromToken();
   const [dialogMessage, setDialogMessage] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [UserProfiles, setUserProfiles] = useState([]); // State to store all user profiles
+  const [userRole, setUserRole] = useState('');
+  const userrId = getUserIdFromToken();
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:8080/api/users/getAllUsersIncludingCurrent', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((response) => {
+        const fetchedUsers = response.data.map((user) => ({
+          image: user.photoUrl || 'default-image-url.jpg',
+          name: `${user.firstname} ${user.lastname}`,
+          id: user.id,
+          email: user.email,
+          role: user.role, // Assuming role is part of the response
+        }));
+        setUserProfiles(fetchedUsers);
+
+        // Set userRole based on the current user's ID
+        const currentUser = fetchedUsers.find(user => user.id === userrId);
+        if (currentUser) {
+          setUserRole(currentUser.role);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching users:', error);
+      });
+  }, [userrId]);
+
   
   useEffect(() => {
     fetchClubs();
@@ -133,35 +166,7 @@ const StudentClubCard = () => {
 
   
 
-  const handleRegisterClickks = (club) => {
-    let basePath;
-    switch (true) {
-      case location.pathname.startsWith('/president'):
-        basePath = '/president';
-        break;
-      case location.pathname.startsWith('/student'):
-        basePath = '/student';
-        break;
-      case location.pathname.startsWith('/oc'):
-        basePath = '/oc';
-        break;
-      case location.pathname.startsWith('/secretary'):
-        basePath = '/secretary';
-        break;
-      case location.pathname.startsWith('/admin'):
-        basePath = '/admin';
-        break;
-      case location.pathname.startsWith('/member'):
-        basePath = '/member';
-        break;
-      case location.pathname.startsWith('/treasurer'):
-        basePath = '/treasurer';
-        break;
-      default:
-        basePath = ''; // Default base path or handle other cases
-    }
-    navigate(`${basePath}/clubregister/${club.club_id}`);
-  };
+
 
   const handleExploreClick = (club) => {
     // Find the user's registration in the filtered registrations list
@@ -211,8 +216,7 @@ const StudentClubCard = () => {
 
   return (
     <div className="flex flex-col">
-      {location.pathname.startsWith('/admin') && (
-        <div className="flex justify-end mb-4">
+ {(['admin', 'treasurer'].includes(userRole.toLowerCase()) ) && (        <div className="flex justify-end mb-4">
           <Button
             className="bg-[#AEC90A] text-[#0B0B0B] px-4 py-2 rounded-full font-medium flex items-center"
             onClick={() => navigate('/admin/addclub')}

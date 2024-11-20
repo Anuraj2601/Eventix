@@ -184,17 +184,7 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   setIsSubmitted(true);
 
-  // validateField("name", name);
-  // validateField("position", position);
-  // validateField("description", description);
-  // validateField("postImage", postImage);
-  
-  // Check if there are any validation errors
-  // if (!Object.values(errors).every((error) => error === "")) {
-  //   // If there are errors, prevent submission and show errors
-  //   console.log("Form has errors:", errors);
-  //   return;
-  // }
+ 
 
   // Perform synchronous validation and store errors locally
   const newErrors = {
@@ -279,76 +269,6 @@ const handleSubmit = async (e) => {
 
   
 
-  // if (Object.values(errors).every((error) => error === "") && Object.values({
-  //     name,
-  //     position,
-  //     description,
-  //     postImage
-     
-  //   }).every((field) => field !== "" || postImageUrl)) {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const session_id = localStorage.getItem("session_id")
-  //     setPublishedUserId(session_id);
-  //     const formData = new FormData();
-
-  //     formData.append("data", new Blob([JSON.stringify({
-  //         name,
-  //         position,
-  //         description,
-  //         postStatus,
-  //         clubId,
-  //         publishedUserId
-         
-  //       })], { type: "application/json" }));
-
-  //     if (postImage) {
-  //       formData.append("file", postImage);
-  //     }
-
-  //     if (id) {
-  //       const response = await PostService.updatePost(
-  //         id,
-  //         name,
-  //         position,
-  //         description,
-  //         postImage,
-  //         postStatus,
-  //         clubId,
-  //         publishedUserId,
-  //         token
-  //       );
-
-  //       alert("Post updated successfully");
-  //       console.log("Post updated:", response);
-  //       navigate(-1);
-
-  //     } else {
-  //       const response = await PostService.savePost(
-  //         name,
-  //         position,
-  //         description,
-  //         postImage,
-  //         postStatus,
-  //         clubId,
-  //         publishedUserId,
-  //         token
-  //       );
-
-  //       alert("Post added successfully");
-  //       console.log("Post added:", response);
-  //       navigate(-1);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error processing Post:", error);
-  //     const errorMessages = error.response
-  //       ? error.response.data.errors
-  //       : { global: error.message };
-  //     setErrors(errorMessages);
-  //     setTimeout(() => setErrors({}), 5000);
-
-  //   }
-  // }
 };
 
 
@@ -404,7 +324,7 @@ const handleCancel = () => {
                     </label>
                     <input
                       id="position"
-                      value={position}
+                      value="Member"
                       onChange={(e) => setPosition(e.target.value)}
                       type="text"
                       placeholder="Secretary"
