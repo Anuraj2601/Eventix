@@ -263,7 +263,6 @@ const StudentClubCard = () => {
                       </div>
                     </div>
                   </div>
-                  <IoMdBookmark className="text-[#AEC90A] custom-card" size={30} />
                 </div>
                 <div className="mb-4">
                   <p className="text-[#F5F5F5]">{club.club_description}</p>

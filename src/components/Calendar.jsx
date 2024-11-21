@@ -164,7 +164,7 @@ const FullCalendar = () => {
                 );
               })}
       {meetingsForDay.map((meeting, i) => {
-  const club = clubDetails.find((club) => club.club_id === meeting.clubId);  // Correct club matching
+  const club = clubDetails.find((club) => club.club_id === meeting.club_id);  // Correct club matching
 
   return (
     <div
@@ -357,7 +357,7 @@ const FullCalendar = () => {
               <div>
                 <h3 className="text-lg font-semibold text-[#AEC90A]">Meetings</h3>
                 {meetingsForDay.map((meeting, i) => {
-                  const club = clubDetails.find((club) => club.club_id === meeting.clubId);
+                  const club = clubDetails.find((club) => club.club_id === meeting.club_id);
                   return (
                     <div
                       key={i}

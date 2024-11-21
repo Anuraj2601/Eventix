@@ -77,7 +77,7 @@ import Inquiriesstudent from './pages/student/Inquiry';
 import Announcementstudent from './components/MainAnnouncement';
 import Messagesstudent from './components/Message';
 import Profilestudent from './components/Profile';
-import MainMeetingstudent from './components/MainMeeting';
+import MainMeetingstudent from './components/MainMeeting copy';
 
 
 
