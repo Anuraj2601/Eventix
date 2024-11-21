@@ -35,7 +35,12 @@ const EventNav = ({clubId, eventDetails}) => {
     {
       label: "Reports",
       value: "Reports",
-      desc: <Reports />,
+      desc: <Reports
+      clubId={clubId}
+      event={eventDetails} // Ensure eventData is the correct event object
+      
+    />
+    ,
     },
   ];
 
