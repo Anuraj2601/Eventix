@@ -193,7 +193,7 @@ const MeetingsList = () => {
                     className={`px-4 py-2 w-full ${disabledButtons.has(announcement.meeting_id) ? 'bg-dark-500 cursor-not-allowed opacity-50' : 'bg-primary text-sec'} rounded font-semibold`}
                     disabled={disabledButtons.has(announcement.meeting_id)}
                   >
-                    {disabledButtons.has(announcement.meeting_id) ? 'Meeting Ended' : 'Join'}
+                    {disabledButtons.has(announcement.meeting_id) ? 'QR code sent to Your mail' : 'Click to receive QR code'}
                   </button>
                 </div>
               </div>
@@ -212,7 +212,7 @@ const MeetingsList = () => {
         {loading ? <div>Loading...</div> : renderMeetingSections()}
         {qrCodeDialogVisible && (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg">
-            <p className="text-lg">You will receive the QR code to your email in a while.</p>
+            <p className="text-lg text-black">You will receive the QR code to your email in a while.</p>
             <button onClick={handleCloseDialog} className="mt-4 px-4 py-2 bg-primary text-white rounded">OK</button>
           </div>
         )}</div>

@@ -163,7 +163,7 @@ const FullCalendar = () => {
                   </div>
                 );
               })}
-      {meetingsForDay.map((meeting, i) => {
+     {meetingsForDay.map((meeting, i) => {
   const club = clubDetails.find((club) => club.club_id === meeting.club_id);  // Correct club matching
 
   return (
@@ -179,12 +179,33 @@ const FullCalendar = () => {
       }}
     >
       {/* Display club image before meeting name */}
-      {club && club.club_image && (
+      {club && club.club_image ? (
         <img
           src={club.club_image}
           alt={club.club_name}
-          style={{ width: "30px", height: "30px", borderRadius: "50%" }}
+          style={{
+            width: "30px",
+            height: "30px",
+            borderRadius: "50%",
+            objectFit: "cover", // Ensures the image is not distorted
+            border: "2px solid #AEC90A", // Adds a border for better visual separation
+          }}
         />
+      ) : (
+        // Fallback if no image is available, you can use a placeholder or default image
+        <div
+          style={{
+            width: "30px",
+            height: "30px",
+            borderRadius: "50%",
+            backgroundColor: "#ccc", // Placeholder background color
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <span style={{ color: "#fff", fontSize: "16px" }}>?</span> {/* Optional: Add an icon or letter */}
+        </div>
       )}
       
       {/* Meeting name and type dot with tooltip */}
