@@ -5,6 +5,9 @@ import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import physicalMeeting from '../assets/physicalMeeting02.png';
 import onlineMeeting from '../assets/onlineMeeting.png';
+import RegistrationService from '../service/registrationService'; // Adjust the path as needed
+import { getUserIdFromToken } from '../utils/utils';
+
 
 const MeetingsList = () => {
   const [meetings, setMeetings] = useState([]);
@@ -17,6 +20,8 @@ const MeetingsList = () => {
   const [popupMeetingId, setPopupMeetingId] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('physical'); // State for selected filter (Physical/Online)
   const token = localStorage.getItem('token') || '';
+  const [registrations, setRegistrations] = useState([]);
+  const userId = getUserIdFromToken();
 
   const fetchClubs = async () => {
     try {
@@ -27,6 +32,27 @@ const MeetingsList = () => {
       console.error("Failed to fetch clubs", error);
     }
   };
+  const fetchRegistrations = async () => {
+    try {
+      const response = await RegistrationService.getAllRegistrations(token);
+      const fetchedRegistrations = response.data || response.content || [];
+      setRegistrations(fetchedRegistrations);
+  
+      // Logs here may not show updated state yet
+      console.log('Registrations:', registrations); // Might log the previous state
+    } catch (error) {
+      console.error("Error fetching registrations:", error);
+    }
+  };
+  
+
+  const validPositions = ["president", "member", "secretary", "treasurer", "oc"];
+  const filteredRegistrations = registrations.filter(
+    (reg) =>
+      reg.email === userId &&
+      reg.accepted === 1 &&
+      validPositions.includes(reg.position.toLowerCase())
+  );
 
   const fetchMeetings = async () => {
     try {
@@ -52,6 +78,7 @@ const MeetingsList = () => {
     if (token) {
       fetchMeetings();
       fetchClubs();
+      fetchRegistrations();
     }
   }, [token]);
 
@@ -96,13 +123,76 @@ const MeetingsList = () => {
     return filteredMeetings;
   };
   
+  const filterMeetingsByParticipantType = (meetings) => {
+    console.log('User ID:', userId);
+
+    return meetings.filter((meeting) => {
+      const { participant_type, club_id } = meeting;
+  
+      // Debug: Current meeting and its participant type
+      console.log('Checking meeting:', meeting.meeting_name, 'Participant Type:', participant_type);
+  
+      if (participant_type === 'EVERYONE') {
+        console.log('Meeting allowed for everyone:', meeting.meeting_name);
+        return true;
+      }
+  
+      // Get user's position in the current club
+      const userRegistration = registrations.find(
+        (reg) => reg.club_id === club_id && reg.email === userId && reg.accepted === 1
+      );
+      console.log('User Registration for Club:', club_id, userRegistration);
+      
+  
+      // Debug: User's registration details
+      console.log('User Registration for Club:', club_id, userRegistration);
+  
+      if (!userRegistration) {
+        console.log('No valid registration found for user in club:', club_id);
+        return false;
+      }
+  
+      const { position } = userRegistration;
+  
+      if (participant_type === 'CLUB_MEMBERS') {
+        const validPositions = ['president', 'member', 'secretary', 'treasurer'];
+        if (validPositions.includes(position.toLowerCase())) {
+          console.log('User is allowed as club member with position:', position);
+          return true;
+        }
+        console.log('User not allowed for CLUB_MEMBERS meeting with position:', position);
+        return false;
+      }
+  
+      if (participant_type === 'CLUB_BOARD') {
+        const validBoardPositions = ['president', 'treasurer', 'secretary'];
+        if (validBoardPositions.includes(position.toLowerCase())) {
+          console.log('User is allowed as club board member with position:', position);
+          return true;
+        }
+        console.log('User not allowed for CLUB_BOARD meeting with position:', position);
+        return false;
+      }
+  
+      // Default deny if none of the conditions match
+      console.log('Default deny for meeting:', meeting.meeting_name);
+      return false;
+    });
+  };
+  
 
   const renderMeetingSections = () => {
     // Filter meetings by participant type "EVERYONE" and only future meetings
-    const filteredMeetings = filterFutureMeetings(meetings.filter(meeting => meeting.participant_type === 'EVERYONE'));
+   // Step 1: Filter future meetings first
+  const futureMeetings = filterFutureMeetings(meetings);
 
-    // Filter based on selected tab (physical or online)
-    const meetingsByType = filteredMeetings.filter(meeting => meeting.meeting_type === selectedFilter.toUpperCase());
+  // Step 2: Filter meetings based on participant type from the future meetings
+  const allowedMeetings = filterMeetingsByParticipantType(futureMeetings);
+
+  // Step 3: Further filter by meeting type (physical or online)
+  const meetingsByType = allowedMeetings.filter(
+    (meeting) => meeting.meeting_type === selectedFilter.toUpperCase()
+  );
 
     return (
       <div className="p-4 rounded-lg mb-20 mx-4">
