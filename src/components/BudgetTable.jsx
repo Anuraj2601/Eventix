@@ -2,15 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Card, CardBody, Typography, Button, Input } from "@material-tailwind/react";
 import EditButton from "./EditButton"; // Import your EditDeleteButton component
 import BudgetService from "../service/BudgetService";
+import moment from 'moment';
 
 
 const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudget = 4000 }) => {
-  const [budgetItems, setBudgetItems] = useState([
-    { id: 1, description: "Venue Rental", type: "cost", amount: 500 },
-    { id: 2, description: "Sponsorship", type: "income", amount: 1000 },
-    { id: 3, description: "Catering", type: "cost", amount: 300 },
-  ]);
-
+  
   const [newItem, setNewItem] = useState({ description: "", type: "COST", amount: 0 });
 
   const [allBudgets, setAllBudgets] = useState([]);
@@ -93,7 +89,6 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
   };
 
  
- 
 
   const handleNewItemChange = (field, value) => {
     setNewItem({ ...newItem, [field]: value });
@@ -152,7 +147,7 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
           <CardBody>
           <Typography color="white" className="mb-4 flex items-center">
             
-            Estimated Budget: Rs. 40,000<span className="mr-2">
+            Estimated Budget: <span className="mr-2">
                 <EditButton />
             </span>
         </Typography>
@@ -162,25 +157,41 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
             <table className="w-full mb-4 text-white">
               <thead>
                 <tr>
+                <th className="p-2 text-left">Date</th>
                   <th className="p-2 text-left">Description</th>
                   <th className="p-2 text-left">Type</th>
                   <th className="p-2 text-left">Amount</th>
                 </tr>
               </thead>
               <tbody>
-                {allBudgets.map(item => (
-                  <tr key={item.budget_id}>
-                    <td className="p-2">{item.budget_name}</td>
-                    <td className="p-2"
-                     style={{
-                      color: item.budget_type === "COST" ? "red" : item.budget_type === "INCOME" ? "#2ecc71" : "white",
-                    }}
-                    >{item.budget_type}</td>
-                    {/* <td className="p-2">${item.amount.toFixed(2)}</td> */}
-                    <td className="p-2">Rs. {item.budget_amount}</td>
-                  </tr>
-                ))}
-              </tbody>
+  {allBudgets.map((item) => {
+    const formattedDate = moment(item.created_at, "YYYY-MM-DDTHH:mm:ssZ", true).isValid()
+      ? moment(item.created_at).format("DD MMM YYYY, hh:mm A")
+      : "Invalid Date";
+
+    return (
+      <tr key={item.budget_id}>
+        <td className="p-2">{item.budget_name}</td>
+        <td
+          className="p-2"
+          style={{
+            color:
+              item.budget_type === "COST"
+                ? "red"
+                : item.budget_type === "INCOME"
+                ? "#2ecc71"
+                : "white",
+          }}
+        >
+          {item.budget_type}
+        </td>
+        <td className="p-2">Rs. {item.budget_amount}</td>
+        <td className="p-2">{formattedDate}</td>
+      </tr>
+    );
+  })}
+</tbody>
+
             </table>
             <form onSubmit={handleAddItem} className="mb-4">
               <div className="flex items-center mb-4">

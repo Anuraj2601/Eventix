@@ -176,7 +176,6 @@ const Candidates = ({ activeTab }) => {
                                               <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
                                               <Typography variant="body2">Position applied for: {candidate.position}</Typography>
                                               <Typography variant="body2">How can they make a change? {candidate.contribution}</Typography>
-                                              <Typography variant="body2">Status: {candidate.selected}</Typography>
                                           </div>
                                           {/* Event OCs List */}
                                           <div className="flex-shrink-0 w-1/4">
@@ -188,26 +187,47 @@ const Candidates = ({ activeTab }) => {
                                               {renderPieChart(candidate.performance)}
                                               <Typography variant="body2" className="mt-2">
                                                   {candidate.performance}%
-                                              </Typography>
+                                              </Typography>                                              
+
                                           </div>
                                       </div>
                                       {/* Buttons at the Bottom Right Corner */}
-                                      <div className="mt-4 flex justify-end gap-2">
-                                          <Button
-                                              className={`flex items-center p-2 text-[#AEC90A] border-2 border-[#AEC90A] text-lg rounded-full hover:text-white hover:border-white ${selectedCount >= 3 ? 'cursor-not-allowed opacity-50' : ''}`}
-                                              onClick={() => handleSelect(candidate.id)}
-                                              disabled={selectedCount >= 3}
-                                          >
-                                              Select
-                                          </Button>
-                                          <Button
-                                              className={`flex items-center p-2 text-red-500 border-2 border-red-500 text-lg rounded-full hover:text-white hover:border-white ${selectedCount >= 3 ? 'cursor-not-allowed opacity-50' : ''}`}
-                                              onClick={() => handleReject(candidate.id)}
-                                              disabled={selectedCount >= 3}
-                                          >
-                                              Reject
-                                          </Button>
-                                      </div>
+                                      {/* Buttons at the Bottom Right Corner */}
+<div className="mt-4 flex justify-end gap-2">
+    {candidate.selected === "selected" ? (
+        <Button
+        className="bg-red-500 hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+        onClick={() => handleReject(candidate.id)}
+        >
+            Reject
+        </Button>
+    ) : candidate.selected === "rejected" ? (
+        <Button
+            className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+            onClick={() => handleSelect(candidate.id)}
+            disabled={selectedCount >= 3}
+        >
+            Select
+        </Button>
+    ) : (
+        <>
+            <Button
+                className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+                onClick={() => handleSelect(candidate.id)}
+                disabled={selectedCount >= 3}
+            >
+                Select
+            </Button>
+            <Button
+                className="bg-red hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+                onClick={() => handleReject(candidate.id)}
+            >
+                Reject
+            </Button>
+        </>
+    )}
+</div>
+
                                   </CardBody>
                               </Card>
                           ))

@@ -20,6 +20,7 @@ import Inquiriespresident from './components/Inquiry';
 import Messagespresident from './components/Message';
 import Profilepresident from './components/Profile';
 import MainMeetingPresident from './components/MainMeeting';
+import MeetingLandingPage from './MeetingLandingPage'
 import AddSponsor from './components/AddSponsor';
 
 
@@ -43,7 +44,7 @@ import Votingoc from './components/Voting';
 import Winners from './components/Winners';
 
 import Apply from './components/Apply';
-import MainMeetingoc from './components/MainMeeting';
+import MainMeetingoc from './components/MainMeetingold';
 
 
 
@@ -59,7 +60,7 @@ import Announcementsecretary from './components/MainAnnouncement';
 import Inquiriessecretary from './components/Inquiry';
 import Messagessecretary from './components/Message';
 import Profilesecretary from './components/Profile';
-import MainMeetingsecretary from './components/MainMeeting';
+import MainMeetingsecretary from './components/MainMeetingold';
 
 
 
@@ -104,7 +105,7 @@ import Announcementmember from './components/MainAnnouncement';
 import Inquiriesmember from './components/Inquiry';
 import Messagesmember from './components/Message';
 import Profilemember from './components/Profile';
-import MainMeetingmember from './components/MainMeeting';
+import MainMeetingmember from './components/MainMeetingold';
 
 
 
@@ -125,7 +126,7 @@ import Announcementadmin from './components/MainAnnouncement';
 import Inquiriesadmin from './pages/student/Inquiry';
 import Messagesadmin from './components/Message';
 import Profileadmin from './components/Profile';
-import MainMeetingadmin from './components/MainMeeting';
+import MainMeetingadmin from './components/MainMeetingold';
 
 
 import StudentDashboardtreasurer from './pages/student/StudentDashboard';
@@ -142,7 +143,7 @@ import Announcementtreasurer from './components/MainAnnouncement';
 import Inquiriestreasurer  from './pages/student/Inquiry';
 import Messagestreasurer from './components/Message';
 import Profiletreasurer from './components/Profile';
-import MainMeetingtreasurer from './components/MainMeeting';
+import MainMeetingtreasurer from './components/MainMeetingold';
 import Requests from './components/Requests'; 
 
 import EventNav from './components/EventNav'; 
@@ -247,8 +248,10 @@ const App = () => {
         <Route path='/president/inquiry' element={<Inquiriespresident/>}></Route>
         <Route path='/president/messages' element={<Messagespresident/>}></Route>
         <Route path='/president/profile' element={<Profilepresident/>}></Route>
-        <Route path='/president/meeting' element={<MainMeetingPresident />}></Route> 
-        <Route path='/president/AddSponsor/:id' element={<AddSponsor />}></Route> 
+
+        <Route path='/president/meeting' element={<MainMeetingPresident />}></Route>
+        <Route path='/president/meeting/:id' element={<MeetingLandingPage />}></Route>
+        <Route path='/president/AddSponsor' element={<AddSponsor />}></Route> 
         <Route path='/president/EditSponsor/:id' element={<AddSponsor />}></Route>
 
         <Route path="/president/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>

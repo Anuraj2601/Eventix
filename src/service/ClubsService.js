@@ -54,6 +54,18 @@ class ClubsService {
     }
   }
 
+  static async getAllClubslanding() {
+    try {
+      const response = await axios.get(
+        `${ClubsService.BASE_URL}/clubs/getAllClubs`
+      );
+      return response.data;
+    } catch (err) {
+      throw err;
+    }
+  }
+  
+
   static async getClubById(club_id, token) {
     try {
       const headers = {

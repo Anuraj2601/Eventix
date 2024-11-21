@@ -20,34 +20,7 @@ const Meeting = ({club}) => {
 
   const [meetings,setMeetings] = useState([]);
 
-  /* useEffect(() => {
-    //console.log("meetings:", meetings);
-    fetchMeetings();
-  }, []);
 
-  useEffect(() => {
-    if (meetings.length === 0) {
-      console.log("No meetings to check.");
-    } else {
-      const ids = meetings.map(meeting => meeting.meeting_id);
-      const uniqueIds = new Set(ids);
-      console.log(`Meetings length: ${meetings.length}`);
-      console.log(ids.length === uniqueIds.size ? 'All IDs are unique' : 'There are duplicate IDs');
-    }
-  }, [meetings]);
-
-  const fetchMeetings = async () => {
-      try {
-          const token = localStorage.getItem('token');
-          const response = await MeetingService.getAllMeetings(token);
-          const meetingsArray = response.content || [];
-          console.log('meeting response in fetchMeetings:', response);
-          setMeetings(meetingsArray);
-
-      } catch(error) {
-          console.error('Error fetching meetings:', error);
-      }
-  }; */
 
   useEffect(() => {
     const fetchMeetings = async () => {
@@ -55,15 +28,18 @@ const Meeting = ({club}) => {
         const token = localStorage.getItem('token');
         const response = await MeetingService.getAllMeetings(token);
         const meetingsArray = response.content || [];
-        //const meetingsArray = response.content.filter(meeting => meeting.clubId == club.club_id) || [];
-        setMeetings(meetingsArray);
+  
+        // Filter meetings by club_id from the `club` prop
+        const filteredMeetings = meetingsArray.filter(meeting => meeting.club_id === club.club_id);
+        setMeetings(filteredMeetings);
       } catch (error) {
         console.error('Error fetching meetings:', error);
       }
     };
-
+  
     fetchMeetings();
-  }, []);
+  }, [club.club_id]); // Add club.club_id as a dependency to re-run if it changes
+  
 
   const formatDate = (dateString) => {
     if (dateString.length < 3) return 'Invalid date'; 
@@ -90,34 +66,6 @@ const Meeting = ({club}) => {
   
 
 
-
-  /* const meetings1 = [
-    {
-      id: "1",
-      desc: "Regarding next club board election",
-      date: "05.06.2024",
-      time: "14:00",
-      status: "Online",
-      audience: "Club Members"
-    },
-    {
-      id: "2",
-      desc: "Regarding club membership update",
-      date: "08.06.2024",
-      time: "15:30",
-      status: "Physical",
-      audience: "Everyone"
-    },
-    {
-      id: "3",
-      desc: "Discussion on upcoming events",
-      date: "10.06.2024",
-      time: "12:00",
-      status: "Online",
-      audience: "Club Board"
-    },
-  ]; */
-
   const handleUpdate = (id) => {
     navigate(`/president/club/meeting/edit/${id}`, { state: { club } });
   }
@@ -142,9 +90,10 @@ const Meeting = ({club}) => {
     
   };
 
-  const openMeetingForm = () =>{
-    navigate(`/president/club/meeting/add`, { state: { club } });
-  }
+  const openMeetingForm = () => {
+    navigate(`/president/club/meeting/add?clubId=${club.club_id}`, { state: { club } });
+  };
+  
 
   return (
     <>
@@ -169,6 +118,9 @@ const Meeting = ({club}) => {
                 <div className="flex flex-col w-1/4">
                   <Typography className="text-white font-normal" variant="h6">
                     {meeting.meeting_name}
+                  </Typography>
+                  <Typography className="text-white font-normal" variant="h6">
+                    {meeting.club_id}
                   </Typography>
                   <div className="flex items-center gap-4 mt-2">
                     <Typography className="text-[#AEC90A] font-normal" variant="h6">

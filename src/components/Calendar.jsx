@@ -75,6 +75,15 @@ const FullCalendar = () => {
   };
   
 
+  const formatTime = (timeArray) => {
+    const [hour, minute] = timeArray;
+    const period = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12; // Convert to 12-hour format (0 becomes 12)
+    const formattedMinute = minute < 10 ? `0${minute}` : minute;
+    return `${formattedHour}:${formattedMinute} ${period}`;
+  };
+
+
   const eventsByDate = events.reduce((acc, event) => {
     const eventDate = format(event.date, "yyyy-MM-dd");
     if (!acc[eventDate]) acc[eventDate] = [];
@@ -128,11 +137,13 @@ const FullCalendar = () => {
               key={index}
               className="calendar-day"
               style={{
-                padding: "10px",
+                padding: "5px",
                 minHeight: "100px",
                 backgroundColor: date ? "black" : "transparent",
                 color: date ? "white" : "transparent",
                 borderRadius: "20px",
+                border: "1px solid rgba(255, 255, 255, 0.2)", // Light white with low opacity
+
                 cursor: "pointer",
                 ...cardHighlightStyle,
                 ...selectedStyle,
@@ -161,8 +172,8 @@ const FullCalendar = () => {
                   </div>
                 );
               })}
-      {meetingsForDay.map((meeting, i) => {
-  const club = clubDetails.find((club) => club.club_id === meeting.clubId);  // Correct club matching
+     {meetingsForDay.map((meeting, i) => {
+  const club = clubDetails.find((club) => club.club_id === meeting.club_id);  // Correct club matching
 
   return (
     <div
@@ -177,12 +188,33 @@ const FullCalendar = () => {
       }}
     >
       {/* Display club image before meeting name */}
-      {club && club.club_image && (
+      {club && club.club_image ? (
         <img
           src={club.club_image}
           alt={club.club_name}
-          style={{ width: "30px", height: "30px", borderRadius: "50%" }}
+          style={{
+            width: "30px",
+            height: "30px",
+            borderRadius: "50%",
+            objectFit: "cover", // Ensures the image is not distorted
+            border: "2px solid #AEC90A", // Adds a border for better visual separation
+          }}
         />
+      ) : (
+        // Fallback if no image is available, you can use a placeholder or default image
+        <div
+          style={{
+            width: "30px",
+            height: "30px",
+            borderRadius: "50%",
+            backgroundColor: "#ccc", // Placeholder background color
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <span style={{ color: "#fff", fontSize: "16px" }}>?</span> {/* Optional: Add an icon or letter */}
+        </div>
       )}
       
       {/* Meeting name and type dot with tooltip */}
@@ -321,7 +353,7 @@ const FullCalendar = () => {
     <h3 className="text-lg font-semibold">{event.name}</h3>
     <ul className="list-disc pl-5">
       <li className="text-sm">
-        {format(event.date, "PP")} | <strong>{format(event.date, "EEEE")}</strong>
+      Time: {formatTime(event.time || [0, 0])} | <strong>{format(event.date, "EEEE")}</strong>
       </li>
       <li className="text-sm">Venue: {event.venue}</li>
     </ul>
@@ -355,7 +387,13 @@ const FullCalendar = () => {
               <div>
                 <h3 className="text-lg font-semibold text-[#AEC90A]">Meetings</h3>
                 {meetingsForDay.map((meeting, i) => {
-                  const club = clubDetails.find((club) => club.club_id === meeting.clubId);
+                  const club = clubDetails.find((club) => club.club_id === meeting.club_id);
+                   // Check if the meeting date is in the past
+      const meetingDate = new Date(meeting.date);
+      const currentDate = new Date();
+
+      // Disable button if meeting date is in the past
+      const isPastMeeting = meetingDate < currentDate;
                   return (
                     <div
                       key={i}
@@ -368,42 +406,69 @@ const FullCalendar = () => {
                         color: "white",
                       }}
                     >
-                      {club && club.club_image && (
-                        <img
-                          src={club.club_image}
-                          alt={club.club_name}
-                          style={{
-                            width: "20px",
-                            height: "20px",
-                            borderRadius: "50%",
-                          }}
-                        />
-                      )}
-                      <div>
-                        <h3>
-                          {meeting.meeting_type}{" "}
-                          <span />
-                          {meeting.meeting_name}
-                          <span
-                            style={{
-                              width: "10px",
-                              height: "10px",
-                              borderRadius: "50%",
-                              backgroundColor:
-                                meeting.meeting_type === "ONLINE" ? "green" : "red",
-                              display: "inline-block",
-                              marginLeft: "10px",
-                            }}
-                            title={
-                              meeting.meeting_type === "ONLINE"
-                                ? "Online Meeting"
-                                : "Physical Meeting"
-                            }
-                          />
-                        </h3>
-                        <p>Date: {format(meeting.date, "PP")}</p>
-                        <p>Organized by: {meeting.clubId}</p>
-                      </div>
+                     
+                     <div>
+  <h3>
+    {meeting.meeting_type}{" "}
+    <span />
+    
+    {meeting.meeting_name}
+    <span
+      style={{
+        width: "10px",
+        height: "10px",
+        borderRadius: "50%",
+        backgroundColor:
+          meeting.meeting_type === "ONLINE" ? "green" : "red",
+        display: "inline-block",
+        marginLeft: "10px",
+      }}
+      title={
+        meeting.meeting_type === "ONLINE"
+          ? "Online Meeting"
+          : "Physical Meeting"
+      }
+    />
+  </h3>
+  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    {/* Meeting Details */}
+  
+    
+    {/* Join Button */}
+    <button
+      style={{
+        padding: "8px 12px",
+        backgroundColor: isPastMeeting ? "gray" : "#AEC90A",
+        cursor: isPastMeeting ? "not-allowed" : "pointer",
+        opacity: isPastMeeting ? 0.5 : 1,
+        border: "none",
+        borderRadius: "4px",
+        color: "black",
+      }}
+      disabled={isPastMeeting}
+      title={isPastMeeting ? "This meeting has already passed" : "Join Meeting"}
+    >
+      {isPastMeeting ? "Meeting Passed" : "Join Meeting"}
+    </button>
+  </div>
+  <p>At: {formatTime(meeting.time, "PP")}</p>
+
+  {club && club.club_image && (
+      <img
+        src={club.club_image}
+        alt={club.club_name}
+        style={{
+          width: "40px",
+          height: "40px",
+          borderRadius: "50%",
+        }}
+      />
+    )}
+
+  {/* Container for button and details */}
+ 
+</div>
+
                     </div>
                   );
                 })}
