@@ -25,6 +25,7 @@
     "apexcharts": "^3.50.0",
     "axios": "^1.7.2",
     "chart.js": "^4.4.6",
+    "chartjs-adapter-moment": "^1.0.1",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
     "dom-helpers": "^5.2.1",

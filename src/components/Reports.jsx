@@ -42,24 +42,28 @@ const BudgetTable = ({ clubId, event, onUpdate, estimatedBudget = 4000 }) => {
     let costData = [0];
     let incomeData = [0];
     let scatterData = [];
-
+  
     allBudgets.forEach((item) => {
-      const formattedDate = moment(item.created_at).format("DD MMM YYYY, hh:mm A");
+      const formattedDate = moment(item.created_at).format("DD MMM YYYY, hh:mm A"); // Format the date
+
       if (item.budget_type === "COST") {
         costData[0] += item.budget_amount;
       } else if (item.budget_type === "INCOME") {
         incomeData[0] += item.budget_amount;
       }
-
+  
       if (item.budget_type === "COST" || item.budget_type === "INCOME") {
         scatterData.push({
           x: moment(item.created_at).valueOf(), // timestamp as x value
           y: item.budget_amount,
-          label: item.budget_name, // Label with budget name
+          label: `${item.budget_name} - ${formattedDate}`, // Label with budget name and formatted date
         });
       }
     });
-
+  
+    // Log the scatterData for debugging
+    console.log("Scatter Data:", scatterData);
+  
     return {
       barChartData: {
         labels,
@@ -98,7 +102,7 @@ const BudgetTable = ({ clubId, event, onUpdate, estimatedBudget = 4000 }) => {
       },
     };
   };
-
+  
   const { barChartData, scatterChartData } = processChartData();
 
   return (
@@ -131,16 +135,22 @@ const BudgetTable = ({ clubId, event, onUpdate, estimatedBudget = 4000 }) => {
             Budget Items over Time (Scatter Plot)
           </Typography>
           <div className="mb-4">
-            <Scatter data={scatterChartData} options={{
-              responsive: true,
-              plugins: {
-                tooltip: {
-                  callbacks: {
-                    label: (context) => `${context.raw.label}: Rs. ${context.raw.y}`, // Show the budget name and amount
+            <Scatter 
+              data={scatterChartData} 
+              options={{
+                responsive: true,
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const dataPoint = context.raw;
+                        return `${dataPoint.label}: Rs. ${dataPoint.y}`; // Use formatted date and budget amount
+                      }
+                    }
                   }
                 }
-              }
-            }} />
+              }} 
+            />
           </div>
 
         </CardBody>
