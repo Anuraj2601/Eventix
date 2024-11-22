@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Tabs,
   TabsHeader,
@@ -12,9 +12,12 @@ import { useLocation } from "react-router-dom"; // Import useLocation hook
 const AnnouncementNav = () => {
   const [activeTab, setActiveTab] = React.useState("Announcements");
   const location = useLocation(); // Get the current path
+  const [eventMeetings, setEventMeetings] = useState([]);
 
   // Check if the path starts with one of the specified routes
   const isEditablePage = [ '/secretary', '/president'].some(path => location.pathname.startsWith(path));
+
+
 
   const data = [
     {
