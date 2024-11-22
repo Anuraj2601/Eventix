@@ -1,167 +1,222 @@
-import React from 'react';
-import { Chart } from 'react-google-charts';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardBody,
+  Typography,
+} from "@material-tailwind/react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
+import BudgetService from "../service/BudgetService";
+import moment from "moment";
 
-const ClubReport = () => {
-  const events = [
-    { name: "MadHack", versions: ["3.0", "2.0", "1.0"], },
-    { name: "ReidExtreme", versions: ["3.0", "2.0", "1.0"], },
-    { name: "IEEE Day", versions: ["2023", "2022", "2021"], },
-    { name: "FreshHack", versions: ["1.0"] },
-  ];
+const BudgetTable = ({ clubId, onUpdate }) => {
+  const [allBudgets, setAllBudgets] = useState([]);
+  const [groupedBudgets, setGroupedBudgets] = useState({});
 
-  const dummyData = {
-    "MadHack": [
-      { version: "3.0", income: 5000, cost: 3000, sponsorship: 2000, registrations: 100 },
-      { version: "2.0", income: 4000, cost: 2500, sponsorship: 1500, registrations: 80 },
-      { version: "1.0", income: 3000, cost: 2000, sponsorship: 1000, registrations: 60 },
-    ],
-    "ReidExtreme": [
-      { version: "3.0", income: 6000, cost: 3500, sponsorship: 2500, registrations: 120 },
-      { version: "2.0", income: 4500, cost: 3000, sponsorship: 1500, registrations: 90 },
-      { version: "1.0", income: 3500, cost: 2200, sponsorship: 1300, registrations: 70 },
-    ],
-    "IEEE Day": [
-      { version: "2023", income: 5500, cost: 3200, sponsorship: 2300, registrations: 110 },
-      { version: "2022", income: 4800, cost: 2900, sponsorship: 1900, registrations: 100 },
-      { version: "2021", income: 4000, cost: 2700, sponsorship: 1300, registrations: 90 },
-    ],
-    "FreshHack": [
-      { version: "1.0", income: 2000, cost: 1500, sponsorship: 500, registrations: 50 },
-    ],
+  // Fetch Budget Data
+  useEffect(() => {
+    const fetchBudgetItems = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await BudgetService.getAllBudgets(token);
+        const budgetArray = response.content || [];
+
+        // Group by event_id
+        const groupedData = budgetArray.reduce((acc, item) => {
+          if (!acc[item.event_id]) acc[item.event_id] = [];
+          acc[item.event_id].push(item);
+          return acc;
+        }, {});
+        setAllBudgets(budgetArray);
+        setGroupedBudgets(groupedData);
+      } catch (error) {
+        console.error("Error fetching budget items", error);
+      }
+    };
+    fetchBudgetItems();
+  }, []);
+
+  const formatCreatedAt = (createdAtArray) => {
+    if (Array.isArray(createdAtArray) && createdAtArray.length === 7) {
+      const [year, month, day, hour, minute, second] = createdAtArray;
+      const date = new Date(year, month - 1, day, hour, minute, second);
+      return moment(date).format("YYYY-MM-DD");
+    }
+    return "Invalid Date";
   };
 
-  const generateVersionComparisonData = () => {
-    const versionComparisonData = [
-      ["Event", "Version 1.0", "Version 2.0", "Version 3.0"],
-      ["MadHack", 60, 80, 100],
-      ["ReidExtreme", 70, 190, 120],
-      ["IEEE Day", 90, 100, 110],
-      ["FreshHack", 50, null, null],
-    ];
-  
-    return versionComparisonData;
-  };
+  // Prepare Data for Charts
+  const barChartData = Object.entries(groupedBudgets).map(([event_id, items]) => {
+    const totalCost = items
+      .filter((item) => item.budget_type === "COST")
+      .reduce((total, item) => total + item.budget_amount, 0);
+    const totalIncome = items
+      .filter((item) => item.budget_type === "INCOME")
+      .reduce((total, item) => total + item.budget_amount, 0);
 
-  const chartOption = {
-    backgroundColor: 'black',
-    chart: {
-      title: 'Version Comparison by Event',
-      subtitle: 'Comparing Registrations across Different Versions and Years',
-      textStyle: { color: 'white' },
-    },
-    hAxis: {
-      title: 'Event',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-    },
-    vAxis: {
-      title: 'Registrations',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-      gridlines: { color: 'white' },
-    },
-    seriesType: 'bars',
-    series: {
-      0: { color: 'red' },
-      1: { color: 'orange' },
-      2: { color: 'green' },
-      3: { color: 'yellow' },
-      4: { color: '#4F7F01' },
-      5: { color: '#3B6B01' },
-    },
-    legend: { textStyle: { color: 'white' } },
-  };
-  
+    return { event_id, cost: totalCost, income: totalIncome };
+  });
 
-  const generateChartData = (eventName) => {
-    const event = dummyData[eventName];
-    const data = [
-      ["Version", "Income", "Cost", "Sponsorship", "Registrations"]
-    ];
-    event.forEach(version => {
-      data.push([version.version, version.income, version.cost, version.sponsorship, version.registrations]);
-    });
-    return data;
-  };
-
-  const generateOverallChartData = () => {
-    const data = [
-      ["Event", "Total Registrations"]
-    ];
-    Object.keys(dummyData).forEach(eventName => {
-      const totalRegistrations = dummyData[eventName].reduce((total, version) => total + version.registrations, 0);
-      data.push([eventName, totalRegistrations]);
-    });
-    return data;
-  };  
-
-  const chartOptions = {
-    backgroundColor: 'black',
-    chart: {
-      title: 'Event Report',
-      subtitle: 'Comparing Income, Costs, Sponsorships, and Registrations across different versions',
-      textStyle: { color: 'white' },
-    },
-    hAxis: {
-      title: 'Version',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-    },
-    vAxis: {
-      title: 'Amount',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-      gridlines: { color: 'white' },
-    },
-    seriesType: 'bars',
-    series: {
-      0: { color: 'red' },
-      1: { color: 'orange' },
-      2: { color: 'green' },
-      3: { color: 'blue', type: 'line' },
-    },
-    legend: { textStyle: { color: 'white' } },
-  };
+  const lineChartData = Object.entries(groupedBudgets).flatMap(([event_id, items]) =>
+    items.map((item) => ({
+      event_id,
+      date: formatCreatedAt(item.created_at),
+      amount: item.budget_amount,
+      type: item.budget_type,
+    }))
+  );
 
   return (
-    <div className="px-40 py-5 rounded-2xl " style={{ backgroundColor: 'black' }}>
-        <div className="mb-8">
-        <h2 className="text-xl text-center font-bold mb-2" style={{ color: 'white' }}>Version Comparison by Event</h2>
-        <Chart
-          width={'100%'}
-          height={'400px'}
-          chartType="ColumnChart"
-          loader={<div>Loading Chart...</div>}
-          data={generateVersionComparisonData()}
-          options={chartOptions}
-        />
-      </div>
-      {events.map(event => (
-        
-        <div key={event.name} className="mb-8">
-          <h2 className="text-xl text-center font-bold mb-2" style={{ color: 'white' }}>{event.name} Reports</h2>
-          <Chart
-            width={'100%'}
-            height={'400px'}
-            chartType="ColumnChart"
-            loader={<div>Loading Chart...</div>}
-            data={generateChartData(event.name)}
-            options={{
-              ...chartOptions,
-              chart: {
-                ...chartOptions.chart,
-                title: `${event.name} Event Report`,
-              },
-            }}
-          />
-        </div>
+    <div>
+      <Card className="w-full bg-black mb-6">
+        <CardBody>
+         
 
-        
-      ))}
-        
+          {/* Bar Chart for Total Costs vs Incomes */}
+          <Typography color="white" variant="h5" className="mb-4 text-center">
+            Total Costs vs Incomes by Event
+          </Typography>
+          <div className="mb-6" style={{ height: 400 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barChartData} margin={{ top: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="event_id" stroke="white" />
+                <YAxis stroke="white" />
+                <Tooltip />
+                <Legend />
+                <Bar
+                  dataKey="cost"
+                  fill="#808080"
+                  barSize={40}
+                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                />
+                <Bar
+                  dataKey="income"
+                  fill="#AEC90A"
+                  barSize={40}
+                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Scatter Plot for Costs */}
+          <Typography color="white" variant="h5" className="mt-8 mb-4 text-center">
+            Costs Over Time by Event
+          </Typography>
+          <div className="mb-6" style={{ height: 400 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  type="category"
+                  tickFormatter={(tick) => moment(tick).format("MMM D, YYYY")}
+                  tick={{ fill: "white" }}
+                  stroke="white"
+                />
+                <YAxis tick={{ fill: "white" }} stroke="white" />
+                <Tooltip />
+                <Legend />
+                {Object.entries(groupedBudgets).map(([event_id, items]) => (
+                  <Line
+                    key={event_id}
+                    data={items
+                      .filter((item) => item.budget_type === "COST")
+                      .map((item) => ({
+                        date: formatCreatedAt(item.created_at),
+                        amount: item.budget_amount,
+                      }))}
+                    dataKey="amount"
+                    name={`Event ${event_id}`}
+                    stroke="#FF5733"
+                    dot={{ r: 5 }}
+                    activeDot={{ r: 7 }}
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Scatter Plot for Incomes */}
+          <Typography color="white" variant="h5" className="mt-8 mb-4 text-center">
+            Incomes Over Time by Event
+          </Typography>
+          <div className="mb-6" style={{ height: 400 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  type="category"
+                  tickFormatter={(tick) => moment(tick).format("MMM D, YYYY")}
+                  tick={{ fill: "white" }}
+                  stroke="white"
+                />
+                <YAxis tick={{ fill: "white" }} stroke="white" />
+                <Tooltip />
+                <Legend />
+                {Object.entries(groupedBudgets).map(([event_id, items]) => (
+                  <Line
+                    key={event_id}
+                    data={items
+                      .filter((item) => item.budget_type === "INCOME")
+                      .map((item) => ({
+                        date: formatCreatedAt(item.created_at),
+                        amount: item.budget_amount,
+                      }))}
+                    dataKey="amount"
+                    name={`Event ${event_id}`}
+                    stroke="#28A745"
+                    dot={{ r: 5 }}
+                    activeDot={{ r: 7 }}
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Registrations and Check-Ins Bar Chart */}
+          <Typography color="white" variant="h5" className="mt-8 mb-4 text-center">
+            Registrations vs Check-Ins
+          </Typography>
+          <div style={{ height: 400 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barChartData} margin={{ top: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="event_id" stroke="white" />
+                <YAxis stroke="white" />
+                <Tooltip />
+                <Legend />
+                <Bar
+                  dataKey="registrations"
+                  fill="#6A1B9A"
+                  barSize={40}
+                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                />
+                <Bar
+                  dataKey="checkIns"
+                  fill="#BA68C8"
+                  barSize={40}
+                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </CardBody>
+      </Card>
     </div>
-    
   );
 };
 
-export default ClubReport;
+export default BudgetTable;
