@@ -44,7 +44,7 @@ import Votingoc from './components/Voting';
 import Winners from './components/Winners';
 
 import Apply from './components/Apply';
-import MainMeetingoc from './components/MainMeeting';
+import MainMeetingoc from './components/MainMeetingold';
 
 
 
@@ -60,7 +60,7 @@ import Announcementsecretary from './components/MainAnnouncement';
 import Inquiriessecretary from './components/Inquiry';
 import Messagessecretary from './components/Message';
 import Profilesecretary from './components/Profile';
-import MainMeetingsecretary from './components/MainMeeting';
+import MainMeetingsecretary from './components/MainMeetingold';
 
 
 
@@ -77,7 +77,7 @@ import Inquiriesstudent from './pages/student/Inquiry';
 import Announcementstudent from './components/MainAnnouncement';
 import Messagesstudent from './components/Message';
 import Profilestudent from './components/Profile';
-import MainMeetingstudent from './components/MainMeeting copy';
+import MainMeetingstudent from './components/MainMeeting';
 
 
 
@@ -105,7 +105,7 @@ import Announcementmember from './components/MainAnnouncement';
 import Inquiriesmember from './components/Inquiry';
 import Messagesmember from './components/Message';
 import Profilemember from './components/Profile';
-import MainMeetingmember from './components/MainMeeting';
+import MainMeetingmember from './components/MainMeetingold';
 
 
 
@@ -126,7 +126,7 @@ import Announcementadmin from './components/MainAnnouncement';
 import Inquiriesadmin from './pages/student/Inquiry';
 import Messagesadmin from './components/Message';
 import Profileadmin from './components/Profile';
-import MainMeetingadmin from './components/MainMeeting';
+import MainMeetingadmin from './components/MainMeetingold';
 
 
 import StudentDashboardtreasurer from './pages/student/StudentDashboard';
@@ -143,7 +143,7 @@ import Announcementtreasurer from './components/MainAnnouncement';
 import Inquiriestreasurer  from './pages/student/Inquiry';
 import Messagestreasurer from './components/Message';
 import Profiletreasurer from './components/Profile';
-import MainMeetingtreasurer from './components/MainMeeting';
+import MainMeetingtreasurer from './components/MainMeetingold';
 import Requests from './components/Requests'; 
 
 import EventNav from './components/EventNav'; 

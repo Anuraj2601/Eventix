@@ -24,7 +24,7 @@
     "@videosdk.live/react-sdk": "^0.1.98",
     "apexcharts": "^3.50.0",
     "axios": "^1.7.2",
-    "chart.js": "^4.4.4",
+    "chart.js": "^4.4.6",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
     "dom-helpers": "^5.2.1",
