@@ -3,6 +3,8 @@ import {
   Card,
   CardBody,
   Typography,
+  Input,
+  Button,
 } from "@material-tailwind/react";
 import {
   LineChart,
@@ -18,12 +20,62 @@ import {
 } from "recharts";
 import BudgetService from "../service/BudgetService";
 import moment from "moment";
+import EventRegistrationService from "../service/EventRegistrationService";
 
-const BudgetTable = ({ clubId, onUpdate }) => {
+
+const BudgetTable = () => {
   const [allBudgets, setAllBudgets] = useState([]);
   const [groupedBudgets, setGroupedBudgets] = useState({});
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [filteredBudgets, setFilteredBudgets] = useState([]);
+  const [eventRegistrations, setEventRegisterations] = useState([]); 
+  const [checkedInStatus, setCheckedInStatus] = useState({});
 
-  // Fetch Budget Data
+  const getRegistrationCounts = () => {
+    const totalRegistrations = eventRegistrations.length;
+    const checkedInCount = eventRegistrations.filter(reg => checkedInStatus[reg.ereg_id]).length;
+    return { totalRegistrations, checkedInCount };
+  };
+
+  const { totalRegistrations, checkedInCount } = getRegistrationCounts();
+
+  const fetchEventRegistrations = async () => {
+    const token = localStorage.getItem("token");
+    const session_id = localStorage.getItem('session_id');
+
+    try{
+      const response2 = await EventRegistrationService.getAllEventRegistrations(token);
+      const eventRegArray = response2.content ? response2.content.filter(eReg => eReg.event_id == event.event_id) : [];
+
+      const registrationsWithUserDetails = await Promise.all(
+        eventRegArray.map(async (evReg) => {
+          try {
+            const userResponse = await UsersService.getUserById(evReg.user_id, token);
+            return { ...evReg, user: userResponse.users }; 
+          } catch (userError) {
+            console.error(`Error fetching details for user_id ${evReg.user_id}:`, userError);
+            return { ...evReg, user: null };
+          }
+        })
+      );
+
+      setEventRegisterations(registrationsWithUserDetails);
+
+      const initialCheckedInStatus = registrationsWithUserDetails.reduce((acc, reg) => {
+        acc[reg.ereg_id] = reg._checked;
+        return acc;
+      }, {});
+      setCheckedInStatus(initialCheckedInStatus);
+    } catch (err) {
+      console.log("Error while fetching event registration details", err);
+    }
+  }
+
+  useEffect(() => {
+    fetchEventRegistrations();
+  }, []);
+  
   useEffect(() => {
     const fetchBudgetItems = async () => {
       try {
@@ -46,6 +98,16 @@ const BudgetTable = ({ clubId, onUpdate }) => {
     fetchBudgetItems();
   }, []);
 
+  useEffect(() => {
+    if (dateFrom && dateTo) {
+      const filtered = allBudgets.filter(item => {
+        const createdDate = moment(item.created_at);
+        return createdDate.isBetween(dateFrom, dateTo, null, "[]");
+      });
+      setFilteredBudgets(filtered);
+    }
+  }, [dateFrom, dateTo, allBudgets]);
+
   const formatCreatedAt = (createdAtArray) => {
     if (Array.isArray(createdAtArray) && createdAtArray.length === 7) {
       const [year, month, day, hour, minute, second] = createdAtArray;
@@ -53,6 +115,14 @@ const BudgetTable = ({ clubId, onUpdate }) => {
       return moment(date).format("YYYY-MM-DD");
     }
     return "Invalid Date";
+  };
+
+  const generateUniqueColor = (index) => {
+    const colors = [
+      "#FF5733", "#28A745",
+      "#3498DB", "#E74C3C", "#F39C12", "#2ECC71", "#9B59B6",
+    ];
+    return colors[index % colors.length];
   };
 
   // Prepare Data for Charts
@@ -64,25 +134,60 @@ const BudgetTable = ({ clubId, onUpdate }) => {
       .filter((item) => item.budget_type === "INCOME")
       .reduce((total, item) => total + item.budget_amount, 0);
 
-    return { event_id, cost: totalCost, income: totalIncome };
+    const totalRegistrations = items.reduce(
+      (total, item) => total + (item.registration_count || 0),
+      0
+    );
+    const checkedInCount = items.reduce(
+      (total, item) => total + (item.checked_in_count || 0),
+      0
+    );
+
+    return {
+      event_id: `Event ${event_id}`,
+      cost: totalCost,
+      income: totalIncome,
+      totalRegistrations,
+      checkedInCount,
+    };
   });
 
-  const lineChartData = Object.entries(groupedBudgets).flatMap(([event_id, items]) =>
-    items.map((item) => ({
-      event_id,
-      date: formatCreatedAt(item.created_at),
-      amount: item.budget_amount,
-      type: item.budget_type,
-    }))
-  );
+  const handleDateChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "fromDate") setDateFrom(value);
+    if (name === "toDate") setDateTo(value);
+  };
+
+  const isDateValid = dateFrom && dateTo && moment(dateFrom).isBefore(dateTo);
 
   return (
     <div>
       <Card className="w-full bg-black mb-6">
         <CardBody>
-         
+          <div className="mb-6">
+            <Input
+              type="date"
+              name="fromDate"
+              value={dateFrom}
+              onChange={handleDateChange}
+              className="mr-4"
+            />
+            <Input
+              type="date"
+              name="toDate"
+              value={dateTo}
+              onChange={handleDateChange}
+            />
+            <Button
+              disabled={!isDateValid}
+              className="ml-4"
+              onClick={() => setFilteredBudgets(filteredBudgets)}
+            >
+              Filter
+            </Button>
+          </div>
 
-          {/* Bar Chart for Total Costs vs Incomes */}
+          {/* Total Costs vs Incomes Bar Chart */}
           <Typography color="white" variant="h5" className="mb-4 text-center">
             Total Costs vs Incomes by Event
           </Typography>
@@ -94,23 +199,31 @@ const BudgetTable = ({ clubId, onUpdate }) => {
                 <YAxis stroke="white" />
                 <Tooltip />
                 <Legend />
-                <Bar
-                  dataKey="cost"
-                  fill="#808080"
-                  barSize={40}
-                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
-                />
-                <Bar
-                  dataKey="income"
-                  fill="#AEC90A"
-                  barSize={40}
-                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
-                />
+                {Object.entries(groupedBudgets).map(([event_id, items], index) => {
+                  const costColor = generateUniqueColor(index);
+                  const incomeColor = generateUniqueColor(index); // Light/Dark shades could be used if needed
+                  return (
+                    <React.Fragment key={event_id}>
+                      <Bar
+                        dataKey="cost"
+                        fill={costColor}
+                        barSize={40}
+                        label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                      />
+                      <Bar
+                        dataKey="income"
+                        fill={incomeColor}
+                        barSize={40}
+                        label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                      />
+                    </React.Fragment>
+                  );
+                })}
               </BarChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Scatter Plot for Costs */}
+          {/* Costs Scatter Plot */}
           <Typography color="white" variant="h5" className="mt-8 mb-4 text-center">
             Costs Over Time by Event
           </Typography>
@@ -126,9 +239,23 @@ const BudgetTable = ({ clubId, onUpdate }) => {
                   stroke="white"
                 />
                 <YAxis tick={{ fill: "white" }} stroke="white" />
-                <Tooltip />
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const { event_id, amount, date } = payload[0].payload;
+                      return (
+                        <div className="bg-black text-white p-2">
+                          <p>{`For: ${event_id}`}</p>
+                          <p>{`Amount: ${amount}`}</p>
+                          <p>{`Date: ${date}`}</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
                 <Legend />
-                {Object.entries(groupedBudgets).map(([event_id, items]) => (
+                {Object.entries(groupedBudgets).map(([event_id, items], index) => (
                   <Line
                     key={event_id}
                     data={items
@@ -139,16 +266,17 @@ const BudgetTable = ({ clubId, onUpdate }) => {
                       }))}
                     dataKey="amount"
                     name={`Event ${event_id}`}
-                    stroke="#FF5733"
+                    stroke={generateUniqueColor(index)}
                     dot={{ r: 5 }}
                     activeDot={{ r: 7 }}
+                    strokeWidth={3}
                   />
                 ))}
               </LineChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Scatter Plot for Incomes */}
+          {/* Income Scatter Plot */}
           <Typography color="white" variant="h5" className="mt-8 mb-4 text-center">
             Incomes Over Time by Event
           </Typography>
@@ -164,9 +292,23 @@ const BudgetTable = ({ clubId, onUpdate }) => {
                   stroke="white"
                 />
                 <YAxis tick={{ fill: "white" }} stroke="white" />
-                <Tooltip />
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const { event_id, amount, date } = payload[0].payload;
+                      return (
+                        <div className="bg-black text-white p-2">
+                          <p>{`Event: ${event_id}`}</p>
+                          <p>{`Amount: ${amount}`}</p>
+                          <p>{`Date: ${date}`}</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
                 <Legend />
-                {Object.entries(groupedBudgets).map(([event_id, items]) => (
+                {Object.entries(groupedBudgets).map(([event_id, items], index) => (
                   <Line
                     key={event_id}
                     data={items
@@ -177,42 +319,18 @@ const BudgetTable = ({ clubId, onUpdate }) => {
                       }))}
                     dataKey="amount"
                     name={`Event ${event_id}`}
-                    stroke="#28A745"
+                    stroke={generateUniqueColor(index)}
                     dot={{ r: 5 }}
                     activeDot={{ r: 7 }}
+                    strokeWidth={3}
                   />
                 ))}
               </LineChart>
             </ResponsiveContainer>
-          </div>
 
-          {/* Registrations and Check-Ins Bar Chart */}
-          <Typography color="white" variant="h5" className="mt-8 mb-4 text-center">
-            Registrations vs Check-Ins
-          </Typography>
-          <div style={{ height: 400 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={barChartData} margin={{ top: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="event_id" stroke="white" />
-                <YAxis stroke="white" />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  dataKey="registrations"
-                  fill="#6A1B9A"
-                  barSize={40}
-                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
-                />
-                <Bar
-                  dataKey="checkIns"
-                  fill="#BA68C8"
-                  barSize={40}
-                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            
           </div>
+          
         </CardBody>
       </Card>
     </div>

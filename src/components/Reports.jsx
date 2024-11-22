@@ -215,7 +215,7 @@ const incomeData = sortedBudgets
     Incomes Over Time
   </Typography>
   <ResponsiveContainer width="100%" height="50%">
-    <LineChart data={incomeData}>
+    <LineChart data={incomeData} >
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis
         dataKey="date"
@@ -252,14 +252,12 @@ const incomeData = sortedBudgets
 
          
 
-          <Typography color="white" variant="h5" className="mb-4 p-5 text-center">
-            Total Costs vs. Incomes
+<Typography color="white" variant="h5" className="mt-80  text-center">            Total Costs vs. Incomes
           </Typography>
           <div className="mb-4" style={{ height: 400 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={[{ name: "Total", cost: totalCosts, income: totalIncomes }]}
-              margin={{ top: 80, }} >
-                <CartesianGrid strokeDasharray="3 3" />
+ margin={{ top: 80,  }}>                <CartesianGrid strokeDasharray="3 3" className="mb-4 p-10"/>
                 <XAxis />
                 <YAxis />
                 <Tooltip />
