@@ -97,6 +97,22 @@ class EventService{
         }
       }
 
+      static async updateIudStatus(eventId, status, role, token) {
+        try {
+          const response = await axios.put(`${EventService.BASE_URL}/event/updateIudStatus/${eventId}`, null,
+            {
+              params: { status, role },
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          return response.data; 
+        } catch (error) {
+          console.error("Error updating IUD status:", error);
+          throw error; 
+        }
+      }
+
+
       
     static logout() {
         localStorage.removeItem("token");

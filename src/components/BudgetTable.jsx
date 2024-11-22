@@ -101,6 +101,22 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
   //   .filter(item => item.type === "income")
   //   .reduce((acc, item) => acc + parseFloat(item.amount), 0);
 
+  const formatCreatedAt = (createdAtArray) => {
+    // Ensure the createdAtArray has 7 elements (year, month, day, hour, minute, second, and timestamp)
+    if (Array.isArray(createdAtArray) && createdAtArray.length === 7) {
+      const [year, month, day, hour, minute, second] = createdAtArray;
+  
+      // Create a Date object from the array values
+      const date = new Date(year, month - 1, day, hour, minute, second);
+  
+      // Return the formatted date using moment.js
+      return moment(date).format("DD MMM YYYY, hh:mm A");
+    }
+  
+    return 'Invalid Date'; // Return a fallback if the date array is invalid
+  };
+  
+
   const totalCosts = allBudgets
     .filter(item => item.budget_type === "COST")
     .reduce((acc, item) => acc + parseFloat(item.budget_amount), 0);
@@ -157,7 +173,7 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
             <table className="w-full mb-4 text-white">
               <thead>
                 <tr>
-                <th className="p-2 text-left">Date</th>
+                <th className="p-2 text-left">On</th>
                   <th className="p-2 text-left">Description</th>
                   <th className="p-2 text-left">Type</th>
                   <th className="p-2 text-left">Amount</th>
@@ -165,12 +181,12 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
               </thead>
               <tbody>
   {allBudgets.map((item) => {
-    const formattedDate = moment(item.created_at, "YYYY-MM-DDTHH:mm:ssZ", true).isValid()
-      ? moment(item.created_at).format("DD MMM YYYY, hh:mm A")
-      : "Invalid Date";
+ const formattedDate = formatCreatedAt(item.created_at); 
+
 
     return (
       <tr key={item.budget_id}>
+         <td>{formattedDate}</td>
         <td className="p-2">{item.budget_name}</td>
         <td
           className="p-2"
@@ -186,8 +202,7 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
           {item.budget_type}
         </td>
         <td className="p-2">Rs. {item.budget_amount}</td>
-        <td className="p-2">{formattedDate}</td>
-      </tr>
+             </tr>
     );
   })}
 </tbody>

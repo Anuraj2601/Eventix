@@ -94,8 +94,14 @@ const MeetingsList = () => {
 
   const getClubDetailsById = (clubId) => {
     const club = clubs.find(c => c.club_id === clubId);
+    
+    if (!club) {
+      console.error(`Club with ID ${clubId} not found.`);
+    }
+    
     return club;
   };
+  
 
   const isJoinButtonEnabled = (meetingDate, meetingTime) => {
     const currentTime = new Date();
@@ -125,35 +131,31 @@ const MeetingsList = () => {
   
   const filterMeetingsByParticipantType = (meetings) => {
     console.log('User ID:', userId);
+    console.log('Registrations:', registrations); // Debugging line
 
     return meetings.filter((meeting) => {
       const { participant_type, club_id } = meeting;
-  
-      // Debug: Current meeting and its participant type
+
       console.log('Checking meeting:', meeting.meeting_name, 'Participant Type:', participant_type);
-  
+
       if (participant_type === 'EVERYONE') {
         console.log('Meeting allowed for everyone:', meeting.meeting_name);
         return true;
       }
-  
-      // Get user's position in the current club
+
       const userRegistration = registrations.find(
-        (reg) => reg.club_id === club_id && reg.email === userId && reg.accepted === 1
+        (reg) => reg.clubId === club_id && reg.userId === userId && reg.accepted === 1
       );
-      console.log('User Registration for Club:', club_id, userRegistration);
       
-  
-      // Debug: User's registration details
-      console.log('User Registration for Club:', club_id, userRegistration);
-  
+      console.log('User Registration for Club:', club_id, userRegistration); // Debugging line
+
       if (!userRegistration) {
         console.log('No valid registration found for user in club:', club_id);
         return false;
       }
-  
+
       const { position } = userRegistration;
-  
+
       if (participant_type === 'CLUB_MEMBERS') {
         const validPositions = ['president', 'member', 'secretary', 'treasurer'];
         if (validPositions.includes(position.toLowerCase())) {
@@ -163,7 +165,7 @@ const MeetingsList = () => {
         console.log('User not allowed for CLUB_MEMBERS meeting with position:', position);
         return false;
       }
-  
+
       if (participant_type === 'CLUB_BOARD') {
         const validBoardPositions = ['president', 'treasurer', 'secretary'];
         if (validBoardPositions.includes(position.toLowerCase())) {
@@ -173,13 +175,15 @@ const MeetingsList = () => {
         console.log('User not allowed for CLUB_BOARD meeting with position:', position);
         return false;
       }
-  
+
       // Default deny if none of the conditions match
       console.log('Default deny for meeting:', meeting.meeting_name);
       return false;
     });
-  };
-  
+};
+
+
+
 
   const renderMeetingSections = () => {
     // Filter meetings by participant type "EVERYONE" and only future meetings
@@ -247,7 +251,7 @@ const MeetingsList = () => {
                   {announcement.meeting_type === 'PHYSICAL' ? (
                     <button
                       onClick={() => setQrCodeDialogVisible(true)} // Open QR Code Dialog for physical meetings
-                      className={`px-4 py-2 w-full   bg-primary text-black cursor-not-allowed rounded font-medium`}
+                      className={`px-4 py-2 w-full   bg-primary text-black  rounded font-medium`}
                     >
                       Click here to Receive QR code
                     </button>
@@ -268,6 +272,8 @@ const MeetingsList = () => {
       </div>
     );
   };
+
+  
 
   return (
     <div className="fixed inset-0 flex">

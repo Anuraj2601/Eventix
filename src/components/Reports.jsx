@@ -1,142 +1,287 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardBody, Typography } from "@material-tailwind/react";
-import { Chart } from "react-google-charts";
-import BudgetTable from "./BudgetTable";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from "recharts";
+import BudgetService from "../service/BudgetService";
+import moment from "moment";
+import EventRegistrationService from "../service/EventRegistrationService";
+import UsersService from "../service/UsersService";
 
-const Reports = () => {
-  const [totalCosts, setTotalCosts] = useState(0);
-  const [totalIncome, setTotalIncome] = useState(0);
+const BudgetTable = ({ clubId, event, onUpdate, estimatedBudget = 4000 }) => {
+  const [allBudgets, setAllBudgets] = useState([]);
+  const [filteredBudgets, setFilteredBudgets] = useState([]);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [eventRegistrations, setEventRegisterations] = useState([]); 
+  const [checkedInStatus, setCheckedInStatus] = useState({});
 
-  // Chart data using the totals calculated by BudgetTable
-  const budgetOverviewChartData = [
-    ["Category", "Amount"],
-    ["Total Costs", totalCosts],
-    ["Total Income", totalIncome],
-  ];
-
-  // Data for Event Registration vs. Check-in Rates
-  const registrationVsCheckinData = [
-    ["Category", "Count"],
-    ["Registrations", 500], // Replace with actual data
-    ["Check-ins", 450], // Replace with actual data
-  ];
-
-  // Data for Estimated Budgets vs. Actual Costs
-  const estimatedVsActualData = [
-    ["Category", "Amount"],
-    ["Estimated Budget", 40000], // Static estimated budget value
-    ["Actual Costs", totalCosts], // Uses the total costs from BudgetTable
-  ];
-
-  // Function to update total costs and income from BudgetTable
-  const handleUpdate = (costs, income) => {
-    setTotalCosts(costs);
-    setTotalIncome(income);
+  const getRegistrationCounts = () => {
+    const totalRegistrations = eventRegistrations.length;
+    const checkedInCount = eventRegistrations.filter(reg => checkedInStatus[reg.ereg_id]).length;
+    return { totalRegistrations, checkedInCount };
   };
+
+  const { totalRegistrations, checkedInCount } = getRegistrationCounts();
+
+  const fetchEventRegistrations = async () => {
+    const token = localStorage.getItem("token");
+    const session_id = localStorage.getItem('session_id');
+
+    try{
+      const response2 = await EventRegistrationService.getAllEventRegistrations(token);
+      const eventRegArray = response2.content ? response2.content.filter(eReg => eReg.event_id == event.event_id) : [];
+
+      const registrationsWithUserDetails = await Promise.all(
+        eventRegArray.map(async (evReg) => {
+          try {
+            const userResponse = await UsersService.getUserById(evReg.user_id, token);
+            return { ...evReg, user: userResponse.users }; 
+          } catch (userError) {
+            console.error(`Error fetching details for user_id ${evReg.user_id}:`, userError);
+            return { ...evReg, user: null };
+          }
+        })
+      );
+
+      setEventRegisterations(registrationsWithUserDetails);
+
+      const initialCheckedInStatus = registrationsWithUserDetails.reduce((acc, reg) => {
+        acc[reg.ereg_id] = reg._checked;
+        return acc;
+      }, {});
+      setCheckedInStatus(initialCheckedInStatus);
+    } catch (err) {
+      console.log("Error while fetching event registration details", err);
+    }
+  }
+
+  useEffect(() => {
+    fetchEventRegistrations();
+  }, []);
+
+  useEffect(() => {
+    const fetchBudgetItems = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await BudgetService.getAllBudgets(token);
+        const budgetArray = response.content.filter((item) => item.event_id === event.event_id) || [];
+        setAllBudgets(budgetArray);
+        setFilteredBudgets(budgetArray);
+      } catch (error) {
+        console.error("Error fetching budget items", error);
+      }
+    };
+    fetchBudgetItems();
+  }, [event.event_id]);
+
+  const formatCreatedAt = (createdAtArray) => {
+    if (Array.isArray(createdAtArray) && createdAtArray.length === 7) {
+      const [year, month, day, hour, minute, second] = createdAtArray;
+      const date = new Date(year, month - 1, day, hour, minute, second);
+      return moment(date).format("YYYY-MM-DD");
+    }
+    return "Invalid Date";
+  };
+
+  const handleFilter = () => {
+    const filtered = allBudgets.filter((item) => {
+      const itemDate = moment(formatCreatedAt(item.created_at), "YYYY-MM-DD");
+      const start = moment(startDate, "YYYY-MM-DD");
+      const end = moment(endDate, "YYYY-MM-DD");
+      return itemDate.isBetween(start, end, "day", "[]");
+    });
+    setFilteredBudgets(filtered);
+  };
+
+  const sortedBudgets = [...filteredBudgets].sort((a, b) => {
+    return moment(formatCreatedAt(a.created_at)).isBefore(moment(formatCreatedAt(b.created_at))) ? -1 : 1;
+  });
+
+  const lineData = sortedBudgets.map((item, index) => {    const prevCost = index > 0 ? sortedBudgets[index - 1].cost : 0;
+    const prevIncome = index > 0 ? sortedBudgets[index - 1].income : 0;
+  
+    // Return the processed item with the appropriate values
+    return {
+    
+    date: formatCreatedAt(item.created_at),
+    cost: item.budget_type === "COST" ? item.budget_amount : prevCost,
+    income: item.budget_type === "INCOME" ? item.budget_amount : prevIncome,
+    label: item.budget_name,
+  };
+});  
+  const costData = sortedBudgets
+  .filter((item) => item.budget_type === "COST")
+  .map((item) => ({
+    date: formatCreatedAt(item.created_at),
+    amount: item.budget_amount,
+    label: item.budget_name,
+  }));
+
+const incomeData = sortedBudgets
+  .filter((item) => item.budget_type === "INCOME")
+  .map((item) => ({
+    date: formatCreatedAt(item.created_at),
+    amount: item.budget_amount,
+    label: item.budget_name,
+  }));
+
+
+  
+  const totalCosts = filteredBudgets
+    .filter((item) => item.budget_type === "COST")
+    .reduce((total, item) => total + item.budget_amount, 0);
+
+  const totalIncomes = filteredBudgets
+    .filter((item) => item.budget_type === "INCOME")
+    .reduce((total, item) => total + item.budget_amount, 0);
 
   return (
     <div>
-      {/* BudgetTable is used but not displayed */}
-      <BudgetTable onUpdate={handleUpdate} showTable={false} />
-
-      {/* Budget Overview Chart */}
-      <Card className="w-full bg-neutral-900 rounded-2xl px-10 ">
+      <Card className="w-full bg-black mb-6">
         <CardBody>
           <Typography color="white" variant="h4" className="mb-4 text-center">
-            Budget Overview
+            Event Reports
           </Typography>
-          <div className="rounded-lg bg-black p-4">
-            <Chart
-              width={"100%"}
-              height={"400px"}
-              chartType="ColumnChart"
-              loader={<div>Loading Chart</div>}
-              data={budgetOverviewChartData}
-              options={{
-                backgroundColor: "black",
-                chartArea: { width: "60%" },
-                hAxis: {
-                  titleTextStyle: { color: "white" },
-                  title: "Category",
-                  textStyle: { color: "white" },
-                },
-                vAxis: {
-                  titleTextStyle: { color: "white" },
-                  title: "Amount",
-                  textStyle: { color: "white" },
-                },
-                legend: { position: "none" },
-                colors: ["blue", "green"],
+
+          <div className="flex gap-4 mb-4">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => {
+                const date = e.target.value;
+                if (date && moment(date).isBefore(moment(), "day")) {
+                  setStartDate(date);
+                }
               }}
+              max={moment().format("YYYY-MM-DD")}
+              className="bg-black text-white p-2 rounded-full"
             />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => {
+                const date = e.target.value;
+                if (date && moment(date).isAfter(startDate)) {
+                  setEndDate(date);
+                }
+              }}
+              min={startDate}
+              className="bg-black text-white p-2 rounded-full"
+            />
+            <button
+              onClick={handleFilter}
+              className="bg-[#AEC90A] text-black px-4 py-2 rounded-full hover:bg-white"
+            >
+              Filter
+            </button>
           </div>
-        </CardBody>
-      </Card>
 
-      {/* Event Registration vs. Check-in Rates Chart */}
-      <Card className="w-full bg-neutral-900 rounded-lg mt-6">
-        <CardBody>
-          <Typography color="white" variant="h4" className="mb-4 text-center">
-            Event Registration vs. Check-in Rates
+          <Typography color="white" variant="h5" className="mb-4 text-center">
+            Incomes and Costs over Time
           </Typography>
-          <div className="rounded-lg bg-black p-4">
-            <Chart
-              width={"100%"}
-              height={"400px"}
-              chartType="BarChart"
-              loader={<div>Loading Chart</div>}
-              data={registrationVsCheckinData}
-              options={{
-                backgroundColor: "black",
-                chartArea: { width: "60%" },
-                hAxis: {
-                  titleTextStyle: { color: "white" },
-                  title: "Count",
-                  textStyle: { color: "white" },
-                },
-                vAxis: {
-                  titleTextStyle: { color: "white" },
-                  title: "Category",
-                  textStyle: { color: "white" },
-                },
-                legend: { position: "none" },
-                colors: ["orange", "#FF5733"], // Different colors for contrast
-              }}
-            />
+          <div className="mb-4" style={{ height: 400 }}>
+          <ResponsiveContainer width="100%" height="100%" className="p-5">
+  <LineChart data={lineData}>
+    <CartesianGrid strokeDasharray="3 3" />
+    <XAxis
+      dataKey="date"
+      name="Date"
+      type="category"
+      title="Date"
+      tickFormatter={(tick) => moment(tick).format("MMM D, YYYY")}
+      tick={{ fill: "white" }}
+      stroke="white"
+    />
+    <YAxis
+      name="Amount"
+      title="Amount (Rs)"
+      tick={{ fill: "white" }}
+      stroke="white"
+    />
+    <Tooltip
+      formatter={(value, name, props) => [
+        `Rs. ${value}`,
+        props.payload.label,
+      ]}
+      cursor={{ strokeDasharray: "3 3" }}
+    />
+    <Legend />
+    {/* Line for Costs */}
+    <Line
+      type="monotone"
+      dataKey="cost"
+      stroke="#808080" // Gray color for cost
+      strokeWidth={2}
+      dot={{ r: 6 }}
+      activeDot={{ r: 8 }}
+      label={{ position: "top", fill: "white", fontWeight: "bold" }}
+    />
+    {/* Line for Incomes */}
+    <Line
+      type="monotone"
+      dataKey="income"
+      stroke="#AEC90A" // Green color for income
+      strokeWidth={2}
+      dot={{ r: 6 }}
+      activeDot={{ r: 8 }}
+      label={{ position: "top", fill: "white", fontWeight: "bold" }}
+    />
+  </LineChart>
+</ResponsiveContainer>
+
           </div>
-        </CardBody>
-      </Card>
 
-      {/* Estimated Budget vs. Actual Costs Chart */}
-      <Card className="w-full bg-neutral-900 rounded-lg mt-6">
-        <CardBody>
-          <Typography color="white" variant="h4" className="mb-4 text-center">
-            Estimated Budget vs. Actual Costs
+          <Typography color="white" variant="h5" className="mb-4 p-5 text-center">
+            Total Costs vs. Incomes
           </Typography>
-          <div className="rounded-lg bg-black p-4">
-            <Chart
-              width={"100%"}
-              height={"400px"}
-              chartType="ColumnChart"
-              loader={<div>Loading Chart</div>}
-              data={estimatedVsActualData}
-              options={{
-                backgroundColor: "black",
-                chartArea: { width: "60%" },
-                hAxis: {
-                  titleTextStyle: { color: "white" },
-                  title: "Amount",
-                  textStyle: { color: "white" },
-                },
-                vAxis: {
-                  titleTextStyle: { color: "white" },
-                  title: "Category",
-                  textStyle: { color: "white" },
-                },
-                legend: { position: "none" },
-                colors: ["#AEC90A", "#FF5733"], // Different colors for contrast
-              }}
-            />
+          <div className="mb-4" style={{ height: 400 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={[{ name: "Total", cost: totalCosts, income: totalIncomes }]}
+              margin={{ top: 80, }} >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis />
+                <YAxis />
+                <Tooltip />
+                <Bar
+                  dataKey="cost"
+                  fill="#808080"
+                  barSize={60}
+                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                />
+                <Bar
+                  dataKey="income"
+                  fill="#AEC90A"
+                  barSize={60}
+                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          <Typography color="white" variant="h5" className="mb-4 p-5 text-center">
+            Total Registrations vs Checked-in Count
+          </Typography>
+          <div className="mb-4 p-10" style={{ height: 400, overflow: "visible" }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={[{ name: "Total Registrations", total: totalRegistrations, checkedIn: checkedInCount }]}
+              margin={{ top: 80,  }}>
+                <CartesianGrid strokeDasharray="3 3" className="mb-4 p-10"/>
+                <XAxis />
+                <YAxis />
+                <Tooltip />
+                <Bar
+                  dataKey="total"
+                  fill="#808080"
+                  barSize={60}
+                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                />
+                <Bar
+                  dataKey="checkedIn"
+                  fill="#AEC90A"
+                  barSize={60}
+                  label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </CardBody>
       </Card>
@@ -144,4 +289,4 @@ const Reports = () => {
   );
 };
 
-export default Reports;
+export default BudgetTable;

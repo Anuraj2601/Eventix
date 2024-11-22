@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import MeetingService from "../service/MeetingService";
 import EventService from "../service/EventService";
 import ClubsService from "../service/ClubsService";  // Import ClubsService
+import { getUserIdFromToken } from '../utils/utils';
+import RegistrationService from '../service/registrationService'; // Adjust the path as needed
+import axios from 'axios';
 
 import {
   format,
@@ -22,12 +25,46 @@ const FullCalendar = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [error, setError] = useState(null);
   const [clubDetails, setClubDetails] = useState([]);
+  const token = localStorage.getItem('token') || '';
+  const [qrCodeDialogVisible, setQrCodeDialogVisible] = useState(false);
+
+  const userId = getUserIdFromToken();
+  const [registrations, setRegistrations] = useState([]);
+
 
   useEffect(() => {
     fetchEvents();
     fetchMeetings();
     fetchClubs();
   }, []);
+
+  const fetchRegistrations = async () => {
+    try {
+      const response = await RegistrationService.getAllRegistrations(token);
+      const fetchedRegistrations = response.data || response.content || [];
+      setRegistrations(fetchedRegistrations);
+  
+      // Logs here may not show updated state yet
+      console.log('Registrations:', registrations); // Might log the previous state
+    } catch (error) {
+      console.error("Error fetching registrations:", error);
+    }
+  };
+  
+  useEffect(() => {
+    if (token) {
+     
+      fetchRegistrations();
+    }
+  }, [token]);
+
+  const validPositions = ["president", "member", "secretary", "treasurer", "oc"];
+  const filteredRegistrations = registrations.filter(
+    (reg) =>
+      reg.email === userId &&
+      reg.accepted === 1 &&
+      validPositions.includes(reg.position.toLowerCase())
+  );
 
   const fetchClubs = async () => {
     try {
@@ -91,12 +128,64 @@ const FullCalendar = () => {
     return acc;
   }, {});
 
-  const meetingsByDate = meetings.reduce((acc, meeting) => {
+
+
+  const filterFutureMeetings = (meetings) => {
+    const currentDate = new Date();
+    return meetings.filter((meeting) => {
+      const meetingDate = new Date(meeting.date);
+      const [hour, minute] = meeting.time;
+      meetingDate.setHours(hour, minute);
+      return meetingDate >= currentDate;
+    });
+  };
+
+  // Filter Meetings by Participant Type
+  const filterMeetingsByParticipantType = (meetings) => {
+    return meetings.filter((meeting) => {
+      const { participant_type, club_id } = meeting;
+
+      if (participant_type === 'EVERYONE') {
+        return true;
+      }
+
+      const userRegistration = registrations.find(
+        (reg) => reg.clubId === club_id && reg.userId === userId && reg.accepted === 1
+      );
+
+      if (!userRegistration) return false;
+
+      const { position } = userRegistration;
+
+      if (participant_type === 'CLUB_MEMBERS') {
+        const validPositions = ['president', 'member', 'secretary', 'treasurer'];
+        return validPositions.includes(position.toLowerCase());
+      }
+
+      if (participant_type === 'CLUB_BOARD') {
+        const validBoardPositions = ['president', 'treasurer', 'secretary'];
+        return validBoardPositions.includes(position.toLowerCase());
+      }
+
+      return false;
+    });
+  };
+
+  // Step 1: Filter future meetings first
+  const futureMeetings = filterFutureMeetings(meetings);
+
+  // Step 2: Filter meetings based on participant type from the future meetings
+  const allowedMeetings = filterMeetingsByParticipantType(futureMeetings);
+
+  // Grouping meetings by date
+  const meetingsByDate = allowedMeetings.reduce((acc, meeting) => {
     const meetingDate = format(meeting.date, "yyyy-MM-dd");
     if (!acc[meetingDate]) acc[meetingDate] = [];
     acc[meetingDate].push(meeting);
     return acc;
   }, {});
+
+
 
   const getCalendarDays = () => {
     const start = startOfWeek(startOfMonth(currentMonth), { weekStartsOn: 0 });
@@ -155,24 +244,9 @@ const FullCalendar = () => {
                   {date.getDate()}
                   {isCurrentDate && <span style={{ fontSize: "10px", color: "#AEC90A" }}> Today</span>}
                 </div>
-              )}              {eventsForDay.map((event, i) => {
-                const club = clubDetails.find((club) => club.club_id === event.club_id);
-                return (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "5px" ,fontSize: "12px", color: "white" ,fontWeight: "bold"}}>
-                   
-                   {club && club.club_image && (
-                      <img
-                        src={club.club_image}
-                        alt={club.club_name}
-                        style={{ width: "30px", height: "30px", borderRadius: "50%" }}
-                      />
-                    )} 
-                    <span >{event.name}</span>
-                   
-                  </div>
-                );
-              })}
-     {meetingsForDay.map((meeting, i) => {
+              )}            
+              
+              {meetingsForDay.map((meeting, i) => {
   const club = clubDetails.find((club) => club.club_id === meeting.club_id);  // Correct club matching
 
   return (
@@ -238,6 +312,25 @@ const FullCalendar = () => {
   );
 })}
 
+
+  {eventsForDay.map((event, i) => {
+                const club = clubDetails.find((club) => club.club_id === event.club_id);
+                return (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "5px" ,fontSize: "12px", color: "white" ,fontWeight: "bold"}}>
+                   
+                   {club && club.club_image && (
+                      <img
+                        src={club.club_image}
+                        alt={club.club_name}
+                        style={{ width: "30px", height: "30px", borderRadius: "50%" }}
+                      />
+                    )} 
+                    <span >{event.name}</span>
+                   
+                  </div>
+                );
+              })}
+     
 
             </div>
           );
