@@ -53,7 +53,7 @@ const Dialog = ({
     </div>
   ) : null;
 
-const RequestTable = ({ type, events, onAccept, onReject }) => {
+const RequestTable = ({ type, events, onAccept, onReject, userRole }) => {
   return (
     <div className="overflow-auto rounded-lg">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -99,15 +99,25 @@ const RequestTable = ({ type, events, onAccept, onReject }) => {
               <span className="text-white">Date: {row.date}</span>
               <span className="text-white">Venue: {row.venue}</span>
             </div>
-
-            <div className="flex items-center mb-4">
-              <button
-                onClick={() => window.open(row.budget, "_blank")}
-                className="px-4 py-2 rounded-lg border-[#AEC90A] border text-white hover:bg-[#AEC90A] transition-all"
-              >
-                View Event Budget
-              </button>
-            </div>
+            {userRole === "admin" ? (
+              // Show purpose and benefit for admin
+              <div className="flex flex-col items-center mb-4">
+                <span className="text-white text-lg font-bold">Purpose:</span>
+                <p className="text-white text-center mb-2">{row.purpose || "Not provided"}</p>
+                <span className="text-white text-lg font-bold">Benefit:</span>
+                <p className="text-white text-center">{row.benefit || "Not provided"}</p>
+              </div>
+            ) : (
+              // Show budget button for other roles (e.g., Treasurer)
+              <div className="flex items-center mb-4">
+                <button
+                  onClick={() => window.open(row.budget, "_blank")}
+                  className="px-4 py-2 rounded-lg border-[#AEC90A] border text-white hover:bg-[#AEC90A] transition-all"
+                >
+                  View Event Budget
+                </button>
+              </div>
+            )}
 
             <div className="flex flex-col space-y-2">
               {type === "all" && (
@@ -211,6 +221,8 @@ const Requests = () => {
             club_image: event.clubImage,
             club_president_image: event.clubPresidentImage,
             club_president_name: event.clubPresidentName,
+            benefit: event.benefits,
+            purpose: event.purpose,
           }));
 
           if (role == "admin") {
@@ -414,6 +426,7 @@ const Requests = () => {
                   events={events[value]}
                   onAccept={handleAccept}
                   onReject={handleReject}
+                  userRole={userRole} 
                 />
               </TabPanel>
             ))

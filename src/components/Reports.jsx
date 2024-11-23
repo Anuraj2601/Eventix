@@ -82,16 +82,18 @@ const BudgetTable = ({ clubId, event, onUpdate, estimatedBudget = 4000 }) => {
     return "Invalid Date";
   };
 
-  const handleFilter = () => {
+   const handleFilter = () => {
+    if (!startDate || !endDate) return;
+
     const filtered = allBudgets.filter((item) => {
       const itemDate = moment(formatCreatedAt(item.created_at), "YYYY-MM-DD");
       const start = moment(startDate, "YYYY-MM-DD");
       const end = moment(endDate, "YYYY-MM-DD");
       return itemDate.isBetween(start, end, "day", "[]");
     });
-    setFilteredBudgets(filtered);
-  };
 
+    setFilteredBudgets(filtered.length > 0 ? filtered : allBudgets);
+  };
   const sortedBudgets = [...filteredBudgets].sort((a, b) => {
     return moment(formatCreatedAt(a.created_at)).isBefore(moment(formatCreatedAt(b.created_at))) ? -1 : 1;
   });
@@ -141,103 +143,121 @@ const incomeData = sortedBudgets
           <Typography color="white" variant="h4" className="mb-4 text-center">
             Event Reports
           </Typography>
-
           <div className="flex gap-4 mb-4">
             <input
               type="date"
               value={startDate}
-              onChange={(e) => {
-                const date = e.target.value;
-                if (date && moment(date).isBefore(moment(), "day")) {
-                  setStartDate(date);
-                }
-              }}
+              onChange={(e) => setStartDate(e.target.value)}
               max={moment().format("YYYY-MM-DD")}
               className="bg-black text-white p-2 rounded-full"
             />
             <input
               type="date"
               value={endDate}
-              onChange={(e) => {
-                const date = e.target.value;
-                if (date && moment(date).isAfter(startDate)) {
-                  setEndDate(date);
-                }
-              }}
+              onChange={(e) => setEndDate(e.target.value)}
               min={startDate}
               className="bg-black text-white p-2 rounded-full"
             />
             <button
               onClick={handleFilter}
-              className="bg-[#AEC90A] text-black px-4 py-2 rounded-full hover:bg-white"
+              disabled={!startDate || !endDate}
+              className={`px-4 py-2 rounded-full ${
+                startDate && endDate ? "bg-[#AEC90A] text-black" : "bg-gray-500 text-gray-200"
+              }`}
             >
               Filter
             </button>
           </div>
 
-          <Typography color="white" variant="h5" className="mb-4 text-center">
-            Incomes and Costs over Time
-          </Typography>
+
           <div className="mb-4" style={{ height: 400 }}>
-          <ResponsiveContainer width="100%" height="100%" className="p-5">
-  <LineChart data={lineData}>
-    <CartesianGrid strokeDasharray="3 3" />
-    <XAxis
-      dataKey="date"
-      name="Date"
-      type="category"
-      title="Date"
-      tickFormatter={(tick) => moment(tick).format("MMM D, YYYY")}
-      tick={{ fill: "white" }}
-      stroke="white"
-    />
-    <YAxis
-      name="Amount"
-      title="Amount (Rs)"
-      tick={{ fill: "white" }}
-      stroke="white"
-    />
-    <Tooltip
-      formatter={(value, name, props) => [
-        `Rs. ${value}`,
-        props.payload.label,
-      ]}
-      cursor={{ strokeDasharray: "3 3" }}
-    />
-    <Legend />
-    {/* Line for Costs */}
-    <Line
-      type="monotone"
-      dataKey="cost"
-      stroke="#808080" // Gray color for cost
-      strokeWidth={2}
-      dot={{ r: 6 }}
-      activeDot={{ r: 8 }}
-      label={{ position: "top", fill: "white", fontWeight: "bold" }}
-    />
-    {/* Line for Incomes */}
-    <Line
-      type="monotone"
-      dataKey="income"
-      stroke="#AEC90A" // Green color for income
-      strokeWidth={2}
-      dot={{ r: 6 }}
-      activeDot={{ r: 8 }}
-      label={{ position: "top", fill: "white", fontWeight: "bold" }}
-    />
-  </LineChart>
-</ResponsiveContainer>
+  {/* Scatter Plot for Costs */}
+  <Typography color="white" variant="h5" className="mb-4 text-center">
+    Costs Over Time
+  </Typography>
+  <ResponsiveContainer width="100%" height="50%">
+    <LineChart data={costData}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis
+        dataKey="date"
+        name="Date"
+        type="category"
+        title="Date"
+        tickFormatter={(tick) => moment(tick).format("MMM D, YYYY")}
+        tick={{ fill: "white" }}
+        stroke="white"
+      />
+      <YAxis
+        name="Amount"
+        title="Amount (Rs)"
+        tick={{ fill: "white" }}
+        stroke="white"
+      />
+      <Tooltip
+        formatter={(value, name, props) => [`Rs. ${value}`, props.payload.label]}
+        cursor={{ strokeDasharray: "3 3" }}
+      />
+      <Legend />
+      <Line
+        type="monotone"
+        dataKey="amount"
+        stroke="#808080"
+        strokeWidth={2}
+        dot={{ r: 6 }}
+        activeDot={{ r: 8 }}
+        label={{ position: "top", fill: "white", fontWeight: "bold" }}
+      />
+    </LineChart>
+  </ResponsiveContainer>
 
-          </div>
+  {/* Scatter Plot for Incomes */}
+  <Typography color="white" variant="h5" className="mt-8 mb-4 text-center">
+    Incomes Over Time
+  </Typography>
+  <ResponsiveContainer width="100%" height="50%">
+    <LineChart data={incomeData} >
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis
+        dataKey="date"
+        name="Date"
+        type="category"
+        title="Date"
+        tickFormatter={(tick) => moment(tick).format("MMM D, YYYY")}
+        tick={{ fill: "white" }}
+        stroke="white"
+      />
+      <YAxis
+        name="Amount"
+        title="Amount (Rs)"
+        tick={{ fill: "white" }}
+        stroke="white"
+      />
+      <Tooltip
+        formatter={(value, name, props) => [`Rs. ${value}`, props.payload.label]}
+        cursor={{ strokeDasharray: "3 3" }}
+      />
+      <Legend />
+      <Line
+        type="monotone"
+        dataKey="amount"
+        stroke="#AEC90A"
+        strokeWidth={2}
+        dot={{ r: 6 }}
+        activeDot={{ r: 8 }}
+        label={{ position: "top", fill: "white", fontWeight: "bold" }}
+      />
+    </LineChart>
+  </ResponsiveContainer>
+</div>
 
-          <Typography color="white" variant="h5" className="mb-4 p-5 text-center">
-            Total Costs vs. Incomes
+         
+
+<Typography color="white" variant="h5" className="mt-80  text-center">            Total Costs vs. Incomes
           </Typography>
           <div className="mb-4" style={{ height: 400 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={[{ name: "Total", cost: totalCosts, income: totalIncomes }]}
-              margin={{ top: 80, }} >
-                <CartesianGrid strokeDasharray="3 3" />
+ margin={{ top: 80,  }}>                <CartesianGrid strokeDasharray="3 3" className="mb-4 p-10"/>
                 <XAxis />
                 <YAxis />
                 <Tooltip />

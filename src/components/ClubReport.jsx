@@ -1,167 +1,340 @@
-import React from 'react';
-import { Chart } from 'react-google-charts';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardBody,
+  Typography,
+  Input,
+  Button,
+} from "@material-tailwind/react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
+import BudgetService from "../service/BudgetService";
+import moment from "moment";
+import EventRegistrationService from "../service/EventRegistrationService";
 
-const ClubReport = () => {
-  const events = [
-    { name: "MadHack", versions: ["3.0", "2.0", "1.0"], },
-    { name: "ReidExtreme", versions: ["3.0", "2.0", "1.0"], },
-    { name: "IEEE Day", versions: ["2023", "2022", "2021"], },
-    { name: "FreshHack", versions: ["1.0"] },
-  ];
 
-  const dummyData = {
-    "MadHack": [
-      { version: "3.0", income: 5000, cost: 3000, sponsorship: 2000, registrations: 100 },
-      { version: "2.0", income: 4000, cost: 2500, sponsorship: 1500, registrations: 80 },
-      { version: "1.0", income: 3000, cost: 2000, sponsorship: 1000, registrations: 60 },
-    ],
-    "ReidExtreme": [
-      { version: "3.0", income: 6000, cost: 3500, sponsorship: 2500, registrations: 120 },
-      { version: "2.0", income: 4500, cost: 3000, sponsorship: 1500, registrations: 90 },
-      { version: "1.0", income: 3500, cost: 2200, sponsorship: 1300, registrations: 70 },
-    ],
-    "IEEE Day": [
-      { version: "2023", income: 5500, cost: 3200, sponsorship: 2300, registrations: 110 },
-      { version: "2022", income: 4800, cost: 2900, sponsorship: 1900, registrations: 100 },
-      { version: "2021", income: 4000, cost: 2700, sponsorship: 1300, registrations: 90 },
-    ],
-    "FreshHack": [
-      { version: "1.0", income: 2000, cost: 1500, sponsorship: 500, registrations: 50 },
-    ],
+const BudgetTable = () => {
+  const [allBudgets, setAllBudgets] = useState([]);
+  const [groupedBudgets, setGroupedBudgets] = useState({});
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [filteredBudgets, setFilteredBudgets] = useState([]);
+  const [eventRegistrations, setEventRegisterations] = useState([]); 
+  const [checkedInStatus, setCheckedInStatus] = useState({});
+
+  const getRegistrationCounts = () => {
+    const totalRegistrations = eventRegistrations.length;
+    const checkedInCount = eventRegistrations.filter(reg => checkedInStatus[reg.ereg_id]).length;
+    return { totalRegistrations, checkedInCount };
   };
 
-  const generateVersionComparisonData = () => {
-    const versionComparisonData = [
-      ["Event", "Version 1.0", "Version 2.0", "Version 3.0"],
-      ["MadHack", 60, 80, 100],
-      ["ReidExtreme", 70, 190, 120],
-      ["IEEE Day", 90, 100, 110],
-      ["FreshHack", 50, null, null],
-    ];
+  const { totalRegistrations, checkedInCount } = getRegistrationCounts();
+
+  const fetchEventRegistrations = async () => {
+    const token = localStorage.getItem("token");
+    const session_id = localStorage.getItem('session_id');
+
+    try{
+      const response2 = await EventRegistrationService.getAllEventRegistrations(token);
+      const eventRegArray = response2.content ? response2.content.filter(eReg => eReg.event_id == event.event_id) : [];
+
+      const registrationsWithUserDetails = await Promise.all(
+        eventRegArray.map(async (evReg) => {
+          try {
+            const userResponse = await UsersService.getUserById(evReg.user_id, token);
+            return { ...evReg, user: userResponse.users }; 
+          } catch (userError) {
+            console.error(`Error fetching details for user_id ${evReg.user_id}:`, userError);
+            return { ...evReg, user: null };
+          }
+        })
+      );
+
+      setEventRegisterations(registrationsWithUserDetails);
+
+      const initialCheckedInStatus = registrationsWithUserDetails.reduce((acc, reg) => {
+        acc[reg.ereg_id] = reg._checked;
+        return acc;
+      }, {});
+      setCheckedInStatus(initialCheckedInStatus);
+    } catch (err) {
+      console.log("Error while fetching event registration details", err);
+    }
+  }
+
+  useEffect(() => {
+    fetchEventRegistrations();
+  }, []);
   
-    return versionComparisonData;
+  useEffect(() => {
+    const fetchBudgetItems = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await BudgetService.getAllBudgets(token);
+        const budgetArray = response.content || [];
+
+        // Group by event_id
+        const groupedData = budgetArray.reduce((acc, item) => {
+          if (!acc[item.event_id]) acc[item.event_id] = [];
+          acc[item.event_id].push(item);
+          return acc;
+        }, {});
+        setAllBudgets(budgetArray);
+        setGroupedBudgets(groupedData);
+      } catch (error) {
+        console.error("Error fetching budget items", error);
+      }
+    };
+    fetchBudgetItems();
+  }, []);
+
+  useEffect(() => {
+    if (dateFrom && dateTo) {
+      const filtered = allBudgets.filter(item => {
+        const createdDate = moment(item.created_at);
+        return createdDate.isBetween(dateFrom, dateTo, null, "[]");
+      });
+      setFilteredBudgets(filtered);
+    }
+  }, [dateFrom, dateTo, allBudgets]);
+
+  const formatCreatedAt = (createdAtArray) => {
+    if (Array.isArray(createdAtArray) && createdAtArray.length === 7) {
+      const [year, month, day, hour, minute, second] = createdAtArray;
+      const date = new Date(year, month - 1, day, hour, minute, second);
+      return moment(date).format("YYYY-MM-DD");
+    }
+    return "Invalid Date";
   };
 
-  const chartOption = {
-    backgroundColor: 'black',
-    chart: {
-      title: 'Version Comparison by Event',
-      subtitle: 'Comparing Registrations across Different Versions and Years',
-      textStyle: { color: 'white' },
-    },
-    hAxis: {
-      title: 'Event',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-    },
-    vAxis: {
-      title: 'Registrations',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-      gridlines: { color: 'white' },
-    },
-    seriesType: 'bars',
-    series: {
-      0: { color: 'red' },
-      1: { color: 'orange' },
-      2: { color: 'green' },
-      3: { color: 'yellow' },
-      4: { color: '#4F7F01' },
-      5: { color: '#3B6B01' },
-    },
-    legend: { textStyle: { color: 'white' } },
-  };
-  
-
-  const generateChartData = (eventName) => {
-    const event = dummyData[eventName];
-    const data = [
-      ["Version", "Income", "Cost", "Sponsorship", "Registrations"]
+  const generateUniqueColor = (index) => {
+    const colors = [
+      "#FF5733", "#28A745",
+      "#3498DB", "#E74C3C", "#F39C12", "#2ECC71", "#9B59B6",
     ];
-    event.forEach(version => {
-      data.push([version.version, version.income, version.cost, version.sponsorship, version.registrations]);
-    });
-    return data;
+    return colors[index % colors.length];
   };
 
-  const generateOverallChartData = () => {
-    const data = [
-      ["Event", "Total Registrations"]
-    ];
-    Object.keys(dummyData).forEach(eventName => {
-      const totalRegistrations = dummyData[eventName].reduce((total, version) => total + version.registrations, 0);
-      data.push([eventName, totalRegistrations]);
-    });
-    return data;
-  };  
+  // Prepare Data for Charts
+  const barChartData = Object.entries(groupedBudgets).map(([event_id, items]) => {
+    const totalCost = items
+      .filter((item) => item.budget_type === "COST")
+      .reduce((total, item) => total + item.budget_amount, 0);
+    const totalIncome = items
+      .filter((item) => item.budget_type === "INCOME")
+      .reduce((total, item) => total + item.budget_amount, 0);
 
-  const chartOptions = {
-    backgroundColor: 'black',
-    chart: {
-      title: 'Event Report',
-      subtitle: 'Comparing Income, Costs, Sponsorships, and Registrations across different versions',
-      textStyle: { color: 'white' },
-    },
-    hAxis: {
-      title: 'Version',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-    },
-    vAxis: {
-      title: 'Amount',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-      gridlines: { color: 'white' },
-    },
-    seriesType: 'bars',
-    series: {
-      0: { color: 'red' },
-      1: { color: 'orange' },
-      2: { color: 'green' },
-      3: { color: 'blue', type: 'line' },
-    },
-    legend: { textStyle: { color: 'white' } },
+    const totalRegistrations = items.reduce(
+      (total, item) => total + (item.registration_count || 0),
+      0
+    );
+    const checkedInCount = items.reduce(
+      (total, item) => total + (item.checked_in_count || 0),
+      0
+    );
+
+    return {
+      event_id: `Event ${event_id}`,
+      cost: totalCost,
+      income: totalIncome,
+      totalRegistrations,
+      checkedInCount,
+    };
+  });
+
+  const handleDateChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "fromDate") setDateFrom(value);
+    if (name === "toDate") setDateTo(value);
   };
+
+  const isDateValid = dateFrom && dateTo && moment(dateFrom).isBefore(dateTo);
 
   return (
-    <div className="px-40 py-5 rounded-2xl " style={{ backgroundColor: 'black' }}>
-        <div className="mb-8">
-        <h2 className="text-xl text-center font-bold mb-2" style={{ color: 'white' }}>Version Comparison by Event</h2>
-        <Chart
-          width={'100%'}
-          height={'400px'}
-          chartType="ColumnChart"
-          loader={<div>Loading Chart...</div>}
-          data={generateVersionComparisonData()}
-          options={chartOptions}
-        />
-      </div>
-      {events.map(event => (
-        
-        <div key={event.name} className="mb-8">
-          <h2 className="text-xl text-center font-bold mb-2" style={{ color: 'white' }}>{event.name} Reports</h2>
-          <Chart
-            width={'100%'}
-            height={'400px'}
-            chartType="ColumnChart"
-            loader={<div>Loading Chart...</div>}
-            data={generateChartData(event.name)}
-            options={{
-              ...chartOptions,
-              chart: {
-                ...chartOptions.chart,
-                title: `${event.name} Event Report`,
-              },
-            }}
-          />
-        </div>
+    <div>
+      <Card className="w-full bg-black mb-6">
+        <CardBody>
+          <div className="mb-6">
+            <Input
+              type="date"
+              name="fromDate"
+              value={dateFrom}
+              onChange={handleDateChange}
+              className="mr-4"
+            />
+            <Input
+              type="date"
+              name="toDate"
+              value={dateTo}
+              onChange={handleDateChange}
+            />
+            <Button
+              disabled={!isDateValid}
+              className="ml-4"
+              onClick={() => setFilteredBudgets(filteredBudgets)}
+            >
+              Filter
+            </Button>
+          </div>
 
-        
-      ))}
-        
+          {/* Total Costs vs Incomes Bar Chart */}
+          <Typography color="white" variant="h5" className="mb-4 text-center">
+            Total Costs vs Incomes by Event
+          </Typography>
+          <div className="mb-6" style={{ height: 400 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barChartData} margin={{ top: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="event_id" stroke="white" />
+                <YAxis stroke="white" />
+                <Tooltip />
+                <Legend />
+                {Object.entries(groupedBudgets).map(([event_id, items], index) => {
+                  const costColor = generateUniqueColor(index);
+                  const incomeColor = generateUniqueColor(index); // Light/Dark shades could be used if needed
+                  return (
+                    <React.Fragment key={event_id}>
+                      <Bar
+                        dataKey="cost"
+                        fill={costColor}
+                        barSize={40}
+                        label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                      />
+                      <Bar
+                        dataKey="income"
+                        fill={incomeColor}
+                        barSize={40}
+                        label={{ position: "top", fill: "white", fontWeight: "bold" }}
+                      />
+                    </React.Fragment>
+                  );
+                })}
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Costs Scatter Plot */}
+          <Typography color="white" variant="h5" className="mt-8 mb-4 text-center">
+            Costs Over Time by Event
+          </Typography>
+          <div className="mb-6" style={{ height: 400 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  type="category"
+                  tickFormatter={(tick) => moment(tick).format("MMM D, YYYY")}
+                  tick={{ fill: "white" }}
+                  stroke="white"
+                />
+                <YAxis tick={{ fill: "white" }} stroke="white" />
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const { event_id, amount, date } = payload[0].payload;
+                      return (
+                        <div className="bg-black text-white p-2">
+                          <p>{`For: ${event_id}`}</p>
+                          <p>{`Amount: ${amount}`}</p>
+                          <p>{`Date: ${date}`}</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Legend />
+                {Object.entries(groupedBudgets).map(([event_id, items], index) => (
+                  <Line
+                    key={event_id}
+                    data={items
+                      .filter((item) => item.budget_type === "COST")
+                      .map((item) => ({
+                        date: formatCreatedAt(item.created_at),
+                        amount: item.budget_amount,
+                      }))}
+                    dataKey="amount"
+                    name={`Event ${event_id}`}
+                    stroke={generateUniqueColor(index)}
+                    dot={{ r: 5 }}
+                    activeDot={{ r: 7 }}
+                    strokeWidth={3}
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Income Scatter Plot */}
+          <Typography color="white" variant="h5" className="mt-8 mb-4 text-center">
+            Incomes Over Time by Event
+          </Typography>
+          <div className="mb-6" style={{ height: 400 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  type="category"
+                  tickFormatter={(tick) => moment(tick).format("MMM D, YYYY")}
+                  tick={{ fill: "white" }}
+                  stroke="white"
+                />
+                <YAxis tick={{ fill: "white" }} stroke="white" />
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const { event_id, amount, date } = payload[0].payload;
+                      return (
+                        <div className="bg-black text-white p-2">
+                          <p>{`Event: ${event_id}`}</p>
+                          <p>{`Amount: ${amount}`}</p>
+                          <p>{`Date: ${date}`}</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Legend />
+                {Object.entries(groupedBudgets).map(([event_id, items], index) => (
+                  <Line
+                    key={event_id}
+                    data={items
+                      .filter((item) => item.budget_type === "INCOME")
+                      .map((item) => ({
+                        date: formatCreatedAt(item.created_at),
+                        amount: item.budget_amount,
+                      }))}
+                    dataKey="amount"
+                    name={`Event ${event_id}`}
+                    stroke={generateUniqueColor(index)}
+                    dot={{ r: 5 }}
+                    activeDot={{ r: 7 }}
+                    strokeWidth={3}
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+
+            
+          </div>
+          
+        </CardBody>
+      </Card>
     </div>
-    
   );
 };
 
-export default ClubReport;
+export default BudgetTable;
