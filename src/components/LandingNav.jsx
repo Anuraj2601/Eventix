@@ -25,7 +25,7 @@ const LandingNav = () => {
           <ul className="hidden lg:flex ml-14 space-x-12 font-normal tracking-wider">
             {navItems.map((item, index) => (
               <li key={index} className="relative group">
-                <a href={item.href} className={`hover:text-secondary ${activeItem === item.label ? "text-secondary" : ""}`}
+                <a href={item.href} className={` hover:text-secondary ${activeItem === item.label ? "text-secondary" : "text-white"}`}
                   onClick={() => setActiveItem(item.label)}>
                   {item.label}
                 </a>
