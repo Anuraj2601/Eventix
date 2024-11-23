@@ -395,7 +395,7 @@ const Exploreevent = () => {
                       opportunities.
                     </Typography>
                     <div className="order-3 md:order-4 flex justify-center items-center bg-[#1E1E1E] custom-3d-shadow  custom-card">
-                      <AnnouncementNav />
+                      <AnnouncementNav clubId={club_id} event={eventDetails}/>
                     </div>
                   </div>
                 </CardBody>
