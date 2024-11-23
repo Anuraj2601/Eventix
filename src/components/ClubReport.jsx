@@ -16,56 +16,87 @@ import {
 import BudgetService from "../service/BudgetService";
 import moment from "moment";
 import EventRegistrationService from "../service/EventRegistrationService";
+import EventService from "../service/EventService";
 
 const BudgetTable = () => {
   const [allBudgets, setAllBudgets] = useState([]);
   const eventColors = ["#FF5733", "#28A745", "#007BFF", "#FFC107"]; // Example color set for lines
   const [registrationsData, setRegistrationsData] = useState([]);
   const [checkedInStatus, setCheckedInStatus] = useState({});
-   // Fetch budget and event registration data on mount
-   useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem("token");
+  const [eventNames, setEventNames] = useState({}); // To store event names
 
+  useEffect(() => {
+    const fetchEventNames = async () => {
       try {
-        // Fetch all budget items
-        const budgetResponse = await BudgetService.getAllBudgets(token);
-        setAllBudgets(budgetResponse.content || []);
-
-        // Fetch event registrations
-        const regResponse = await EventRegistrationService.getAllEventRegistrations(token);
-        const registrationsArray = regResponse.content || [];
-
-        // Process event registrations
-        const groupedData = registrationsArray.reduce((acc, { event_id, is_checked }) => {
-          if (!acc[event_id]) {
-            acc[event_id] = { event_id, registrations: 0, checkins: 0 };
-          }
-
-          // If registration count or check-in count is available, increment
-          acc[event_id].registrations += 1; // Assuming one entry per registration
-          if (is_checked) {
-            acc[event_id].checkins += 1;
-          }
-
+        const eventIds = Array.from(new Set(allBudgets.map((item) => item.event_id)));
+        const eventData = await EventService.getEventNamesByIds(eventIds);
+        const names = eventData.reduce((acc, event) => {
+          acc[event.event_id] = event.name;
           return acc;
         }, {});
-
-        setRegistrationsData(Object.values(groupedData));
-
-        // Initialize checked-in status (optional)
-        const initialCheckedInStatus = registrationsArray.reduce((acc, { e_reg_id, is_checked }) => {
-          acc[e_reg_id] = is_checked;
-          return acc;
-        }, {});
-        setCheckedInStatus(initialCheckedInStatus);
-
+        setEventNames(names);
       } catch (error) {
-        console.error("Error fetching data", error);
+        console.error("Error fetching event names:", error);
       }
     };
-    fetchData();
-  }, []);
+
+    if (allBudgets.length) {
+      fetchEventNames();
+    }
+  }, [allBudgets]);
+
+useEffect(() => {
+  const fetchData = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      // Fetch all budget items
+      const budgetResponse = await BudgetService.getAllBudgets(token);
+      setAllBudgets(budgetResponse.content || []);
+
+      // Fetch event registrations
+      const regResponse = await EventRegistrationService.getAllEventRegistrations(token);
+      const registrationsArray = regResponse.content || [];
+
+      // Process event registrations
+      const groupedData = registrationsArray.reduce((acc, { event_id, _checked }) => {
+        if (!acc[event_id]) {
+          acc[event_id] = { event_id, registrations: 0, checkins: 0 };
+        }
+      
+        // Increment registrations count
+        acc[event_id].registrations += 1; // Assuming one entry per registration
+
+        // Ensure _checked is defined, default to false if not available
+        const checked = _checked === undefined ? false : _checked;
+
+        // Increment checkins count if _checked is true
+        if (checked === true) {  // Explicitly check if _checked is true (boolean)
+          acc[event_id].checkins += 1;
+        }
+      
+        return acc;
+      }, {});
+      
+      setRegistrationsData(Object.values(groupedData));
+      
+      // Initialize checked-in status (optional)
+      const initialCheckedInStatus = registrationsArray.reduce((acc, { e_reg_id, _checked }) => {
+        const checked = _checked === undefined ? false : _checked; // Default to false if undefined
+        acc[e_reg_id] = checked;
+        return acc;
+      }, {});
+      
+      setCheckedInStatus(initialCheckedInStatus);
+
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
+  };
+  fetchData();
+}, []);
+
+
 
   useEffect(() => {
     console.log("Fetched registrations data: ", registrationsData);
@@ -104,15 +135,11 @@ const BudgetTable = () => {
     }
   });
 
-  const uniqueEvents = Array.from(
-    new Set(allBudgets.map((item) => item.event_id))
-  ).map((eventId) => {
-    const event = allBudgets.find((item) => item.event_id === eventId);
-    return { 
-      event_id: eventId, 
-      event_name: event ? event.event_name : `Event ${eventId}` // Ensure event_name exists
-    };
-  });
+ const uniqueEvents = Array.from(new Set(allBudgets.map((item) => item.event_id)))
+    .map((eventId) => ({
+      event_id: eventId,
+      event_name: eventNames[eventId] || `Event ${eventId}`,
+    }));
 
   // Generate a unique color for each event ID
   const generateColor = (index) => {
@@ -131,11 +158,11 @@ const BudgetTable = () => {
       }))
       .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sorting dates in descending order
     
-    return {
-      event_id: event.event_id,
-      event_name: event.event_name,
-      data: eventBudgets
-    };
+      return {
+        event_id: event.event_id,
+        event_name: event.event_name,
+        data: eventBudgets,
+      };
   });
 
   // Incomes Data for each event
@@ -149,24 +176,23 @@ const BudgetTable = () => {
       }))
       .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sorting dates in descending order
   
-    return {
-      event_id: event.event_id,
-      event_name: event.event_name,
-      data: eventBudgets
-    };
+      return {
+        event_id: event.event_id,
+        event_name: event.event_name,
+        data: eventBudgets,
+      };
   });
 
   const CustomTooltip = ({ payload, label }) => {
     if (payload && payload.length) {
-      const { event_id, amount, budget_name, color } = payload[0].payload; // Make sure color exists
+      const { event_id, amount, budget_name } = payload[0].payload; // Make sure color exists
       return (
         <div style={{ backgroundColor: "black", padding: "10px", color: "white" }}>
-          <p>Event ID: {event_id}</p>
-          <p>Amount: {amount}</p>
-          <p>Date: {label}</p>
-          <p>Budget Name: {budget_name}</p>
-          <p style={{ color: color }}>Event Color: {color}</p>
-        </div>
+        <p>Event: {eventNames[event_id]}</p> {/* Display event name */}
+        <p>Amount: {amount}</p>
+        <p>Date: {label}</p>
+        <p>Budget Name: {budget_name}</p>
+      </div>
       );
     }
     return null;
