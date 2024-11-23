@@ -45,7 +45,7 @@ const BudgetTable = () => {
           // If registration count or check-in count is available, increment
           acc[event_id].registrations += 1; // Assuming one entry per registration
           if (is_checked) {
-            acc[event_id].checkins += 1; // Only increment if checked-in
+            acc[event_id].checkins += 1;
           }
 
           return acc;
