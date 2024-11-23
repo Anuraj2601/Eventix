@@ -295,12 +295,12 @@ export function Meetings() {
     {
       name: "Planning for Future Club Leadership",
       date: "10.06.2024",
-      online: true,
+      online: false,
       joinLink: "https://example.com/join-event2",
     },
   ];
 
-  return (
+  /*return (
     <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
       {events.map((event, index) => (
         <div key={index} className="w-full rounded-full p-4 flex flex-col mb-4" style={{ backgroundColor: '#171717' }}>
@@ -338,7 +338,61 @@ export function Meetings() {
         </div>
       ))}
     </div>
+  );*/
+  return (
+    <div className="flex justify-center items-center flex-col p-4 rounded-lg" style={{ backgroundColor: '#1E1E1E' }}>
+      {events.map((event, index) => (
+        <div key={index} className="w-full rounded-full p-4 flex flex-col mb-4" style={{ backgroundColor: '#171717' }}>
+          <div className="ml-4">
+            <h3 className="text-md text-white mb-2">{event.name}</h3>
+            <div className="flex justify-between items-center mt-2">
+              <span className="text-gray-400" style={{ color: '#AEC90A' }}>{event.date}</span>
+              <div className="flex items-center space-x-4">
+                {event.online ? (
+                  <div className="flex items-center">
+                    <div style={{ backgroundColor: '#00DE3E', width: '10px', height: '10px', marginRight: '5px', borderRadius: '50%' }}></div>
+                    <p style={{ color: 'white', fontSize: '0.875rem', marginRight: '400px' }}>Online</p>
+                    {event.joinLink && (
+                      <a
+                        href={event.joinLink}
+                        className="text-white text-sm border px-2 py-1 rounded-full"
+                        style={{ backgroundColor: '#5C690A', borderColor: '#5C690A' ,width: '70px', height: '30px',marginRight: '40px'}}
+                      >
+                        Join
+                      </a>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <div style={{ backgroundColor: 'red', width: '10px', height: '10px', marginRight: '5px', borderRadius: '50%' }}></div>
+                    <p style={{ color: 'white', fontSize: '0.875rem', marginRight: '392px' }}>Physical</p>
+                    {event.qrLink && (
+                      <a
+                        href={event.qrLink}
+                        className="text-white text-sm border px-2 py-1 rounded-full"
+                        style={{ backgroundColor: '#5C690A', borderColor: '#5C690A',width: '70px', height: '30px',marginRight: '40px' }}
+                      >
+                        Get QR
+                      </a>
+                    )}
+                    {!event.qrLink && (
+                      <button
+                        className="text-white text-sm border px-2 py-1 rounded-full"
+                        style={{ backgroundColor: '#5C690A', borderColor: '#5C690A',width: '70px', height: '30px',marginRight: '40px' }}
+                      >
+                        Get QR
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
   );
+  
 }
 
 

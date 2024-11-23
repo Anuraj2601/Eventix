@@ -15,7 +15,7 @@ const UpcomingEvent = () => {
     const [currentEventIndex, setCurrentEventIndex] = useState(0);
     const [animationClass, setAnimationClass] = useState('');
 
-    // Define content for each button with multiple events
+    // Define content for each button with multiple events 
     const contentData = {
         IEEE: [
             {
@@ -78,7 +78,7 @@ const UpcomingEvent = () => {
     // Function to handle button click and update active state
     const handleButtonClick = (buttonName) => {
         setActiveButton(buttonName);
-        setCurrentEventIndex(0); // Reset to the first event of the new active category
+        setCurrentEventIndex(0);
     };
 
     const handleNextClick = () => {
@@ -127,11 +127,11 @@ const UpcomingEvent = () => {
                             </div>
                         </div>
                         <div className="mt-10 ml-0 flex justify-center items-center gap-4">
-                            <div className="text-[15px] font-normal bg-dark-background w-1/2 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary">
+                            <div className="text-[15px] font-normal text-white bg-dark-background w-1/2 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary">
                                 Deadline : <span className="ml-2 text-[15px] font-normal text-primary">{activeEvent.deadline}</span>
                             </div>
 
-                            <div className="text-[15px] font-normal bg-dark-background w-1/2 ml-0 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary">
+                            <div className="text-[15px] font-normal text-white bg-dark-background w-1/2 ml-0 h-12 p-2 rounded-md flex items-center justify-center hover:border border-secondary">
                                 Event Date : <span className="ml-2 text-[15px] font-normal text-primary">{activeEvent.eventDate}</span>
                             </div>
                         </div>
@@ -143,7 +143,7 @@ const UpcomingEvent = () => {
                                 </div>
                                 <div className="ml-3 flex flex-col justify-center">
                                     <div className="flex items-center">
-                                        <p className="text-[15px] font-normal flex items-center mr-5 mt-0">
+                                        <p className="text-[15px] font-normal flex items-center mr-5 mt-0 text-white">
                                             {activeEvent.name}
                                             <RiTeamFill className="ml-3 w-6 h-6 mb-1 text-primary" />
                                         </p>

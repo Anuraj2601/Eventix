@@ -7,8 +7,15 @@ import { FaLocationDot } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { MdPhone } from "react-icons/md";
 import { Button } from "@material-tailwind/react";
+import { useNavigate } from 'react-router-dom';
 
 const Event = ({event}) => {
+    const navigate = useNavigate();
+
+    const handleRegister = () =>{
+        navigate(`/eventregister/${event.event}`);
+    }
+
   return (
     <div className="flex items-center justify-center mt-8 mb-4">
         <div className='bg-[#0b0b0b] p-5 w-3/4 rounded-md' >
@@ -58,7 +65,7 @@ const Event = ({event}) => {
                 </div>
                 <div className="flex items-center justify-center gap-8">
                     <p className='text-[#AEC90A]'><u className='text-[#AEC90A]'>Why important ?</u></p>
-                    <Button className="flex items-center gap-2 bg-[#AEC90A] py-2 px-4 rounded-3xl font-medium text-[#0b0b0b]">
+                    <Button className="flex items-center gap-2 bg-[#AEC90A] py-2 px-4 rounded-3xl font-medium text-[#0b0b0b]" onClick={handleRegister}>
                         Register{" "}
                         <svg
                         xmlns="http://www.w3.org/2000/svg"
