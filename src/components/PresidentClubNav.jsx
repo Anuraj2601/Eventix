@@ -30,7 +30,7 @@ const PresidentClubNav = ({ club }) => {
     { label: "Meetings", value: "Meetings", desc: <Meeting club={club} /> },
     { label: "Announcement", value: "Announcement", desc: <Announcement club={club} /> },
     ...(showRestrictedTabs ? [
-      { label: "Event Reports", value: "Event Reports", desc: <ClubReport /> },
+      { label: "Event Reports", value: "Event Reports", desc: <ClubReport club={club}/> },
       { label: "Recruitment", value: "Recruitment", desc: <Recruitment /> }
       
     ] : []),
