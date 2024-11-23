@@ -165,6 +165,18 @@ const AnnouncementNav = ({clubId, event}) => {
     const formattedHour = hour % 12 || 12; // Convert 0 or 12+ to 12-hour format
     return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
   };
+
+  const formatDate = (dateArray) => {
+    const [year, month, day] = dateArray;
+    const date = new Date(year, month - 1, day); // Month is zero-indexed
+    return date.toLocaleDateString("en-US", {
+      month: "numeric", // Numeric form of the month
+      day: "2-digit",   // 2-digit day
+      year: "numeric",  // Full year
+    });
+  };
+  
+  
   
 
   const data = [
@@ -206,7 +218,7 @@ const AnnouncementNav = ({clubId, event}) => {
                             onMouseLeave={() => setHoveredRow(null)}
                           >
                           <td className="p-2"><strong>{meeting.meeting_name}</strong></td>
-                          <td className="p-2">{meeting.date.join("/")}</td>
+                          <td className="p-2">{formatDate(meeting.date)}</td>
                           <td className="p-2">{formatTime(meeting.time)}</td>
                           <td className="p-2">{meeting.meeting_type}</td>
                           <td className="p-2"> {meeting.venue}</td>
