@@ -10,7 +10,8 @@ class MeetingService{
                             meeting_type, 
                             participant_type, 
                             club_id, 
-                            token ){
+                            token,
+                            venue = null ){
         try{
 
             const data = {
@@ -21,6 +22,10 @@ class MeetingService{
                 participant_type,
                 club_id
             };
+
+            if (meeting_type === "PHYSICAL" && venue) {
+                data.venue = venue;
+            }
 
             const headers = {
                 'Content-Type': 'application/json',
