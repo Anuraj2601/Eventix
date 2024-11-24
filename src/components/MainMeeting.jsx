@@ -6,7 +6,7 @@ import Navbar from './Navbar';
 import physicalMeeting from '../assets/physicalMeeting02.png';
 import onlineMeeting from '../assets/onlineMeeting.png';
 import RegistrationService from '../service/registrationService'; // Adjust the path as needed
-import { getUserIdFromToken } from '../utils/utils';
+import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
 import { useNavigate } from "react-router-dom";
 
 
@@ -18,11 +18,15 @@ const MeetingsList = () => {
   const [disabledButtons, setDisabledButtons] = useState(new Set());
   const [popupVisible, setPopupVisible] = useState(null);
   const [qrCodeDialogVisible, setQrCodeDialogVisible] = useState(false);
+  const [sendingQRCode, setSendingQRCode] = useState({});
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState('');
   const [popupMeetingId, setPopupMeetingId] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('physical'); // State for selected filter (Physical/Online)
   const token = localStorage.getItem('token') || '';
   const [registrations, setRegistrations] = useState([]);
   const userId = getUserIdFromToken();
+  const userEmail = getUserEmailFromToken();
 
   const fetchClubs = async () => {
     try {
@@ -189,6 +193,43 @@ const MeetingsList = () => {
     });
 };
 
+  // QR Code API call
+  const sendQRCodeEmail = async (meetingId) => {
+    setSendingQRCode((prevState) => ({
+      ...prevState,
+      [meetingId]: true, // Mark as sending QR code for this meeting
+    }));
+  
+    // Simulate the sending process (replace this with actual email sending logic)
+    setTimeout(() => {
+      setSendingQRCode((prevState) => ({
+        ...prevState,
+        [meetingId]: false, // Reset after sending
+      }));
+    }, 2000);
+    setEmailSent(false);
+    setEmailError('');
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/president/sendQrCode/${meetingId}`,
+        { email: userEmail },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        setEmailSent(true);
+        setQrCodeDialogVisible(true);
+      }
+    } catch (error) {
+      console.error("Error sending QR code:", error);
+      setEmailError('Failed to send QR code. Please try again later.');
+    } finally {
+      setSendingQRCode(false);
+    }
+  };
+
+
 
 
 
@@ -256,12 +297,13 @@ const MeetingsList = () => {
                 </div>
                 <div className="flex space-x-2 mb-10 w-full">
                   {announcement.meeting_type === 'PHYSICAL' ? (
-                    <button
-                      onClick={() => setQrCodeDialogVisible(true)} // Open QR Code Dialog for physical meetings
-                      className={`px-4 py-2 w-full   bg-primary text-black  rounded font-medium`}
-                    >
-                      Click here to Receive QR code
-                    </button>
+                     <button
+                     onClick={() => sendQRCodeEmail(announcement.meeting_id)}
+                     className={`px-4 py-2 w-full ${sendingQRCode[announcement.meeting_id] ? 'bg-gray-500' : 'bg-primary'} text-black rounded font-medium`}
+                     disabled={sendingQRCode[announcement.meeting_id]}
+                   >
+                     {sendingQRCode[announcement.meeting_id] ? 'Sending...' : 'Click here to Receive QR code'}
+                   </button>
                   ) : (
                     <button
                     onClick={() => handleJoinMeetingClick(announcement.meeting_id)}
@@ -293,7 +335,11 @@ const MeetingsList = () => {
           {/* QR Code Dialog for Physical Meetings */}
           {qrCodeDialogVisible && (
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg">
-              <p className="text-lg text-black">You will receive the QR code to your student email in a while.</p>
+            {emailSent ? (
+              <p className="text-lg text-black">The QR code has been sent to your email.</p>
+            ) : (
+              <p className="text-lg text-red-500">{emailError}</p>
+            )}
               <button
                 onClick={() => setQrCodeDialogVisible(false)}
                 className="mt-4 px-4 py-2 bg-primary text-white rounded"
