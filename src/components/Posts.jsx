@@ -8,10 +8,39 @@ import launchImage from '../assets/launch.jpg';
 import reid3Image from '../assets/reid3.jpg';
 import speakerImage from '../assets/speaker.jpg';
 import EventPostService from '../service/EventPostService';
+import UsersService from '../service/UsersService';
 
 
 const Posts = ({ post, isPresidentOrSecretaryPage }) => {
     const [status, setStatus] = useState(post.post_status);
+    const [userImage, setuserImage] = useState('');
+    const [userName, setuserName] = useState('');
+
+    const fetchUser = async (post) => {
+
+        try{
+            const token = localStorage.getItem('token');
+            const response = await UsersService.getUserById(post.published_user_id ,token);
+            //console.log("user details in post", response);
+            const userImageUrl = response.users.photoUrl;
+            const publisherName = response.users.firstname + " " + response.users.lastname;
+            setuserImage(userImageUrl);
+            setuserName(publisherName);
+            // const User = response.content || [];
+            // console.log("all posts", postsArray);
+            // setPosts(postsArray);
+
+        }catch(error){
+            console.log("Error fetching user details for posts", error);
+        }
+            
+    }
+
+    useEffect(() =>{
+
+        fetchUser(post);
+
+    }, [])
 
     const handleApprove = () => {
         setStatus('APPROVED');
@@ -28,10 +57,10 @@ const Posts = ({ post, isPresidentOrSecretaryPage }) => {
             }}>
                 <div className="flex flex-row items-center justify-between mb-4">
                     <div className="flex items-center gap-2 custom-card">
-                        <img src={post.userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
+                        <img src={userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
                         <div className="flex flex-col">
-                            <p>{post.userName}</p>
-                            <p className="text-[#AEC90A]">{post.position}</p>
+                            <p>{userName}</p>
+                            {/* <p className="text-[#AEC90A]">{post.position}</p> */}
                         </div>
                     </div>
                     {isPresidentOrSecretaryPage && status === 'PENDING' && (
