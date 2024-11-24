@@ -7,6 +7,7 @@ import physicalMeeting from '../assets/physicalMeeting02.png';
 import onlineMeeting from '../assets/onlineMeeting.png';
 import RegistrationService from '../service/registrationService'; // Adjust the path as needed
 import { getUserIdFromToken } from '../utils/utils';
+import { useNavigate } from "react-router-dom";
 
 
 const MeetingsList = () => {
@@ -110,6 +111,12 @@ const MeetingsList = () => {
 
     // Enable Join button only if meeting is within the next hour
     return meetingDateTime - currentTime <= 60 * 60 * 1000 && meetingDateTime > currentTime;
+  };
+
+  const navigate = useNavigate();
+
+  const handleJoinMeetingClick = (meetingId) => {
+    navigate(`/president/meeting/${meetingId}`);
   };
 
   const filterFutureMeetings = (meetings) => {
@@ -257,7 +264,7 @@ const MeetingsList = () => {
                     </button>
                   ) : (
                     <button
-                      onClick={() => window.open(announcement.meeting_link, "_blank")}
+                    onClick={() => handleJoinMeetingClick(announcement.meeting_id)}
                       className={`px-4 py-2 w-full ${isJoinButtonEnabled(announcement.date, announcement.time) ? 'bg-primary text-sec' : 'bg-gray-500 cursor-not-allowed'} rounded font-medium`}
                       disabled={!isJoinButtonEnabled(announcement.date, announcement.time)}
                     >
