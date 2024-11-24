@@ -65,7 +65,7 @@ const AnnouncementNav = ({clubId, event}) => {
     if (activeTab === "Announcements") {
       fetchEventAnnouncements();
     }
-  }, []);
+  }, [activeTab]);
 
 
   useEffect(() => {

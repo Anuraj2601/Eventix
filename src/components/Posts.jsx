@@ -145,52 +145,52 @@ const NewsFeed = ({ posts, setEventPosts, event }) => {
 
 const App = ({clubId, event}) => {
 
-    const samplePosts = [
-        {
-            position: 'Secretary',
-            userName: 'John Doe',
-            userImage: "https://randomuser.me/api/portraits/men/3.jpg",
-            caption: 'Are you ready to take the next step in your reidExtreme 3.0 journey? The reidExtreme 3.0 is the perfect opportunity for students to explore potential career paths, network with industry professionals, and discover exciting job and internship opportunities',
-            image: launchImage,
-            link: 'Register now',
-            status: 'pending',
-        },
-        {
-            position: 'President',
-            userName: 'Veron',
-            userImage: "https://randomuser.me/api/portraits/men/2.jpg",
-            caption: 'While possessing knowledge is all well and good, if you have not the wisdom to wield it to your advantage, it becomes about as useful as soot. All but removing probability, one should not only be able to calculate every way forward, but should also be well-versed enough to choose the best path.Piqued your interest? Read further here - https://www.britannica.com/science/game-theory Register your team for ReidXtreme by visiting ',
-            image: reid3Image,
-            link: 'http://reidxtreme.ucscieee.com/',
-            status: 'approved',
-        }, 
-        {
-            position: 'OC',
-            userName: 'Sarah',
-            userImage: "https://randomuser.me/api/portraits/women/7.jpg",
-            caption: 'Are you ready to take the next step in your reidExtreme 3.0 journey? The reidExtreme 3.0 is the perfect opportunity for students to explore potential career paths, network with industry professionals, and discover exciting job and internship opportunities',
-            image: speakerImage,
-            link: 'Register now',
-            status: 'pending',
-        },
-        {
-            userName: 'Jane Smith',
-            userImage: "https://randomuser.me/api/portraits/men/9.jpg",
-            caption: 'Had a great time at the conference today!',
-            image: null,
-            link: null,
-            status: 'approved',
-        },
-        {
-            position: 'Treasurer',
-            userName: 'David Brown',
-            userImage: "https://randomuser.me/api/portraits/men/10.jpg",
-            caption: 'Our budget meeting was insightful. Thank you to all who participated!',
-            image: null,
-            link: null,
-            status: 'rejected',
-        }
-    ];
+    // const samplePosts = [
+    //     {
+    //         position: 'Secretary',
+    //         userName: 'John Doe',
+    //         userImage: "https://randomuser.me/api/portraits/men/3.jpg",
+    //         caption: 'Are you ready to take the next step in your reidExtreme 3.0 journey? The reidExtreme 3.0 is the perfect opportunity for students to explore potential career paths, network with industry professionals, and discover exciting job and internship opportunities',
+    //         image: launchImage,
+    //         link: 'Register now',
+    //         status: 'pending',
+    //     },
+    //     {
+    //         position: 'President',
+    //         userName: 'Veron',
+    //         userImage: "https://randomuser.me/api/portraits/men/2.jpg",
+    //         caption: 'While possessing knowledge is all well and good, if you have not the wisdom to wield it to your advantage, it becomes about as useful as soot. All but removing probability, one should not only be able to calculate every way forward, but should also be well-versed enough to choose the best path.Piqued your interest? Read further here - https://www.britannica.com/science/game-theory Register your team for ReidXtreme by visiting ',
+    //         image: reid3Image,
+    //         link: 'http://reidxtreme.ucscieee.com/',
+    //         status: 'approved',
+    //     }, 
+    //     {
+    //         position: 'OC',
+    //         userName: 'Sarah',
+    //         userImage: "https://randomuser.me/api/portraits/women/7.jpg",
+    //         caption: 'Are you ready to take the next step in your reidExtreme 3.0 journey? The reidExtreme 3.0 is the perfect opportunity for students to explore potential career paths, network with industry professionals, and discover exciting job and internship opportunities',
+    //         image: speakerImage,
+    //         link: 'Register now',
+    //         status: 'pending',
+    //     },
+    //     {
+    //         userName: 'Jane Smith',
+    //         userImage: "https://randomuser.me/api/portraits/men/9.jpg",
+    //         caption: 'Had a great time at the conference today!',
+    //         image: null,
+    //         link: null,
+    //         status: 'approved',
+    //     },
+    //     {
+    //         position: 'Treasurer',
+    //         userName: 'David Brown',
+    //         userImage: "https://randomuser.me/api/portraits/men/10.jpg",
+    //         caption: 'Our budget meeting was insightful. Thank you to all who participated!',
+    //         image: null,
+    //         link: null,
+    //         status: 'rejected',
+    //     }
+    // ];
 
     const [eventPosts, setEventPosts] = useState([]);
 
