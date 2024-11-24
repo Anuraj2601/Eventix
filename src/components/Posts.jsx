@@ -8,6 +8,7 @@ import launchImage from '../assets/launch.jpg';
 import reid3Image from '../assets/reid3.jpg';
 import speakerImage from '../assets/speaker.jpg';
 
+
 const Posts = ({ post, isPresidentOrSecretaryPage }) => {
     const [status, setStatus] = useState(post.status);
 
@@ -111,7 +112,8 @@ const NewsFeed = ({ posts }) => {
     );
 };
 
-const App = () => {
+const App = ({clubId, event}) => {
+
     const samplePosts = [
         {
             position: 'Secretary',
@@ -158,6 +160,30 @@ const App = () => {
             status: 'rejected',
         }
     ];
+
+    // const [eventPosts, setEventPosts] = useState([]);
+
+    // useEffect(() => {
+
+    //     const fetchEventPosts = async () => {
+    //         try{
+    //             const token = localStorage.getItem('token');
+    //             const response = await PostService.getAllPosts(token);
+    //             const postsArray = response.content.filter(post => post.club_id === club.club_id) || [];
+    //             console.log("all posts", postsArray);
+    //             setPosts(postsArray);
+    
+    //         }catch(error){
+    //             console.error("Error fetching posts", error);
+    //         }
+
+    //     }
+
+    //     fetchEventPosts();
+
+      
+    // }, [])
+
 
     return (
         <NewsFeed posts={samplePosts} />
