@@ -14,11 +14,15 @@ import {
 import { FaEye, FaEdit, FaTrash, FaPlus } from "react-icons/fa"; // Import icons
 import { useLocation } from "react-router-dom"; // Import useLocation hook
 import EventMeetingService from "../service/EventMeetingService";
+import EventAnnouncementService from "../service/EventAnnouncementService";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { MdOutlinePeopleAlt } from "react-icons/md";
 
 const AnnouncementNav = ({clubId, event}) => {
   const [activeTab, setActiveTab] = React.useState("Announcements");
   const location = useLocation(); // Get the current path
   const [eventMeetings, setEventMeetings] = useState([]);
+  const [eventAnnouncements, setEventAnnouncements] = useState([]);
   const [hoveredRow, setHoveredRow] = useState(null);
 
   const isEditablePage = [ '/secretary', '/president'].some(path => location.pathname.startsWith(path));
@@ -40,6 +44,29 @@ const AnnouncementNav = ({clubId, event}) => {
     return diffMinutes <= 30 && diffMinutes >= 0; // Meeting is within 30 minutes
   };
 
+  useEffect(() => {
+    const fetchEventAnnouncements = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await EventAnnouncementService.getAllEventAnnouncements(token);
+        //console.log("Event meetings", response);
+        const eventAnnouncementsArray = response.content.filter(announcement => announcement.event_id === event.event_id ) || [];
+        console.log("event Announcements array", eventAnnouncementsArray);
+
+      
+        setEventAnnouncements(eventAnnouncementsArray); 
+
+        
+      } catch (error) {
+        console.error("Error fetching announcmenets", error);
+      }
+    };
+
+    if (activeTab === "Announcements") {
+      fetchEventAnnouncements();
+    }
+  }, [activeTab]);
+
 
   useEffect(() => {
     const fetchEventMeetings = async () => {
@@ -59,8 +86,42 @@ const AnnouncementNav = ({clubId, event}) => {
       }
     };
 
-    fetchEventMeetings();
-  }, []);
+    if (activeTab === "Meeting") {
+      fetchEventMeetings();
+    }
+
+  }, [activeTab]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const token = localStorage.getItem("token");
+        
+  //       // Fetch Announcements
+  //       const announcementsResponse = await EventAnnouncementService.getAllEventAnnouncements(token);
+  //       const announcementsArray = announcementsResponse.content.filter(
+  //         (announcement) => announcement.event_id === event.event_id
+  //       );
+  //       console.log("event Announcements array", announcementsArray);
+
+  //       setEventAnnouncements(announcementsArray);
+  
+  //       // Fetch Meetings
+  //       const meetingsResponse = await EventMeetingService.getAllEventMeetings(token);
+  //       const meetingsArray = meetingsResponse.content.filter(
+  //         (meeting) => meeting.event_id === event.event_id
+  //       );
+  //       console.log("event Meetings array", meetingsArray);
+
+  //       setEventMeetings(meetingsArray);
+  //     } catch (error) {
+  //       console.error("Error fetching event data", error);
+  //     }
+  //   };
+  
+  //   fetchData();
+  // }, []);
+  
 
   const formatTime = (timeArray) => {
     if (!Array.isArray(timeArray) || timeArray.length !== 2) return "Invalid time";
@@ -70,13 +131,67 @@ const AnnouncementNav = ({clubId, event}) => {
     return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
   };
   
+  const formatDate = (dateArray) => {
+    const [year, month, day] = dateArray;
+    const date = new Date(year, month - 1, day); // Month is zero-indexed
+    return date.toLocaleDateString("en-US", {
+      month: "numeric", // Numeric form of the month
+      day: "2-digit",   // 2-digit day
+      year: "numeric",  // Full year
+    });
+  };
+  
  
 
   const data = [
     {
       label: "Announcements",
       value: "Announcements",
-      desc: "The Event registration link will be available soon.",
+      desc:  (
+        <div className="mb-2 overflow-auto max-h-24">
+          {eventAnnouncements
+          .map((anc) => (
+          <div key={anc.e_announcement_id} className="mb-4 flex justify-between items-center border-b border-gray-300 pb-2">
+          <p className="flex  space-x-2 overflow-x-auto whitespace-nowrap">
+            <div className="flex flex-col">
+              <span className="text-[#AEC90A] font-bold"><strong>{anc.title}</strong></span>
+              <span  >{anc.content}</span>
+
+            </div>
+          
+          
+          <div className="flex items-center space-x-2">
+          
+            {anc.type === 'EVERYONE' ? (
+              <FaPeopleGroup className="text-[#AEC90A] text-2xl"/>
+            ) : (
+              <MdOutlinePeopleAlt className="text-[#AEC90A] text-2xl"/>
+            )}
+
+            <span > {anc.type}</span>
+
+          </div>
+          {/* {isMeetingToday(meeting.date) && isTimeClose(meeting.time) ? (
+          <button
+            className="ml-2 p-2 bg-yellow-500 text-white rounded"
+            disabled={false}
+          >
+            Join
+          </button>
+          ) : (
+          <button
+            className="ml-2 p-2 bg-gray-500 text-white rounded cursor-not-allowed"
+            disabled={true}
+          >
+            Join
+          </button>
+          )} */}
+          </p>
+          </div>
+          ))}
+          </div>
+
+                ),
       editable: isEditablePage, // Set editable based on the page
     },
   
@@ -96,10 +211,10 @@ const AnnouncementNav = ({clubId, event}) => {
       return meetingDate > currentDate;
     })
     .map((meeting) => (
-      <div key={meeting.e_meeting_id} className="mb-4">
+      <div key={meeting.e_meeting_id} className="mb-4 border-b border-gray-300 pb-2">
         <p className="flex items-center space-x-2 overflow-x-auto whitespace-nowrap">
           <span><strong>{meeting.meeting_name}</strong></span>
-          <span className="text-[#AEC90A] font-bold">{meeting.date.join("/")}</span>
+          <span className="text-[#AEC90A] font-bold">{formatDate(meeting.date)}</span>
           <span className="text-[#AEC90A] font-bold">{formatTime(meeting.time)}</span>
 
           {/* Conditionally display the dot for meeting type */}
@@ -172,7 +287,7 @@ const AnnouncementNav = ({clubId, event}) => {
             className="relative text-white"
           >
             <div className="relative group">
-              <p className="mb-4">{desc}</p>
+              <p className="mb-4">{activeTab === value && desc}</p>
            
               {editable && (
                 <button

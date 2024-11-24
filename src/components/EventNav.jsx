@@ -28,7 +28,7 @@ const EventNav = ({clubId , event}) => {
     {
       label: "Posts",
       value: "Posts",
-      desc: <Posts clubId = {clubId}/>,
+      desc: <Posts clubId = {clubId} event = {event}/>,
     },
     {
       label: "Organizing Committee",
