@@ -119,7 +119,21 @@ const MeetingsList = () => {
 
   const navigate = useNavigate();
 
-  const handleJoinMeetingClick = (meetingId) => {
+  const handleJoinMeetingClick = async (meetingId) => {
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/president/sendMeetingCode/${meetingId}`,
+        { email: userEmail },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        console.log("Meeting code sent successfully");
+      }
+    } catch (error) {
+      console.error("Error sending Meeting code:", error);
+    }
     navigate(`/president/meeting/${meetingId}`);
   };
 
