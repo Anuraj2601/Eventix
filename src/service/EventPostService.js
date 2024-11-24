@@ -71,6 +71,7 @@ class EventPostService{
                 }
             )
 
+            console.log("Event Post response", response.data);
             return response.data;
             
         }catch(err){
