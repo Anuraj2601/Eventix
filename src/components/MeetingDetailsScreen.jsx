@@ -49,7 +49,7 @@ export function MeetingDetailsScreen({
               setMeetingId(e.target.value);
             }}
             placeholder={"Enter meeting Id"}
-            className="px-4 py-3 bg-gray-650 rounded-xl text-white w-full text-center"
+            className="px-4 py-3 bg-gray-650 rounded-xl text-black w-full text-center"
           />
           {meetingIdError && (
             <p className="text-xs text-red-600">{`Please enter valid meetingId`}</p>
@@ -63,7 +63,7 @@ export function MeetingDetailsScreen({
             value={participantName}
             onChange={(e) => setParticipantName(e.target.value)}
             placeholder="Enter your name"
-            className="px-4 py-3 mt-5 bg-gray-650 rounded-xl text-white w-full text-center"
+            className="px-4 py-3 mt-5 bg-gray-650 rounded-xl text-black w-full text-center"
           />
 
           {/* <p className="text-xs text-white mt-1 text-center">
@@ -71,8 +71,8 @@ export function MeetingDetailsScreen({
           </p> */}
           <button
             disabled={participantName.length < 3}
-            className={`w-full ${participantName.length < 3 ? "bg-gray-650" : "bg-purple-350"
-              }  text-white px-2 py-3 rounded-xl mt-5`}
+            className={` ${participantName.length < 3 ? "bg-gray-650" : "bg-purple-350"
+              }  px-3 py-3 w-full bg-primary text-black rounded-xl mt-5`}
             onClick={(e) => {
               if (iscreateMeetingClicked) {
                 onClickStartMeeting();
@@ -119,7 +119,7 @@ export function MeetingDetailsScreen({
               Create a meeting
             </button> */}
             <button
-              className="w-full bg-gray-650 text-white px-2 py-3 rounded-xl mt-5"
+              className="px-3 py-3 w-full bg-primary text-black rounded-xl mt-5"
               onClick={(e) => {
                 setIsJoinMeetingClicked(true);
               }}
