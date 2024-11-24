@@ -155,6 +155,25 @@ class MeetingService{
         }
       }
 
+      static async sendMeetingCode(meetingId, userEmail, token) {
+        try {
+          const response = await axios.post(
+            `${MeetingService.BASE_URL}/president/sendMeetingCode/${meetingId}`,
+            { email: userEmail },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+              }
+            }
+          );
+          return response.data;
+        } catch (err) {
+          console.error("Error sending QR code:", err.response?.data || err.message);
+          throw err;
+        }
+      }
+
 
     static logout() {
         localStorage.removeItem("token");
