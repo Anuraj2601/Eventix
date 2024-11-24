@@ -408,7 +408,7 @@ const Exploreevent = () => {
           </div>
 
 
-                    <div className="flex justify-center items-center p-10">
+                    <div className="flex justify-center items-center p-10 mt-28">
             <Card
               className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]"
               style={{
