@@ -70,6 +70,16 @@ const AnnouncementNav = ({clubId, event}) => {
     return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
   };
   
+  const formatDate = (dateArray) => {
+    const [year, month, day] = dateArray;
+    const date = new Date(year, month - 1, day); // Month is zero-indexed
+    return date.toLocaleDateString("en-US", {
+      month: "numeric", // Numeric form of the month
+      day: "2-digit",   // 2-digit day
+      year: "numeric",  // Full year
+    });
+  };
+  
  
 
   const data = [
@@ -99,7 +109,7 @@ const AnnouncementNav = ({clubId, event}) => {
       <div key={meeting.e_meeting_id} className="mb-4">
         <p className="flex items-center space-x-2 overflow-x-auto whitespace-nowrap">
           <span><strong>{meeting.meeting_name}</strong></span>
-          <span className="text-[#AEC90A] font-bold">{meeting.date.join("/")}</span>
+          <span className="text-[#AEC90A] font-bold">{formatDate(meeting.date)}</span>
           <span className="text-[#AEC90A] font-bold">{formatTime(meeting.time)}</span>
 
           {/* Conditionally display the dot for meeting type */}
