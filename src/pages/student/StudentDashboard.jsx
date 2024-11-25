@@ -1,107 +1,73 @@
-import React from 'react';
-import Sidebar from '../../components/Sidebar';
-import Navbar from '../../components/Navbar';
-import Event from '../../components/Event';
-import Upcoming from '../../components/Upcoming';
-import Feedback from '../../components/Feedback';
-
-// Import images
-import dp from '../../assets/clubs/ieee.png';
-import dp1 from '../../assets/clubs/rotaract.png';
-import madhackImage from '../../assets/events/flix.jpg';
-import hackathonImage from '../../assets/events/rainbow.jpg';
-import rekaImage from '../../assets/events/journey.jpg';
-import careerfairImage from '../../assets/events/session.jpg';
-import dhackImage from '../../assets/events/install.jpg';
-
-import vesakImage from "../../assets/vesak.jpg";
-import eidImage from "../../assets/farewell.jpg";
-import farewellImage from "../../assets/farewell.jpg";
-import esalaImage from "../../assets/esala.jpg";
-import posonImage from "../../assets/poson.jpg";
-import { useNavigate } from 'react-router-dom';
+// export default Dashboard;
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Sidebar from "../../components/Sidebar";
+import Navbar from "../../components/Navbar";
+import Upcoming from "../../components/Upcoming";
+import Feedback from "../../components/Feedback";
+import RegistrationModal from "../../components/RegistrationModal"; // Import RegistrationModal
+import {
+  AiOutlineCalendar,
+  AiOutlineInfoCircle,
+  AiOutlineEnvironment,
+  AiOutlineClockCircle,
+} from "react-icons/ai";
 
 const Dashboard = () => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null); // State for selected event
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
-  const events = [
-    {
-      id: "2",
-      publisher_name: "John Doe",
-      publisher_position: "President of Club IEEE",
-      publisher_img: dp1,
-      event: "Tech Symposium 2025",
-      deadline: "10th of April 2025",
-      description: "A symposium showcasing the latest in technology and innovation.",
-      date: "25.09.2025",
-      time: "10 am",
-      venue: "UCSC Mini Auditorium",
-      contact: "0217988235",
-      email: "techsymposium@ucsc.edu",
-      image: hackathonImage,
-    },
-    {
-      id: "1",
-      publisher_name: "Lori Kletzer",
-      publisher_position: "President of Club Rotaract",
-      publisher_img: dp,
-      event: "2025 Career Fair",
-      deadline: "30th of March 2025",
-      description: "Join us for the annual career fair to meet potential employers and learn about job opportunities.",
-      date: "20.08.2025",
-      time: "9 am",
-      venue: "UCSC Mini Auditorium",
-      contact: "0217988234",
-      email: "career25@gmail.com",
-      image: eidImage,
-      
-    },
-   
-    {
-      id: "3",
-      publisher_name: "Jane Smith",
-      publisher_position: "President of Club ACM",
-      publisher_img: dp,
-      event: "Health and Wellness Fair",
-      deadline: "15th of May 2025",
-      description: "An event focused on promoting health and wellness among students.",
-      date: "30.05.2025",
-      time: "8 am",
-      venue: "UCSC Mini Auditorium",
-      contact: "0217988236",
-      email: "wellnessfair@ucsc.edu",
-      image: rekaImage,
-    },
-    {
-      id: "4",
-      publisher_name: "Mark Johnson",
-      publisher_position: "President of Club Rotaract",
-      publisher_img: dp1,
-      event: "Alumni Homecoming 2025",
-      deadline: "20th of June 2025",
-      description: "Reconnect with fellow alumni and celebrate our university's achievements.",
-      date: "30.06.2025",
-      time: "8 am",
-      venue: "UCSC Mini Auditorium",
-      contact: "0217988237",
-      email: "homecoming@ucsc.edu",
-      image: careerfairImage,
-    },
-    {
-      id: "5",
-      publisher_name: "John Doe",
-      publisher_position: "President of Club IEEE",
-      publisher_img: dp,
-      event: "Cultural Festival 2025",
-      deadline: "5th of August 2025",
-      description: "Celebrate the diversity of our campus with performances, food, and art from different cultures.",
-      date: "03.05.2025",
-      time: "8 am",
-      venue: "UCSC Mini Auditorium",
-      contact: "0217988238",
-      email: "culturalfest@ucsc.edu",
-      image: dhackImage,
-    }
-  ];
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found");
+        setError("Authentication token is missing");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/event/getAllEvents",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setEvents(response.data.content); // Assuming `content` contains the events array
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching events:", err);
+        setError("Failed to load events");
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  const Event = ({ eventName, description, date, venue, image }) => {
+    if (!eventName) return null;
+
+    return (
+      <div className="event-card p-4 bg-neutral-800 rounded-lg shadow-lg mb-4">
+        <img
+          src={image || "default-image-url.jpg"}
+          alt={eventName}
+          className="w-full h-48 object-cover rounded-lg mb-2"
+        />
+        <h2 className="text-lg font-bold mb-2">{eventName}</h2>
+        <p className="text-sm mb-2">{description}</p>
+        <p className="text-sm mb-2">Date: {date}</p>
+        <p className="text-sm">Venue: {venue}</p>
+      </div>
+    );
+  };
 
   return (
     <div className="fixed inset-0 flex">
@@ -109,23 +75,111 @@ const Dashboard = () => {
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
         <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto">
-  <div className="w-2/4 px-2 ml-2 overflow-y-auto">
-    {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
-    {events.length > 0 && events.map(event => <Event event={event} key={event.id} />)}
-  </div>
-  <div className="w-2/4 flex flex-col py-1 h-full">
-    <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl ">
-      <Upcoming />
-    </div>
-    <div className="flex-1  overflow-y-auto  mb-4" >      <Feedback />
+          <div className="w-2/4 px-2 ml-2 overflow-y-auto">
+            {loading && <div className="text-[#AEC90A]">Loading events...</div>}
+            {error && <div className="text-red-500">{error}</div>}
+            {!loading && !error && events.length === 0 && (
+              <div className="text-[#AEC90A]">No events yet</div>
+            )}
+            {!loading &&
+              !error &&
+              events.length > 0 &&
+              events.map((event) => (
+                <div
+                  key={event.event_id}
+                  className="border p-4 mb-4 rounded-lg"
+                >
+                  <img
+                    src={
+                      event.event_image && event.event_image.startsWith("http")
+                        ? event.event_image
+                        : event.event_image
+                        ? `http://localhost:8080/uploads/events/eventImages/${event.event_image}`
+                        : "default-image-url.jpg"
+                    }
+                    alt={event.name}
+                    className="w-full h-40 object-cover rounded-md mb-2"
+                  />
+                  <h3 className="text-lg font-bold">{event.name}</h3>
+                  <div
+                    className="flex py-6 items-center space-x-6 mb-2 rounded mt-2"
+                    style={{ backgroundColor: "#090101" }}
+                  >
+                    <div className="flex items-center ml-2 mb-2">
+                      <AiOutlineCalendar
+                        className="text-[#AEC90A] mr-2"
+                        size={20}
+                      />{" "}
+                      {/* Event Name icon */}
+                      <p className="text-sm">{event.name}</p>
+                    </div>
 
-    </div>
-  </div>
-</div>
+                    <div className="flex items-center mb-2">
+                      <AiOutlineClockCircle
+                        className="text-[#AEC90A] mr-2"
+                        size={20}
+                      />{" "}
+                      {/* Date icon */}
+                      <p className="text-sm">
+                        {new Intl.DateTimeFormat("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        }).format(new Date(event.date))}
+                      </p>
+                    </div>
+                    <div className="flex items-center mb-2">
+                      <AiOutlineEnvironment
+                        className="text-[#AEC90A] mr-2"
+                        size={20}
+                      />{" "}
+                      {/* Venue icon */}
+                      <p className="text-sm">{event.venue}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center mb-2 ml-2">
+                    <AiOutlineInfoCircle
+                      className="text-[#AEC90A] mr-2"
+                      size={20}
+                    />{" "}
+                    {/* Purpose icon */}
+                    <p className="text-sm font-bold">{event.purpose}</p>
+                  </div>
 
+                  <div className="p-1 mb-1 flex flex-col relative">
+                    <button
+                      onClick={() => {
+                        setSelectedEvent(event);
+                        setIsModalOpen(true);
+                      }}
+                      // className="mt-2 px-4 py-2 bg-[#AEC90A] text-black rounded hover:bg-[#93b208]"
+                      className="mt-2 ml-auto px-4 py-2 bg-[#AEC90A] text-black rounded hover:bg-[#93b208]"
+                    >
+                      Register
+                    </button>
+                  </div>
+                </div>
+              ))}
+          </div>
+          <div className="w-2/4 flex flex-col py-1 h-full">
+            <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl">
+              <Upcoming />
+            </div>
+            <div className="flex-1 overflow-y-auto mb-4">
+              <Feedback />
+            </div>
+          </div>
         </div>
       </div>
+      {isModalOpen && (
+        <RegistrationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          event={selectedEvent}
+        />
+      )}
+    </div>
   );
-}
+};
 
 export default Dashboard;

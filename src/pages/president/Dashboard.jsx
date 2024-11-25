@@ -33,7 +33,7 @@ const Dashboard = () => {
   const events = [
     {
       id: "5",
-      publisher_name: "John Doe",
+      publisher_name: "John Doeeeeeeeeeeeeeeeeeeeeeeee",
       publisher_position: "President of Club IEEE",
       publisher_img: dp,
       event: "Cultural Festival 2025",
