@@ -38,6 +38,8 @@ const AddNewPostForm = () => {
   const [errors, setErrors] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showAddSuccessPopup, setShowAddSuccessPopup] = useState(false);
+  const [showUpdateSuccessPopup, setShowUpdateSuccessPopup] = useState(false);
   //club id
   //published user id
 
@@ -46,6 +48,14 @@ const AddNewPostForm = () => {
       //setSelectedImage(URL.createObjectURL(e.target.files[0]));
       setPostImage(e.target.files[0]);
     }
+  };
+
+  const handleClosePopup = () => {
+    setShowAddSuccessPopup(false);
+  };
+
+  const handleClosePopup1 = () => {
+    setShowUpdateSuccessPopup(false);
   };
 
   const currentUserDetails = async () => {
@@ -241,8 +251,13 @@ const handleSubmit = async (e) => {
           publishedUserId,
           token
         );
-        alert("Post updated successfully");
-        navigate(-1);
+
+        setShowUpdateSuccessPopup(true);
+        //alert("Post updated successfully");
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+
       } else {
         const response = await PostService.savePost(
           name,
@@ -254,8 +269,13 @@ const handleSubmit = async (e) => {
           publishedUserId,
           token
         );
-        alert("Post added successfully");
-        navigate(-1);
+
+        setShowAddSuccessPopup(true);
+        //alert("Post added successfully");
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        
       }
     } catch (error) {
       console.error("Error processing Post:", error);
@@ -410,6 +430,40 @@ const handleCancel = () => {
           </div>
         </div>
       </div>
+
+      {showAddSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                Post created successfully
+            </h2>
+          </div>
+        </div>
+      )}
+
+      {showUpdateSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup1}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                Post updated successfully
+            </h2>
+          </div>
+        </div>
+      )}
     </>
   );
 };

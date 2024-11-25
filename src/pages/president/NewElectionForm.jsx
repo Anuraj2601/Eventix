@@ -23,6 +23,8 @@ const NewElectionForm = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState('');
+  const [showAddSuccessPopup, setShowAddSuccessPopup] = useState(false);
+  const [showUpdateSuccessPopup, setShowUpdateSuccessPopup] = useState(false);
 
   const { club } = location.state || {};
   //console.log('club in election form', club);
@@ -47,6 +49,14 @@ const NewElectionForm = () => {
   //   return new Date(date.getTime() - offset);
   // };
   
+  const handleClosePopup = () => {
+    setShowAddSuccessPopup(false);
+  };
+
+  const handleClosePopup1 = () => {
+    setShowUpdateSuccessPopup(false);
+  };
+
   const toUTC = (date) => {
     const offset = date.getTimezoneOffset() * 60000;
     return new Date(date.getTime() + offset);
@@ -235,9 +245,12 @@ useEffect(() => {
                     );
         
                     
-                    alert('Election updated successfully');
+                    //alert('Election updated successfully');
+                    setShowUpdateSuccessPopup(true);
                     console.log('Election updated:', response);
-                    navigate(-1);
+                    setTimeout(() => {
+                      navigate(-1);
+                    }, 2000);
     
                 }else{
     
@@ -252,9 +265,12 @@ useEffect(() => {
                     );
         
                     
-                    alert('Election added successfully');
+                    //alert('Election added successfully');
+                    setShowAddSuccessPopup(true);
                     console.log('Election added:', response);
-                    navigate(-1);
+                    setTimeout(() => {
+                      navigate(-1);
+                    }, 2000);
     
                 }
 
@@ -416,7 +432,7 @@ useEffect(() => {
                       Cancel
                     </Button>
                     <Button type='submit'         className="bg-[#AEC90A] hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
->
+                    >
                       Submit
                     </Button>
                   </div>
@@ -424,8 +440,43 @@ useEffect(() => {
               </div>
             </div>
           </div>
+
+
         </div>
         </div>
+        {showAddSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                Election created successfully
+            </h2>
+          </div>
+        </div>
+      )}
+
+      {showUpdateSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup1}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+              Election updated successfully
+            </h2>
+          </div>
+        </div>
+      )}
     </>
   );
 };
