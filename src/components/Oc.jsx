@@ -112,6 +112,8 @@ const App = ({clubId, event}) => {
     const [allClubMembers, setAllClubMembers] = useState([]);
     const [currentOcMembers, setCurrentOcMembers] = useState([]);
     const [error, setError] = useState("");
+    const [showAddSuccessPopup, setShowAddSuccessPopup] = useState(false);
+    const [showRemoveSuccessPopup, setShowRemovwSuccessPopup] = useState(false);
 
     const location = useLocation(); // Get the current path
 
@@ -124,6 +126,14 @@ const App = ({clubId, event}) => {
         return paths.some(path => location.pathname.startsWith(path));
     };
 
+    const handleClosePopup = () => {
+        setShowAddSuccessPopup(false);
+    };
+
+    const handleRemoveClosePopup = () => {
+        setShowRemovwSuccessPopup(false);
+    };
+
     const handleRemove = async (oc_id, teamName, memberIndex) => {
 
         const token = localStorage.getItem('token'); 
@@ -131,7 +141,8 @@ const App = ({clubId, event}) => {
         try{
             const response1 = await EventOcService.deleteEventOc(oc_id, token);
 
-            alert('Event OC removed successfully');
+            //alert('Event OC removed successfully');
+            setShowRemovwSuccessPopup(true);
             console.log('Event OC removed:', response1);
 
 
@@ -205,8 +216,8 @@ const App = ({clubId, event}) => {
                 token
             );
 
-            
-            alert('Event OC added successfully');
+            setShowAddSuccessPopup(true);
+            //alert('Event OC added successfully');
             console.log('Event OC added:', response);
             //navigate(-1);
 
@@ -436,9 +447,43 @@ const App = ({clubId, event}) => {
             ))}
         </div>
     </div>
+    {showAddSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                Event OC added successfully
+            </h2>
+          </div>
+        </div>
+    )}
+
     
     
 </Modal>
+{showRemoveSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleRemoveClosePopup}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                Event OC Removed successfully
+            </h2>
+          </div>
+        </div>
+    )}
+
 
         </div>
     );

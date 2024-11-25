@@ -10,6 +10,7 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
   const [newItem, setNewItem] = useState({ description: "", type: "COST", amount: 0 });
 
   const [allBudgets, setAllBudgets] = useState([]);
+  const [showAddSuccessPopup, setShowAddSuccessPopup] = useState(false);
 
   //console.log("clubID in budget", clubId);
   //console.log("event in budget", event);
@@ -19,6 +20,10 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
   //   setBudgetItems([...budgetItems, { id: budgetItems.length + 1, ...newItem }]);
   //   setNewItem({ description: "", type: "cost", amount: 0 });
   // };
+
+  const handleClosePopup = () => {
+    setShowAddSuccessPopup(false);
+};
 
   const handleAddItem = async (e) => {
       e.preventDefault();
@@ -68,7 +73,8 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
           );
 
           
-          alert('Event Budget added successfully');
+          //alert('Event Budget added successfully');
+          setShowAddSuccessPopup(true);
           console.log('Event Budget added:', response);
           //navigate(-1);
 
@@ -166,7 +172,7 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
             Estimated Budget: <span className="mr-2">
                 <EditButton />
             </span>
-        </Typography>
+          </Typography>
             <Typography color="white" variant="h4" className="mb-4 text-center">
               Event Budget Tracker
             </Typography>
@@ -180,32 +186,32 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
                 </tr>
               </thead>
               <tbody>
-  {allBudgets.map((item) => {
- const formattedDate = formatCreatedAt(item.created_at); 
+                {allBudgets.map((item) => {
+              const formattedDate = formatCreatedAt(item.created_at); 
 
 
-    return (
-      <tr key={item.budget_id}>
-         <td>{formattedDate}</td>
-        <td className="p-2">{item.budget_name}</td>
-        <td
-          className="p-2"
-          style={{
-            color:
-              item.budget_type === "COST"
-                ? "red"
-                : item.budget_type === "INCOME"
-                ? "#2ecc71"
-                : "white",
-          }}
-        >
-          {item.budget_type}
-        </td>
-        <td className="p-2">Rs. {item.budget_amount}</td>
-             </tr>
-    );
-  })}
-</tbody>
+                  return (
+                    <tr key={item.budget_id}>
+                      <td>{formattedDate}</td>
+                      <td className="p-2">{item.budget_name}</td>
+                      <td
+                        className="p-2"
+                        style={{
+                          color:
+                            item.budget_type === "COST"
+                              ? "red"
+                              : item.budget_type === "INCOME"
+                              ? "#2ecc71"
+                              : "white",
+                        }}
+                      >
+                        {item.budget_type}
+                      </td>
+                      <td className="p-2">Rs. {item.budget_amount}</td>
+                          </tr>
+                  );
+                })}
+              </tbody>
 
             </table>
             <form onSubmit={handleAddItem} className="mb-4">
@@ -247,8 +253,29 @@ const BudgetTable = ({ clubId, event, onUpdate, showTable = true, estimatedBudge
             </div>
           </CardBody>
         </Card>
+
+        
+      )}
+
+      {showAddSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                Event budget added successfully
+            </h2>
+          </div>
+        </div>
       )}
     </div>
+
+    
   );
 };
 

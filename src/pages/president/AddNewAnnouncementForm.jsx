@@ -14,12 +14,23 @@ const AddNewAnnouncementForm = () => {
     const [announcementType, setAnnouncementType] = useState('PUBLIC');
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(true);
+    const [showAddSuccessPopup, setShowAddSuccessPopup] = useState(false);
+    const [showUpdateSuccessPopup, setShowUpdateSuccessPopup] = useState(false);
 
     const { id } = useParams();
     const { club } = location.state || {};
 
     const handleRadioChange = (e) => {
         setAnnouncementType(e.target.value);
+    };
+
+     
+    const handleClosePopup = () => {
+        setShowAddSuccessPopup(false);
+    };
+
+    const handleClosePopup1 = () => {
+        setShowUpdateSuccessPopup(false);
     };
 
     const validate = () => {
@@ -79,9 +90,14 @@ const AddNewAnnouncementForm = () => {
                     club.club_id,
                     token
                 );
-                alert('Announcement updated successfully');
+
+                //alert('Announcement updated successfully');
+                setShowUpdateSuccessPopup(true);
                 console.log('Announcement updated:', response);
-                navigate(-1);
+                setTimeout(() => {
+                    navigate(-1);
+                }, 2000);
+
             } else {
                 const response = await AnnouncementService.saveAnnouncement(
                     title,
@@ -90,9 +106,14 @@ const AddNewAnnouncementForm = () => {
                     club.club_id,
                     token
                 );
-                alert('Announcement added successfully');
+
+                //alert('Announcement added successfully');
+                setShowAddSuccessPopup(true);
                 console.log('Announcement added:', response);
-                navigate(-1);
+                setTimeout(() => {
+                    navigate(-1);
+                }, 2000);
+                
             }
         } catch (error) {
             console.error("Error processing Announcement:", error);
@@ -183,6 +204,40 @@ const AddNewAnnouncementForm = () => {
                     </div>
                 </div>
             </div>
+
+            {showAddSuccessPopup && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+                <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+                <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+                    <span
+                    className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+                    onClick={handleClosePopup}
+                    >
+                    &times;
+                    </span>
+                    <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                        Announcement created successfully
+                    </h2>
+                </div>
+                </div>
+            )}
+
+            {showUpdateSuccessPopup && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+                <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+                <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+                    <span
+                    className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+                    onClick={handleClosePopup1}
+                    >
+                    &times;
+                    </span>
+                    <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                    Announcement updated successfully
+                    </h2>
+                </div>
+                </div>
+            )}
         </div>
     );
 };
