@@ -17,8 +17,8 @@ import ieee5 from "../assets/events/revol.jpg";
 import rac1 from "../assets/events/trail.jpg";
 import acm1 from "../assets/farewell.jpg";
 import rac2 from "../assets/events/snap.jpg";
-import LikeButton from './LikeButton'; // Adjust path as necessary
-import RegistrationModal from './RegistrationModal'; // Adjust path as necessary
+import LikeButton from './LikeButton';
+import RegistrationModal from './RegistrationModal';
 
 const upcomingItems = [
   { id: 1, name: "Madhack", image: ieee1, details: "IEEE Club Board Election for Term 24/25", date: "2024-08-15", venue: "Main Auditorium", time: "10:00 AM", organizedBy: "IEEE", clubImage: ieeeImg, likes: Math.floor(Math.random() * 100) },

@@ -109,7 +109,7 @@ const Dashboard = () => {
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
         <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto">
-  <div className="w-2/4 px-2 ml-2 overflow-y-auto">
+  <div className="w-1/2 px-2 ml-2 overflow-y-auto">
     {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
     {events.length > 0 && events.map(event => <Event event={event} key={event.id} />)}
   </div>
