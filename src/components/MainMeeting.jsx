@@ -8,6 +8,7 @@ import onlineMeeting from '../assets/onlineMeeting.png';
 import RegistrationService from '../service/registrationService'; // Adjust the path as needed
 import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
 import { useNavigate } from "react-router-dom";
+import EventMeetingService from "../service/EventMeetingService";
 
 
 const MeetingsList = () => {
@@ -29,7 +30,40 @@ const MeetingsList = () => {
   const userEmail = getUserEmailFromToken();
   const [participants, setParticipants] = useState([]);
   const [loadingParticipants, setLoadingParticipants] = useState(false);
+
   const [selectedMeetingId, setSelectedMeetingId] = useState(null);
+
+  const fetchEventMeetings = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await EventMeetingService.getAllEventMeetings(token);
+      //console.log("Event meetings", response);
+      const eventMeetingsArray = response.content || [];
+      console.log("event Meetings array", eventMeetingsArray);
+
+    
+      setEventMeetings(eventMeetingsArray); 
+
+      
+    } catch (error) {
+      console.error("Error fetching meetings", error);
+    }
+  };
+  const isMeetingToday = (date) => {
+    const today = new Date();
+    const meetingDate = new Date(date[2], date[1] - 1, date[0]); // assuming date is [day, month, year]
+    return today.toDateString() === meetingDate.toDateString();
+  };
+
+  const isTimeClose = (time) => {
+    const now = new Date();
+    const meetingTime = new Date();
+    meetingTime.setHours(time[0], time[1], 0, 0); // assuming time is [hour, minute]
+    
+    // Check if the meeting is within 30 minutes from now
+    const diffMinutes = (meetingTime - now) / (1000 * 60);
+    return diffMinutes <= 30 && diffMinutes >= 0; // Meeting is within 30 minutes
+  };
 
   const fetchParticipants = async (meetingId) => {
     setLoadingParticipants(true);
@@ -129,6 +163,7 @@ const MeetingsList = () => {
       fetchMeetings();
       fetchClubs();
       fetchRegistrations();
+      fetchEventMeetings();
     }
   }, [token]);
 
@@ -335,9 +370,7 @@ const MeetingsList = () => {
           <span>Upcoming Club Meetings</span>
         </h2>
        
-        {/* Participants Section */}
-{/* Participants Section */}
-{selectedMeetingId && (
+        {selectedMeetingId && (
   <div className="mt-8">
     <h3 className="text-lg font-semibold mb-4">
       Participants for Meeting ID: {selectedMeetingId}
@@ -384,6 +417,8 @@ const MeetingsList = () => {
     )}
   </div>
 )}
+
+ 
 
  
 
