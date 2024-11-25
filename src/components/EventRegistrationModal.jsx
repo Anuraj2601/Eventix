@@ -141,7 +141,10 @@ const EventRegistrationModal = ({clubId, eventDetails, event, isOpen, onClose })
         
         //alert('Registration successful!');
         setShowAddSuccessPopup(true);
-        onClose(); // Close the modal after submission
+        setTimeout(() => {
+          onClose(); // Close modal after popup is shown
+        }, 2000);
+  
 
     } catch (error) {
         const errorMessage = error.message || 'Failed to submit the form.';
@@ -253,7 +256,7 @@ const EventRegistrationModal = ({clubId, eventDetails, event, isOpen, onClose })
             </button>
           </div>
         </form>
-        
+
         {showAddSuccessPopup && (
         <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
           <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
