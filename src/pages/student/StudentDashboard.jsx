@@ -53,9 +53,7 @@ const Dashboard = () => {
       contact: "0217988234",
       email: "career25@gmail.com",
       image: eidImage,
-      
     },
-   
     {
       id: "3",
       publisher_name: "Jane Smith",
@@ -104,28 +102,27 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="fixed inset-0 flex">
-      <Sidebar className="flex-shrink-0" />
+    <div className="fixed inset-0 flex flex-col md:flex-row">
+      <Sidebar className="flex-shrink-0 md:w-1/4" />
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
         <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto">
-  <div className="w-1/2 px-2 ml-2 overflow-y-auto">
-    {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
-    {events.length > 0 && events.map(event => <Event event={event} key={event.id} />)}
-  </div>
-  <div className="w-2/4 flex flex-col py-1 h-full">
-    <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl ">
-      <Upcoming />
-    </div>
-    <div className="flex-1  overflow-y-auto  mb-4" >      <Feedback />
-
-    </div>
-  </div>
-</div>
-
+          <div className="w-full md:w-1/2 px-2 ml-2 overflow-y-auto">
+            {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
+            {events.length > 0 && events.map(event => <Event event={event} key={event.id} />)}
+          </div>
+          <div className="w-full md:w-1/2 flex flex-col py-1 h-full">
+            <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl ">
+              <Upcoming />
+            </div>
+            <div className="flex-1 overflow-y-auto mb-4">
+              <Feedback />
+            </div>
+          </div>
         </div>
       </div>
+    </div>
   );
-}
+};
 
 export default Dashboard;
