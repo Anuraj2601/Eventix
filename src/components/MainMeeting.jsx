@@ -27,6 +27,51 @@ const MeetingsList = () => {
   const [registrations, setRegistrations] = useState([]);
   const userId = getUserIdFromToken();
   const userEmail = getUserEmailFromToken();
+  const [participants, setParticipants] = useState([]);
+  const [loadingParticipants, setLoadingParticipants] = useState(false);
+  const [selectedMeetingId, setSelectedMeetingId] = useState(null);
+
+  const fetchParticipants = async (meetingId) => {
+    setLoadingParticipants(true);
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/meeting-participants/meeting/${meetingId}`
+      );
+      console.log("API Response for Participants:", response.data); // Log full response
+      setParticipants(response.data || []);
+    } catch (err) {
+      console.error("Error fetching participants:", err);
+      setError("Failed to fetch participants. Please try again later.");
+    } finally {
+      setLoadingParticipants(false);
+    }
+  };
+  
+
+  // Handle meeting selection
+  const handleMeetingClick = (meetingId) => {
+    setSelectedMeetingId(meetingId);
+    fetchParticipants(meetingId);
+  };
+
+  // Function to send the QR code via email
+  const sendQRCodeEmail = async (meetingId, qrCodeUrl) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/president/sendQrCode/${meetingId}`,
+        { email: userEmail, qrCodeUrl }, // Send the QR code URL in the email
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        console.log('QR code sent successfully!');
+      }
+    } catch (error) {
+      console.error('Error sending QR code email:', error);
+      setEmailError('Error while sending QR code via email.');
+    }
+  };
+
 
   const fetchClubs = async () => {
     try {
@@ -208,7 +253,7 @@ const MeetingsList = () => {
 };
 
   // QR Code API call
-  const sendQRCodeEmail = async (meetingId) => {
+  const sendQRCodeEmaill = async (meetingId) => {
     setSendingQRCode((prevState) => ({
       ...prevState,
       [meetingId]: true, // Mark as sending QR code for this meeting
@@ -289,6 +334,59 @@ const MeetingsList = () => {
         <h2 className="text-xl font-semibold flex items-center p-5">
           <span>Upcoming Club Meetings</span>
         </h2>
+       
+        {/* Participants Section */}
+{/* Participants Section */}
+{selectedMeetingId && (
+  <div className="mt-8">
+    <h3 className="text-lg font-semibold mb-4">
+      Participants for Meeting ID: {selectedMeetingId}
+    </h3>
+    {loadingParticipants ? (
+      <div>Loading participants...</div>
+    ) : (
+      (() => {
+        // Get current user ID (assume it's stored in localStorage or obtained dynamically)
+        const currentUserId = userId; // Replace with appropriate method if different
+        const filteredParticipants = participants.filter(
+          (participant) => participant.userId === currentUserId
+        );
+
+        return filteredParticipants.length > 0 ? (
+          <table className="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 border">Participant ID</th>
+                <th className="px-4 py-2 border">Club ID</th>
+                <th className="px-4 py-2 border">Meeting ID</th>
+                <th className="px-4 py-2 border">QR Code</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredParticipants.map((participant) => (
+                <tr key={participant.participantId}>
+                  <td className="px-4 py-2 border">{participant.participantId}</td>
+                  <td className="px-4 py-2 border">{participant.clubId}</td>
+                  <td className="px-4 py-2 border">{participant.meetingId}</td>
+                  <td className="px-4 py-2 border">{participant.qrCodeUser}</td>
+                  <td className="px-4 py-2 border">{participant.userId}</td>
+
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="text-gray-500">
+            No participants found for your user ID in this meeting.
+          </div>
+        );
+      })()
+    )}
+  </div>
+)}
+
+ 
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {meetingsByType.map((announcement) => {
             const club = getClubDetailsById(announcement.club_id);
@@ -311,13 +409,18 @@ const MeetingsList = () => {
                 </div>
                 <div className="flex space-x-2 mb-10 w-full">
                   {announcement.meeting_type === 'PHYSICAL' ? (
-                     <button
-                     onClick={() => sendQRCodeEmail(announcement.meeting_id)}
-                     className={`px-4 py-2 w-full ${sendingQRCode[announcement.meeting_id] ? 'bg-gray-500' : 'bg-primary'} text-black rounded font-medium`}
-                     disabled={sendingQRCode[announcement.meeting_id]}
-                   >
-                     {sendingQRCode[announcement.meeting_id] ? 'Sending...' : 'Click here to Receive QR code'}
-                   </button>
+                      <button
+                      onClick={() => handleMeetingClick(announcement.meeting_id)}
+                      className={`px-4 py-2 w-full ${sendingQRCode[announcement.meeting_id] === 'fetching' ? 'bg-gray-500' : 'bg-primary'} text-black rounded font-medium`}
+                      disabled={sendingQRCode[announcement.meeting_id] === 'fetching'}
+                    >
+                      {sendingQRCode[announcement.meeting_id] === 'fetching'
+                        ? 'Fetching...'
+                        : sendingQRCode[announcement.meeting_id] // Display the fetched QR code value if available
+                        ? sendingQRCode[announcement.meeting_id]
+                        : 'Fetch My QR Code'}
+                    </button>
+                    
                   ) : (
                     <button
                     onClick={() => handleJoinMeetingClick(announcement.meeting_id)}
