@@ -3,25 +3,104 @@ import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import physicalMeeting from '../assets/physicalMeeting02.png';
 import onlineMeeting from '../assets/onlineMeeting.png';
-import ieee from '../assets/ieee.jpeg';
-import isaca from '../assets/isaca.png';
-import rotract from '../assets/rotract.jpeg';
-import { useLocation } from 'react-router-dom';
+import RegistrationService from '../service/registrationService'; // Adjust the path as needed
+import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
+import { useNavigate } from "react-router-dom";
+import EventMeetingService from "../service/EventMeetingService";
 
 
-const MainMeeting = () => {
-    const [selectedFilter, setSelectedFilter] = useState('physical');
-    const [showPopup, setShowPopup] = useState(false);
-    const [reason, setReason] = useState('');
-    const [currentMeetingId, setCurrentMeetingId] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [declinedMeetings, setDeclinedMeetings] = useState(new Set());
-    const [showDeclinedModal, setShowDeclinedModal] = useState(false);
-    const [popupVisible, setPopupVisible] = useState(null);
-    const [disabledButtons, setDisabledButtons] = useState(new Set());
-    const location = useLocation();
-    const path = location.pathname;
-    const shouldShowForm = path.startsWith('/admin') || path.startsWith('/president') || path.startsWith('/secretary');
+const MeetingsList = () => {
+  const [meetings, setMeetings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [clubs, setClubs] = useState([]);
+  const [disabledButtons, setDisabledButtons] = useState(new Set());
+  const [eventMeetings, setEventMeetings] = useState([]);
+  const [qrCodeDialogVisible, setQrCodeDialogVisible] = useState(false);
+  const [sendingQRCode, setSendingQRCode] = useState({});
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [popupMeetingId, setPopupMeetingId] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState('physical'); // State for selected filter (Physical/Online)
+  const token = localStorage.getItem('token') || '';
+  const [registrations, setRegistrations] = useState([]);
+  const userId = getUserIdFromToken();
+  const userEmail = getUserEmailFromToken();
+  const [participants, setParticipants] = useState([]);
+  const [loadingParticipants, setLoadingParticipants] = useState(false);
+  const [selectedMeetingId, setSelectedMeetingId] = useState(null);
+  
+  const fetchEventMeetings = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await EventMeetingService.getAllEventMeetings(token);
+      //console.log("Event meetings", response);
+      const eventMeetingsArray = response.content || [];
+      console.log("event Meetings array", eventMeetingsArray);
+
+    
+      setEventMeetings(eventMeetingsArray); 
+
+      
+    } catch (error) {
+      console.error("Error fetching meetings", error);
+    }
+  };
+  const isMeetingToday = (date) => {
+    const today = new Date();
+    const meetingDate = new Date(date[2], date[1] - 1, date[0]); // assuming date is [day, month, year]
+    return today.toDateString() === meetingDate.toDateString();
+  };
+
+  const isTimeClose = (time) => {
+    const now = new Date();
+    const meetingTime = new Date();
+    meetingTime.setHours(time[0], time[1], 0, 0); // assuming time is [hour, minute]
+    
+    // Check if the meeting is within 30 minutes from now
+    const diffMinutes = (meetingTime - now) / (1000 * 60);
+    return diffMinutes <= 30 && diffMinutes >= 0; // Meeting is within 30 minutes
+  };
+  const fetchParticipants = async (meetingId) => {
+    setLoadingParticipants(true);
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/meeting-participants/meeting/${meetingId}`
+      );
+      console.log("API Response for Participants:", response.data); // Log full response
+      setParticipants(response.data || []);
+    } catch (err) {
+      console.error("Error fetching participants:", err);
+      setError("Failed to fetch participants. Please try again later.");
+    } finally {
+      setLoadingParticipants(false);
+    }
+  };
+  
+
+  // Handle meeting selection
+  const handleMeetingClick = (meetingId) => {
+    setSelectedMeetingId(meetingId);
+    fetchParticipants(meetingId);
+  };
+
+  // Function to send the QR code via email
+  const sendQRCodeEmail = async (meetingId, qrCodeUrl) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/president/sendQrCode/${meetingId}`,
+        { email: userEmail, qrCodeUrl }, // Send the QR code URL in the email
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        console.log('QR code sent successfully!');
+      }
+    } catch (error) {
+      console.error('Error sending QR code email:', error);
+      setEmailError('Error while sending QR code via email.');
+    }
+  };
 
 
     const meetingAnnouncements = [
@@ -63,51 +142,14 @@ const MainMeeting = () => {
         },
     ];
 
-    const unionAnnouncements = [
-        {
-            id: 10,
-            title: 'Union General Meeting',
-            description: 'Annual general meeting for all union members.',
-            date: '2024-09-01',
-            time: '03:00 PM',
-            location: 'Main Hall',
-            postedDate: '2024-07-25',
-            postedTime: '10:00 AM'
-        },
-        {
-            id: 20,
-            title: 'Union Budget Review',
-            description: 'Review of the annual budget and allocation.',
-            date: '2024-09-10',
-            time: '01:00 PM',
-            location: 'Conference Room A',
-            postedDate: '2024-07-26',
-            postedTime: '11:00 AM'
-        },
-        {
-            id: 30,
-            title: 'Union Leadership Summit',
-            description: 'Meeting of union leaders to discuss future strategies.',
-            date: '2024-09-15',
-            time: '09:00 AM',
-            location: 'Main Hall',
-            postedDate: '2024-07-27',
-            postedTime: '09:00 AM'
-        },
-        {
-            id: 40,
-            title: 'Union Member Engagement Event',
-            description: 'Event to engage with union members and discuss ongoing projects.',
-            date: '2024-09-20',
-            time: '02:00 PM',
-            location: 'Event Center',
-            postedDate: '2024-07-28',
-            postedTime: '10:00 AM'
-        },
-    ];
-    const handleJoinMeeting = (id) => {
-        console.log('Join Meeting for meeting ID:', id);
-    };
+  useEffect(() => {
+    if (token) {
+      fetchMeetings();
+      fetchClubs();
+      fetchRegistrations();
+      fetchEventMeetings();
+    }
+  }, [token]);
 
     const handleDeclineMeeting = (id) => {
         setCurrentMeetingId(id);
@@ -317,14 +359,17 @@ const MainMeeting = () => {
     `}</style>
 
 
-
-const renderUnionAnnouncements = () => {
-    const handleGetQRCode = (id) => {
-        setPopupVisible(id);
-        setTimeout(() => {
-            setPopupVisible(null);
-        }, 5000);
-    };
+  const getClubImageByEventMeeting = (eventMeeting) => {
+    const club = clubs.find(c => c.club_id === eventMeeting.club_id);
+  
+    if (!club) {
+      console.error(`Club with ID ${eventMeeting.club_id} not found.`);
+      return null; // Return null if the club is not found
+    }
+  
+    return club.image; // Assuming the club has an 'image' property
+  };
+  
 
     const handleCancelPopup = () => {
         setPopupVisible(null);
@@ -333,68 +378,182 @@ const renderUnionAnnouncements = () => {
     const announcementsToShow = selectedFilter === 'online' ? unionAnnouncements.slice(0, 3) : unionAnnouncements;
 
     return (
-        <div className="p-4 rounded-lg mb-10 mx-4">
-            <h2 className="text-[16px] font-medium mb-4">Upcoming UNION Meetings</h2>
-            {announcementsToShow.map((announcement) => (
-                <div key={announcement.id} className="relative bg-dark-500 rounded-lg flex items-center p-4 mb-4 w-full h-[100px]">
-                    <div className="flex flex-col justify-between flex-grow">
-                        <div>
-                            <p className="text-sm mt-2">
-                                <span className="block font-medium text-[14px] leading-loose">
-                                    {announcement.title} | <span className="font-normal text-[14px] leading-loose text-white opacity-50">{announcement.description}</span>
-                                </span>
-                                <span className='block text-[15px] text-primary opacity-100 mt-1'>
-                                    {announcement.date} | {announcement.time} | {announcement.location}
-                                </span>
-                            </p>
-                        </div>
-                        <div className="text-xs text-white opacity-50 mt-2">
-                            <span>{announcement.postedDate}</span>
-                            <span className="mx-2">{announcement.postedTime}</span>
-                        </div>
-                    </div>
-                    <div className="flex-none ml-4 flex space-x-2">
-                        {selectedFilter === 'physical' ? (
-                            <>
-                                <button
-                                    onClick={() => handleDeclineMeeting(announcement.id)}
-                                    className={`px-4 py-2 ${declinedMeetings.has(announcement.id) ? 'bg-dark-500 cursor-not-allowed border border-red-600 text-red-500' : 'bg-dark-400 text-primary'} rounded font-medium w-[150px] hover:scale-105 transition-transform duration-200`}
-                                    disabled={declinedMeetings.has(announcement.id)}
-                                >
-                                    {declinedMeetings.has(announcement.id) ? 'Declined' : 'Decline'}
-                                </button>
-                                <button
-                                    onClick={() => handleGetQRCode(announcement.id)}
-                                    className={`px-4 py-2 ${popupVisible === announcement.id ? 'bg-dark-500 cursor-not-allowed opacity-50 text-primary border border-secondary' : 'bg-primary text-sec'} rounded font-semibold w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200 text-dark-400`}
-                                    disabled={popupVisible === announcement.id}
-                                >
-                                    {popupVisible === announcement.id ? 'QR Code Sent' : 'Get QR Code'}
-                                </button>
-                            </>
-                        ) : (
-                            <button
-                                onClick={() => handleJoinMeeting(announcement.id)}
-                                className="px-4 py-2 bg-dark-400 cursor-not-allowed text-white opacity-50 rounded font-medium w-[150px] hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
-                            >
-                                Join Meeting
-                            </button>
-                        )}
-                    </div>
-                    {popupVisible === announcement.id && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                            <div className="bg-white p-6 rounded-lg w-[450px] h-[200px] flex flex-col items-center justify-center">
-                                <p className="text-dark-400 mb-4 font-medium">Wait a minute, your QR code will be sent to you as a notification.</p>
+      <div className="p-4 rounded-lg mb-20 mx-4">
+        {/* Tab section */}
+        <div className="flex space-x-4 mb-6">
+          <button
+            className={`px-4 py-2 rounded ${selectedFilter === 'physical' ?  'text-primary border-b-2 border-primary' : 'text-white'}`}
+            onClick={() => setSelectedFilter('physical')}
+          >
+            Physical Meetings
+          </button>
+          <button
+            className={`px-4 py-2 rounded ${selectedFilter === 'online' ?  'text-primary border-b-2 border-primary' : 'text-white'}`}
+            onClick={() => setSelectedFilter('online')}
+          >
+            Online Meetings
+          </button>
+          <button
+      className={`px-4 py-2 rounded ${selectedFilter === 'QR' ? 'text-primary border-b-2 border-primary' : 'text-white'}`}
+      onClick={() => setSelectedFilter('QR')}
+    >
+      Scan QR code
+    </button>
+        </div>
 
-                                <button onClick={handleCancelPopup} className="bg-dark-400 text-white px-4 py-2 w-[400px] rounded">
-                                    No need
-                                </button>
-                                <div className="mb-4 text-primary font-medium animate-blink mt-6">Loading...</div>
-                            </div>
-                        </div>
-                    )}
+        {/* Display corresponding image */}
+        <img
+          src={selectedFilter === 'physical' ? physicalMeeting : onlineMeeting}
+          alt={selectedFilter === 'physical' ? "Physical Meeting" : "Online Meeting"}
+          className="w-full h-auto mb-6 shadow-lg"
+        />
+{selectedFilter === 'QR' }
+        {/* Upcoming Club Meetings Section */}
+        <h2 className="text-xl font-semibold flex items-center p-5">
+          <span>Upcoming Club Meetings</span>
+        </h2>
+       
+        {/* Participants Section */}
+{/* Participants Section */}
+{selectedMeetingId && (
+  <div className="mt-8">
+    <h3 className="text-lg font-semibold mb-4">
+      Participants for Meeting ID: {selectedMeetingId}
+    </h3>
+    {loadingParticipants ? (
+      <div>Loading participants...</div>
+    ) : (
+      (() => {
+        // Get current user ID (assume it's stored in localStorage or obtained dynamically)
+        const currentUserId = userId; // Replace with appropriate method if different
+        const filteredParticipants = participants.filter(
+          (participant) => participant.userId === currentUserId
+        );
+
+        return filteredParticipants.length > 0 ? (
+          <table className="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 border">Participant ID</th>
+                <th className="px-4 py-2 border">Club ID</th>
+                <th className="px-4 py-2 border">Meeting ID</th>
+                <th className="px-4 py-2 border">QR Code</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredParticipants.map((participant) => (
+                <tr key={participant.participantId}>
+                  <td className="px-4 py-2 border">{participant.participantId}</td>
+                  <td className="px-4 py-2 border">{participant.clubId}</td>
+                  <td className="px-4 py-2 border">{participant.meetingId}</td>
+                  <td className="px-4 py-2 border">{participant.qrCodeUser}</td>
+                  <td className="px-4 py-2 border">{participant.userId}</td>
+
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="text-gray-500">
+            No participants found for your user ID in this meeting.
+          </div>
+        );
+      })()
+    )}
+  </div>
+)}
+
+ 
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {meetingsByType.map((announcement) => {
+            const club = getClubDetailsById(announcement.club_id);
+            const clubImage = club ? club.club_image : "https://via.placeholder.com/150";
+            const clubName = club ? club.club_name : "Unknown Club";
+            return (
+              <div key={announcement.meeting_id} className="relative bg-dark-500 rounded-lg flex flex-col items-center p-4 h-80"  style={{
+                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
+              }}>
+                <div className="flex flex-col items-center mb-6 flex-grow">
+                  <img src={clubImage} alt={clubName} className="w-24 h-24 rounded-full mb-2" />
+                  <p className="text-sm text-primary font-semibold">{clubName}</p>
+                  <p className="text-sm text-center mt-2">
+                    <span className="block font-medium">{announcement.meeting_name}</span>
+                    <span className='block text-[20px] text-primary opacity-100 mt-6'>
+                      {formatDate(announcement.date)} at {formatTime(announcement.time)}
+                    </span>
+                    <span className="block text-xs text-gray-400">{new Date(announcement.date).toLocaleString('en-us', { weekday: 'long' })}</span>
+                  </p>
                 </div>
             ))}
         </div>
+        <div className="mb-2 mt-10">
+          <h1>Upcoming Event OC meetings</h1>
+  {eventMeetings
+    .filter((meeting) => {
+    
+      const meetingDate = new Date(meeting.date);
+      const currentDate = new Date();
+
+      // Ensure the meeting is in the future
+      return meetingDate > currentDate;
+    })
+    .map((meeting) => (
+      <div key={meeting.e_meeting_id} className="mb-4 border-b border-gray-300 pb-2">
+        <p className="flex items-center space-x-2 overflow-x-auto whitespace-nowrap">
+          <span><strong>{meeting.meeting_name}</strong></span>
+          <span className="text-[#AEC90A] font-bold">{formatDate(meeting.date)}</span>
+          <span className="text-[#AEC90A] font-bold">{formatTime(meeting.time)}</span>
+
+          {/* Conditionally display the dot for meeting type */}
+          {meeting.meeting_type === 'ONLINE' ? (
+            <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span> // Green dot for online
+          ) : (
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> // Red dot for physical
+          )}
+
+          <span>at {meeting.venue}</span>
+
+         {/* Conditional "Join" button or "Get QR Code" */}
+{isMeetingToday(meeting.date) && isTimeClose(meeting.time) ? (
+  meeting.meeting_type === 'ONLINE' ? (
+    <button
+      className="ml-2 p-2 bg-yellow-500 text-white rounded"
+      disabled={false} // Enabled for online meetings when time is close
+    >
+      Join
+    </button>
+  ) : (
+    <button
+      className="ml-2 p-2 bg-yellow-500 text-white rounded"
+    >
+      Get QR Code
+    </button>
+  )
+) : (
+  meeting.meeting_type === 'ONLINE' ? (
+    <button
+      className="ml-2 p-2 bg-gray-500 text-white rounded cursor-not-allowed"
+      disabled={true} // Disabled for online meetings outside the time range
+    >
+      Join
+    </button>
+  ) : (
+    <button
+      className="ml-2 p-2 bg-[#AEC90A] text-white rounded cursor-not-allowed"
+      disabled={true} // Disabled for physical meetings outside the time range
+    >
+      Get QR Code
+    </button>
+  )
+)}
+
+
+        </p>
+      </div>
+    ))}
+</div>
+      </div>
     );
 };
 

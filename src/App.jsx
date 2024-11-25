@@ -85,6 +85,8 @@ import MainMeetingstudent from './components/MainMeeting';
 
 import Landing from "./pages/Landing"
 import Login from "./components/login"
+import QRCodeScanner from "./components/QRCodeScanner"
+
 import Signup from "./components/Signup"
 import SecretaryExploreclub from './pages/secretary/Exploreclub';
 
@@ -170,9 +172,9 @@ const App = () => {
         <Route exact path="/" element={<Landing />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/Signup" element={<Signup />}></Route>
-        <Route path="/CheckEmail" element={<CheckEmail />}></Route>
+        <Route path="/QRCodeScanner" element={<QRCodeScanner />}></Route>
 
-      
+        QRCodeScanner
 
          {/* member routes */}
 
