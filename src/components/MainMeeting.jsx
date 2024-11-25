@@ -8,6 +8,7 @@ import onlineMeeting from '../assets/onlineMeeting.png';
 import RegistrationService from '../service/registrationService'; // Adjust the path as needed
 import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
 import { useNavigate } from "react-router-dom";
+import EventMeetingService from "../service/EventMeetingService";
 
 
 const MeetingsList = () => {
@@ -30,6 +31,39 @@ const MeetingsList = () => {
   const [participants, setParticipants] = useState([]);
   const [loadingParticipants, setLoadingParticipants] = useState(false);
   const [selectedMeetingId, setSelectedMeetingId] = useState(null);
+  const [eventMeetings, setEventMeetings] = useState([]);
+
+  const fetchEventMeetings = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await EventMeetingService.getAllEventMeetings(token);
+      //console.log("Event meetings", response);
+      const eventMeetingsArray = response.content || [];
+      console.log("event Meetings array", eventMeetingsArray);
+
+    
+      setEventMeetings(eventMeetingsArray); 
+
+      
+    } catch (error) {
+      console.error("Error fetching meetings", error);
+    }
+  };
+  const isMeetingToday = (date) => {
+    const today = new Date();
+    const meetingDate = new Date(date[2], date[1] - 1, date[0]); // assuming date is [day, month, year]
+    return today.toDateString() === meetingDate.toDateString();
+  };
+
+  const isTimeClose = (time) => {
+    const now = new Date();
+    const meetingTime = new Date();
+    meetingTime.setHours(time[0], time[1], 0, 0); // assuming time is [hour, minute]
+    
+    // Check if the meeting is within 30 minutes from now
+    const diffMinutes = (meetingTime - now) / (1000 * 60);
+    return diffMinutes <= 30 && diffMinutes >= 0; // Meeting is within 30 minutes
+  };
 
   const fetchParticipants = async (meetingId) => {
     setLoadingParticipants(true);
@@ -129,6 +163,8 @@ const MeetingsList = () => {
       fetchMeetings();
       fetchClubs();
       fetchRegistrations();
+      fetchEventMeetings();
+
     }
   }, [token]);
 
@@ -434,7 +470,71 @@ const MeetingsList = () => {
               </div>
             );
           })}
-        </div>
+        </div><div className="mb-2 mt-10">
+  <h1>Upcoming Event OC meetings</h1>
+  {eventMeetings
+    .filter((meeting) => {
+      const meetingDate = new Date(meeting.date);
+      const currentDate = new Date();
+
+      // Ensure the meeting is in the future
+      return meetingDate > currentDate;
+    })
+    .map((meeting) => (
+      <div key={meeting.e_meeting_id} className="mb-4 border-b border-gray-300 pb-2">
+        <p className="flex items-center space-x-2 overflow-x-auto whitespace-nowrap">
+          <span>
+            <strong>{meeting.meeting_name}</strong>
+          </span>
+          <span className="text-[#AEC90A] font-bold">{formatDate(meeting.date)}</span>
+          <span className="text-[#AEC90A] font-bold">{formatTime(meeting.time)}</span>
+
+          {/* Conditionally display the dot for meeting type */}
+          {meeting.meeting_type === 'ONLINE' ? (
+            <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span> // Green dot for online
+          ) : (
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> // Red dot for physical
+          )}
+
+          <span>at {meeting.venue}</span>
+
+          {/* Conditional "Join" button or "Get QR Code" */}
+          {isMeetingToday(meeting.date) && isTimeClose(meeting.time) ? (
+            meeting.meeting_type === 'ONLINE' ? (
+              <button
+                className="ml-2 p-2 bg-yellow-500 text-white rounded"
+                disabled={false} // Enabled for online meetings when time is close
+              >
+                Join
+              </button>
+            ) : (
+              <button
+                className="ml-2 p-2 bg-yellow-500 text-white rounded"
+              >
+                Get QR Code
+              </button>
+            )
+          ) : (
+            meeting.meeting_type === 'ONLINE' ? (
+              <button
+                className="ml-2 p-2 bg-gray-500 text-white rounded cursor-not-allowed"
+                disabled={true} // Disabled for online meetings outside the time range
+              >
+                Join
+              </button>
+            ) : (
+              <button
+                className="ml-2 p-2 bg-[#AEC90A] text-white rounded cursor-not-allowed"
+                disabled={true} // Disabled for physical meetings outside the time range
+              >
+                Get QR Code
+              </button>
+            )
+          )}
+        </p>
+      </div>
+    ))}
+</div>
       </div>
     );
   };
