@@ -225,10 +225,10 @@ const AddNewMeetingForm = () => {
               {errors.participantType && <p className="text-red-500">{errors.participantType}</p>}
             </div>
             <div className="col-span-full flex justify-center gap-4 mt-6">
-              <Button onClick={() => navigate(-1)} className="border-2 border-green-500 text-green-500">
+              <Button onClick={() => navigate(-1)} className="border-2 border-[#AEC90A] text-[#AEC90A]">
                 Cancel
               </Button>
-              <Button type="submit" className="bg-green-500 text-black">
+              <Button type="submit" className="bg-[#AEC90A] text-black">
                 Submit
               </Button>
             </div>
