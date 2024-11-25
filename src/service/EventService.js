@@ -3,12 +3,12 @@ import axios from "axios";
 class EventService{
     static BASE_URL = "http://localhost:8080"
 
-    static async saveEvent(name, venue, date, purpose, benefits, eventImage, budgetFile, club_id, token){
+    static async saveEvent(name, venue, date, time, purpose, benefits, eventImage, budgetFile, public_status, club_id, token){
         try{
 
           
             const formData = new FormData();
-            formData.append('data', new Blob([JSON.stringify({ name, venue, date, purpose, benefits, club_id })], { type: 'application/json' }));
+            formData.append('data', new Blob([JSON.stringify({ name, venue, date, time, purpose, benefits, public_status, club_id })], { type: 'application/json' }));
             if (eventImage) formData.append('eventImage', eventImage);
             if (budgetFile) formData.append('budgetFile', budgetFile);
 
@@ -57,6 +57,17 @@ class EventService{
         }
     }
 
+    static async getAllEventslanding() {
+      try {
+        const response = await axios.get(`${EventService.BASE_URL}/event/getAllEvents`, {
+        });
+        return response.data; // Return the response data from the API
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        throw error; // Throw the error if request fails
+      }
+  }
+
 
     static async getAllEventsWithClubs(token) {
         try {
@@ -85,6 +96,36 @@ class EventService{
           throw error; 
         }
       }
+
+      static async updateIudStatus(eventId, status, role, token) {
+        try {
+          const response = await axios.put(`${EventService.BASE_URL}/event/updateIudStatus/${eventId}`, null,
+            {
+              params: { status, role },
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          return response.data; 
+        } catch (error) {
+          console.error("Error updating IUD status:", error);
+          throw error; 
+        }
+      }
+
+
+      static async deleteEventById(eventId, token) {
+        try {
+            // Make the DELETE request to the backend
+            const response = await axios.delete(`${EventService.BASE_URL}/event/deleteEvent/${eventId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return response.data; // Return the response data from the API
+        } catch (error) {
+            console.error("Error deleting event:", error);
+            throw error; // Throw the error if request fails
+        }
+    }
+
 
       
     static logout() {

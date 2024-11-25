@@ -6,23 +6,36 @@ import Navbar from "./Navbar";
 import axios from "axios";
 import EventService from "../service/EventService";
 import { useParams } from "react-router-dom";
-import Swal from 'sweetalert2'
-
+import Swal from "sweetalert2";
+import {
+  DatePicker,
+  TimePicker,
+  LocalizationProvider,
+} from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import TextField from "@mui/material/TextField";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 const AddEvent = () => {
+  const navigate = useNavigate(); // Initialize navigate hook
+
   // <Route path='/club/454/add-event' element={<AddEvent />} ></Route>
-  const id  = useParams(); // Get club_id from the URL
+  const id = useParams(); // Get club_id from the URL
   const club_id = id.name;
   console.log("Club ID:", club_id);
 
   const [formFields, setFormFields] = useState({
     name: "",
     venue: "",
-    date: "",
+    date: null, // Updated to use MUI DatePicker (dayjs object)
+    time: null, // Updated to use MUI TimePicker (dayjs object)
     budgetFile: null, // PDF file for the budget,
     purpose: "",
     benefits: "",
     eventImage: null, // New field for the event image
+    public_status: false, // Default to "Private"
   });
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -58,24 +71,41 @@ const AddEvent = () => {
   //     validateForm();
   //   };
 
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+      primary: {
+        main: "#AEC90A", // Customize the primary color (e.g., green)
+      },
+      background: {
+        paper: "#1e1e1e", // Dark background for picker popups
+        default: "#121212",
+      },
+      text: {
+        primary: "#ffffff", // White text
+        secondary: "#a1a1a1", // Light gray text
+      },
+    },
+  });
+
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     const file = files[0];
-    
+
     // Check if file is valid
     console.log(`File selected for ${name}:`, file);
 
     // Validate file type for budget
-    if (name === 'budgetFile') {
-      if (file && file.type !== 'application/pdf') {
+    if (name === "budgetFile") {
+      if (file && file.type !== "application/pdf") {
         alert("Please upload a PDF file for the budget.");
         return;
       }
     }
 
     // Validate file type for eventImage
-    if (name === 'eventImage') {
-      if (file && !['image/jpeg', 'image/png'].includes(file.type)) {
+    if (name === "eventImage") {
+      if (file && !["image/jpeg", "image/png"].includes(file.type)) {
         alert("Please upload an image file (JPEG or PNG) for the event image.");
         return;
       }
@@ -87,31 +117,34 @@ const AddEvent = () => {
     }));
   };
 
-
   const validateForm = () => {
     const {
       name,
       venue,
       date,
+      time,
       budgetFile,
       purpose,
       benefits,
       eventImage,
     } = formFields;
-    
+
     // Add console log to inspect form fields
     console.log("Validating form with fields:", formFields);
 
     const isValid =
       name.trim() !== "" &&
       venue.trim() !== "" &&
-      date.trim() !== "" &&
+      date !== null && // Date must be selected
+      time !== null && // Time must be selected
       budgetFile !== null && // Budget file is required
-        (budgetFile instanceof File && budgetFile.type === 'application/pdf') && // Check for PDF type
+      budgetFile instanceof File &&
+      budgetFile.type === "application/pdf" && // Check for PDF type
       purpose.trim() !== "" &&
       benefits.trim() !== "" &&
-      (eventImage === null || (eventImage instanceof File && 
-        ['image/jpeg', 'image/png'].includes(eventImage.type))); // Event image is optional but must be JPEG or PNG if provided
+      (eventImage === null ||
+        (eventImage instanceof File &&
+          ["image/jpeg", "image/png"].includes(eventImage.type))); // Event image is optional but must be JPEG or PNG if provided
 
     console.log("Form Validation Status:", isValid); // Debugging line
     setIsFormValid(isValid);
@@ -123,18 +156,19 @@ const AddEvent = () => {
       return;
     }
 
-
     const formData = new FormData();
-    
+
     // Append form fields to FormData
     formData.append("name", formFields.name);
     formData.append("venue", formFields.venue);
-    formData.append("date", formFields.date);
+    formData.append("date", formFields.date.toISOString()); // Convert date to ISO string
+    formData.append("time", formFields.time.format("HH:mm")); // Format time
     formData.append("purpose", formFields.purpose);
     formData.append("benefits", formFields.benefits);
+    formData.append("public_status", formFields.public_status); // Convert boolean to 1/0
 
     //formData.append("club_id", club_id);
-    
+
     // Append files to FormData
     if (formFields.budget) {
       formData.append("budgetFile", formFields.budgetFile);
@@ -150,11 +184,13 @@ const AddEvent = () => {
       const response = await EventService.saveEvent(
         formFields.name,
         formFields.venue,
-        formFields.date,
+        formFields.date.toISOString(),
+        formFields.time.format("HH:mm"),
         formFields.purpose,
         formFields.benefits,
         formFields.eventImage,
         formFields.budgetFile,
+        formFields.public_status,
         club_id,
         token
       );
@@ -167,13 +203,17 @@ const AddEvent = () => {
         setFormFields({
           name: "",
           venue: "",
-          date: "",
+          date: null,
+          time: null,
           budgetFile: null,
           purpose: "",
           benefits: "",
           eventImage: null,
+          public_status: false,
         });
         setIsFormValid(false); // Optionally reset form validation
+        // Navigate to the previous page
+        navigate(-1); // Go back to the previous page
       });
     } catch (error) {
       console.error("Error submitting form", error);
@@ -191,21 +231,70 @@ const AddEvent = () => {
           </Typography>
 
           <div className="grid grid-cols-1 gap-4">
-            {/* Event Image Upload */}
-            <div className="mb-4">
-              <label className="block mb-2">Event Image:</label>
-              <div className="flex flex-col items-center">
+            {/* Event Image Upload and Toggle */}
+            <div className="mb-4 flex items-center justify-between space-x-4">
+              {/* Event Image Upload */}
+              <div className="flex flex-col w-1/2">
+                <label className="block mb-2 text-gray-300">Event Image:</label>
                 <input
                   type="file"
                   name="eventImage"
                   onChange={handleFileChange}
-                  className="w-full h-12 bg-black text-white p-2 rounded-2xl"
+                  className="bg-black text-white p-2 rounded-xl"
                   style={{
                     boxShadow:
                       "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
                   }}
                 />
                 <FaUpload className="text-white mt-2" />
+              </div>
+
+              {/* Public/Private Radio Buttons */}
+              <div className="mb-4">
+                <label className="block mb-2 font-medium text-white">
+                  Is this event public or private?
+                </label>
+                <div className="flex items-center space-x-8">
+                  {/* Private Option */}
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      name="public_status"
+                      value="private"
+                      checked={!formFields.public_status}
+                      onChange={() =>
+                        setFormFields((prev) => ({
+                          ...prev,
+                          public_status: false,
+                        }))
+                      }
+                      className="form-radio text-[#AEC90A] focus:ring-[#AEC90A]"
+                    />
+                    <span className="text-sm font-medium text-white">
+                      Private
+                    </span>
+                  </label>
+
+                  {/* Public Option */}
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      name="public_status"
+                      value="public"
+                      checked={formFields.public_status}
+                      onChange={() =>
+                        setFormFields((prev) => ({
+                          ...prev,
+                          public_status: true,
+                        }))
+                      }
+                      className="form-radio text-[#AEC90A] focus:ring-[#AEC90A]"
+                    />
+                    <span className="text-sm font-medium text-white">
+                      Public
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -239,7 +328,7 @@ const AddEvent = () => {
                   }}
                 />
               </div>
-              <div>
+              {/* <div>
                 <label className="block mb-2">
                   Tentative Date of the Event:
                 </label>
@@ -254,7 +343,56 @@ const AddEvent = () => {
                       "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
                   }}
                 />
-              </div>
+              </div> */}
+              <ThemeProvider theme={darkTheme}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <div className="mb-4">
+                    <label className="block mb-2">
+                      Tentative Date of the Event:
+                    </label>
+                    <DatePicker
+                      value={formFields.date}
+                      onChange={(newValue) =>
+                        setFormFields((prev) => ({ ...prev, date: newValue }))
+                      }
+                      minDate={dayjs()} // Prevent selecting past dates
+                      slots={{
+                        textField: (props) => (
+                          <TextField
+                            {...props}
+                            className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                            sx={{
+                              boxShadow:
+                                "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                            }}
+                          />
+                        ),
+                      }}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block mb-2">Event Time:</label>
+                    <TimePicker
+                      value={formFields.time}
+                      onChange={(newValue) =>
+                        setFormFields((prev) => ({ ...prev, time: newValue }))
+                      }
+                      slots={{
+                        textField: (props) => (
+                          <TextField
+                            {...props}
+                            className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                            sx={{
+                              boxShadow:
+                                "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                            }}
+                          />
+                        ),
+                      }}
+                    />
+                  </div>
+                </LocalizationProvider>
+              </ThemeProvider>
 
               {/* <div>
                 <label className="block mb-2">Budget of the Event:</label>
@@ -271,7 +409,6 @@ const AddEvent = () => {
                 />
               </div>
             </div> */}
-
               <div>
                 <label className="block mb-2">Upload Budget File (PDF):</label>
                 <div className="flex flex-col items-center">
@@ -368,7 +505,7 @@ const AddEvent = () => {
               onClick={handleSubmit}
               disabled={!isFormValid}
               className={`p-2 rounded-2xl ${
-                isFormValid ? "bg-green-500" : "bg-gray-500"
+                isFormValid ? "bg-[#AEC90A]" : "bg-gray-500"
               } text-white`}
               style={{
                 boxShadow:

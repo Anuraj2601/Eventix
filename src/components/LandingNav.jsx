@@ -2,10 +2,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import Logo from "../assets/logo.png";
 import { navItems } from "../constants";
-import Login from "./login";
-import SignUp from "./Signup";
 import { Link } from "react-router-dom";
-
 
 const LandingNav = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -15,8 +12,24 @@ const LandingNav = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
   };
 
+  const handleScroll = (sectionId) => {
+    setActiveItem(sectionId); // Update the active state
+    const section = document.getElementById(sectionId); // Locate the section
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" }); // Smooth scroll
+    }
+  };
+
+   const navItems = [
+    { label: "Home", href: "#" },
+    { label: "Events", href: "#" },
+    { label: "Clubs", href: "#" },
+    { label: "About-us", href: "#" },
+  ];
+  
+
   return (
-    <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80 font-medium ">
+    <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80 font-medium">
       <div className="container px-4 mx-auto relative lg:text-sm">
         <div className="flex justify-between items-center">
           <div className="flex items-center flex-shrink-0">
@@ -25,11 +38,19 @@ const LandingNav = () => {
           <ul className="hidden lg:flex ml-14 space-x-12 font-normal tracking-wider">
             {navItems.map((item, index) => (
               <li key={index} className="relative group">
-                <a href={item.href} className={`hover:text-[#AEC90A] ${activeItem === item.label ? "text-[#AEC90A]" : "text-white"}`}
-                  onClick={() => setActiveItem(item.label)}>
+                <button
+                  className={`hover:text-[#AEC90A] ${
+                    activeItem === item.label ? "text-[#AEC90A]" : "text-white"
+                  }`}
+                  onClick={() => handleScroll(item.label)}
+                >
                   {item.label}
-                </a>
-                <span className={`absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 bg-[#AEC90A] rounded-full transition-opacity ${activeItem === item.label ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                </button>
+                <span
+                  className={`absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 bg-[#AEC90A] rounded-full transition-opacity ${
+                    activeItem === item.label
+                      ? "opacity-100"
+                      : "opacity-0 group-hover:opacity-100"
                   }`}
                 ></span>
               </li>
@@ -37,16 +58,19 @@ const LandingNav = () => {
           </ul>
           <div className="hidden lg:flex justify-center space-x-5 items-center font-light mr-[120px]">
             <a
-              href={Login}
-              className="relative overflow-hidden w-24 h-10  flex items-center justify-center text-[#AEC90A] border border-primary rounded-md font-medium transition duration-500 ease-in-out group"
+              href="/login"
+              className="relative overflow-hidden w-24 h-10 flex items-center justify-center text-[#AEC90A] border border-primary rounded-md font-medium transition duration-500 ease-in-out group"
             >
               <span className="absolute inset-0 bg-gradient-to-r  from-primary to-[#DDFF00] w-full h-full transform -translate-x-full transition-transform duration-300 ease-in-out group-hover:translate-x-0"></span>
-              <span className="relative z-10 group-hover:text-gray-900 text-[14px] font-semibold "><Link to="/login">Login</Link></span>
+              <span className="relative z-10 group-hover:text-gray-900 text-[14px] font-semibold ">
+                Login
+              </span>
             </a>
             <a
-              href={SignUp}
+              href="/Signup"
               className="bg-gradient-to-r from-primary to-[#DBFF00] w-24 h-10 rounded-md flex items-center justify-center text-gray-900 text-[14px] font-semibold"
-            ><Link to="/Signup">SignUp</Link>
+            >
+              SignUp
             </a>
           </div>
 
@@ -61,23 +85,17 @@ const LandingNav = () => {
             <ul>
               {navItems.map((item, index) => (
                 <li key={index} className="py-4">
-                  <a href={item.href}>{item.label}</a>
+                  <button
+                    onClick={() => {
+                      setMobileDrawerOpen(false);
+                      handleScroll(item.label);
+                    }}
+                  >
+                    {item.label}
+                  </button>
                 </li>
               ))}
             </ul>
-            <div className="flex space-x-6 py-5">
-              <a href="#" className="py-2 px-3 border rounded-md w-26 h-10" style={{ 
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-          }}>
-                Login
-              </a>
-              <a
-                href="#" className="py-2 px-3 rounded-md bg-gradient-to-r from-primary to-[#DBFF00] w-22 h-10" style={{ 
-                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
-                }}>
-                SignUp
-              </a>
-            </div>
           </div>
         )}
       </div>

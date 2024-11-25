@@ -7,6 +7,7 @@ const Votestab = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   const electionIdFromUrl = currentPath.split('/').pop(); // Extract the last part of the URL (electionId)
+  const [dialogVisible, setDialogVisible] = useState(false); // State for dialog visibility
 
   const [candidates, setCandidates] = useState({
     president: [],
@@ -22,6 +23,9 @@ const Votestab = () => {
 
   const [releasedStatus, setReleasedStatus] = useState(0); // Add state for released status
 
+  const handleDialogClose = () => {
+    setDialogVisible(false);
+  };
 
   useEffect(() => {
     const fetchCandidates = async () => {
@@ -88,6 +92,7 @@ const Votestab = () => {
         const token = localStorage.getItem("token");
         const response = await releaseElection(electionIdFromUrl, body, token);
         console.log("Results released:", response);
+        setDialogVisible(true);
     } catch (error) {
         console.error("Error releasing results:", error);
     }
@@ -117,6 +122,23 @@ const Votestab = () => {
           Release Results to Club
         </button>
       </div>
+
+      {dialogVisible && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 w-96 text-center">
+            <h2 className="text-2xl font-bold mb-4">Results Released</h2>
+            <p className="text-gray-700">
+              The results of this election have been successfully released. All Club members can now see the winners, and new members are promoted to their positions.
+            </p>
+            <button
+              onClick={handleDialogClose}
+              className="mt-4 px-6 py-2 bg-[#AEC90A] text-white rounded-full hover:bg-[#9AB307]"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* President Position */}
       <div className="relative mb-12 w-full p-5">

@@ -52,12 +52,13 @@ const members = Array.from({ length: 20 }, (_, index) => {
 
 const Registrations = ({clubId, event}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [checkedInStatus, setCheckedInStatus] = useState(
-    members.reduce((acc, member) => {
-      acc[member.id] = member.checkedIn;
-      return acc;
-    }, {})
-  );
+  // const [checkedInStatus, setCheckedInStatus] = useState(
+  //   members.reduce((acc, member) => {
+  //     acc[member.id] = member.checkedIn;
+  //     return acc;
+  //   }, {})
+  // );
+  const [checkedInStatus, setCheckedInStatus] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
 
   //console.log("event details in registrations",  event);
@@ -67,7 +68,27 @@ const Registrations = ({clubId, event}) => {
     setIsOpen(!isOpen);
   };
 
-  const handleCheckboxChange = (id) => {
+  // const handleCheckboxChange = (id) => {
+  //   setCheckedInStatus((prev) => ({
+  //     ...prev,
+  //     [id]: !prev[id]
+  //   }));
+  // };
+
+  const handleCheckboxChange = async (id) => {
+
+    const token = localStorage.getItem("token");
+
+    try{
+
+      const response = await EventRegistrationService.registrationCheckIn(id, token);
+      console.log('Event registration checked in:', response);
+
+
+    }catch(err){
+      console.log("Error while checking in event registrations", err);
+    }
+
     setCheckedInStatus((prev) => ({
       ...prev,
       [id]: !prev[id]
@@ -120,6 +141,14 @@ const Registrations = ({clubId, event}) => {
       console.log("event reg array with user details",registrationsWithUserDetails);
       setEventRegisterations(registrationsWithUserDetails);
 
+
+      // Initialize checkedInStatus based on is_checked from the backend
+      const initialCheckedInStatus = registrationsWithUserDetails.reduce((acc, reg) => {
+        acc[reg.ereg_id] = reg._checked; // Assuming `is_checked` is a boolean from the backend
+        return acc;
+      }, {});
+      setCheckedInStatus(initialCheckedInStatus);
+
      
 
     }catch(err){
@@ -146,9 +175,11 @@ const Registrations = ({clubId, event}) => {
     onChange={handleSearchChange}
     className="w-1/2 p-2 border border-gray-300 bg-black rounded-full text-white"
   />
+  
 </div>
 
-        
+
+
         {/* Custom Switch and Duration Section */}
         <div>
           <div className="flex items-center mb-4">
@@ -164,6 +195,16 @@ const Registrations = ({clubId, event}) => {
             </Typography>
             <EditButton className="ml-4" /> {/* Display only the delete button */}
           </div>
+          <div className="flex items-center justify-between mb-4">
+  <div className="flex items-center gap-4">
+  <Typography style={{ color: '#AEC90A' }} variant="h6">
+      Total Registrations: {eventRegistrations.length}
+    </Typography>
+    <Typography style={{ color: '#AEC90A' }} variant="h6">
+      Checked-In: {Object.values(checkedInStatus).filter(status => status).length}
+    </Typography>
+  </div>
+</div>
         </div>
         
         {/* Registered Members Section */}

@@ -1,167 +1,421 @@
-import React from 'react';
-import { Chart } from 'react-google-charts';
+import React, { useState, useEffect } from "react";
+import { Card, CardBody, Typography } from "@material-tailwind/react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  LabelList,
+} from "recharts";
+import BudgetService from "../service/BudgetService";
+import moment from "moment";
+import EventRegistrationService from "../service/EventRegistrationService";
+import EventService from "../service/EventService";
 
-const ClubReport = () => {
-  const events = [
-    { name: "MadHack", versions: ["3.0", "2.0", "1.0"], },
-    { name: "ReidExtreme", versions: ["3.0", "2.0", "1.0"], },
-    { name: "IEEE Day", versions: ["2023", "2022", "2021"], },
-    { name: "FreshHack", versions: ["1.0"] },
-  ];
+const BudgetTable = () => {
+  const [allBudgets, setAllBudgets] = useState([]);
+  const eventColors = ["#FF5733", "#28A745", "#007BFF", "#FFC107"]; // Example color set for lines
+  const [registrationsData, setRegistrationsData] = useState([]);
+  const [checkedInStatus, setCheckedInStatus] = useState({});
+  const [eventNames, setEventNames] = useState({}); // To store event names
 
-  const dummyData = {
-    "MadHack": [
-      { version: "3.0", income: 5000, cost: 3000, sponsorship: 2000, registrations: 100 },
-      { version: "2.0", income: 4000, cost: 2500, sponsorship: 1500, registrations: 80 },
-      { version: "1.0", income: 3000, cost: 2000, sponsorship: 1000, registrations: 60 },
-    ],
-    "ReidExtreme": [
-      { version: "3.0", income: 6000, cost: 3500, sponsorship: 2500, registrations: 120 },
-      { version: "2.0", income: 4500, cost: 3000, sponsorship: 1500, registrations: 90 },
-      { version: "1.0", income: 3500, cost: 2200, sponsorship: 1300, registrations: 70 },
-    ],
-    "IEEE Day": [
-      { version: "2023", income: 5500, cost: 3200, sponsorship: 2300, registrations: 110 },
-      { version: "2022", income: 4800, cost: 2900, sponsorship: 1900, registrations: 100 },
-      { version: "2021", income: 4000, cost: 2700, sponsorship: 1300, registrations: 90 },
-    ],
-    "FreshHack": [
-      { version: "1.0", income: 2000, cost: 1500, sponsorship: 500, registrations: 50 },
-    ],
+  useEffect(() => {
+    const fetchEventNames = async () => {
+      try {
+        const eventIds = Array.from(new Set(allBudgets.map((item) => item.event_id)));
+        const eventData = await EventService.getEventNamesByIds(eventIds);
+        const names = eventData.reduce((acc, event) => {
+          acc[event.event_id] = event.name;
+          return acc;
+        }, {});
+        setEventNames(names);
+      } catch (error) {
+        console.error("Error fetching event names:", error);
+      }
+    };
+
+    if (allBudgets.length) {
+      fetchEventNames();
+    }
+  }, [allBudgets]);
+
+useEffect(() => {
+  const fetchData = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      // Fetch all budget items
+      const budgetResponse = await BudgetService.getAllBudgets(token);
+      setAllBudgets(budgetResponse.content || []);
+
+      // Fetch event registrations
+      const regResponse = await EventRegistrationService.getAllEventRegistrations(token);
+      const registrationsArray = regResponse.content || [];
+
+      // Process event registrations
+      const groupedData = registrationsArray.reduce((acc, { event_id, _checked }) => {
+        if (!acc[event_id]) {
+          acc[event_id] = { event_id, registrations: 0, checkins: 0 };
+        }
+      
+        // Increment registrations count
+        acc[event_id].registrations += 1; // Assuming one entry per registration
+
+        // Ensure _checked is defined, default to false if not available
+        const checked = _checked === undefined ? false : _checked;
+
+        // Increment checkins count if _checked is true
+        if (checked === true) {  // Explicitly check if _checked is true (boolean)
+          acc[event_id].checkins += 1;
+        }
+      
+        return acc;
+      }, {});
+      
+      setRegistrationsData(Object.values(groupedData));
+      
+      // Initialize checked-in status (optional)
+      const initialCheckedInStatus = registrationsArray.reduce((acc, { e_reg_id, _checked }) => {
+        const checked = _checked === undefined ? false : _checked; // Default to false if undefined
+        acc[e_reg_id] = checked;
+        return acc;
+      }, {});
+      
+      setCheckedInStatus(initialCheckedInStatus);
+
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
+  };
+  fetchData();
+}, []);
+
+
+
+  useEffect(() => {
+    console.log("Fetched registrations data: ", registrationsData);
+  }, [registrationsData]);
+
+  const formatCreatedAt = (createdAtArray) => {
+    if (Array.isArray(createdAtArray) && createdAtArray.length === 7) {
+      const [year, month, day, hour, minute, second] = createdAtArray;
+      const date = new Date(year, month - 1, day, hour, minute, second);
+      return moment(date).format("YYYY-MM-DD");
+    }
+    return "Invalid Date";
   };
 
-  const generateVersionComparisonData = () => {
-    const versionComparisonData = [
-      ["Event", "Version 1.0", "Version 2.0", "Version 3.0"],
-      ["MadHack", 60, 80, 100],
-      ["ReidExtreme", 70, 190, 120],
-      ["IEEE Day", 90, 100, 110],
-      ["FreshHack", 50, null, null],
-    ];
+  // Grouped Bar Chart Data (Costs and Incomes by Event ID)
+  const groupedBarData = [];
+  allBudgets.forEach((item) => {
+    const existingEvent = groupedBarData.find(
+      (entry) => entry.event_id === item.event_id
+    );
+    if (existingEvent) {
+      existingEvent.costs =
+        item.budget_type === "COST"
+          ? (existingEvent.costs || 0) + item.budget_amount
+          : existingEvent.costs || 0;
+      existingEvent.incomes =
+        item.budget_type === "INCOME"
+          ? (existingEvent.incomes || 0) + item.budget_amount
+          : existingEvent.incomes || 0;
+    } else {
+      groupedBarData.push({
+        event_id: item.event_id,
+        costs: item.budget_type === "COST" ? item.budget_amount : 0,
+        incomes: item.budget_type === "INCOME" ? item.budget_amount : 0,
+      });
+    }
+  });
+
+ const uniqueEvents = Array.from(new Set(allBudgets.map((item) => item.event_id)))
+    .map((eventId) => ({
+      event_id: eventId,
+      event_name: eventNames[eventId] || `Event ${eventId}`,
+    }));
+
+  // Generate a unique color for each event ID
+  const generateColor = (index) => {
+    const colors = ["#FF5733", "#28A745", "#1E90FF", "#FF1493", "#FFD700"];  // Add more colors if needed
+    return colors[index % colors.length];  // Cycle through the colors
+  };
+
+  // Costs Data for each event
+  const costsData = uniqueEvents.map((event) => {
+    const eventBudgets = allBudgets
+      .filter((item) => item.budget_type === "COST" && item.event_id === event.event_id)
+      .map((item) => ({
+        date: formatCreatedAt(item.created_at),
+        amount: item.budget_amount,
+        budget_name: item.budget_name,  // Show budget name instead of type
+      }))
+      .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sorting dates in descending order
+    
+      return {
+        event_id: event.event_id,
+        event_name: event.event_name,
+        data: eventBudgets,
+      };
+  });
+
+  // Incomes Data for each event
+  const incomesData = uniqueEvents.map((event) => {
+    const eventBudgets = allBudgets
+      .filter((item) => item.budget_type === "INCOME" && item.event_id === event.event_id)
+      .map((item) => ({
+        date: formatCreatedAt(item.created_at),
+        amount: item.budget_amount,
+        budget_name: item.budget_name,  // Show budget name instead of type
+      }))
+      .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sorting dates in descending order
   
-    return versionComparisonData;
+      return {
+        event_id: event.event_id,
+        event_name: event.event_name,
+        data: eventBudgets,
+      };
+  });
+
+  const CustomTooltip = ({ payload, label }) => {
+    if (payload && payload.length) {
+      const { event_id, amount, budget_name } = payload[0].payload; // Make sure color exists
+      return (
+        <div style={{ backgroundColor: "black", padding: "10px", color: "white" }}>
+        <p>Event: {eventNames[event_id]}</p> {/* Display event name */}
+        <p>Amount: {amount}</p>
+        <p>Date: {label}</p>
+        <p>Budget Name: {budget_name}</p>
+      </div>
+      );
+    }
+    return null;
   };
 
-  const chartOption = {
-    backgroundColor: 'black',
-    chart: {
-      title: 'Version Comparison by Event',
-      subtitle: 'Comparing Registrations across Different Versions and Years',
-      textStyle: { color: 'white' },
-    },
-    hAxis: {
-      title: 'Event',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-    },
-    vAxis: {
-      title: 'Registrations',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-      gridlines: { color: 'white' },
-    },
-    seriesType: 'bars',
-    series: {
-      0: { color: 'red' },
-      1: { color: 'orange' },
-      2: { color: 'green' },
-      3: { color: 'yellow' },
-      4: { color: '#4F7F01' },
-      5: { color: '#3B6B01' },
-    },
-    legend: { textStyle: { color: 'white' } },
-  };
-  
 
-  const generateChartData = (eventName) => {
-    const event = dummyData[eventName];
-    const data = [
-      ["Version", "Income", "Cost", "Sponsorship", "Registrations"]
-    ];
-    event.forEach(version => {
-      data.push([version.version, version.income, version.cost, version.sponsorship, version.registrations]);
-    });
-    return data;
-  };
 
-  const generateOverallChartData = () => {
-    const data = [
-      ["Event", "Total Registrations"]
-    ];
-    Object.keys(dummyData).forEach(eventName => {
-      const totalRegistrations = dummyData[eventName].reduce((total, version) => total + version.registrations, 0);
-      data.push([eventName, totalRegistrations]);
-    });
-    return data;
-  };  
-
-  const chartOptions = {
-    backgroundColor: 'black',
-    chart: {
-      title: 'Event Report',
-      subtitle: 'Comparing Income, Costs, Sponsorships, and Registrations across different versions',
-      textStyle: { color: 'white' },
-    },
-    hAxis: {
-      title: 'Version',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-    },
-    vAxis: {
-      title: 'Amount',
-      textStyle: { color: 'white' },
-      titleTextStyle: { color: 'white' },
-      gridlines: { color: 'white' },
-    },
-    seriesType: 'bars',
-    series: {
-      0: { color: 'red' },
-      1: { color: 'orange' },
-      2: { color: 'green' },
-      3: { color: 'blue', type: 'line' },
-    },
-    legend: { textStyle: { color: 'white' } },
-  };
+  // Colors for Bars and Lines
+  const barColors = { costs: "#FF5733", incomes: "#28A745", registrations: "#007BFF", checkins: "#FFC107" };
 
   return (
-    <div className="px-40 py-5 rounded-2xl " style={{ backgroundColor: 'black' }}>
-        <div className="mb-8">
-        <h2 className="text-xl text-center font-bold mb-2" style={{ color: 'white' }}>Version Comparison by Event</h2>
-        <Chart
-          width={'100%'}
-          height={'400px'}
-          chartType="ColumnChart"
-          loader={<div>Loading Chart...</div>}
-          data={generateVersionComparisonData()}
-          options={chartOptions}
-        />
-      </div>
-      {events.map(event => (
-        
-        <div key={event.name} className="mb-8">
-          <h2 className="text-xl text-center font-bold mb-2" style={{ color: 'white' }}>{event.name} Reports</h2>
-          <Chart
-            width={'100%'}
-            height={'400px'}
-            chartType="ColumnChart"
-            loader={<div>Loading Chart...</div>}
-            data={generateChartData(event.name)}
-            options={{
-              ...chartOptions,
-              chart: {
-                ...chartOptions.chart,
-                title: `${event.name} Event Report`,
-              },
-            }}
-          />
-        </div>
+    <div>
+      <Card className="w-full bg-black mb-6">
+        <CardBody>
+          <Typography color="white" variant="h4" className="mb-4 text-center">
+            Event Reports
+          </Typography>
 
-        
+          {/* Grouped Bar Chart for Costs and Incomes */}
+          <Typography color="white" variant="h5" className="mb-4 text-center">
+            Costs and Incomes Grouped by Event ID
+          </Typography>
+          <div className="mb-8" style={{ height: 400 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={groupedBarData}
+                margin={{ top: 20, bottom: 20 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="event_id"
+                  tick={{ fill: "white" }}
+                  stroke="white"
+                  label={{ value: "Event ID", position: "insideBottom", fill: "white" }}
+                />
+                <YAxis tick={{ fill: "white" }} stroke="white" />
+                <Tooltip />
+                <Legend />
+                <Bar
+                  dataKey="costs"
+                  fill={barColors.costs}
+                  name="Costs"
+                  barSize={30}
+                >
+                  <LabelList dataKey="costs" position="top" fill="white" formatter={(value) => `Cost: ${value}`} />
+                </Bar>
+                <Bar
+                  dataKey="incomes"
+                  fill={barColors.incomes}
+                  name="Incomes"
+                  barSize={30}
+                >
+                  <LabelList dataKey="incomes" position="top" fill="white" formatter={(value) => `Income: ${value}`} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+            
+          <Typography color="white" variant="h5" className="mb-4 text-center">
+  Costs Over Time
+</Typography>
+<div style={{ height: 400 }}>
+  <ResponsiveContainer width="100%" height="100%">
+    <LineChart data={costsData[0]?.data || []}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis
+        dataKey="date"
+        tickFormatter={(tick) => moment(tick).format("MMM D, YYYY")}
+        tick={{ fill: "white" }}
+        stroke="white"
+      />
+      <YAxis tick={{ fill: "white" }} stroke="white" />
+      <Tooltip content={<CustomTooltip />} />
+      <Legend
+  content={({ payload }) => (
+    <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
+      {payload.map((entry, index) => (
+        <li
+          key={index}
+          style={{
+            color: entry.color,
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '5px',
+            justifyContent: 'center', // This will center align the legend
+          }}
+        >
+          <span
+            style={{
+              width: '10px',
+              height: '10px',
+              backgroundColor: entry.color,
+              borderRadius: '50%',
+              marginRight: '5px',
+            }}
+          ></span>
+          {entry.value} {/* This will display the event name */}
+        </li>
       ))}
-        
+    </ul>
+  )}
+/>
+
+      {costsData.map((event, index) => (
+        <Line
+          key={event.event_id}
+          type="monotone"
+          dataKey="amount"
+          data={event.data || []} // Ensure there is data
+          stroke={generateColor(index)}
+          name={event.event_name}
+          dot={{ r: 6 }}
+          activeDot={{ r: 8 }}
+        />
+      ))}
+    </LineChart>
+  </ResponsiveContainer>
+</div>
+
+// Line Chart for Incomes
+<Typography color="white" variant="h5" className="mb-4 text-center">
+  Incomes Over Time
+</Typography>
+<div style={{ height: 400 }}>
+  <ResponsiveContainer width="100%" height="100%">
+    <LineChart>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis
+        dataKey="date"
+        tickFormatter={(tick) => moment(tick).format("MMM D, YYYY")}
+        tick={{ fill: "white" }}
+        stroke="white"
+      />
+      <YAxis tick={{ fill: "white" }} stroke="white" />
+      <Tooltip content={<CustomTooltip />} />
+      <Legend
+  content={({ payload }) => (
+    <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
+      {payload.map((entry, index) => (
+        <li
+          key={index}
+          style={{
+            color: entry.color,
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '5px',
+            justifyContent: 'center', // This will center align the legend
+          }}
+        >
+          <span
+            style={{
+              width: '10px',
+              height: '10px',
+              backgroundColor: entry.color,
+              borderRadius: '50%',
+              marginRight: '5px',
+            }}
+          ></span>
+          {entry.value} {/* This will display the event name */}
+        </li>
+      ))}
+    </ul>
+  )}
+/>
+
+      {incomesData.map((event, index) => (
+        <Line
+          key={event.event_id}
+          type="monotone"
+          dataKey="amount"
+          data={event.data} // Use event-specific data
+          stroke={generateColor(index)} // Assign color dynamically
+          name={event.event_name}
+          dot={{ r: 6 }}
+          activeDot={{ r: 8 }}
+        />
+      ))}
+    </LineChart>
+  </ResponsiveContainer>
+</div>
+
+
+<Typography color="white" variant="h5" className="mb-4 text-center">
+        Registrations and Check-ins Grouped by Event ID
+      </Typography>
+      <div style={{ height: 400 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={registrationsData} margin={{ top: 20, bottom: 20 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="event_id"
+              tick={{ fill: 'white' }}
+              stroke="white"
+              label={{ value: "Event ID", position: "insideBottom", fill: 'white' }}
+            />
+            <YAxis tick={{ fill: 'white' }} stroke="white" />
+            <Tooltip />
+            <Legend />
+            <Bar
+              dataKey="registrations"
+              fill="#808080"  // Gray color for registrations
+              name="Registrations"
+              barSize={30}
+            >
+              <LabelList dataKey="registrations" position="top" fill="white" />
+            </Bar>
+            <Bar
+              dataKey="checkins"
+              fill="#AEC90A"  // Green color for check-ins
+              name="Check-ins"
+              barSize={30}
+            >
+              <LabelList dataKey="checkins" position="top" fill="white" />
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+        </CardBody>
+      </Card>
     </div>
-    
   );
 };
 
-export default ClubReport;
+export default BudgetTable;

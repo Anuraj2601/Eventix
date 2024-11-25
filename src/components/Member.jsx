@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import RegistrationService from '../service/registrationService'; // Adjust the path as needed
 import UsersService from '../service/UsersService'; // Adjust path if needed
+import EventOcService from '../service/EventOcService';
 
 const Member = () => {
     const [registrations, setRegistrations] = useState([]);
@@ -9,6 +10,39 @@ const Member = () => {
     const [error, setError] = useState(null);
     const [token, setToken] = useState(localStorage.getItem('token') || '');
     const [userProfiles, setUserProfiles] = useState({});
+    const [eventOCs, setEventOCs] = useState([]);
+
+    useEffect(() => {
+      const fetchEventOCs = async () => {
+          try {
+              const token = localStorage.getItem('token');
+              const response = await EventOcService.getAllEventOcs(token);
+              console.log("Fetched Event OCs:", response.content); // Check API response
+              setEventOCs(response.content || []);
+          } catch (error) {
+              console.error("Error fetching Event OCs:", error);
+          }
+      };
+      fetchEventOCs();
+  }, []);
+
+  const getMatchingEventNames = (email) => {
+    console.log("Filtering for email:", email);
+    console.log("Event OCs:", eventOCs);
+
+    // Match registration email with Event OC user_id
+    const matchingOCs = eventOCs.filter((oc) => {
+        console.log("Checking registration email:", email, "against Event OC user_id:", oc.user_id);
+        return String(oc.user_id).trim().toLowerCase() === String(email).trim().toLowerCase();
+    });
+
+    console.log("Matching OCs After Filter:", matchingOCs);
+
+    return matchingOCs.map((oc) => oc.event_name);
+};
+
+
+  
 
     useEffect(() => {
         const fetchRegistrations = async () => {
@@ -75,43 +109,7 @@ const Member = () => {
         }
     }, [registrations]);
 
-    const handleSelect = async (id) => {
-        const updatedRegistration = registrations.find((reg) => reg.registrationId === id);
-
-        if (!updatedRegistration) {
-            console.error('Registration not found for ID:', id);
-            return;
-        }
-
-        const updates = {
-            accepted: 1,
-            position: 'Member',
-            registrationId: updatedRegistration.registrationId,
-            email: updatedRegistration.email,
-            clubId: updatedRegistration.clubId,
-            team: updatedRegistration.team,
-            interviewSlot: updatedRegistration.interviewSlot,
-            reason: updatedRegistration.reason
-        };
-
-        console.log('Updating registration with ID:', id);
-        console.log('Data being submitted for update:', updates);
-
-        try {
-            const response = await RegistrationService.updateRegistration(id, updates, token);
-            console.log('Update response:', response);
-
-            setRegistrations((prev) =>
-                prev.map((reg) =>
-                    reg.registrationId === id ? { ...reg, accepted: 1, position: 'Member' } : reg
-                )
-            );
-            setSelectedId(id);
-        } catch (err) {
-            console.error('Error updating registration:', err);
-            setError('Error updating registration. Please try again.');
-        }
-    };
+    
 
     const handleReject = async (id) => {
         const updatedRegistration = registrations.find((reg) => reg.registrationId === id);
@@ -175,7 +173,9 @@ const Member = () => {
             {filteredRegistrations.length > 0 ? (
               filteredRegistrations.map((reg) => (
                 <div key={reg.registrationId} className="flex justify-center gap-3 p-3 text-white">
-                  <div className="flex flex-col items-center p-2 bg-black rounded-2xl custom-card text-center">
+                  <div className="flex flex-col items-center p-2 bg-black rounded-2xl custom-card text-center"  style={{
+                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+              }}>
                     {/* Image Section */}
                     <div style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
                       <img
@@ -189,8 +189,14 @@ const Member = () => {
                       <h3 className="text-xl font-semibold mb-2">{userProfiles[reg.email]?.name || 'Unknown'}</h3>
                       <p className="mb-2"><strong>Team:</strong> {reg.team}</p>
                       <p className="mb-4"><strong>Email:</strong> {reg.email}</p>
-                      <p className="mb-4"> {reg.reason} </p>
-                      {isPresidentView && (
+<p className="mb-4">
+                    <strong>Associated Events:</strong>
+                  </p>
+                  <ul className="list-disc list-inside">
+                    {getMatchingEventNames(reg.email).map((eventName, index) => (
+                      <li key={index}>{eventName}</li>
+                    ))}
+                  </ul>                      {isPresidentView && (
                         <div className="flex justify-end">
                           <button
                             onClick={() => handleReject(reg.registrationId)}

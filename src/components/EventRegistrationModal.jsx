@@ -177,53 +177,14 @@ const EventRegistrationModal = ({clubId, eventDetails, event, isOpen, onClose })
               readOnly
             />
 
-            {/* <div className="flex flex-col gap-3 w-full">
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                className="w-full h-16 bg-black text-white p-2 rounded-2xl"
-                style={{
-                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)',
-                  display: 'none',
-                }}                placeholder="Email"
-                readOnly
-              />
-            </div> */}
+         
           </div>
 
           <div className="grid gap-10 mb-6 md:grid-cols-2">
             {/* Team menu */}
             <div className="flex flex-col gap-3">
               <label htmlFor="email" className="block mb-2 text-[#AEC90A]">Email</label>
-              {/* <Menu open={openMenu} handler={setOpenMenu} allowHover className='border-[#AEC90A] border-2'>
-                <MenuHandler>
-                  <Button
-                    variant="text"
-                    className="w-full h-16 bg-black text-white p-2 rounded-2xl  border-white"
-                    style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                  >
-                    {formData.team || "Click here to Select a Team"}{" "}
-                    <HiChevronDown
-                      strokeWidth={2.5}
-                      className={`h-3.5 w-3.5 transition-transform ${openMenu ? "rotate-180" : ""}`}
-                    />
-                  </Button>
-                </MenuHandler>
-                <MenuList className='bg-[#0B0B0B] p-0 border-[#AEC90A]'>
-                  <ul className="col-span-4 flex w-80 flex-col gap-1 text-white">
-                    {menuItems.map(({ title }) => (
-                      <MenuItem
-                        key={title}
-                        className='hover:bg-slate-900 p-2'
-                        onClick={() => handleMenuItemClick(title)}
-                      >
-                        {title}
-                      </MenuItem>
-                    ))}
-                  </ul>
-                </MenuList>
-              </Menu> */}
+             
               <input
                 type="email"
                 name="email"
@@ -238,18 +199,7 @@ const EventRegistrationModal = ({clubId, eventDetails, event, isOpen, onClose })
             {/* Interview Slot */}
             <div className="flex flex-col gap-3">
               <label htmlFor="mobile" className="block mb-2 text-[#AEC90A]">Mobile Number</label>
-              {/* <DatePicker
-                selected={selectedDate}
-                onChange={handleDateChange}
-                className="w-full h-16 bg-black text-white p-2 rounded-2xl"
-                style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                placeholderText="Pick a date"
-                showTimeSelect
-                timeFormat="HH:mm"
-                timeIntervals={15}
-                dateFormat="MMMM d, yyyy h:mm aa"
-                withPortal
-              /> */}
+            
               <input
                 type="number"
                 id='mobile'

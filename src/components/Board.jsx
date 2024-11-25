@@ -93,7 +93,7 @@ const Board = () => {
   if (error) return <p className="text-red-500">Error: {error}</p>;
   return (
     <div className="flex flex-col justify-center items-center h-full overflow-auto rounded-2xl">
-      <div className="text-[#AEC90A] text-3xl mt-2">Board of Current Term </div>
+      <div className="text-[#AEC90A]  font-bold text-3xl mt-2">Board of Current Term </div>
       <div className="flex justify-center gap-16 p-10">
         {/* President Card */}
         {president && (

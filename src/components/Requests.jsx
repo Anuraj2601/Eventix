@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { MdSend } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
 import {
   Tabs,
@@ -8,8 +7,6 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import { FaDownload } from "react-icons/fa";
-import { IconButton } from "@material-tailwind/react";
 
 import EventService from "../service/EventService";
 
@@ -56,7 +53,7 @@ const Dialog = ({
     </div>
   ) : null;
 
-const RequestTable = ({ type, events, onAccept, onReject }) => {
+const RequestTable = ({ type, events, onAccept, onReject, userRole }) => {
   return (
     <div className="overflow-auto rounded-lg">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -79,7 +76,7 @@ const RequestTable = ({ type, events, onAccept, onReject }) => {
                     "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
                 }}
               />
-              <span className="text-white mb-2">{row.event}</span>
+              <span className="text-white font-bold text-2xl mb-2">{row.event}</span>
             </div>
 
             <div className="flex flex-col items-center mb-4">
@@ -102,35 +99,59 @@ const RequestTable = ({ type, events, onAccept, onReject }) => {
               <span className="text-white">Date: {row.date}</span>
               <span className="text-white">Venue: {row.venue}</span>
             </div>
-
-            {/* <div className="flex items-center mb-4">
-              <IconButton>
-                <FaDownload size={20} className="text-white cursor-pointer mr-4" />
-              </IconButton>
-            </div> */}
-
-            <div className="flex items-center mb-4">
-              <button
-                onClick={() => window.open(row.budget, "_blank")}
-                className="px-4 py-2 rounded-lg border-[#AEC90A] border text-white hover:bg-[#AEC90A] transition-all"
-              >
-                View Event Budget
-              </button>
-            </div>
+            {userRole === "admin" ? (
+              // Show purpose and benefit for admin
+              <div className="flex flex-col items-center mb-4">
+                <span className="text-white text-lg font-bold">Purpose:</span>
+                <p className="text-white text-center mb-2">{row.purpose || "Not provided"}</p>
+                <span className="text-white text-lg font-bold">Benefit:</span>
+                <p className="text-white text-center">{row.benefit || "Not provided"}</p>
+              </div>
+            ) : (
+              // Show budget button for other roles (e.g., Treasurer)
+              <div className="flex items-center mb-4">
+                <button
+                  onClick={() => window.open(row.budget, "_blank")}
+                  className="px-4 py-2 rounded-lg border-[#AEC90A] border text-white hover:bg-[#AEC90A] transition-all"
+                >
+                  View Event Budget
+                </button>
+              </div>
+            )}
 
             <div className="flex flex-col space-y-2">
-              <button
-                className="px-3 py-1 rounded-full text-[#AEC90A] border-[#AEC90A] border"
-                onClick={() => onAccept(row)}
-              >
-                Accept
-              </button>
-              <button
-                className="px-3 py-1 rounded-full text-[#D32F2F] border border-[#D32F2F]"
-                onClick={() => onReject(row)}
-              >
-                Reject
-              </button>
+              {type === "all" && (
+                <>
+                  <button
+                    className="px-3 py-1 rounded-full text-[#AEC90A] border-[#AEC90A] border"
+                    onClick={() => onAccept(row)}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="px-3 py-1 rounded-full text-[#D32F2F] border border-[#D32F2F]"
+                    onClick={() => onReject(row)}
+                  >
+                    Reject
+                  </button>
+                </>
+              )}
+              {type === "accepted" && (
+                <button
+                  className="px-3 py-1 rounded-full text-[#D32F2F] border border-[#D32F2F]"
+                  onClick={() => onReject(row)}
+                >
+                  Reject
+                </button>
+              )}
+              {type === "rejected" && (
+                <button
+                  className="px-3 py-1 rounded-full text-[#AEC90A] border-[#AEC90A] border"
+                  onClick={() => onAccept(row)}
+                >
+                  Accept
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -159,14 +180,23 @@ const Requests = () => {
       const token = localStorage.getItem("token");
 
       if (token) {
-        const role = localStorage.getItem("role");
-        console.log("Local Storage Role:", role);
+        // const role = localStorage.getItem("role");
+        // console.log("Local Storage Role:", role);
 
-        setUserRole(role);
+        // setUserRole(role);
 
-        if (role.toLowerCase() !== "treasurer") {
+        const storedRole = localStorage.getItem("role") || ""; // Fallback to an empty string
+        const role = storedRole.trim().toLowerCase(); // Normalize the role
+
+        console.log("Local Storage Role:", storedRole);
+        console.log("Local Storage role (Normalized/role):", role);
+
+        setUserRole(role); // Store the normalized role in state
+
+        // Authorization check (customize if needed)
+        if (role !== "treasurer" && role !== "admin") {
           alert("You are not authorized to view this page.");
-          return; // Prevent further execution if not treasurer
+          return;
         }
 
         setLoading(true);
@@ -191,30 +221,54 @@ const Requests = () => {
             club_image: event.clubImage,
             club_president_image: event.clubPresidentImage,
             club_president_name: event.clubPresidentName,
+            benefit: event.benefits,
+            purpose: event.purpose,
           }));
 
-          // Categorize events
-          const allEvents = formattedEvents.filter(
-            (event) => event.budget_status === -1 && event.iud_status === -1
-          );
-          const acceptedEvents = formattedEvents.filter(
-            (event) => event.budget_status === 1
-          );
-          const rejectedEvents = formattedEvents.filter(
-            (event) => event.budget_status === 0
-          );
+          if (role == "admin") {
+            // Admin-specific event filtering by iud_status
+            const allEvents = formattedEvents.filter(
+              (event) => event.iud_status === -1 && event.budget_status === 1
+            );
+            const approvedEvents = formattedEvents.filter(
+              (event) => event.iud_status === 1 && event.budget_status === 1
+            );
+            const rejectedEvents = formattedEvents.filter(
+              (event) => event.iud_status === 0 && event.budget_status === 1
+            );
 
-          // Update state with categorized events
-          setEvents({
-            all: allEvents,
-            accepted: acceptedEvents,
-            rejected: rejectedEvents,
-          });
+            setEvents({
+              all: allEvents,
+              accepted: approvedEvents,
+              rejected: rejectedEvents,
+            });
 
-          console.log("All Events:", allEvents);
-          console.log("Accepted Events:", acceptedEvents);
-          console.log("Rejected Events:", rejectedEvents);
+            console.log("Admin View - All Events:", allEvents);
+            console.log("Admin View - Approved Events:", approvedEvents);
+            console.log("Admin View - Rejected Events:", rejectedEvents);
+          } else {
+            // Treasurer-specific event filtering by budget_status
+            const allEvents = formattedEvents.filter(
+              (event) => event.budget_status === -1 && event.iud_status === -1
+            );
+            const acceptedEvents = formattedEvents.filter(
+              (event) => event.budget_status === 1
+            );
+            const rejectedEvents = formattedEvents.filter(
+              (event) => event.budget_status === 0
+            );
 
+            // Update state with categorized events
+            setEvents({
+              all: allEvents,
+              accepted: acceptedEvents,
+              rejected: rejectedEvents,
+            });
+
+            console.log("Treasurer View - All Events:", allEvents);
+            console.log("Treasurer View - Accepted Events:", acceptedEvents);
+            console.log("Treasurer View - Rejected Events:", rejectedEvents);
+          }
         } catch (error) {
           console.error("Error fetching events:", error);
         }
@@ -251,35 +305,67 @@ const Requests = () => {
   //   handleDialogClose();
   // };
 
-
   const handleDialogConfirm = async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("You must be logged in as a treasurer to perform this action.");
+      alert("You must be logged in to perform this action.");
       return;
     }
 
     try {
+      const isAdmin = userRole?.toLowerCase() === "admin";
       const newStatus = currentAction === "accept" ? 1 : 0;
-      const response = await EventService.updateBudgetStatus(
-        currentRow.id,
-        newStatus,
-        "treasurer",
-        token
-      );
+
+      let response;
+
+      if (isAdmin) {
+        // Admin updates iud_status
+        response = await EventService.updateIudStatus(
+          currentRow.id,
+          newStatus,
+          "admin",
+          token
+        );
+      } else {
+        // Treasurer updates budget_status
+        response = await EventService.updateBudgetStatus(
+          currentRow.id,
+          newStatus,
+          "treasurer",
+          token
+        );
+      }
 
       if (response.statusCode === "RSP_SUCCESS") {
-        alert(`Event ${currentAction === "accept" ? "accepted" : "rejected"} successfully!`);
+        alert(
+          `Event ${
+            currentAction === "accept" ? "accepted" : "rejected"
+          } successfully!`
+        );
         setEvents((prev) => {
-          const updatedAll = prev.all.filter((event) => event.id !== currentRow.id);
+          const updatedAll = prev.all.filter(
+            (event) => event.id !== currentRow.id
+          );
           const updatedAccepted =
             currentAction === "accept"
-              ? [...prev.accepted, { ...currentRow, budget_status: 1 }]
+              ? [
+                  ...prev.accepted,
+                  {
+                    ...currentRow,
+                    [`${isAdmin ? "iud_status" : "budget_status"}`]: 1,
+                  },
+                ]
               : prev.accepted;
           const updatedRejected =
             currentAction === "reject"
-              ? [...prev.rejected, { ...currentRow, budget_status: 0 }]
+              ? [
+                  ...prev.rejected,
+                  {
+                    ...currentRow,
+                    [`${isAdmin ? "iud_status" : "budget_status"}`]: 0,
+                  },
+                ]
               : prev.rejected;
 
           return {
@@ -289,17 +375,15 @@ const Requests = () => {
           };
         });
       } else {
-        alert(response.message || "Failed to update the budget status.");
+        alert(response.message || "Failed to update the event status.");
       }
     } catch (error) {
-      console.error("Error updating budget status:", error);
+      console.error("Error updating event status:", error);
       alert("An error occurred. Please try again.");
     }
 
     handleDialogClose();
   };
-
-
 
   return (
     <div className="flex flex-col mt-6">
@@ -342,6 +426,7 @@ const Requests = () => {
                   events={events[value]}
                   onAccept={handleAccept}
                   onReject={handleReject}
+                  userRole={userRole} 
                 />
               </TabPanel>
             ))
@@ -352,10 +437,24 @@ const Requests = () => {
       <Dialog
         isOpen={isDialogOpen}
         onClose={handleDialogClose}
-        title={currentAction === "accept" ? "Accept Budget" : "Reject Budget"}
+        title={
+          currentAction === "accept"
+            ? userRole === "admin"
+              ? "Approve Event"
+              : "Accept Budget"
+            : userRole === "admin"
+            ? "Reject Event"
+            : "Reject Budget"
+        }
         primaryAction={{
           label:
-            currentAction === "accept" ? "Confirm Accept" : "Confirm Reject",
+            currentAction === "accept"
+              ? userRole === "admin"
+                ? "Confirm Approve"
+                : "Confirm Accept"
+              : userRole === "admin"
+              ? "Confirm Reject"
+              : "Confirm Reject",
           onClick: handleDialogConfirm,
         }}
         secondaryAction={{ label: "Cancel", onClick: handleDialogClose }}
@@ -365,8 +464,12 @@ const Requests = () => {
       >
         <p className="text-white">
           {currentAction === "accept"
-            ? "Are you sure you want to accept this event budget?"
-            : "Are you sure you want to reject this event budget?"}
+            ? userRole === "admin"
+              ? "Are you sure you want to Approve this Event Request?"
+              : "Are you sure you want to Accept this Event Budget?"
+            : userRole === "admin"
+            ? "Are you sure you want to Reject this Event Request?"
+            : "Are you sure you want to Reject this Event Budget?"}
         </p>
       </Dialog>
     </div>

@@ -22,14 +22,15 @@ const PresidentClubNav = ({ club }) => {
 
   const data = [
     { label: "Current Board", value: "Current Board", desc: <Board /> },
+    { label: "Members", value: "Members", desc: <Member /> },
     { label: "Posts", value: "Posts", desc: <ClubPosts club={club} /> },
     { label: "Events", value: "Events", desc: <ClubEvent club={club} /> },
-    { label: "Members", value: "Members", desc: <Member /> },
+    
     { label: "Elections", value: "Elections", desc: <ElectionDetails club={club} /> },
     { label: "Meetings", value: "Meetings", desc: <Meeting club={club} /> },
     { label: "Announcement", value: "Announcement", desc: <Announcement club={club} /> },
     ...(showRestrictedTabs ? [
-      { label: "Event Reports", value: "Event Reports", desc: <ClubReport /> },
+      { label: "Event Reports", value: "Event Reports", desc: <ClubReport club={club}/> },
       { label: "Recruitment", value: "Recruitment", desc: <Recruitment /> }
       
     ] : []),
@@ -67,7 +68,10 @@ const PresidentClubNav = ({ club }) => {
   return (
     <Tabs value={activeTab} onChange={setActiveTab}>
       <TabsHeader
-        className="rounded-none bg-transparent p-0 grid grid-cols-9"
+        className="rounded-full bg-black px-8 grid grid-cols-9 "
+        style={{ 
+          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
+        }}
         indicatorProps={{
           className:
             "mt-8 absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 rounded-full transition-opacity bg-transparent border-b-[8px] border-[#AEC90A] shadow-none",

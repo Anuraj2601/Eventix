@@ -11,7 +11,6 @@ const ExploreClub = () => {
     const [activeTab, setActiveTab] = useState("new-users");
 
     const mainTabs = [
-        { label: "New Users", value: "new-users" },
         { label: "Event Requests", value: "event-requests" },
     ];
     
@@ -42,7 +41,7 @@ const ExploreClub = () => {
                         </TabsHeader>
                         <div className=" overflow-y-auto px-10">
                             {activeTab === "event-requests" && <Requests />}
-                            {activeTab === "new-users" && <Users />}
+                         
 
                         </div>
                     </Tabs>
