@@ -101,39 +101,41 @@ const Dashboard = () => {
                     className="w-full h-40 object-cover rounded-md mb-2"
                   />
                   <h3 className="text-lg font-bold">{event.name}</h3>
-                  <div className="flex py-6 items-center space-x-6 mb-2 rounded mt-2"  style={{ backgroundColor: "#090101" }}>
-                    
-                  <div className="flex items-center ml-2 mb-2">
-                    <AiOutlineCalendar
-                      className="text-[#AEC90A] mr-2"
-                      size={20}
-                    />{" "}
-                    {/* Event Name icon */}
-                    <p className="text-sm">{event.name}</p>
-                  </div>
-                  
-                  <div className="flex items-center mb-2">
-                    <AiOutlineClockCircle
-                      className="text-[#AEC90A] mr-2"
-                      size={20}
-                    />{" "}
-                    {/* Date icon */}
-                    <p className="text-sm">
-                      {new Intl.DateTimeFormat("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      }).format(new Date(event.date))}
-                    </p>
-                  </div>
-                  <div className="flex items-center mb-2">
-                    <AiOutlineEnvironment
-                      className="text-[#AEC90A] mr-2"
-                      size={20}
-                    />{" "}
-                    {/* Venue icon */}
-                    <p className="text-sm">{event.venue}</p>
-                  </div>
+                  <div
+                    className="flex py-6 items-center space-x-6 mb-2 rounded mt-2"
+                    style={{ backgroundColor: "#090101" }}
+                  >
+                    <div className="flex items-center ml-2 mb-2">
+                      <AiOutlineCalendar
+                        className="text-[#AEC90A] mr-2"
+                        size={20}
+                      />{" "}
+                      {/* Event Name icon */}
+                      <p className="text-sm">{event.name}</p>
+                    </div>
+
+                    <div className="flex items-center mb-2">
+                      <AiOutlineClockCircle
+                        className="text-[#AEC90A] mr-2"
+                        size={20}
+                      />{" "}
+                      {/* Date icon */}
+                      <p className="text-sm">
+                        {new Intl.DateTimeFormat("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        }).format(new Date(event.date))}
+                      </p>
+                    </div>
+                    <div className="flex items-center mb-2">
+                      <AiOutlineEnvironment
+                        className="text-[#AEC90A] mr-2"
+                        size={20}
+                      />{" "}
+                      {/* Venue icon */}
+                      <p className="text-sm">{event.venue}</p>
+                    </div>
                   </div>
                   <div className="flex items-center mb-2 ml-2">
                     <AiOutlineInfoCircle
@@ -143,18 +145,18 @@ const Dashboard = () => {
                     {/* Purpose icon */}
                     <p className="text-sm font-bold">{event.purpose}</p>
                   </div>
-                  
+
                   <div className="p-1 mb-1 flex flex-col relative">
-                  <button
-                    onClick={() => {
-                      setSelectedEvent(event);
-                      setIsModalOpen(true);
-                    }}
-                    // className="mt-2 px-4 py-2 bg-[#AEC90A] text-black rounded hover:bg-[#93b208]"
-                     className="mt-2 ml-auto px-4 py-2 bg-[#AEC90A] text-black rounded hover:bg-[#93b208]"
-                  >
-                    Register
-                  </button>
+                    <button
+                      onClick={() => {
+                        setSelectedEvent(event);
+                        setIsModalOpen(true);
+                      }}
+                      // className="mt-2 px-4 py-2 bg-[#AEC90A] text-black rounded hover:bg-[#93b208]"
+                      className="mt-2 ml-auto px-4 py-2 bg-[#AEC90A] text-black rounded hover:bg-[#93b208]"
+                    >
+                      Register
+                    </button>
                   </div>
                 </div>
               ))}
