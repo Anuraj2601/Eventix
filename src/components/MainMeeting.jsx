@@ -83,11 +83,53 @@ const MeetingsList = () => {
   
 
   // Handle meeting selection
-  const handleMeetingClick = (meetingId) => {
+  const handleMeetingClick = async (meetingId) => {
     setSelectedMeetingId(meetingId);
+    const meeting = meetings.find((m) => m.meeting_id === meetingId);
+    if (!meeting) return;
+
+    setSendingQRCode((prev) => ({ ...prev, [meetingId]: "fetching" }));
+
+    try {
+      const response = await fetch("/api/meeting-participants/qr-code", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          meetingId,
+          clubId: meeting.club_id,
+        }),
+      });
+
+      const contentType = response.headers.get('Content-Type');
+      let data = null;
+    
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('Unexpected response:', text);
+        throw new Error('Server returned invalid data');
+      }
+      if (response.ok) {
+        setSendingQRCode((prev) => ({ ...prev, [meetingId]: "QR Code Sent!" }));
+        setQrCodeDialogVisible(true);
+        setEmailSent(true);
+      } else {
+        throw new Error(data.message || "Failed to fetch QR code.");
+      }
+    } catch (error) {
+      console.error("Error fetching QR code:", error);
+      setSendingQRCode((prev) => ({ ...prev, [meetingId]: null }));
+      setQrCodeDialogVisible(true);
+      setEmailSent(false);
+      setEmailError(error.message);
+    }
+
     fetchParticipants(meetingId);
   };
-
   // Function to send the QR code via email
   const sendQRCodeEmail = async (meetingId, qrCodeUrl) => {
     try {
