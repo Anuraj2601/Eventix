@@ -470,7 +470,8 @@ const MeetingsList = () => {
               </div>
             );
           })}
-        </div><div className="mb-2 mt-10">
+        </div>
+        <div className="mb-2 mt-10">
   <h1>Upcoming Event OC meetings</h1>
   {eventMeetings
     .filter((meeting) => {
