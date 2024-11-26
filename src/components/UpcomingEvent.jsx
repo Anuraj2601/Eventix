@@ -8,6 +8,7 @@ import ClubsService from "../service/ClubsService";
 import Modal from "react-modal";
 import madhack2 from "../assets/madhack2.png"; // Default image
 import { savePublicRegistration } from '../service/PublicService';
+import { getPublicRegistrationsByEvent } from '../service/PublicService';  // Import the service
 
 Modal.setAppElement("#root");
 
@@ -17,6 +18,9 @@ const UpcomingEvent = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [eventRegistrations, setEventRegistrations] = useState([]);
+  const [selectedEventId, setSelectedEventId] = useState(null); // State to track selected event ID
+
   const [formData, setFormData] = useState({
     name: "",
     mobile: "",
@@ -35,6 +39,22 @@ const UpcomingEvent = () => {
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   
+  useEffect(() => {
+    if (!selectedEventId) return;  // Don't run if no event is selected
+
+    const fetchRegistrations = async () => {
+      try {
+        const registrationsData = await getPublicRegistrationsByEvent(selectedEventId);
+        setEventRegistrations(registrationsData);  // Update the state with fetched registrations
+      } catch (error) {
+        setErrorMessage('Error fetching registrations. Please try again.');
+        setErrorModalOpen(true);
+      }
+    };
+
+    fetchRegistrations();
+  }, [selectedEventId]);
+
   // Function to close the error modal
   const closeErrorModal = () => {
     setErrorModalOpen(false);
@@ -134,6 +154,21 @@ const UpcomingEvent = () => {
     setIsFormValid(isValid);
   };
 
+  useEffect(() => {
+    if (!selectedEventId) return;  // Don't run if no event is selected
+
+    const fetchRegistrations = async () => {
+      try {
+        const registrationsData = await getPublicRegistrationsByEvent(selectedEventId);
+        setEventRegistrations(registrationsData);  // Update the state with fetched registrations
+      } catch (error) {
+        setErrorMessage('Error fetching registrations. Please try again.');
+        setErrorModalOpen(true);
+      }
+    };
+
+    fetchRegistrations();
+  }, [selectedEventId]);
   const handleRegister = async (e) => {
     e.preventDefault();
     
@@ -152,6 +187,18 @@ const UpcomingEvent = () => {
       return;
     }
   
+    const existingRegistration = eventRegistrations.find(
+      (registration) =>
+        registration.name === formData.name ||
+        registration.mobile === formData.mobile ||
+        registration.email === formData.email
+    );
+  
+    if (existingRegistration) {
+      setErrorMessage("You have already registered for this event.");
+      setErrorModalOpen(true); // Open error dialog
+      return; // Stop the registration if duplicate is found
+    }
     try {
       const publicRegistrationsDTO = {
         participantName: formData.name,
@@ -164,6 +211,7 @@ const UpcomingEvent = () => {
   
       // Save the registration data
       await savePublicRegistration(publicRegistrationsDTO);
+      setSelectedEventId(formData.eventId);
    setSuccessDialog(true);
       setModalIsOpen(false); // Close the registration modal
       // Reset form after successful registration
@@ -232,7 +280,7 @@ const UpcomingEvent = () => {
                     <div className="flex justify-between items-center">
                       {event.public_status && (
                         <button
-                          className="mt-4 w-full bg-[#AEC90A] text-white py-2 rounded-md hover:bg-primary-dark transition"
+                          className="mt-4 w-full bg-[#AEC90A] text-black py-2 rounded-full  hover:bg-primary-dark transition"
                           onClick={() => openModal(event)} // Trigger the modal on click
                         >
                           Register Now
@@ -243,13 +291,14 @@ const UpcomingEvent = () => {
                 );
               })}
           </div>
+          
         ) : (
           <div className="text-center text-white">
             <h2>No events found</h2>
+            
           </div>
         )}
       </div>
-
       {/* Modal for Registration */}
       <Modal
         isOpen={modalIsOpen}
@@ -296,7 +345,7 @@ const UpcomingEvent = () => {
           <input type="hidden" name="clubId" value={formData.clubId} />
           <input type="hidden" name="eventId" value={formData.eventId} />
           <input type="hidden" name="eventName" value={formData.eventName} />
-
+         
           <div className="flex justify-between items-center">
             <button
               type="submit"
