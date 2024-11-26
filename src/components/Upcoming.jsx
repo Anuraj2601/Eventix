@@ -21,25 +21,25 @@ import RegistrationModal from './RegistrationModal'; // Make sure this path is c
 import EventService from "../service/EventService"; // Ensure correct import
 import ClubsService from "../service/ClubsService"; // Ensure correct import
 
-const convertTo12HourFormat = (timeString) => {
-  if (!timeString || typeof timeString !== 'string') {
-    console.error("Invalid time string");
-    return "Invalid time"; // Return a default value in case of an error
-  }
-
-  const [hour, minute, second] = timeString.split(":").map(Number);
+const convertDateToReadableFormat = (dateString) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.toLocaleString('default', { month: 'long' }); // Gets the full month name
+  const year = date.getFullYear();
   
-  if (isNaN(hour) || isNaN(minute) || isNaN(second)) {
-    console.error("Invalid time format");
-    return "Invalid time";
-  }
-
-  const ampm = hour >= 12 ? "PM" : "AM";
-  const formattedHour = hour % 12 || 12; // Convert hour to 12-hour format
-  return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
+  // Add suffix to day (e.g. 1 -> 1st, 2 -> 2nd, etc.)
+  const suffix = (day) => {
+    if (day > 3 && day < 21) return 'th'; // Special case for 11th, 12th, and 13th
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  };
+  
+  return `${day}${suffix(day)} ${month} ${year}`;
 };
-
-// Example usage:
 
 
 
@@ -78,22 +78,51 @@ const Upcoming = () => {
           const eventDate = new Date(event.date[0], event.date[1] - 1, event.date[2]);
           return eventDate >= today && event.iud_status !== 0 && event.budget_status !== 0; // Only include future events
         })
-        .map((event) => ({
-          event_id: event.event_id,
-          name: event.name,
-          image: event.event_image || ieee1, // Fallback to default image
-          date: `${event.date[0]}/${event.date[1]}/${event.date[2]}`,
-          venue: event.venue,
-          club_id: event.club_id,
-          clubImage: event.club_image || ieeeImg, // Ensure a fallback
-          public_status: event.public_status,
-        }));
+        .map((event) => {
+          let formattedTime = "Time not available"; // Default value
+  
+          if (event.time) {
+            if (Array.isArray(event.time) && event.time.length === 2) {
+              // Ensure event.time is an array with 2 elements (hour and minute)
+              formattedTime = formatTime(event.time);
+            } else {
+              console.warn(`Invalid time format for event: ${event.name}. Expected an array of [hour, minute], but got: ${typeof event.time}`);
+            }
+          }
+  
+          console.log(`Event: ${event.name} | Time: ${event.time} | Formatted Time: ${formattedTime}`);
+          
+          return {
+            event_id: event.event_id,
+            name: event.name,
+            venue: event.venue,
+
+            image: event.event_image || ieee1, // Fallback to default image
+            date: convertDateToReadableFormat(event.date), // Format date
+            time: formattedTime,  // Use formatted time
+            club_id: event.club_id,
+            clubImage: event.club_image || ieeeImg, // Ensure a fallback
+            public_status: event.public_status,
+            budget_status: event.budget_status,
+            iud_status: event.iud_status,
+          };
+        });
+  
       setUpcomingEvents(futureEvents);
-      console.log(futureEvents)
+      console.log(futureEvents); // Log the processed future events
     } catch (error) {
       console.error("Error fetching events:", error);
     }
   };
+  
+  const formatTime = (timeArray) => {
+    const [hour, minute] = timeArray;
+    const period = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;  // Convert 24-hour to 12-hour format
+    const formattedMinute = minute < 10 ? `0${minute}` : minute;  // Ensure minute is two digits
+    return `${formattedHour}:${formattedMinute} ${period}`;
+  };
+  
 
   useEffect(() => {
     fetchClubs();
@@ -103,10 +132,14 @@ const Upcoming = () => {
   return (
     <div className="p-2 rounded-md relative">
       <h2 className="text-white text-sm font-bold -mt-2">Upcoming</h2>
+      
+
       <div className="flex flex-wrap overflow-y-auto -mx-2">
         {upcomingEvents.map((event) => {
-          const activeClub = clubDetails.find((club) => club.club_id === event.club_id) || {};
-          const canRegister = event.iud_status === 1 && event.budget_status === 1;
+           const activeClub = clubDetails.find((club) => club.club_id === event.club_id) || {};
+           const clubImage = activeClub.club_image || "https://via.placeholder.com/100"; // Fallback image
+           const clubName = activeClub.club_name || "Unknown Club"; // Fallback name
+           const canRegister = event.iud_status === 1 && event.budget_status === 1;
           return (          
             <div 
               key={event.event_id} 
@@ -128,11 +161,11 @@ const Upcoming = () => {
                 <div className="event-back">
                   <h3 className="text-white text-xl font-bold mb-2">{event.name}</h3>
                   <p>{event.details}</p>
-                  <p className="text-gray-400">Date: {event.date}</p>
-                  <p className="text-gray-400">Venue: {event.venue}</p>
-                  <p className="text-gray-400">Time:  {convertTo12HourFormat(event.time)}</p> {/* Display formatted time here */}
+                  <p className="text-gray-400">On  {event.date}</p>
+                  <p className="text-gray-400">In {event.venue}</p>
+                  <p className="text-gray-400">At {event.time}</p>
                   <p className="text-gray-400">Organized By:</p>
-                  <img src={event.clubImage} alt="Club" className="w-12 h-12 rounded-full mb-2" />
+                  <img src={clubImage} alt="Club" className="w-12 h-12 rounded-full mb-2" />
                   <div className="flex justify-center items-center mt-2">
                     <LikeButton likes={event.likes} />
                     {canRegister && (
