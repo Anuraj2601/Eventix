@@ -21,17 +21,26 @@ import RegistrationModal from './RegistrationModal'; // Make sure this path is c
 import EventService from "../service/EventService"; // Ensure correct import
 import ClubsService from "../service/ClubsService"; // Ensure correct import
 
-const formatTime = (date) => {
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-  const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+const convertTo12HourFormat = (timeString) => {
+  if (!timeString || typeof timeString !== 'string') {
+    console.error("Invalid time string");
+    return "Invalid time"; // Return a default value in case of an error
+  }
 
-  return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+  const [hour, minute, second] = timeString.split(":").map(Number);
+  
+  if (isNaN(hour) || isNaN(minute) || isNaN(second)) {
+    console.error("Invalid time format");
+    return "Invalid time";
+  }
+
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const formattedHour = hour % 12 || 12; // Convert hour to 12-hour format
+  return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
 };
 
-// Usage example:
-const date = new Date(); // Current time
+// Example usage:
+
 
 
 const Upcoming = () => {
@@ -80,6 +89,7 @@ const Upcoming = () => {
           public_status: event.public_status,
         }));
       setUpcomingEvents(futureEvents);
+      console.log(futureEvents)
     } catch (error) {
       console.error("Error fetching events:", error);
     }
@@ -97,8 +107,6 @@ const Upcoming = () => {
         {upcomingEvents.map((event) => {
           const activeClub = clubDetails.find((club) => club.club_id === event.club_id) || {};
           const canRegister = event.iud_status === 1 && event.budget_status === 1;
-          const formattedTime = formatTime(new Date(event.time));
-
           return (          
             <div 
               key={event.event_id} 
@@ -122,7 +130,7 @@ const Upcoming = () => {
                   <p>{event.details}</p>
                   <p className="text-gray-400">Date: {event.date}</p>
                   <p className="text-gray-400">Venue: {event.venue}</p>
-                  <p className="text-gray-400">Time: {formattedTime}</p> {/* Display formatted time here */}
+                  <p className="text-gray-400">Time:  {convertTo12HourFormat(event.time)}</p> {/* Display formatted time here */}
                   <p className="text-gray-400">Organized By:</p>
                   <img src={event.clubImage} alt="Club" className="w-12 h-12 rounded-full mb-2" />
                   <div className="flex justify-center items-center mt-2">
