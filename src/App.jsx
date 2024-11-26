@@ -158,7 +158,7 @@ import AddNewClubForm from './pages/admin/AddNewClubForm';
 
 
 import CheckEmail from './components/CheckEmail';
-
+import ForgotPassword from './components/ForgotPassword';
 
 // Import other pages if necessary
 
@@ -172,7 +172,7 @@ const App = () => {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/Signup" element={<Signup />}></Route>
         <Route path="/CheckEmail" element={<CheckEmail />}></Route>
-
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       
 
          {/* member routes */}

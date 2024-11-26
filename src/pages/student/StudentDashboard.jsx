@@ -121,12 +121,15 @@ const Dashboard = () => {
                       />{" "}
                       {/* Date icon */}
                       <p className="text-sm">
-                        {new Intl.DateTimeFormat("en-GB", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        }).format(new Date(event.date))}
-                      </p>
+  {event.date && !isNaN(new Date(event.date).getTime())
+    ? new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(new Date(event.date))
+    : "Invalid date"}
+</p>
+
                     </div>
                     <div className="flex items-center mb-2">
                       <AiOutlineEnvironment
