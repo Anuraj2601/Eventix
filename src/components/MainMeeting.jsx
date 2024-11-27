@@ -170,7 +170,13 @@ const MeetingsList = () => {
       console.error("Error fetching registrations:", error);
     }
   };
-  
+  const validPositionsboard = ["president", "secretary", "treasurer"];
+  const filteredRegistrationsboard = registrations.filter(
+    (reg) =>
+      reg.email === userId &&
+      reg.accepted === 1 &&
+      validPositionsboard.includes(reg.position.toLowerCase())
+  );
 
   const validPositions = ["president", "member", "secretary", "treasurer", "oc"];
   const filteredRegistrations = registrations.filter(
@@ -398,6 +404,12 @@ const MeetingsList = () => {
             onClick={() => setSelectedFilter('online')}
           >
             Online Meetings
+          </button>
+          <button
+            className={`px-4 py-2 rounded ${selectedFilter === 'QR' ?  'text-primary border-b-2 border-primary' : 'text-white'}`}
+            onClick={() => setSelectedFilter('QR')}
+          >
+            QR Code Ccanner
           </button>
         </div>
 
