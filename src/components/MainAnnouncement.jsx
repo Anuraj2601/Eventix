@@ -356,7 +356,7 @@ const MainAnnouncement = () => {
       onClick={() => openAnnouncementForm(announcement.club_id)} // Pass club_id as argument
       className="bg-primary text-white"
     >
-      Create Announcement
+      Create New Union Announcement
     </Button>
   </div>
 )}
@@ -371,7 +371,6 @@ const MainAnnouncement = () => {
                                             
                                             <div>
                                                 <p className="text-sm text-primary font-semibold">{announcement.title}</p>
-                                                <p className="text-sm text-primary font-semibold">{announcement.club_id}</p>
 
                                                 {/* <p className="text-sm">{announcement.content} <span className='ml-5 text-primary opacity-60'>{announcement.date} | {announcement.time} | {announcement.location}</span></p> */}
                                                 <p className="text-sm">{announcement.content} </p>
