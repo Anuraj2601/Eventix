@@ -28,7 +28,7 @@ const EventNav = ({clubId , event}) => {
     {
       label: "Posts",
       value: "Posts",
-      desc: <Posts clubId = {clubId}/>,
+      desc: <Posts clubId = {clubId} event = {event}/>,
     },
     {
       label: "Organizing Committee",
@@ -69,7 +69,7 @@ const EventNav = ({clubId , event}) => {
             </Tab>
           ))}
         </TabsHeader>
-        <TabsBody className="h-[600px] overflow-auto"> {/* Adjust height as needed */}
+        <TabsBody className="h-[700px] overflow-auto"> {/* Adjust height as needed */}
           {data.map(({ value, desc }) => (
             <TabPanel key={value} value={value}>
               {/* {desc} */}

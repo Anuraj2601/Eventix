@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -6,13 +6,14 @@ import MeetingService from "../../service/MeetingService";
 import { Button } from "@material-tailwind/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { format } from 'date-fns'; // Import date-fns
-import axios from 'axios';
-
 
 const AddNewMeetingForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { id } = useParams();
+  const { club } = location.state || {};
+  const clubId = club?.club_id;
+
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(null);
   const [time, setTime] = useState("");
@@ -21,12 +22,6 @@ const AddNewMeetingForm = () => {
   const [venue, setVenue] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const { id } = useParams();
-  const { club } = location.state || {};
-  const clubId = club?.club_id;
-
-  const handleRadioChange = (e) => setMeetingType(e.target.value);
 
   const validateField = (field, value) => {
     let error = "";
@@ -53,53 +48,88 @@ const AddNewMeetingForm = () => {
         break;
     }
     setErrors((prev) => ({ ...prev, [field]: error }));
+    return error;
   };
 
+  const validateAllFields = () => {
+    const validationErrors = {
+      title: validateField("title", title),
+      date: validateField("date", date),
+      time: validateField("time", time),
+      meetingType: validateField("meetingType", meetingType),
+      participantType: validateField("participantType", participantType),
+      venue: validateField("venue", venue),
+    };
+
+    return Object.values(validationErrors).every((error) => !error);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitted(true);
-  
-    // Validate all fields
-    const isValid = ["title", "date", "time", "meetingType", "participantType", "venue"]
-      .every((field) => !errors[field] && eval(field));
-  
-    if (isValid) {
+
+    if (validateAllFields()) {
       try {
         const token = localStorage.getItem("token");
         const meetingData = {
-          meeting_id: id,  // Make sure id is correctly set for editing an existing meeting
           meeting_name: title,
-          date: date.toISOString().split('T')[0],  // Ensure the date format is yyyy-mm-dd
-          time: time,  // Ensure time is in correct format (HH:mm:ss)
-          meeting_type: meetingType,  // "PHYSICAL" or "ONLINE"
-          participant_type: participantType,  // "EVERYONE", "CLUB_MEMBERS", or "CLUB_BOARD"
-          club_id: clubId,  // Club ID related to the meeting
-          venue,  // Venue for the meeting
-          qrCodeUrl: meetingType === "PHYSICAL" ? "http://example.com/qrcode/1" : "",  // Only include qrCodeUrl if it's a physical meeting
+          date: date.toISOString().split("T")[0],
+          time,
+          meeting_type: meetingType,
+          participant_type: participantType,
+          club_id: clubId,
+          ...(meetingType === "PHYSICAL" && { venue }),
         };
-  
-        console.log('Sending data to server:', meetingData);  // Log the data being sent for debugging
-  
-        const response = await axios.post('http://localhost:8080/president/saveMeeting', meetingData, {
-          headers: {
-            Authorization: `Bearer ${token}`,  // Send the token for authentication
-          },
-        });
-  
+
+        const response = await MeetingService.saveMeeting(
+          meetingData.meeting_name,
+          meetingData.date,
+          meetingData.time,
+          meetingData.meeting_type,
+          meetingData.participant_type,
+          meetingData.club_id,
+          token,
+          meetingType === "PHYSICAL" ? meetingData.venue : undefined
+        );
+
         if (response.status === 200) {
           alert("Meeting saved successfully!");
+          navigate(-1);
         } else {
           alert("Error saving meeting.");
         }
-        navigate(-1);
       } catch (error) {
-        console.error("Error saving meeting:", error);
+        console.error("Error saving meeting:", error.response || error.message);
         alert("An error occurred while saving the meeting.");
       }
     }
   };
-  
+
+  const handleChange = (field, value) => {
+    switch (field) {
+      case "title":
+        setTitle(value);
+        break;
+      case "date":
+        setDate(value);
+        break;
+      case "time":
+        setTime(value);
+        break;
+      case "meetingType":
+        setMeetingType(value);
+        break;
+      case "participantType":
+        setParticipantType(value);
+        break;
+      case "venue":
+        setVenue(value);
+        break;
+      default:
+        break;
+    }
+    if (isSubmitted) validateField(field, value);
+  };
 
   return (
     <div className="flex h-screen bg-neutral-900 text-white">
@@ -109,36 +139,26 @@ const AddNewMeetingForm = () => {
         <div className="p-10">
           <h1 className="text-center text-xl font-bold mb-6">{id ? "Update Meeting" : "Create a New Meeting"}</h1>
           <form onSubmit={handleSubmit} className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            <div className="hidden">
-              <label className="block mb-2">Club ID</label>
-              <input
-                type="text"
-                className="w-full bg-black text-white p-2 rounded-2xl"
-                
-                value={clubId}
-                disabled
-              />
-            </div>
             <div>
               <label className="block mb-2">Title</label>
               <input
                 type="text"
                 className="w-full bg-black text-white p-2 rounded-2xl"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => handleChange("title", e.target.value)}
               />
-              {isSubmitted && errors.title && <p className="text-red-500">{errors.title}</p>}
+              {errors.title && <p className="text-red-500">{errors.title}</p>}
             </div>
             <div>
               <label className="block mb-2">Meeting Date</label>
               <DatePicker
                 selected={date}
-                onChange={(date) => setDate(date)}
+                onChange={(date) => handleChange("date", date)}
                 dateFormat="yyyy/MM/dd"
                 minDate={new Date()}
                 className="w-full bg-black text-white p-2 rounded-2xl"
               />
-              {isSubmitted && errors.date && <p className="text-red-500">{errors.date}</p>}
+              {errors.date && <p className="text-red-500">{errors.date}</p>}
             </div>
             <div>
               <label className="block mb-2">Meeting Time</label>
@@ -146,9 +166,9 @@ const AddNewMeetingForm = () => {
                 type="time"
                 className="w-full bg-black text-white p-2 rounded-2xl"
                 value={time}
-                onChange={(e) => setTime(e.target.value)}
+                onChange={(e) => handleChange("time", e.target.value)}
               />
-              {isSubmitted && errors.time && <p className="text-red-500">{errors.time}</p>}
+              {errors.time && <p className="text-red-500">{errors.time}</p>}
             </div>
             <div>
               <label className="block mb-2">Meeting Type</label>
@@ -159,7 +179,7 @@ const AddNewMeetingForm = () => {
                     name="type"
                     value="PHYSICAL"
                     checked={meetingType === "PHYSICAL"}
-                    onChange={handleRadioChange}
+                    onChange={(e) => handleChange("meetingType", e.target.value)}
                   />
                   Physical
                 </label>
@@ -169,12 +189,12 @@ const AddNewMeetingForm = () => {
                     name="type"
                     value="ONLINE"
                     checked={meetingType === "ONLINE"}
-                    onChange={handleRadioChange}
+                    onChange={(e) => handleChange("meetingType", e.target.value)}
                   />
                   Online
                 </label>
               </div>
-              {isSubmitted && errors.meetingType && <p className="text-red-500">{errors.meetingType}</p>}
+              {errors.meetingType && <p className="text-red-500">{errors.meetingType}</p>}
             </div>
             {meetingType === "PHYSICAL" && (
               <div>
@@ -183,9 +203,9 @@ const AddNewMeetingForm = () => {
                   type="text"
                   className="w-full bg-black text-white p-2 rounded-2xl"
                   value={venue}
-                  onChange={(e) => setVenue(e.target.value)}
+                  onChange={(e) => handleChange("venue", e.target.value)}
                 />
-                {isSubmitted && errors.venue && <p className="text-red-500">{errors.venue}</p>}
+                {errors.venue && <p className="text-red-500">{errors.venue}</p>}
               </div>
             )}
             <div>
@@ -193,18 +213,24 @@ const AddNewMeetingForm = () => {
               <select
                 className="w-full bg-black text-white p-2 rounded-2xl"
                 value={participantType}
-                onChange={(e) => setParticipantType(e.target.value)}
+                onChange={(e) => handleChange("participantType", e.target.value)}
               >
-                <option value="" disabled>Select Participant Type</option>
+                <option value="" disabled>
+                  Select Participant Type
+                </option>
                 <option value="EVERYONE">Everyone</option>
                 <option value="CLUB_MEMBERS">Club Members</option>
                 <option value="CLUB_BOARD">Club Board</option>
               </select>
-              {isSubmitted && errors.participantType && <p className="text-red-500">{errors.participantType}</p>}
+              {errors.participantType && <p className="text-red-500">{errors.participantType}</p>}
             </div>
             <div className="col-span-full flex justify-center gap-4 mt-6">
-              <Button onClick={() => navigate(-1)} className="border-2 border-green-500 text-green-500">Cancel</Button>
-              <Button type="submit" className="bg-green-500 text-black">Submit</Button>
+              <Button onClick={() => navigate(-1)} className="border-2 border-[#AEC90A] text-[#AEC90A]">
+                Cancel
+              </Button>
+              <Button type="submit" className="bg-[#AEC90A] text-black">
+                Submit
+              </Button>
             </div>
           </form>
         </div>

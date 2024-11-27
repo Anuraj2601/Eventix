@@ -31,6 +31,7 @@ const EventRegistrationModal = ({clubId, eventDetails, event, isOpen, onClose })
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showAddSuccessPopup, setShowAddSuccessPopup] = useState(false);
 
  // console.log('club id in event reg', clubId);
  //console.log('event details in event reg', eventDetails);
@@ -79,6 +80,10 @@ const EventRegistrationModal = ({clubId, eventDetails, event, isOpen, onClose })
     return Object.values(formData).every(value => value.trim() !== '') ;
   };
 
+  
+  const handleClosePopup = () => {
+    setShowAddSuccessPopup(false);
+  };
 
 
   const handleSubmit = async (e) => {
@@ -133,8 +138,14 @@ const EventRegistrationModal = ({clubId, eventDetails, event, isOpen, onClose })
             session_id,
             token
         );
-        alert('Registration successful!');
-        onClose(); // Close the modal after submission
+        
+        //alert('Registration successful!');
+        setShowAddSuccessPopup(true);
+        setTimeout(() => {
+          onClose(); // Close modal after popup is shown
+        }, 2000);
+  
+
     } catch (error) {
         const errorMessage = error.message || 'Failed to submit the form.';
         console.error(errorMessage);
@@ -245,8 +256,31 @@ const EventRegistrationModal = ({clubId, eventDetails, event, isOpen, onClose })
             </button>
           </div>
         </form>
+
+        {showAddSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                Registered for the event successfully
+            </h2>
+          </div>
+        </div>
+      )}
       </div>
+
+     
     </div>
+
+    
+
+
   );
 };
 

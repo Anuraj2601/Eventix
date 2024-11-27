@@ -395,7 +395,7 @@ const Exploreevent = () => {
                       opportunities.
                     </Typography>
                     <div className="order-3 md:order-4 flex justify-center items-center bg-[#1E1E1E] custom-3d-shadow  custom-card">
-                      <AnnouncementNav />
+                      <AnnouncementNav clubId={club_id} event={eventDetails}/>
                     </div>
                   </div>
                 </CardBody>
@@ -408,7 +408,7 @@ const Exploreevent = () => {
           </div>
 
 
-                    <div className="flex justify-center items-center p-10">
+                    <div className="flex justify-center items-center p-10 mt-28">
             <Card
               className="w-full bg-neutral-900 h-128 relative bg-[#1E1E1E]"
               style={{
