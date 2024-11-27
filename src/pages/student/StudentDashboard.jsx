@@ -70,8 +70,8 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="fixed inset-0 flex">
-      <Sidebar className="flex-shrink-0" />
+    <div className="fixed inset-0 flex flex-col md:flex-row">
+      <Sidebar className="flex-shrink-0 md:w-1/4" />
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
         <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto">

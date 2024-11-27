@@ -19,7 +19,9 @@ const AddNewAnnouncementForm = () => {
 
     const { id } = useParams();
     const { club } = location.state || {};
-
+    const { state } = location;
+    const clubId = state?.club_id || null;
+    
     const handleRadioChange = (e) => {
         setAnnouncementType(e.target.value);
     };
@@ -75,44 +77,43 @@ const AddNewAnnouncementForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!validate()) return;
-
+    
         const token = localStorage.getItem('token');
+    
         try {
             if (id) {
+                // Update announcement
                 const response = await AnnouncementService.updateAnnouncement(
                     id,
                     title,
                     content,
                     announcementType,
-                    club.club_id,
+                    clubId, // Use the passed club_id
                     token
                 );
-
-                //alert('Announcement updated successfully');
+    
                 setShowUpdateSuccessPopup(true);
                 console.log('Announcement updated:', response);
                 setTimeout(() => {
                     navigate(-1);
                 }, 2000);
-
             } else {
+                // Add new announcement
                 const response = await AnnouncementService.saveAnnouncement(
                     title,
                     content,
                     announcementType,
-                    club.club_id,
+                    clubId, // Use the passed club_id
                     token
                 );
-
-                //alert('Announcement added successfully');
+    
                 setShowAddSuccessPopup(true);
                 console.log('Announcement added:', response);
                 setTimeout(() => {
                     navigate(-1);
                 }, 2000);
-                
             }
         } catch (error) {
             console.error("Error processing Announcement:", error);
@@ -121,7 +122,7 @@ const AddNewAnnouncementForm = () => {
             setTimeout(() => setErrors({}), 5000);
         }
     };
-
+    
     const handleCancel = () => {
         navigate(-1);
     };

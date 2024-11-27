@@ -20,6 +20,8 @@ import LikeButton from './LikeButton'; // Make sure this path is correct
 import RegistrationModal from './RegistrationModal'; // Make sure this path is correct
 import EventService from "../service/EventService"; // Ensure correct import
 import ClubsService from "../service/ClubsService"; // Ensure correct import
+import EventRegistrationModal from "./EventRegistrationModal";
+import EventRegistrationService from "../service/EventRegistrationService";
 
 const convertDateToReadableFormat = (dateString) => {
   const date = new Date(dateString);
@@ -49,7 +51,51 @@ const Upcoming = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [clubDetails, setClubDetails] = useState([]);
+  const [isEventRegistered, setIsEventRegistered] = useState(false);
+  const session_id = localStorage.getItem('session_id');
+  
+  const isRegistered = async (event_id) => {
+    const token = localStorage.getItem("token");
+    const session_id = localStorage.getItem('session_id');
+    
+    try {
+      const response2 = await EventRegistrationService.getAllEventRegistrations(token);
+      const eventRegArray = response2.content
+        ? response2.content.filter(eReg => eReg.event_id === event_id && eReg.user_id === session_id)
+        : [];
+  
+      return eventRegArray.length > 0; // Return true if registered, false otherwise
+    } catch (err) {
+      console.log("Error while fetching event registration details", err);
+      return false; // Default to not registered in case of error
+    }
+  };
+  
+  
+  
 
+  useEffect(() => {
+    isRegistered(); // This should only be called once when the component mounts
+  }, [isEventRegistered]);  // Empty dependency array ensures this effect runs once after mount
+  
+  const [registrationStatus, setRegistrationStatus] = useState({});
+
+useEffect(() => {
+  const fetchRegistrationStatuses = async () => {
+    const statusMap = {};
+    for (const event of upcomingEvents) {
+      const isRegisteredStatus = await isRegistered(event.event_id);
+      statusMap[event.event_id] = isRegisteredStatus;
+    }
+    setRegistrationStatus(statusMap);
+  };
+
+  if (upcomingEvents.length > 0) {
+    fetchRegistrationStatuses();
+  }
+}, [upcomingEvents]);
+
+  
   const openModal = (event) => {
     setSelectedEvent(event);
     setIsModalOpen(true);
@@ -129,6 +175,8 @@ const Upcoming = () => {
     fetchEvents();
   }, []);
 
+  
+
   return (
     <div className="p-2 rounded-md relative">
       <h2 className="text-white text-sm font-bold -mt-2">Upcoming</h2>
@@ -168,14 +216,31 @@ const Upcoming = () => {
                   <img src={clubImage} alt="Club" className="w-12 h-12 rounded-full mb-2" />
                   <div className="flex justify-center items-center mt-2">
                     <LikeButton likes={event.likes} />
-                    {canRegister && (
-              <button 
-              className="button-register ml-4" 
-              onClick={() => openModal(event)}
-            >
-              Register
-            </button>
+                    {isEventRegistered === undefined ? (
+              <button className="loading-button">Checking...</button>
+            ) : isEventRegistered ? (
+              <button
+                disabled
+                className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full cursor-not-allowed"
+                style={{
+                  boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                }}
+              >
+                Registered
+              </button>
+            ) : (
+              canRegister && (
+                <button
+                  className="button-register ml-4"
+                  onClick={() => openModal(event)}
+                >
+                  Register
+                </button>
+              )
             )}
+
+
+
                   </div>
                 </div>
               </div>
@@ -185,12 +250,14 @@ const Upcoming = () => {
       </div>
 
       {selectedEvent && (
-        <RegistrationModal
-          event={selectedEvent}
-          isOpen={isModalOpen}
-          onClose={closeModal}
-        />
-      )}
+            <EventRegistrationModal
+              clubId={selectedEvent.club_id}
+              eventDetails={selectedEvent}
+              event={selectedEvent}
+              isOpen={isModalOpen}
+              onClose={closeModal}
+            />
+          )}
     </div>
   );
 };
