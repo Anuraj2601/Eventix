@@ -9,12 +9,14 @@ import AnnouncementService from '../service/AnnouncementService';
 import RegistrationService from '../service/registrationService';
 import UsersService from '../service/UsersService';
 import ClubsService from '../service/ClubsService';
+import { useNavigate } from "react-router-dom";
 
 const MainAnnouncement = () => {
     const [selectedFilter, setSelectedFilter] = useState('allAnnouncements');
     const [selectedClub, setSelectedClub] = useState(null);
     const [viewMode, setViewMode] = useState('new');
     const isAdminPath = location.pathname.startsWith('/admin');
+    const navigate = useNavigate();
 
     const [registeredClubs, setRegisteredClubs] = useState([]);
     const [AllAnnouncements, setAllAnnouncements] = useState([]);
