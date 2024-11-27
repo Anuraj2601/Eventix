@@ -521,7 +521,7 @@ const MeetingsList = () => {
                         ? 'Fetching...'
                         : sendingQRCode[announcement.meeting_id] // Display the fetched QR code value if available
                         ? sendingQRCode[announcement.meeting_id]
-                        : 'Fetch My QR Code'}
+                        : 'Get My QR Code'}
                     </button>
                     
                   ) : (
@@ -544,7 +544,6 @@ const MeetingsList = () => {
 
     {selectedFilter === 'online' && (
       <div>
-        <h2 className="text-lg font-semibold mb-2">Online Meetings</h2>
         {eventMeetings
           .filter((meeting) => {
             const meetingDate = new Date(meeting.date);
@@ -579,7 +578,6 @@ const MeetingsList = () => {
 
     {selectedFilter === 'physical' && (
       <div>
-        <h2 className="text-lg font-semibold mb-2">Physical Meetings</h2>
         {eventMeetings
           .filter((meeting) => {
             const meetingDate = new Date(meeting.date);
