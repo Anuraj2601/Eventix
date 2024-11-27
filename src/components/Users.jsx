@@ -7,6 +7,7 @@ const ExcelUpload = () => {
   const [dialogMessage, setDialogMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
 
+  
   // Function to handle file upload and data extraction
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -75,13 +76,13 @@ const ExcelUpload = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-4">
+    <div className="flex flex-col items-center p-10 overflow-auto">
       <div>
         <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
       </div>
       
       {fileData.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-4 bg-black p-8 rounded-lg">
           <h3>Imported Data:</h3>
           <table className="table-auto border-collapse border border-gray-200">
             <thead>
@@ -105,14 +106,14 @@ const ExcelUpload = () => {
       )}
 
       <button
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        className="mt-4 px-4 py-2 bg-[#AEC90A] text-black rounded-lg"
         onClick={handleUploadAndRegister}
       >
         Upload and Register Users
       </button>
 
       {showDialog && (
-        <div className="mt-4 p-4 bg-green-100 border border-green-300 text-green-700 rounded">
+        <div className="mt-4 p-8 bg-white bg-opacity-50 border border-[#AEC90A] text-black font-bold rounded">
           {dialogMessage}
         </div>
       )}
