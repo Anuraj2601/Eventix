@@ -106,7 +106,10 @@ const Sidebar = () => {
             </li>
 
             <li className={linkClass('/announcement')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
-              <Link to={`/${baseUrl}/announcement`} className="px-3">
+            <Link
+    to={`/${userRole.toLowerCase() === 'admin' ? 'admin' : 'student'}/announcements`}
+    className="px-3"
+  >
                 <BsMegaphone className="inline-block w-9 h-9 mt-1 -ml-0.5" />
               </Link>
             </li>

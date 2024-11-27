@@ -154,6 +154,8 @@ import AddEvent from './components/AddEvent';
 import { ClubMemberNav } from './components/ClubMemberNav';
 import AddNewAnnouncementForm from './pages/president/AddNewAnnouncementForm';
 import AddNewMeetingForm from './pages/president/AddNewMeetingForm';
+
+import AddNewunionAnnouncementForm from './pages/president/AddNewunionAnnouncementForm';
 import AddNewClubForm from './pages/admin/AddNewClubForm';
 
 
@@ -317,13 +319,15 @@ const App = () => {
         <Route path='/student/requests' element={<EventRequests/>}></Route>
         <Route path='/student/users' element={<NewUsers/>}></Route>
         <Route path='/admin/notifications' element={<AdminNotifications  />} ></Route>
-        <Route path='/admin/announcement' element={<Announcementadmin />}></Route> 
+        <Route path='/admin/announcements' element={<Announcementstudent />}></Route> 
         <Route path='/admin/inquiry' element={<Inquiriesadmin/>}></Route>
         <Route path='/admin/messages' element={<Messagesadmin/>}></Route>
         <Route path='/admin/profile' element={<Profileadmin/>}></Route>
         <Route path='/admin/meeting' element={<MainMeetingadmin />}></Route> 
         <Route path='/admin/addclub' element={<AddNewClubForm />}></Route>
+        <Route path="/admin/club/announcement/add" element={<AddNewunionAnnouncementForm/>}></Route>
 
+<Route path="/admin/club/announcement/edit/:id" element={<AddNewunionAnnouncementForm/>}></Route>
 
         <Route path='/treasurer/club' element={<StudentAllClubstreasurer/>}></Route>
         <Route path='/treasurer/club/:name' element={<StudentClubDetailstreasurer/>}></Route>
