@@ -7,26 +7,33 @@ const QrScanner = () => {
 
   useEffect(() => {
     const codeReader = new BrowserMultiFormatReader();
-    
+
     const startScanner = async () => {
       try {
         const videoElement = videoRef.current;
-        // Try to start the video stream
+
+        // Get the video stream from the camera
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "environment" }, // Use back camera
         });
+
+        // Display the video stream
         videoElement.srcObject = stream;
 
-        // Start decoding the video stream
+        console.log("Video stream started");
+
+        // Start decoding the video stream continuously
         codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
           if (result) {
+            console.log("QR Code Detected:", result.getText());
             setScannedData(result.getText());
-            stream.getTracks().forEach(track => track.stop()); // Stop the stream once scanned
+            stream.getTracks().forEach(track => track.stop()); // Stop the stream after detection
           }
           if (err && !(err instanceof ZXing.NotFoundException)) {
-            console.error(err);
+            console.error("Error scanning QR code:", err);
           }
         });
+
       } catch (error) {
         console.error("Error starting the QR scanner:", error);
       }

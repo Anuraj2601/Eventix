@@ -44,7 +44,7 @@ const ExcelUpload = () => {
 
       // Check if all required columns are filled
       if (!firstname || !lastname || !email || !regNo) {
-        setDialogMessage("Missing required fields in one of the records.");
+        setDialogMessage("Missing required fields in one of the records. please ensure that all records have values for firstname, lastname, email, regNo ");
         setShowDialog(true);
         return;
       }
