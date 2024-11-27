@@ -8,18 +8,11 @@ import Feedback from '../../components/Feedback';
 // Import images
 import dp from '../../assets/clubs/ieee.png';
 import dp1 from '../../assets/clubs/rotaract.png';
-import madhackImage from '../../assets/events/flix.jpg';
 import hackathonImage from '../../assets/events/rainbow.jpg';
 import rekaImage from '../../assets/events/journey.jpg';
 import careerfairImage from '../../assets/events/session.jpg';
 import dhackImage from '../../assets/events/install.jpg';
-
-import vesakImage from "../../assets/vesak.jpg";
 import eidImage from "../../assets/farewell.jpg";
-import farewellImage from "../../assets/farewell.jpg";
-import esalaImage from "../../assets/esala.jpg";
-import posonImage from "../../assets/poson.jpg";
-import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
 
@@ -103,16 +96,28 @@ const Dashboard = () => {
 
   return (
     <div className="fixed inset-0 flex flex-col md:flex-row">
-      <Sidebar className="flex-shrink-0 md:w-1/4" />
+      {/* Sidebar */}
+      <Sidebar className="flex-shrink-0 md:w-1/4 w-full" />
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto">
+        <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto flex-col md:flex-row">
+          {/* Events Section */}
           <div className="w-full md:w-1/2 px-2 ml-2 overflow-y-auto">
             {events.length === 0 && <div className='text-[#AEC90A]'>No events yet</div>}
-            {events.length > 0 && events.map(event => <Event event={event} key={event.id} />)}
+            {events.length > 0 && (
+              <div className="space-y-4 md:space-y-8">
+                {events.map(event => (
+                  <div key={event.id} className="flex-shrink-0">
+                    <Event event={event} key={event.id} />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
+          
+          {/* Right Section (Upcoming + Feedback) */}
           <div className="w-full md:w-1/2 flex flex-col py-1 h-full">
-            <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl ">
+            <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl">
               <Upcoming />
             </div>
             <div className="flex-1 overflow-y-auto mb-4">
