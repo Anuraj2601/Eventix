@@ -9,6 +9,7 @@ import RegistrationService from '../service/registrationService'; // Adjust the 
 import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
 import { useNavigate } from "react-router-dom";
 import EventMeetingService from "../service/EventMeetingService";
+import QRScanner from './QrScanner'; // Adjust the path as needed
 
 
 const MeetingsList = () => {
@@ -409,22 +410,34 @@ const MeetingsList = () => {
             className={`px-4 py-2 rounded ${selectedFilter === 'QR' ?  'text-primary border-b-2 border-primary' : 'text-white'}`}
             onClick={() => setSelectedFilter('QR')}
           >
-            QR Code Ccanner
+           QR code Scanner
           </button>
         </div>
 
         {/* Display corresponding image */}
-        <img
-          src={selectedFilter === 'physical' ? physicalMeeting : onlineMeeting}
-          alt={selectedFilter === 'physical' ? "Physical Meeting" : "Online Meeting"}
-          className="w-full h-auto mb-6 shadow-lg"
-        />
-
-        {/* Upcoming Club Meetings Section */}
+        {selectedFilter === 'physical' ? (
+    <img
+      src={physicalMeeting}
+      alt="Physical Meeting"
+      className="w-full h-auto mb-6 shadow-lg"
+    />
+  ) : selectedFilter === 'online' ? (
+    <img
+      src={onlineMeeting}
+      alt="Online Meeting"
+      className="w-full h-auto mb-6 shadow-lg"
+    />
+  ) : (
+    <div>
+      <h2 className="text-lg font-semibold mb-2"></h2>
+      <QRScanner />
+    </div>
+  )}         {(selectedFilter === 'online' || selectedFilter === 'physical') && (
+    <div>
         <h2 className="text-xl font-semibold flex items-center p-5">
           <span>Upcoming Club Meetings</span>
         </h2>
-       
+      
         {/* Participants Section */}
 {/* Participants Section */}
 {selectedMeetingId && (
@@ -473,8 +486,8 @@ const MeetingsList = () => {
       })()
     )}
   </div>
+)} </div>
 )}
-
  
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -525,71 +538,84 @@ const MeetingsList = () => {
             );
           })}
         </div>
-        <div className="mb-2 mt-10">
-  <h1>Upcoming Event OC meetings</h1>
-  {eventMeetings
-    .filter((meeting) => {
-      const meetingDate = new Date(meeting.date);
-      const currentDate = new Date();
+        {(selectedFilter === 'online' || selectedFilter === 'physical') && (
+  <div className="mb-2 mt-10">
+    <h1 className="text-2xl font-bold mb-4">Upcoming Event OC Meetings</h1>
 
-      // Ensure the meeting is in the future
-      return meetingDate > currentDate;
-    })
-    .map((meeting) => (
-      <div key={meeting.e_meeting_id} className="mb-4 border-b border-gray-300 pb-2">
-        <p className="flex items-center space-x-2 overflow-x-auto whitespace-nowrap">
-          <span>
-            <strong>{meeting.meeting_name}</strong>
-          </span>
-          <span className="text-[#AEC90A] font-bold">{formatDate(meeting.date)}</span>
-          <span className="text-[#AEC90A] font-bold">{formatTime(meeting.time)}</span>
-
-          {/* Conditionally display the dot for meeting type */}
-          {meeting.meeting_type === 'ONLINE' ? (
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span> // Green dot for online
-          ) : (
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> // Red dot for physical
-          )}
-
-          <span>at {meeting.venue}</span>
-
-          {/* Conditional "Join" button or "Get QR Code" */}
-          {isMeetingToday(meeting.date) && isTimeClose(meeting.time) ? (
-            meeting.meeting_type === 'ONLINE' ? (
-              <button
-                className="ml-2 p-2 bg-yellow-500 text-white rounded"
-                disabled={false} // Enabled for online meetings when time is close
-              >
-                Join
-              </button>
-            ) : (
-              <button
-                className="ml-2 p-2 bg-yellow-500 text-white rounded"
-              >
-                Get QR Code
-              </button>
-            )
-          ) : (
-            meeting.meeting_type === 'ONLINE' ? (
-              <button
-                className="ml-2 p-2 bg-gray-500 text-white rounded cursor-not-allowed"
-                disabled={true} // Disabled for online meetings outside the time range
-              >
-                Join
-              </button>
-            ) : (
-              <button
-                className="ml-2 p-2 bg-[#AEC90A] text-white rounded cursor-not-allowed"
-                disabled={true} // Disabled for physical meetings outside the time range
-              >
-                Get QR Code
-              </button>
-            )
-          )}
-        </p>
+    {selectedFilter === 'online' && (
+      <div>
+        <h2 className="text-lg font-semibold mb-2">Online Meetings</h2>
+        {eventMeetings
+          .filter((meeting) => {
+            const meetingDate = new Date(meeting.date);
+            const currentDate = new Date();
+            return meetingDate > currentDate && meeting.meeting_type === 'ONLINE';
+          })
+          .map((meeting) => (
+            <div key={meeting.e_meeting_id} className="mb-4 border-b border-gray-300 pb-2">
+              <p className="flex items-center space-x-2 overflow-x-auto whitespace-nowrap">
+                <span>
+                  <strong>{meeting.meeting_name}</strong>
+                </span>
+                <span className="text-[#AEC90A] font-bold">{formatDate(meeting.date)}</span>
+                <span className="text-[#AEC90A] font-bold">{formatTime(meeting.time)}</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span> {/* Green dot */}
+                <span>at {meeting.venue}</span>
+                {isMeetingToday(meeting.date) && isTimeClose(meeting.time) ? (
+                  <button className="ml-2 p-2 bg-yellow-500 text-white rounded">Join</button>
+                ) : (
+                  <button
+                    className="ml-2 p-2 bg-gray-500 text-white rounded cursor-not-allowed"
+                    disabled
+                  >
+                    Join
+                  </button>
+                )}
+              </p>
+            </div>
+          ))}
       </div>
-    ))}
-</div>
+    )}
+
+    {selectedFilter === 'physical' && (
+      <div>
+        <h2 className="text-lg font-semibold mb-2">Physical Meetings</h2>
+        {eventMeetings
+          .filter((meeting) => {
+            const meetingDate = new Date(meeting.date);
+            const currentDate = new Date();
+            return meetingDate > currentDate && meeting.meeting_type === 'PHYSICAL';
+          })
+          .map((meeting) => (
+            <div key={meeting.e_meeting_id} className="mb-4 border-b border-gray-300 pb-2">
+              <p className="flex items-center space-x-2 overflow-x-auto whitespace-nowrap">
+                <span>
+                  <strong>{meeting.meeting_name}</strong>
+                </span>
+                <span className="text-[#AEC90A] font-bold">{formatDate(meeting.date)}</span>
+                <span className="text-[#AEC90A] font-bold">{formatTime(meeting.time)}</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> {/* Red dot */}
+                <span>at {meeting.venue}</span>
+                {isMeetingToday(meeting.date) && isTimeClose(meeting.time) ? (
+                  <button className="ml-2 p-2 bg-yellow-500 text-white rounded">
+                    Get QR Code
+                  </button>
+                ) : (
+                  <button
+                    className="ml-2 p-2 bg-[#AEC90A] text-white rounded cursor-not-allowed"
+                    disabled
+                  >
+                    Get QR Code
+                  </button>
+                )}
+              </p>
+            </div>
+          ))}
+      </div>
+    )}
+  </div>
+)}
+
       </div>
     );
   };
