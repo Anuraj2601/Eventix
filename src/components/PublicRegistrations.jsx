@@ -26,10 +26,11 @@ const PublicRegistration = ({ event }) => {
 
 
       const initialCheckedInStatus = registrations.reduce((acc, reg) => {
-        acc[reg.ereg_id] = reg._checked;
+        acc[reg.id] = reg.checkedInStatus; // Use 'ereg_id' for unique identifier and '_checked' for status
         return acc;
       }, {});
       setCheckedInStatus(initialCheckedInStatus);
+      
     } catch (error) {
       console.error("Error fetching event registration details", error);
       setError("Failed to fetch registration details.");
@@ -39,22 +40,43 @@ const PublicRegistration = ({ event }) => {
   // Handle check-in toggle
   const handleCheckInToggle = async (registrationId) => {
     try {
-      // Toggle the check-in status
-      const updatedStatus = !checkedInStatus[registrationId];
-      
-      // Update check-in status in the backend
-      const response = await updateCheckInStatus(registrationId, updatedStatus);
-
-      // Update the local state to reflect the new check-in status
-      setCheckedInStatus((prevStatus) => ({
-        ...prevStatus,
-        [registrationId]: updatedStatus,
-      }));
+      // Optimistically update the local state
+      const updatedRegistrations = eventRegistrations.map((registration) => {
+        if (registration.id === registrationId) {
+          // Toggle check-in status immediately
+          registration.checkInStatus = registration.checkInStatus === 1 ? 0 : 1;
+        }
+        return registration;
+      });
+  
+      setEventRegistrations(updatedRegistrations);
+  
+      // Optionally save to localStorage for persistence
+      localStorage.setItem('registrations', JSON.stringify(updatedRegistrations));
+  
+      // Send the updated status to the backend
+      const updatedStatus = updatedRegistrations.find(
+        (reg) => reg.id === registrationId
+      ).checkInStatus;
+  
+      await updateCheckInStatus(registrationId, updatedStatus);
     } catch (error) {
       console.error("Error updating check-in status", error);
       setError("Failed to update check-in status.");
+  
+      // Revert state in case of an error
+      const revertedRegistrations = eventRegistrations.map((registration) => {
+        if (registration.id === registrationId) {
+          // Revert to previous state
+          registration.checkInStatus = registration.checkInStatus === 1 ? 0 : 1;
+        }
+        return registration;
+      });
+  
+      setEventRegistrations(revertedRegistrations);
     }
   };
+  
 
   // Fetch registrations when event_id changes
   useEffect(() => {
@@ -64,8 +86,7 @@ const PublicRegistration = ({ event }) => {
   const getRegistrationCounts = () => {
     const totalRegistrations = eventRegistrations.length;
     const checkedInCount = eventRegistrations.filter(
-      (reg) => checkedInStatus[reg.ereg_id]
-    ).length;
+      (reg) => reg.checkInStatus === 1    ).length;
     return { totalRegistrations, checkedInCount };
   };
 
@@ -188,7 +209,6 @@ const PublicRegistration = ({ event }) => {
                         {registration.participantName || "User"}
                       </p>
                       <p className="text-sm text-gray-400">{registration.email}</p>
-                      <p className="text-sm text-gray-400">{registration.id}</p>
                       <p className="text-sm text-gray-400">{registration.mobile}</p>
                     </div>
                   </div>
@@ -196,10 +216,13 @@ const PublicRegistration = ({ event }) => {
                   <div className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={checkedInStatus[registration.ereg_id]}
-                      onChange={() => handleCheckInToggle(registration.ereg_id)}
-                      className="w-6 h-6 rounded-lg border-gray-500"
-                    />
+                      checked={registration.checkInStatus === 1} 
+                      onChange={() => handleCheckInToggle(registration.id)}
+                      className="w-6 h-6 rounded-lg border-[#AEC90A] transition-all duration-300"
+                      style={{
+                        backgroundColor: registration.checkInStatus === 1 ? '#AEC90A' : '', // AE code color when checked
+                        borderColor: registration.checkInStatus === 1 ? '#AEC90A' : '', // AE code color when checked
+                      }}                   />
                   </div>
                 </div>
               ))}
