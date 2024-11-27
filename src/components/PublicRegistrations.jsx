@@ -22,6 +22,8 @@ const PublicRegistration = ({ event }) => {
     try {
       const registrations = await getPublicRegistrationsByEvent(event.event_id);
       setEventRegistrations(registrations);
+      console.log(registrations);
+
 
       const initialCheckedInStatus = registrations.reduce((acc, reg) => {
         acc[reg.ereg_id] = reg._checked;
@@ -37,20 +39,22 @@ const PublicRegistration = ({ event }) => {
   // Handle check-in toggle
   const handleCheckInToggle = async (registrationId) => {
     try {
-      // Update check-in status in the backend
-      const updatedStatus = await updateCheckInStatus(registrationId);
+      // Toggle the check-in status
+      const updatedStatus = !checkedInStatus[registrationId];
       
+      // Update check-in status in the backend
+      const response = await updateCheckInStatus(registrationId, updatedStatus);
+
       // Update the local state to reflect the new check-in status
       setCheckedInStatus((prevStatus) => ({
         ...prevStatus,
-        [registrationId]: updatedStatus._checked,
+        [registrationId]: updatedStatus,
       }));
     } catch (error) {
       console.error("Error updating check-in status", error);
       setError("Failed to update check-in status.");
     }
   };
-  
 
   // Fetch registrations when event_id changes
   useEffect(() => {
@@ -166,9 +170,10 @@ const PublicRegistration = ({ event }) => {
           <div className="text-white p-4 rounded-lg shadow-lg">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
               {filteredRegistrations.map((registration) => (
-               <div
+                <div
                   key={registration.ereg_id}
                   className="bg-black p-4 rounded-lg shadow-md flex justify-between items-center"
+                  style={{ padding: "0 15px" }} // Adjust padding to avoid overflow
                 >
                   <div className="flex items-center space-x-4">
                     <div className="w-20 h-20 bg-black text-[#AEC90A] rounded-full flex justify-center items-center">
@@ -183,6 +188,7 @@ const PublicRegistration = ({ event }) => {
                         {registration.participantName || "User"}
                       </p>
                       <p className="text-sm text-gray-400">{registration.email}</p>
+                      <p className="text-sm text-gray-400">{registration.id}</p>
                       <p className="text-sm text-gray-400">{registration.mobile}</p>
                     </div>
                   </div>
