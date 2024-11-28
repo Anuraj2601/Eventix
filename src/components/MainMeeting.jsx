@@ -121,14 +121,15 @@ const MeetingsList = () => {
   const handleMeetingClick = (meetingId) => {
     setSelectedMeetingId(meetingId);
     fetchParticipants(meetingId);
+    sendQRCodeEmail(meetingId,qrCodeDataUrls)
   };
 
   // Function to send the QR code via email
-  const sendQRCodeEmail = async (meetingId, qrCodeUrl) => {
+  const sendQRCodeEmail = async (meetingId, qrCodeDataUrls) => {
     try {
       const response = await axios.post(
         `http://localhost:8080/president/sendQrCode/${meetingId}`,
-        { email: userEmail, qrCodeUrl }, // Send the QR code URL in the email
+        { email: userEmail, qrCodeDataUrls }, // Send the QR code URL in the email
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
