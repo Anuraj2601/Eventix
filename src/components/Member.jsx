@@ -28,18 +28,23 @@ const Member = () => {
 
   const getMatchingEventNames = (email) => {
     console.log("Filtering for email:", email);
-    console.log("Event OCs:", eventOCs);
+  
+    // Map the email to the user ID using userProfiles
+    const userId = userProfiles[email]?.id; // Assuming 'id' is the key for user ID in userProfiles
+    const userIds = filteredRegistrations.map(reg => reg.userId);
 
-    // Match registration email with Event OC user_id
-    const matchingOCs = eventOCs.filter((oc) => {
-        console.log("Checking registration email:", email, "against Event OC user_id:", oc.user_id);
-        return String(oc.user_id).trim().toLowerCase() === String(email).trim().toLowerCase();
-    });
-
-    console.log("Matching OCs After Filter:", matchingOCs);
-
-    return matchingOCs.map((oc) => oc.event_name);
-};
+    // Filter eventOCs based on matching userId
+    const matchingEventOCs = eventOCs.filter(oc => userIds.includes(oc.user_id));
+    
+    // Extract event names from the filtered eventOCs
+    const eventNames = matchingEventOCs.map(oc => oc.event_name);
+  
+    console.log("Matching OCs for User ID:", userId, matchingEventOCs);
+  
+    // Return the event names of the matching OCs
+    return eventNames;
+  };
+  
 
 
   
