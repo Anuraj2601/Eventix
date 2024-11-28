@@ -24,26 +24,54 @@ const BudgetTable = () => {
   const [registrationsData, setRegistrationsData] = useState([]);
   const [checkedInStatus, setCheckedInStatus] = useState({});
   const [eventNames, setEventNames] = useState({}); // To store event names
+  const [uniqueEvents, setUniqueEvents] = useState([]); // State for storing unique events
+  const [events, setEvents] = useState([]);  // Initialize state with an empty array
 
+  
   useEffect(() => {
     const fetchEventNames = async () => {
-      try {
-        const eventIds = Array.from(new Set(allBudgets.map((item) => item.event_id)));
-        const eventData = await EventService.getEventNamesByIds(eventIds);
-        const names = eventData.reduce((acc, event) => {
-          acc[event.event_id] = event.name;
-          return acc;
-        }, {});
-        setEventNames(names);
-      } catch (error) {
-        console.error("Error fetching event names:", error);
-      }
+        try {
+            // Fetch all events
+            const allEvents = await EventService.getAllEvents();  // Assuming this endpoint fetches all events
+            setEvents(allEvents);
+            // Create a set of event IDs from the budgets
+            const eventIds = Array.from(new Set(allBudgets.map((item) => item.event_id)));
+
+            // Filter the fetched events by event_id
+            const filteredEvents = allEvents.filter(event => eventIds.includes(event.event_id));
+
+            // Create a mapping of event_id to event name
+            const names = filteredEvents.reduce((acc, event) => {
+                acc[event.event_id] = event.name;
+                return acc;
+            }, {});
+
+            // Set the event names to state
+            setEventNames(names);
+        } catch (error) {
+            console.error("Error fetching event names:", error);
+        }
     };
 
+    // Only fetch if there are any budgets to avoid unnecessary fetch calls
     if (allBudgets.length) {
-      fetchEventNames();
+        fetchEventNames();
     }
-  }, [allBudgets]);
+  }, [allBudgets]); // Dependency on allBudgets, so it will refetch when the budgets array changes
+
+  useEffect(() => {
+    // Create unique events only after eventNames are updated
+    if (Object.keys(eventNames).length > 0 && allBudgets.length > 0) {
+        const uniqueEventsList = Array.from(new Set(allBudgets.map((item) => item.event_id)))
+            .map((eventId) => ({
+                event_id: eventId,
+                event_name: eventNames[eventId] || `Event ${eventId}`,
+            }));
+        setUniqueEvents(uniqueEventsList);
+    }
+  }, [eventNames, allBudgets]); // Re-run when either eventNames or allBudgets changes
+ // Dependency on allBudgets, so it will refetch when the budgets array changes
+
 
 useEffect(() => {
   const fetchData = async () => {
@@ -135,11 +163,7 @@ useEffect(() => {
     }
   });
 
- const uniqueEvents = Array.from(new Set(allBudgets.map((item) => item.event_id)))
-    .map((eventId) => ({
-      event_id: eventId,
-      event_name: eventNames[eventId] || `Event ${eventId}`,
-    }));
+
 
   // Generate a unique color for each event ID
   const generateColor = (index) => {
@@ -210,7 +234,24 @@ useEffect(() => {
           <Typography color="white" variant="h4" className="mb-4 text-center">
             Event Reports
           </Typography>
-
+          <tbody>
+            {events.map((event) => (
+              <tr key={event.event_id} className="border-t">
+                <td className="px-4 py-2">{event.event_id}</td>
+                <td className="px-4 py-2">{event.event_name}</td>
+                <td className="px-4 py-2">
+                  {registrationsData
+                    .filter((reg) => reg.event_id === event.event_id)
+                    .reduce((acc, reg) => acc + reg.registrations, 0)}
+                </td>
+                <td className="px-4 py-2">
+                  {registrationsData
+                    .filter((reg) => reg.event_id === event.event_id)
+                    .reduce((acc, reg) => acc + reg.checkins, 0)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
           {/* Grouped Bar Chart for Costs and Incomes */}
           <Typography color="white" variant="h5" className="mb-4 text-center">
             Costs and Incomes Grouped by Event ID

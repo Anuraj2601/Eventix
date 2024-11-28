@@ -58,12 +58,10 @@ const Login = () => {
   };
 
   const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!password) return "Password is required";
-    if (!passwordRegex.test(password))
-      return "Password must be at least 8 characters";
-    return "";
+    return "";  // No additional checks, any non-empty string is valid
   };
+  
 
   const validate = () => {
     const emailError = validateEmail(email);
@@ -136,7 +134,7 @@ const Login = () => {
           }
         } else {
           setShowBadCredentialsPopup(true);
-          setErrors({ ...errors, global: userData.message });
+          setErrors({ ...errors, global: "Invalid email or password" });
         }
       } catch (error) {
         const errorMessage = error.response
@@ -178,9 +176,54 @@ const Login = () => {
       {/* Right Side */}
       <div className="lg:w-1/2 w-full bg-dark-background flex flex-col justify-center px-6 lg:px-10 py-8 border-t border-r border-b border-white border-opacity-30">
         <form onSubmit={handleSubmit} className="space-y-6 mx-auto w-full lg:w-[60%]">
-          {errors.global && (
-            <p className="text-red-700 text-sm">{errors.global}</p>
-          )}
+         
+
+{showPopup && (
+  <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-[9999]">
+    <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+    <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105 z-[10000]">
+      <span
+        className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+        onClick={handleClosePopup}
+      >
+        &times;
+      </span>
+      <h2 className="text-[15px] font-semibold text-dark-400 mb-4">
+        Leave without Login?
+      </h2>
+      <button
+        className="bg-primary text-white px-4 py-2 w-32 text-[14px] rounded font-medium mr-2 hover:bg-dark-400"
+        onClick={handleOkClick}
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
+{showBadCredentialsPopup && (
+  <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-[9999]">
+    <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+    <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105 z-[10000]">
+      <span
+        className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+        onClick={handleLoginPopup}
+      >
+        &times;
+      </span>
+      <h2 className="text-[15px] font-semibold text-dark-400 mb-4">
+        <span className="text-red-600">Invalid email or password</span>
+      </h2>
+      <button
+        className="bg-primary text-white px-4 py-2 w-32 text-[14px] rounded font-medium mr-2 hover:bg-dark-400"
+        onClick={handleLoginPopup}
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
+
+
           <div>
             <label htmlFor="username" className="block text-white text-sm mb-4">
               User Name
@@ -190,7 +233,7 @@ const Login = () => {
               id="username"
               name="username"
               className="w-full px-4 py-2 h-[50px] bg-dark-400 text-white border border-white opacity-50 rounded"
-              placeholder="2021cs100"
+              placeholder="2021cs100@stu.ucsc.cmb.ac.lk"
               value={email}
               onChange={handleEmailChange}
             />
@@ -244,7 +287,7 @@ const Login = () => {
             <div className="text-right mt-4">
             <Link
               to="/forgot-password"
-              className="text-sm text-blue-500 hover:underline hover:text-blue-700 transition"
+              className="text-sm text-[#AEC90A] hover:underline hover:text-blue-700 transition"
             >
               Forgot password?
             </Link>
