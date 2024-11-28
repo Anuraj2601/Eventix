@@ -171,13 +171,33 @@ const MeetingsList = () => {
       console.error("Error fetching registrations:", error);
     }
   };
-  const validPositionsboard = ["president", "secretary", "treasurer"];
-  const filteredRegistrationsboard = registrations.filter(
-    (reg) =>
-      reg.email === userId &&
-      reg.accepted === 1 &&
-      validPositionsboard.includes(reg.position.toLowerCase())
-  );
+
+  const validBoardPositions = ['president', 'treasurer', 'secretary'];
+
+  const isUserEligibleForClubBoard = () => {
+    console.log("Checking user eligibility for CLUB_BOARD...");
+  
+    const eligible = registrations.some((reg) => {
+      const isEligible = 
+        reg.userId === userId && 
+        validBoardPositions.includes(reg.position.toLowerCase()) &&
+        reg.accepted === 1;
+  
+      // Log the condition checks for each registration
+      console.log(
+        `Checking registration for user ${reg.userId}:`,
+        `Position: ${reg.position}, Accepted: ${reg.accepted}`,
+        `Eligible: ${isEligible}`
+      );
+  
+      return isEligible;
+    });
+  
+    // Log the result of the eligibility check
+    console.log("Is user eligible for CLUB_BOARD:", eligible);
+    return eligible;
+  };
+  
 
   const validPositions = ["president", "member", "secretary", "treasurer", "oc"];
   const filteredRegistrations = registrations.filter(
@@ -406,12 +426,14 @@ const MeetingsList = () => {
           >
             Online Meetings
           </button>
+          {isUserEligibleForClubBoard() && (
+
           <button
             className={`px-4 py-2 rounded ${selectedFilter === 'QR' ?  'text-primary border-b-2 border-primary' : 'text-white'}`}
             onClick={() => setSelectedFilter('QR')}
           >
            QR code Scanner
-          </button>
+          </button>  )}
         </div>
 
         {/* Display corresponding image */}
