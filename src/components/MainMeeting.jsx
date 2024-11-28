@@ -421,11 +421,25 @@ const MeetingsList = () => {
         </div>
 
         {/* Display corresponding image */}
-        <img
-          src={selectedFilter === 'physical' ? physicalMeeting : onlineMeeting}
-          alt={selectedFilter === 'physical' ? "Physical Meeting" : "Online Meeting"}
-          className="w-full h-auto mb-6 shadow-lg"
-        />
+        {selectedFilter === 'physical' ? (
+    <img
+      src={physicalMeeting}
+      alt="Physical Meeting"
+      className="w-full h-auto mb-6 shadow-lg"
+    />
+  ) : selectedFilter === 'online' ? (
+    <img
+      src={onlineMeeting}
+      alt="Online Meeting"
+      className="w-full h-auto mb-6 shadow-lg"
+    />
+  ) : (
+    <div>
+      <h2 className="text-lg font-semibold mb-2"></h2>
+      <QRScanner />
+    </div>
+  )}    
+  
 
         {/* Upcoming Club Meetings Section */}
         <h2 className="text-xl font-semibold flex items-center p-5">
