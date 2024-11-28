@@ -219,7 +219,7 @@ const App = () => {
         <Route path='/student/calendar' element={<StudentEventCalendar />}></Route>
         <Route path='/student' element={<StudentDashboard/>}></Route>
         <Route path='/student/inquiry' element={<Inquiriesstudent/>}></Route>
-        <Route path='/student/announcement' element={<Announcementstudent />}></Route> 
+        <Route path='/student/announcements' element={<Announcementstudent />}></Route> 
         <Route path='/student/messages' element={<Messagesstudent/>}></Route>
         <Route path='/student/profile' element={<Profilestudent/>}></Route>
         <Route path='/student/meeting' element={<MainMeetingstudent />}></Route> 
