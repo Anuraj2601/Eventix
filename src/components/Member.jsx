@@ -208,14 +208,19 @@ const Member = () => {
                       <h3 className="text-xl font-semibold mb-2">{userProfiles[reg.email]?.name || 'Unknown'}</h3>
                       <p className="mb-2"><strong>Team:</strong> {reg.team}</p>
                       <p className="mb-4"><strong>Email:</strong> {reg.email}</p>
-<p className="mb-4">
-                    <strong>Associated Events:</strong>
-                  </p>
-                  <ul className="list-disc list-inside">
-  {getMatchingEventNames(reg.userId).map((eventName, index) => (
-    <li key={index}>{eventName}</li>
-  ))}
-</ul>
+                      {getMatchingEventNames(reg.userId).length > 0 && (
+  <>
+    <p className="mb-4">
+      <strong>Associated Events:</strong>
+    </p>
+    <ul className="list-disc list-inside">
+      {getMatchingEventNames(reg.userId).map((eventName, index) => (
+        <li key={index}>{eventName}</li>
+      ))}
+    </ul>
+  </>
+)}
+
                      {isPresidentView && (
                         <div className="flex justify-end">
                           <button
