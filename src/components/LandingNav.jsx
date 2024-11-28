@@ -20,13 +20,13 @@ const LandingNav = () => {
     }
   };
 
-   const navItems = [
+  const navItems = [
     { label: "Home", href: "#" },
     { label: "Events", href: "#" },
     { label: "Clubs", href: "#" },
     { label: "About-us", href: "#" },
   ];
-  
+
 
   return (
     <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80 font-medium">
@@ -39,19 +39,17 @@ const LandingNav = () => {
             {navItems.map((item, index) => (
               <li key={index} className="relative group">
                 <button
-                  className={`hover:text-[#AEC90A] ${
-                    activeItem === item.label ? "text-[#AEC90A]" : "text-white"
-                  }`}
+                  className={`hover:text-[#AEC90A] ${activeItem === item.label ? "text-[#AEC90A]" : "text-white"
+                    }`}
                   onClick={() => handleScroll(item.label)}
                 >
                   {item.label}
                 </button>
                 <span
-                  className={`absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 bg-[#AEC90A] rounded-full transition-opacity ${
-                    activeItem === item.label
+                  className={`absolute left-1/2 transform -translate-x-1/2 -bottom-3 w-2 h-2 bg-[#AEC90A] rounded-full transition-opacity ${activeItem === item.label
                       ? "opacity-100"
                       : "opacity-0 group-hover:opacity-100"
-                  }`}
+                    }`}
                 ></span>
               </li>
             ))}
@@ -74,17 +72,17 @@ const LandingNav = () => {
             </a>
           </div>
 
-          <div className="lg:hidden md:flex flex-col justify-end">
+          <div className="lg:hidden md:flex flex-col justify-end text-white">
             <button onClick={toggleNavbar}>
               {mobileDrawerOpen ? <X /> : <Menu />}
             </button>
           </div>
         </div>
         {mobileDrawerOpen && (
-          <div className="fixed right-0 z-20 bg-neutral-900 w-full p-12 flex flex-col justify-center items-center lg:hidden text-base font-normal">
+          <div className="fixed right-0 z-20 bg-dark-400 border border-radious-25 text-white w-full p-12 flex flex-col justify-center items-center lg:hidden text-base font-normal">
             <ul>
               {navItems.map((item, index) => (
-                <li key={index} className="py-4">
+                <li key={index} className=" ml-96 py-4">
                   <button
                     onClick={() => {
                       setMobileDrawerOpen(false);

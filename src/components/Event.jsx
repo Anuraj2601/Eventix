@@ -23,11 +23,11 @@ const Event = ({ event }) => {
     };
 
     return (
-        <div className="relative flex items-center justify-start mr-2 mt-2 mb-8 px-10">
+        <div className="relative flex flex-col sm:flex-row items-center justify-start mr-2 mt-2 mb-8 px-10 sm:px-5">
             <div className='bg-[#0b0b0b] p-5 w-full rounded-md' style={{ 
                 boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' 
             }}>
-                <div className="flex flex-row items-center justify-between mb-6">
+                <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
                         <img src={event.publisher_img} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
                         <div>
@@ -42,9 +42,9 @@ const Event = ({ event }) => {
                     </div>
                 </div>
                 <div className="relative">
-                    <img src={event.image} alt="" className='object-cover w-full h-96' />
+                    <img src={event.image} alt="" className='object-cover w-full h-64 sm:h-96' />
                     <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between bg-black bg-opacity-80 p-4 text-white">
-                        <div className="flex items-center gap-4">
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
                             <div className="flex items-center gap-2">
                                 <FaCalendar className='text-[#AEC90A]' size={20} />
                                 <span>{event.date}</span>

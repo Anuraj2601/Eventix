@@ -44,8 +44,8 @@ const FullCalendar = () => {
       const fetchedRegistrations = response.data || response.content || [];
       setRegistrations(fetchedRegistrations);
   
-      // Logs here may not show updated state yet
-      console.log('Registrations:', registrations); // Might log the previous state
+    
+      console.log('Registrations:', registrations); 
     } catch (error) {
       console.error("Error fetching registrations:", error);
     }
