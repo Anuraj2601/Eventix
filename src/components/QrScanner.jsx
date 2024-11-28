@@ -9,7 +9,7 @@ const QrScanner = () => {
   useEffect(() => {
     const scanner = new Html5QrcodeScanner("qr-reader", {
       fps: 10, // Frames per second
-      qrbox: { width: 250, height: 250 }, // Scanning box dimensions
+      qrbox: { width: 500, height: 250 }, // Scanning box dimensions
     });
 
     scanner.render(
@@ -54,6 +54,10 @@ const QrScanner = () => {
     }
   }, [userId, meetingId]); // Trigger whenever userId or meetingId changes
 
+  const closeModal = () => {
+    setSuccessMessage(""); // Clear the success message to close the dialog
+  };
+
   return (
     <div
       className="flex flex-col items-center justify-center min-h-screen p-10"
@@ -71,33 +75,25 @@ const QrScanner = () => {
         }}
       ></div>
 
-      {scannedResult && (
-        <div
-          className="mt-4 px-4 py-2 bg-[#AEC90A] text-white rounded"
-          style={{ width: "300px" }}
-        >
-          <strong>QR Code scanned successfully:</strong>
-          <div>
-            <strong>User ID: </strong>
-            {userId}
-          </div>
-          <div>
-            <strong>Club ID: </strong>
-            {clubId}
-          </div>
-          <div>
-            <strong>Meeting ID: </strong>
-            {meetingId}
-          </div>
-        </div>
-      )}
+     
 
-      {successMessage && (
+{successMessage && (
         <div
-          className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
-          style={{ width: "300px" }}
+          className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
         >
-          {successMessage}
+          <div
+            className="bg-white text-black rounded p-6 shadow-lg"
+            style={{ width: "300px", textAlign: "center" }}
+          >
+            <p>{successMessage}</p>
+            <button
+              onClick={closeModal}
+              className="mt-4 px-4 py-2 bg-[#AEC90A] text-white rounded hover:bg-black"
+            >
+              OK
+            </button>
+          </div>
         </div>
       )}
     </div>
