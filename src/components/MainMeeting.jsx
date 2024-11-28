@@ -565,6 +565,8 @@ const MeetingsList = () => {
             );
           })}
         </div>
+        {(selectedFilter === 'online' || selectedFilter === 'physical') && (
+
         <div className="mb-2 mt-10">
   <h1>Upcoming Event OC meetings</h1>
   {eventMeetings
@@ -629,7 +631,7 @@ const MeetingsList = () => {
         </p>
       </div>
     ))}
-</div>
+</div>)}
       </div>
     );
   };
