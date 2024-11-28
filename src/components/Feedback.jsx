@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ieeePast2 from "../assets/events/reid2.jpg"; // Example image
 import EventService from "../service/EventService"; // Ensure correct import
+import EventFeedbackService from "../service/EventFeedbackService";
 
 const Feedback = () => {
   const [selectedFeedback, setSelectedFeedback] = useState(null);
@@ -56,6 +57,7 @@ const Feedback = () => {
         .map((event) => {
           return {
             event_id: event.event_id,
+            club_id: event.club_id,
             name: event.name,
             venue: event.venue,
             image: event.event_image || ieeePast2, // Fallback to example image
@@ -79,10 +81,52 @@ const Feedback = () => {
     setFeedback(event.target.value);
   };
 
-  const handleSubmit = () => {
-    alert("Feedback submitted!");
-    setFeedback(""); // Clear feedback
-    setIsFormVisible(false); // Hide form after submission
+  // const handleSubmit = () => {
+  //   alert("Feedback submitted!");
+  //   setFeedback(""); // Clear feedback
+  //   setIsFormVisible(false); // Hide form after submission
+  // };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!feedback || feedback.trim() === '') {
+      alert("Please enter your feedback");
+    }
+
+    const token = localStorage.getItem('token');
+    const session_id = localStorage.getItem('session_id');
+    console.log("event details", selectedFeedback);
+    try {
+      
+      await EventFeedbackService.saveEventFeedback(
+          feedback,
+          selectedFeedback.club_id,
+          selectedFeedback.event_id,
+          session_id,
+          token
+      );
+      
+      alert('Feedback successful!');
+      setFeedback(""); // Clear feedback
+      setIsFormVisible(false); // Hide form after submission
+      // setShowAddSuccessPopup(true);
+      // setTimeout(() => {
+      //   onClose(); // Close modal after popup is shown
+      // }, 2000);
+
+
+    } catch (error) {
+        const errorMessage = error.message || 'Failed to submit the form.';
+        console.error(errorMessage);
+        alert(errorMessage);
+    }
+
+
+
+    // alert("Feedback submitted!");
+    // setFeedback(""); // Clear feedback
+    // setIsFormVisible(false); // Hide form after submission
   };
 
   const handleEmojiClick = (eventId, emoji) => {
@@ -103,8 +147,10 @@ const Feedback = () => {
           <div
             key={event.event_id}
             className="w-full flex items-start mb-4 p-1"
-            onClick={() => setSelectedFeedback(event)}
+            
+           
           >
+            
             <img
               src={event.image}
               alt={event.name}
@@ -120,6 +166,7 @@ const Feedback = () => {
               }}
             >
               {isFormVisible ? (
+                <form>
                 <div className="feedback-form bg-neutral-800 p-2 rounded-lg">
                   <p className="text-white text-lg font-bold mb-2">We welcome your feedback!</p>
                   <textarea
@@ -130,12 +177,14 @@ const Feedback = () => {
                     rows="3"
                   />
                   <button
+                    type="submit"
                     onClick={handleSubmit}
                     className="w-auto p-2 bg-[#AEC90A] text-black rounded-lg mt-4"
                   >
                     Submit Feedback
                   </button>
                 </div>
+                </form>
               ) : (
                 <div className="flex flex-col h-full ml-2">
                   <div>
@@ -163,7 +212,10 @@ const Feedback = () => {
                     <p className="text-gray-400 mb-2">
                       {event.details}
                       <button
-                        onClick={() => setIsFormVisible(true)}
+                        onClick={() => {
+                          setIsFormVisible(true); // Show the form
+                          setSelectedFeedback(event); // Set the selected event
+                        }}
                         className="ml-4 mt-2 py-1 px-3 bg-[#AEC90A] text-black rounded-lg right-0"
                       >
                         Give Feedback
