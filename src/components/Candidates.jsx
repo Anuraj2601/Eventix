@@ -15,6 +15,9 @@ const Candidates = ({ activeTab }) => {
     const [message, setMessage] = useState(""); 
     const [eventOCs, setEventOCs] = useState([]);
     const [userProfiles, setUserProfiles] = useState([]); // Initialize as an array
+    const [meetingParticipants, setMeetingParticipants] = useState([]);
+
+    
 
     useEffect(() => {
         const fetchUserProfiles = async () => {
@@ -115,6 +118,36 @@ const Candidates = ({ activeTab }) => {
         };
         fetchCandidates();
     }, []);
+
+    useEffect(() => {
+        const fetchMeetingParticipants = async () => {
+            const promises = candidates.map(async (candidate) => {
+                const events = getEventNamesForCandidate(candidate);
+                const userId = candidate.user_id;
+                const clubId = candidate.clubId;
+                
+                try {
+                    const response = await axios.get(
+                        `http://localhost:8080/api/meeting-participants/user/${userId}/club/${clubId}`
+                    );
+                    return {
+                        candidate,
+                        meetingParticipants: response.data,
+                        events
+                    };
+                } catch (error) {
+                    console.error('Error fetching meeting participants:', error);
+                    return null;
+                }
+            });
+            
+            const results = await Promise.all(promises);
+            const filteredResults = results.filter(result => result !== null);
+            setMeetingParticipants(filteredResults);
+        };
+
+        fetchMeetingParticipants();
+    }, [candidates, userProfiles, eventOCs]);
 
     const filterCandidates = (candidates) => {
         const electionIdFromUrl = window.location.pathname.split('/').pop(); // Extract the last part of the URL (electionId)
@@ -221,12 +254,48 @@ const Candidates = ({ activeTab }) => {
                       <Typography variant="h5" className="mb-2">
                           {category}
                       </Typography>
+                       <tbody>
+          {meetingParticipants.length > 0 ? (
+            meetingParticipants.map(({ candidate, meetingParticipants, events }) => (
+              <tr key={candidate.id}>
+                <td className="px-4 py-2">
+                  <div className="flex items-start gap-4">
+                    <Avatar
+                      className="w-16 h-16 rounded-full"
+                      src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`}
+                    />
+                    <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
+                  </div>
+                </td>
+                <td className="px-4 py-2">{candidate.clubId}</td>
+                <td className="px-4 py-2">
+                  {events.length > 0 ? events.join(', ') : 'No Events'}
+                </td>
+                <td className="px-4 py-2">
+                  {meetingParticipants.length > 0
+                    ? meetingParticipants[0].attendance === 1
+                      ? 'Present'
+                      : 'Absent'
+                    : 'N/A'}
+                </td>
+                <td className="px-4 py-2">
+                  {meetingParticipants.length > 0 ? meetingParticipants[0].qrCodeUser : 'No QR Code'}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="px-4 py-2 text-center">Loading...</td>
+            </tr>
+          )}
+        </tbody>
                       {sortedCandidates.length > 0 ? (
                             sortedCandidates.map(candidate => {
                                 // Find the matching user profile for this candidate
                                 const userProfile = userProfiles.find(profile => profile.user_id === candidate.user_id);
                                 const associatedEvents = getEventNamesForCandidate(candidate); // Store the event names result
             
+                                
                                 return (
                             
                               <Card key={candidate.id} className="mb-4 bg-black text-white">
@@ -239,7 +308,8 @@ const Candidates = ({ activeTab }) => {
                                           {/* Details in the Middle */}
                                           <div className="flex-grow flex flex-col gap-4 w-1/3">
                                               <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
-                                              
+                                              <Typography variant="h6">{candidate.clubId || 'No Name'}</Typography>
+
                                               <Typography variant="h6">{candidate.userEmail || 'No Name'}</Typography>
                                               <Typography variant="h6">Position they Applied for : {candidate.position }</Typography>
 
