@@ -51,7 +51,6 @@ const MeetingsList = () => {
     }
   }, [loadingParticipants, selectedMeetingId, participants, userId]);
 
-  if (!selectedMeetingId) return null; 
 
   const [qrCodeDataUrls, setQrCodeDataUrls] = useState({}); // State to store QR codes
 
