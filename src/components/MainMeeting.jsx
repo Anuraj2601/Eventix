@@ -10,6 +10,7 @@ import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
 import { useNavigate } from "react-router-dom";
 import EventMeetingService from "../service/EventMeetingService";
 
+import QRCode from "qrcode"; // Importing the QRCode library
 
 const MeetingsList = () => {
   const [meetings, setMeetings] = useState([]);
@@ -32,7 +33,42 @@ const MeetingsList = () => {
   const [loadingParticipants, setLoadingParticipants] = useState(false);
   const [selectedMeetingId, setSelectedMeetingId] = useState(null);
   const [eventMeetings, setEventMeetings] = useState([]);
+  const [filteredParticipants, setFilteredParticipants] = useState([]);
 
+
+  useEffect(() => {
+    if (!loadingParticipants && selectedMeetingId) {
+      // Filter participants based on the selected meeting and user ID
+      const filteredParticipants = participants.filter(
+        (participant) => participant.meetingId === selectedMeetingId && participant.userId === userId
+      );
+
+      // Generate QR codes for each filtered participant
+      filteredParticipants.forEach((participant) => {
+        const qrCodeData = participant.qrCodeUser; // Data to generate QR code
+        handleGenerateQrCode(qrCodeData, participant.participantId);
+      });
+    }
+  }, [loadingParticipants, selectedMeetingId, participants, userId]);
+
+  if (!selectedMeetingId) return null; 
+
+  const [qrCodeDataUrls, setQrCodeDataUrls] = useState({}); // State to store QR codes
+
+  // Function to generate and store QR code data URL
+  const handleGenerateQrCode = (qrCodeData, participantId) => {
+    QRCode.toDataURL(qrCodeData, { type: 'png' }, (err, url) => {
+      if (err) {
+        console.error("Error generating QR code:", err);
+      } else {
+        setQrCodeDataUrls((prevState) => ({
+          ...prevState,
+          [participantId]: url, // Save the QR code for the specific participant
+        }));
+      }
+    });
+  };
+  
   const fetchEventMeetings = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -81,7 +117,6 @@ const MeetingsList = () => {
     }
   };
   
-
   // Handle meeting selection
   const handleMeetingClick = (meetingId) => {
     setSelectedMeetingId(meetingId);
@@ -106,7 +141,6 @@ const MeetingsList = () => {
     }
   };
 
-
   const fetchClubs = async () => {
     try {
       const clubs = await ClubsService.getAllClubs(token);
@@ -129,7 +163,6 @@ const MeetingsList = () => {
     }
   };
   
-
   const validPositions = ["president", "member", "secretary", "treasurer", "oc"];
   const filteredRegistrations = registrations.filter(
     (reg) =>
@@ -188,7 +221,6 @@ const MeetingsList = () => {
     return club;
   };
   
-
   const isJoinButtonEnabled = (meetingDate, meetingTime) => {
     const currentTime = new Date();
     const meetingDateTime = new Date(meetingDate);
@@ -287,7 +319,6 @@ const MeetingsList = () => {
       return false;
     });
 };
-
   // QR Code API call
   const sendQRCodeEmaill = async (meetingId) => {
     setSendingQRCode((prevState) => ({
@@ -324,13 +355,8 @@ const MeetingsList = () => {
     }
   };
 
-
-
-
-
   const renderMeetingSections = () => {
-    // Filter meetings by participant type "EVERYONE" and only future meetings
-   // Step 1: Filter future meetings first
+   
   const futureMeetings = filterFutureMeetings(meetings);
 
   // Step 2: Filter meetings based on participant type from the future meetings
@@ -371,8 +397,6 @@ const MeetingsList = () => {
           <span>Upcoming Club Meetings</span>
         </h2>
        
-        {/* Participants Section */}
-{/* Participants Section */}
 {selectedMeetingId && (
   <div className="mt-8">
     <h3 className="text-lg font-semibold mb-4">
@@ -406,7 +430,27 @@ const MeetingsList = () => {
                   <td className="px-4 py-2 border">{participant.meetingId}</td>
                   <td className="px-4 py-2 border">{participant.qrCodeUser}</td>
                   <td className="px-4 py-2 border">{participant.userId}</td>
-
+                  <td className="px-4 py-2 border">
+                {/* Display QR Code dynamically */}
+                {qrCodeDataUrls[participant.participantId] ? (
+                  <div>
+                    <img
+                      src={qrCodeDataUrls[participant.participantId]}
+                      alt={`QR Code for ${participant.participantId}`}
+                      className="w-16 h-16"
+                    />
+                    <a
+                      href={qrCodeDataUrls[participant.participantId]}
+                      download={`qr_code_${participant.participantId}.png`}
+                      className="text-blue-500 underline"
+                    >
+                      Download QR
+                    </a>
+                  </div>
+                ) : (
+                  <div>Loading QR...</div>
+                )}
+              </td>
                 </tr>
               ))}
             </tbody>
@@ -420,8 +464,6 @@ const MeetingsList = () => {
     )}
   </div>
 )}
-
- 
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {meetingsByType.map((announcement) => {
@@ -541,7 +583,6 @@ const MeetingsList = () => {
   };
 
   
-
   return (
     <div className="fixed inset-0 flex">
       <Sidebar className="flex-shrink-0" />
