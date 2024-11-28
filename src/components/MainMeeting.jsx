@@ -9,6 +9,7 @@ import RegistrationService from '../service/registrationService'; // Adjust the 
 import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
 import { useNavigate } from "react-router-dom";
 import EventMeetingService from "../service/EventMeetingService";
+import QRScanner from './QrScanner'; // Adjust the path as needed
 
 import QRCode from "qrcode"; // Importing the QRCode library
 
