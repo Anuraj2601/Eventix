@@ -439,7 +439,8 @@ const MeetingsList = () => {
       <QRScanner />
     </div>
   )}    
-  
+   {(selectedFilter === 'online' || selectedFilter === 'physical') && (
+    <div>
 
         {/* Upcoming Club Meetings Section */}
         <h2 className="text-xl font-semibold flex items-center p-5">
