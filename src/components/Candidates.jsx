@@ -5,6 +5,7 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, Tooltip, Legend, ArcElement } from 'chart.js';
 import EventOcService from '../service/EventOcService';
 import UsersService from '../service/UsersService'; // Adjust path if needed
+import axios from 'axios';
 
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -13,43 +14,41 @@ const Candidates = ({ activeTab }) => {
     const [candidates, setCandidates] = useState([]);
     const [message, setMessage] = useState(""); 
     const [eventOCs, setEventOCs] = useState([]);
-    const [userProfiles, setUserProfiles] = useState({});
-
+    const [userProfiles, setUserProfiles] = useState([]); // Initialize as an array
 
     useEffect(() => {
         const fetchUserProfiles = async () => {
             try {
-                const profilePromises = candidates.map(async (reg) => {
-                    if (reg.email && !userProfiles[reg.email]) {
-                        try {
-                            const response = await UsersService.getUserProfileByEmail(reg.email);
-                            return { email: reg.email, name: response.name, profileImage: response.profileImage };
-                        } catch (err) {
-                            console.error('Error fetching profile:', err);
-                            return { email: reg.email, name: 'Unknown', profileImage: '' }; 
-                        }
-                    }
+                const response = await axios.get('http://localhost:8080/api/users/getAllUsersIncludingCurrent', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
                 });
-    
-                const profilesArray = await Promise.all(profilePromises);
-                const profiles = profilesArray.reduce((acc, profile) => {
-                    if (profile) {
-                        acc[profile.email] = profile;
-                    }
-                    return acc;
-                }, {});
-    
-                setUserProfiles((prevProfiles) => ({ ...prevProfiles, ...profiles }));
+
+                // Check if the response data is an array
+                if (Array.isArray(response.data)) {
+                    // Map the response data to create user profiles
+                    const profiles = response.data.map((user) => ({
+                        user_id: user.id,
+                        name: `${user.firstname} ${user.lastname}`,
+                        email: user.email,
+                        profileImage: user.photoUrl || '',  // Use a default if no image
+                    }));
+
+                    // Set the fetched user profiles to the state
+                    setUserProfiles(profiles);
+                } else {
+                    setMessage('Error: Response data is not an array');
+                }
             } catch (err) {
-                setError('Error fetching user profiles. Please try again.');
+                setMessage('Error fetching user profiles. Please try again.');
+                console.error('Error fetching user profiles:', err);
             }
         };
-    
-        if (candidates.length) {
-            fetchUserProfiles();
-        }
-    }, [candidates]);
-    
+
+        // Fetch the profiles when the component mounts
+        fetchUserProfiles();
+    }, []);
 
 
     useEffect(() => {
@@ -77,21 +76,23 @@ const Candidates = ({ activeTab }) => {
 
     
 
-    const getMatchingEventNames = (candidate) => {
-        console.log("Candidate OC:", candidate.oc); // Log the candidate's OC field to see its contents
-        if (!Array.isArray(eventOCs)) return []; // Safeguard check
-        if (!candidate.oc) return [];
+    const getEventNamesForCandidate = (candidate) => {
+        if (!candidate.userEmail) return []; // Return empty array if no email
     
-        // Filtering eventOCs based on matching oc_id and returning the event names
+        // Find matching profile based on email
+        const matchingProfile = userProfiles.find(
+            (profile) => profile.email === candidate.userEmail
+        );
+    
+        if (!matchingProfile) return []; // If no matching profile, return empty array
+    
+        // Filter event OCs by the found user_id
         return eventOCs
-            .filter(event => candidate.oc.includes(event.oc_id)) // Filter by oc_id
-            .map(event => event.event_name); // Map to return event names
+            .filter((oc) => oc.user_id === matchingProfile.user_id) // Filter event OCs by user_id
+            .map((oc) => oc.event_name); // Return only the event names
     };
     
     
-    
-    
-  
     
     useEffect(() => {
         const fetchCandidates = async () => {
@@ -199,10 +200,12 @@ const Candidates = ({ activeTab }) => {
     return (
       <div className="text-white">
           {message && (
-              <div className="bg-black text-yellow-500 p-4 mb-4">
+              <div className="bg-black text-[#AEC90A] p-4 mb-4">
                   <Typography>{message}</Typography>
               </div>
           )}
+
+
           {categories.map(category => {
               const categoryCandidates = candidates.filter(candidate => candidate.position.toLowerCase() === category.toLowerCase());
               const filteredCandidates = filterCandidates(categoryCandidates);
@@ -219,31 +222,40 @@ const Candidates = ({ activeTab }) => {
                           {category}
                       </Typography>
                       {sortedCandidates.length > 0 ? (
-                          sortedCandidates.map(candidate => (
+                            sortedCandidates.map(candidate => {
+                                // Find the matching user profile for this candidate
+                                const userProfile = userProfiles.find(profile => profile.user_id === candidate.user_id);
+                                const associatedEvents = getEventNamesForCandidate(candidate); // Store the event names result
+            
+                                return (
+                            
                               <Card key={candidate.id} className="mb-4 bg-black text-white">
                                   <CardBody>
                                       <div className="flex items-start gap-4">
                                           {/* Image on the Left */}
                                           <div className="flex-shrink-0 w-1/6">
-                                              <Avatar className="w-40 h-40" src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
+                                              <Avatar className="w-40 h-40 rounded-full" src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
                                           </div>
                                           {/* Details in the Middle */}
                                           <div className="flex-grow flex flex-col gap-4 w-1/3">
                                               <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
-                                              <p>User ID: {candidate.user_id}</p> 
-                                              <Typography variant="body2">Position applied for: {candidate.position}</Typography>
+                                              
+                                              <Typography variant="h6">{candidate.userEmail || 'No Name'}</Typography>
+                                              <Typography variant="h6">Position they Applied for : {candidate.position }</Typography>
+
+
                                               <Typography variant="body2">How can they make a change? {candidate.contribution}</Typography>
                                           </div>
-                                          {getMatchingEventNames(candidate).length > 0 && (
-                        <>
-                            <p className="mb-4"><strong>Associated Events:</strong></p>
-                            <ul className="list-disc list-inside">
-                                {getMatchingEventNames(candidate).map((eventName, eventIndex) => (
-                                    <li key={eventIndex}>{eventName}</li>
-                                ))}
-                            </ul>
-                        </>
-                    )}
+                                          {associatedEvents.length > 0 && (
+                                        <>
+                                            <p className="mb-4"><strong>Associated Events:</strong></p>
+                                            <ul className="list-disc list-inside text-[#AEC90A] font-bold">
+                                                {associatedEvents.map((eventName, index) => (
+                                                    <li key={index}>{eventName}</li>
+                                                ))}
+                                            </ul>
+                                        </>
+                                    )}
 
                                           {/* Pie Chart on the Right */}
                                           <div className="flex-shrink-0 w-1/6 flex flex-col items-center">
@@ -293,15 +305,16 @@ const Candidates = ({ activeTab }) => {
 
                                   </CardBody>
                               </Card>
-                          ))
-                      ) : (
+                          );
+                        })
+                    ) : (
                           <Typography>No candidates for {category}.</Typography>
-                      )}
-                  </div>
-              );
-          })}
-      </div>
-  );
-};
+                          )}
+                          </div>
+                      );
+                  })}
+              </div>
+          );
+      };
 
 export default Candidates;
