@@ -4,6 +4,7 @@ import { IoArrowBackCircleOutline } from "react-icons/io5";
 import loginImg from "../assets/loginImg.png";
 import { useNavigate } from "react-router-dom";
 import UsersService from "../service/UsersService";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -241,9 +242,12 @@ const Login = () => {
             </div>
 
             <div className="text-right mt-4">
-              <a href="#" className="text-sm text-secondary hover:underline">
-                Forgot password?
-              </a>
+            <Link
+              to="/forgot-password"
+              className="text-sm text-blue-500 hover:underline hover:text-blue-700 transition"
+            >
+              Forgot password?
+            </Link>
             </div>
           </div>
         </form>

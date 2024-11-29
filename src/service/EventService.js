@@ -113,6 +113,20 @@ class EventService{
       }
 
 
+      static async deleteEventById(eventId, token) {
+        try {
+            // Make the DELETE request to the backend
+            const response = await axios.delete(`${EventService.BASE_URL}/event/deleteEvent/${eventId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return response.data; // Return the response data from the API
+        } catch (error) {
+            console.error("Error deleting event:", error);
+            throw error; // Throw the error if request fails
+        }
+    }
+
+
       
     static logout() {
         localStorage.removeItem("token");

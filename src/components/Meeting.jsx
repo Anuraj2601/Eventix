@@ -119,9 +119,7 @@ const Meeting = ({club}) => {
                   <Typography className="text-white font-normal" variant="h6">
                     {meeting.meeting_name}
                   </Typography>
-                  <Typography className="text-white font-normal" variant="h6">
-                    {meeting.club_id}
-                  </Typography>
+                 
                   <div className="flex items-center gap-4 mt-2">
                     <Typography className="text-[#AEC90A] font-normal" variant="h6">
                       Date: {formatDate(meeting.date)}

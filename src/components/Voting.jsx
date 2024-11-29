@@ -270,7 +270,6 @@ onClick={() => {
                       />
                      <div className="text-center mt-2">
   <div className="text-white text-2xl font-bold">{candidate.name}</div>
-  <div className="text-white text-2xl font-bold">{candidate.id}</div>
 
   <div className="text-gray-300 text-lg font-light">{candidate.contribution}</div>
 </div>
