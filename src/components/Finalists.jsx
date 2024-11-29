@@ -206,42 +206,53 @@ const Candidates = ({ activeTab }) => {
 
                     if (selectedCategory === category) {
                         return (
-                          <div key={category} className="mb-8">
+                         <div key={category} className="mb-8">
     <Typography variant="h5" className="mb-2">{category}</Typography>
     {sortedCandidates.length > 0 ? (
-        <div className="flex flex-col gap-4"> {/* Flex container with column layout */}
+        <div className="flex flex-col gap-8"> {/* Flex column for vertical stacking with extra gap */}
             {sortedCandidates.map(candidate => {
                 const userProfile = userProfiles.find(profile => profile.user_id === candidate.user_id);
                 const associatedEvents = getEventNamesForCandidate(candidate);
                 const participantDetails = meetingParticipants[candidate.id] || [];
 
                 return (
-                    <Card key={candidate.id} className="bg-black text-white w-full mb-8" style={{
-                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
-                    }}>
-                        <CardBody>
-                            <div className="flex items-start gap-4">
-                                <div className="flex-shrink-0 w-1/6">
-                                    <Avatar className="w-40 h-40 rounded-full" src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
-                                </div>
-                                <div className="flex-grow flex flex-col gap-4 w-1/3">
-                                    <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
-                                    <Typography variant="h6">{candidate.userEmail || 'No Email'}</Typography>
-                                    <Typography variant="h6">Position: {candidate.position}</Typography>
-                                    <Typography variant="body2">How can they make a change? : {candidate.contribution}</Typography>
-                                </div>
+                    <Card 
+                      key={candidate.id} 
+                      className="bg-black flex flex-col items-center space-y-4 p-10 rounded-lg custom-card w-1/3 m-2" // m-2 adds margin for spacing
+                    >
+                        <Avatar
+                            src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`}
+                            alt={`Candidate ${candidate.id}`}
+                            className="w-36 h-36 rounded-full object-cover border-black border-4"
+                            style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                        />
+                        <CardBody className="flex flex-col items-center text-center">
+                            <Typography variant="h5" className="text-white font-bold">{candidate.name || 'No Name'}</Typography>
+                            <Typography className="text-gray-300 p-2">{candidate.contribution || 'No contribution available'}</Typography>
 
-                                {associatedEvents.length > 0 && (
-                                    <ul className="w-1/3">
+                            {/* Render the Pie Chart */}
+                            {renderPieChart(participantDetails.length > 0
+                                ? (participantDetails.filter(p => p.attendance === 1).length / participantDetails.length) * 100
+                                : 0
+                            )}
+ <Typography variant="body2" className="mt-2 text-white">
+    {(
+      (participantDetails.filter((participant) => participant.attendance === 1).length /
+      participantDetails.length) * 100
+    ).toFixed(2)}% club performance
+  </Typography>
+                            <div className="my-4 mt-8">
+                              
+                                {associatedEvents.length > 0 ? (
+                                  
+                                    <ul className="list-disc text-gray-300">
+                                        <Typography className="text-white">Has been successful in being part of:</Typography>
                                         {associatedEvents.map((event, idx) => (
                                             <li key={idx}>{event}</li>
                                         ))}
                                     </ul>
-                                )}
-
-                                {renderPieChart(participantDetails.length > 0
-                                    ? (participantDetails.filter(p => p.attendance === 1).length / participantDetails.length) * 100
-                                    : 0
+                                ) : (
+                                    <Typography className="text-gray-400"></Typography>
                                 )}
                             </div>
                         </CardBody>
@@ -253,6 +264,7 @@ const Candidates = ({ activeTab }) => {
         <Typography>No candidates found for this category.</Typography>
     )}
 </div>
+
 
                            
                         );
