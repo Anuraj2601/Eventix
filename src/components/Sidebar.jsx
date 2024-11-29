@@ -5,27 +5,24 @@ import { FaHome } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { IoCalendarNumberOutline, IoExitOutline, IoVideocamOutline } from 'react-icons/io5';
 import { MdSettings } from 'react-icons/md';
+import { HiMenuAlt1, HiX } from 'react-icons/hi'; 
 import Logo from '../assets/eventix Logo1.png';
 import axios from 'axios';
-import { getUserIdFromToken } from '../utils/utils'; // Utility function for getting user ID from the token
+import { getUserIdFromToken } from '../utils/utils';
 
 const Sidebar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
-  const [UserProfiles, setUserProfiles] = useState([]); // State to store all user profiles
-  const [userRole, setUserRole] = useState(''); // State to store the user's role
-  const [showLogoutDialog, setShowLogoutDialog] = useState(false); // State for the logout dialog
+  const [UserProfiles, setUserProfiles] = useState([]);
+  const [userRole, setUserRole] = useState('');
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
 
-  // Retrieve the user ID from the token
   const userId = getUserIdFromToken();
-
-  // Base URL for student
   const baseUrl = 'student';
 
-  // Function to determine if the item should be selected
   const isSelected = (path) => currentPath.includes(path);
 
-  // Fetch users
   useEffect(() => {
     axios
       .get('http://localhost:8080/api/users/getAllUsersIncludingCurrent', {
@@ -39,12 +36,11 @@ const Sidebar = () => {
           name: `${user.firstname} ${user.lastname}`,
           id: user.id,
           email: user.email,
-          role: user.role, // Assuming role is part of the response
+          role: user.role,
         }));
         setUserProfiles(fetchedUsers);
 
-        // Set userRole based on the current user's ID
-        const currentUser = fetchedUsers.find(user => user.id === userId);
+        const currentUser = fetchedUsers.find((user) => user.id === userId);
         if (currentUser) {
           setUserRole(currentUser.role);
         }
@@ -56,12 +52,11 @@ const Sidebar = () => {
 
   const linkClass = (path) => {
     const fullPath = `/${baseUrl}${path}`;
-    const isSelected = currentPath.startsWith(fullPath) || currentPath.includes(fullPath);
+    const isSelected = currentPath.includes(path);  // Check if the path is active
     return isSelected
-      ? 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2 bg-[#AEC90A] text-black'
-      : 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2';
+      ? 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2 bg-[#AEC90A] text-black'  // Active state style
+      : 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2';  // Inactive state style
   };
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/';
@@ -71,89 +66,109 @@ const Sidebar = () => {
     setShowLogoutDialog(false);
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
-    <aside className="bg-stone-950 shadow-2xl text-white w-52 h-full p-4 flex flex-col justify-between items-center overflow-y-auto">
-      <div className="p-2 flex justify-center">
-        <img src={Logo} alt="logo" className="w-70 h-24 ml-2 mb-2" />
-      </div>
+    <div className="relative">
+      {/* Hamburger Menu for Mobile */}
+      <button
+        className="text-[#AEC90A] sm:hidden absolute top-4 left-4 z-50"
+        onClick={toggleSidebar}
+      >
+        {isSidebarOpen ? <HiX size={30} /> : <HiMenuAlt1 size={30} />}
+      </button>
 
-      <div className="flex flex-col items-center space-y-1 flex-grow">
-        <ul className="ml-0 text-black font-bold">
-          <li className={linkClass('/dashboard')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
-            <Link to={`/${baseUrl}/dashboard`} className="px-3">
-              <FaHome className="inline-block w-9 h-9 mt-1 -ml-0.5" />
-            </Link>
-          </li>
+      {/* Sidebar */}
+      <aside
+        className={`bg-stone-950 shadow-2xl text-white w-52 h-full p-4 flex flex-col justify-between items-center overflow-y-auto z-40 fixed top-0 ${
+          isSidebarOpen ? 'left-0' : '-left-64'
+        } sm:left-0 sm:relative transition-all duration-300`}
+      >
+        <div className="p-2 flex justify-center">
+          <img src={Logo} alt="logo" className="w-70 h-24 ml-2 mb-2" />
+        </div>
 
-          <li className={linkClass('/calendar')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
-            <Link to={`/${baseUrl}/calendar`} className="px-3">
-              <IoCalendarNumberOutline className="inline-block w-9 h-9 -ml-0.5 mt-1" />
-            </Link>
-          </li>
-
-          <li className={linkClass('/announcement')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
-            <Link to={`/${baseUrl}/announcement`} className="px-3">
-              <BsMegaphone className="inline-block w-9 h-9 mt-1 -ml-0.5" />
-            </Link>
-          </li>
-
-          <li className={linkClass('/club')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
-            <Link to={`/${baseUrl}/club`} className="px-3">
-              <FaPeopleGroup className="inline-block w-9 h-9 mt-1 -ml-0.5" />
-            </Link>
-          </li>
-
-          <li className={linkClass('/meeting')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
-            <Link to={`/${baseUrl}/meeting`} className="px-3">
-              <IoVideocamOutline className="inline-block w-9 h-9 mt-1 -ml-0.5" />
-            </Link>
-          </li>
-
-          {(['admin', 'treasurer'].includes(userRole.toLowerCase()) ||
-            currentPath.startsWith('/admin') ||
-            currentPath.startsWith('/treasurer')) && (
-            <li className={linkClass('/requests')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
-              <Link to={`/${baseUrl}/requests`} className="px-3">
-                <MdSettings className="inline-block w-9 h-9 mt-1 -ml-0.5" />
+        <div className="flex flex-col items-center space-y-1 flex-grow">
+          <ul className="ml-0 text-black font-bold">
+            <li className={linkClass('/dashboard')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
+              <Link to={`/${baseUrl}/dashboard`} className="px-3">
+                <FaHome className="inline-block w-9 h-9 mt-1 -ml-0.5" />
               </Link>
             </li>
-          )}
-        </ul>
-      </div>
 
-      <ul className="mb-0">
-        <li className="w-28 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2">
-          <button className="px-3" onClick={() => setShowLogoutDialog(true)}>
-            <span className="hover:bg-[#AEC90A] hover:text-black mr-2 mt-2 mb-2">Logout</span>
-            <IoExitOutline className="inline-block w-6 h-6 mt-0" />
-          </button>
-        </li>
-      </ul>
+            <li className={linkClass('/calendar')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
+              <Link to={`/${baseUrl}/calendar`} className="px-3">
+                <IoCalendarNumberOutline className="inline-block w-9 h-9 -ml-0.5 mt-1" />
+              </Link>
+            </li>
 
-      {/* Logout Dialog */}
-      {showLogoutDialog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-            <p className="mb-4 text-black ">Are you sure you want to logout?</p>
-            <div className="flex space-x-2 justify-center">
-  <button
-    className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-red-700"
-    onClick={handleLogout}
+            <li className={linkClass('/announcements')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
+            <Link
+    to={`/${userRole.toLowerCase() === 'admin' ? 'admin' : 'student'}/announcements`}
+    className="px-3"
   >
-    Yes
-  </button>
-  <button
-    className="px-4 py-2 bg-[#AEC90A] rounded hover:bg-gray-400"
-    onClick={handleDialogClose}
-  >
-    No
-  </button>
-</div>
+                <BsMegaphone className="inline-block w-9 h-9 mt-1 -ml-0.5" />
+              </Link>
+            </li>
 
-          </div>
+            <li className={linkClass('/club')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
+              <Link to={`/${baseUrl}/club`} className="px-3">
+                <FaPeopleGroup className="inline-block w-9 h-9 mt-1 -ml-0.5" />
+              </Link>
+            </li>
+
+            <li className={linkClass('/meeting')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
+              <Link to={`/${baseUrl}/meeting`} className="px-3">
+                <IoVideocamOutline className="inline-block w-9 h-9 mt-1 -ml-0.5" />
+              </Link>
+            </li>
+
+            {(['admin', 'treasurer'].includes(userRole.toLowerCase()) ||
+              currentPath.startsWith('/admin') ||
+              currentPath.startsWith('/treasurer')) && (
+              <li className={linkClass('/requests')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
+                <Link to={`/${baseUrl}/requests`} className="px-3">
+                  <MdSettings className="inline-block w-9 h-9 mt-1 -ml-0.5" />
+                </Link>
+              </li>
+            )}
+          </ul>
         </div>
-      )}
-    </aside>
+
+        <ul className="mb-0">
+          <li className="w-28 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2">
+            <button className="px-3" onClick={() => setShowLogoutDialog(true)}>
+              <span className="hover:bg-[#AEC90A] hover:text-black mr-2 mt-2 mb-2">Logout</span>
+              <IoExitOutline className="inline-block w-6 h-6 mt-0" />
+            </button>
+          </li>
+        </ul>
+
+        {showLogoutDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+              <p className="mb-4 text-black ">Are you sure you want to logout?</p>
+              <div className="flex space-x-2 justify-center">
+                <button
+                  className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-red-700"
+                  onClick={handleLogout}
+                >
+                  Yes
+                </button>
+                <button
+                  className="px-4 py-2 bg-[#AEC90A] rounded hover:bg-gray-400"
+                  onClick={handleDialogClose}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </aside>
+    </div>
   );
 };
 

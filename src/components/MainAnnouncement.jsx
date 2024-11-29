@@ -1,33 +1,38 @@
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
-import ieeeImage from '../assets/clubs/ieee.png';
-import isacaImage from '../assets/clubs/isaca1.png';
-import rotaractImage from '../assets/clubs/rotaract.png';
-import { useLocation } from 'react-router-dom';
+
 import AnnouncementService from '../service/AnnouncementService';
 import RegistrationService from '../service/registrationService';
 import UsersService from '../service/UsersService';
 import ClubsService from '../service/ClubsService';
+import { useNavigate } from "react-router-dom";
+import AnnouncementModal from './AnnouncementModal';
+import { Button, Typography } from "@material-tailwind/react";
 
 const MainAnnouncement = () => {
     const [selectedFilter, setSelectedFilter] = useState('allAnnouncements');
     const [selectedClub, setSelectedClub] = useState(null);
     const [viewMode, setViewMode] = useState('new');
     const isAdminPath = location.pathname.startsWith('/admin');
+    const navigate = useNavigate();
 
     const [registeredClubs, setRegisteredClubs] = useState([]);
     const [AllAnnouncements, setAllAnnouncements] = useState([]);
     const [filteredAllAnnouncements, setFilteredAllAnnouncements] = useState([]);
     const [UnionAnnouncements, setUnionAnnouncements] = useState([]);
     const [ClubsAnnouncements, setClubsAnnouncements] = useState([]);
-
+    const [showModal, setShowModal] = useState(false);
+    const [announcementMessage, setAnnouncementMessage] = useState('');
     let unionClubId;
 
-   
-
- 
+    const openAnnouncementForm = (clubId) => {
+      // Navigate to the announcement form with the club_id in the state
+      navigate(`/admin/club/announcement/add`, { state: { club_id: clubId } });
+  };
+  
     
+
     const formatDate = (dateArray) => {
         
         const [year, month, day, hour, minute] = dateArray;
@@ -342,20 +347,21 @@ const MainAnnouncement = () => {
                 <div className="relative p-4 rounded-lg h-[70vh]">
                    
                     <div  className="grid grid-cols-1 gap-4">
-                    {isAdminPath && (
-
-                    <div className="flex space-x-4 absolute top-2 right-4">
-        <button
-            onClick={() => setShowModal(true)}
-            className="px-4 py-2 bg-primary text-black rounded font-medium"
-        >
-            Add New
-        </button>
-       
-    </div> )}
+                   
                         {UnionAnnouncements.map((announcement) => (
                             <div  >
-                                <div className="grid grid-cols-1 gap-4 mt-2">
+                              {isAdminPath && (
+  <div className="flex space-x-4 absolute top-2 right-4">
+    <Button
+      onClick={() => openAnnouncementForm(announcement.club_id)} // Pass club_id as argument
+      className="bg-primary text-white"
+    >
+      Create New Union Announcement
+    </Button>
+  </div>
+)}
+
+                                <div className="grid grid-cols-1 gap-4 mt-12">
                                
                                    
                                          
@@ -365,6 +371,7 @@ const MainAnnouncement = () => {
                                             
                                             <div>
                                                 <p className="text-sm text-primary font-semibold">{announcement.title}</p>
+
                                                 {/* <p className="text-sm">{announcement.content} <span className='ml-5 text-primary opacity-60'>{announcement.date} | {announcement.time} | {announcement.location}</span></p> */}
                                                 <p className="text-sm">{announcement.content} </p>
                                             </div>

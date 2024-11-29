@@ -8,7 +8,7 @@ import { Tabs, TabsHeader, Tab } from "@material-tailwind/react";
 
 
 const ExploreClub = () => {
-    const [activeTab, setActiveTab] = useState("new-users");
+    const [activeTab, setActiveTab] = useState("event-requests");
 
     const mainTabs = [
         { label: "Event Requests", value: "event-requests" },
@@ -37,10 +37,21 @@ const ExploreClub = () => {
                                 >
                                     {label}
                                 </Tab>
+                                
                             ))}
+                             <Tab
+            key="import-users"
+            value="import-users"
+            onClick={() => setActiveTab("import-users")}
+            className={activeTab === "import-users" ? "text-[#AEC90A]" : ""}
+        >
+            Import Users
+        </Tab>
                         </TabsHeader>
                         <div className=" overflow-y-auto px-10">
                             {activeTab === "event-requests" && <Requests />}
+                            {activeTab === "import-users" && <Users />}
+
                          
 
                         </div>

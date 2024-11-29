@@ -26,20 +26,39 @@ const Member = () => {
       fetchEventOCs();
   }, []);
 
-  const getMatchingEventNames = (email) => {
-    console.log("Filtering for email:", email);
-    console.log("Event OCs:", eventOCs);
+  const getMatchingEventNames = (emailOrUserId) => {
+    console.log("Filtering for email or userId:", emailOrUserId);
 
-    // Match registration email with Event OC user_id
-    const matchingOCs = eventOCs.filter((oc) => {
-        console.log("Checking registration email:", email, "against Event OC user_id:", oc.user_id);
-        return String(oc.user_id).trim().toLowerCase() === String(email).trim().toLowerCase();
-    });
+    // Check if the input is an email or userId
+    let userId;
+    
+    if (typeof emailOrUserId === 'string') {
+        // If it's an email, map to userId
+        userId = userProfiles[emailOrUserId]?.id; // Assuming 'userProfiles' contains the mapping of email to userId
+        if (!userId) {
+            console.log("User not found for email:", emailOrUserId);
+            return []; // Return an empty array if no userId is found
+        }
+    } else {
+        // If it's directly a userId, use it as is
+        userId = emailOrUserId;
+    }
 
-    console.log("Matching OCs After Filter:", matchingOCs);
-
-    return matchingOCs.map((oc) => oc.event_name);
+    console.log("UserId for filtering:", userId);
+  
+    // Filter eventOCs based on matching userId
+    const matchingEventOCs = eventOCs.filter(oc => oc.user_id === userId);
+    
+    // Extract event names from the filtered eventOCs
+    const eventNames = matchingEventOCs.map(oc => oc.event_name);
+  
+    console.log("Matching OCs for User ID:", userId, matchingEventOCs);
+  
+    // Return the event names of the matching OCs
+    return eventNames;
 };
+
+  
 
 
   
@@ -189,14 +208,20 @@ const Member = () => {
                       <h3 className="text-xl font-semibold mb-2">{userProfiles[reg.email]?.name || 'Unknown'}</h3>
                       <p className="mb-2"><strong>Team:</strong> {reg.team}</p>
                       <p className="mb-4"><strong>Email:</strong> {reg.email}</p>
-<p className="mb-4">
-                    <strong>Associated Events:</strong>
-                  </p>
-                  <ul className="list-disc list-inside">
-                    {getMatchingEventNames(reg.email).map((eventName, index) => (
-                      <li key={index}>{eventName}</li>
-                    ))}
-                  </ul>                      {isPresidentView && (
+                      {getMatchingEventNames(reg.userId).length > 0 && (
+  <>
+    <p className="mb-4">
+      <strong>Associated Events:</strong>
+    </p>
+    <ul className="list-disc list-inside">
+      {getMatchingEventNames(reg.userId).map((eventName, index) => (
+        <li key={index}>{eventName}</li>
+      ))}
+    </ul>
+  </>
+)}
+
+                     {isPresidentView && (
                         <div className="flex justify-end">
                           <button
                             onClick={() => handleReject(reg.registrationId)}
