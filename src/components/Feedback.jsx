@@ -10,6 +10,7 @@ const Feedback = () => {
   const [emojiRatings, setEmojiRatings] = useState({});
   const [pastEvents, setPastEvents] = useState([]); // Renamed to focus on past events
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEventId, setSelectedEventId] = useState(null);
 
   const convertDateToReadableFormat = (dateString) => {
     const date = new Date(dateString[0], dateString[1] - 1, dateString[2]); // Subtract 1 from the month value
@@ -131,6 +132,11 @@ const Feedback = () => {
     // setIsFormVisible(false); // Hide form after submission
   };
 
+  const handleFeedbackButtonClick = (event) => {
+    setSelectedEventId(event.event_id); // Set the current event ID
+    setSelectedFeedback(event); // Store the event data for submission
+  };
+
   const handleEmojiClick = (eventId, emoji) => {
     setEmojiRatings((prev) => ({
       ...prev,
@@ -179,7 +185,7 @@ const Feedback = () => {
                 boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
               }}
             >
-              {isFormVisible ? (
+              {selectedEventId === event.event_id  ? (
                 <form>
                 <div className="feedback-form bg-neutral-800 p-2 rounded-lg">
                   <p className="text-white text-lg font-bold mb-2">We welcome your feedback!</p>
@@ -226,10 +232,7 @@ const Feedback = () => {
                     <p className="text-gray-400 mb-2">
                       {event.details}
                       <button
-                        onClick={() => {
-                          setIsFormVisible(true); // Show the form
-                          setSelectedFeedback(event); // Set the selected event
-                        }}
+                        onClick={() => handleFeedbackButtonClick(event)}
                         className="ml-4 mt-2 py-1 px-3 bg-[#AEC90A] text-black rounded-lg right-0"
                       >
                         Give Feedback
