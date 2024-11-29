@@ -257,11 +257,11 @@ const App = () => {
         <Route path='/president/AddSponsor' element={<AddSponsor />}></Route> 
         <Route path='/president/EditSponsor/:id' element={<AddSponsor />}></Route>
 
-        <Route path="/president/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
+        <Route path="/president/club/announce/add" element={<AddNewAnnouncementForm/>}></Route>
 
-        <Route path="/president/club/announcement/edit/:id" element={<AddNewAnnouncementForm/>}></Route>
-        <Route path="/president/club/meeting/add" element={<AddNewMeetingForm/>}></Route>
-        <Route path="/president/club/meeting/edit/:id" element={<AddNewMeetingForm/>}></Route>
+        <Route path="/president/club/announce/edit/:id" element={<AddNewAnnouncementForm/>}></Route>
+        <Route path="/president/club/meet/add" element={<AddNewMeetingForm/>}></Route>
+        <Route path="/president/club/meet/edit/:id" element={<AddNewMeetingForm/>}></Route>
 
 
 
