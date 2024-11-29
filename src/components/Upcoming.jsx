@@ -176,7 +176,6 @@ const Upcoming = () => {
   return (
     <div className="p-2 rounded-md relative">
       <h2 className="text-white text-sm font-bold -mt-2">Upcoming</h2>
-      <h2 className="text-white text-sm font-bold -mt-2"> {userId}</h2>
 
       <div className="flex flex-wrap overflow-y-auto -mx-2">
         {upcomingEvents.map((event) => {
