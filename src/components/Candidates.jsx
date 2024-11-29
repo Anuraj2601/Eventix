@@ -313,7 +313,9 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
                                 
                                 return (
                             
-                              <Card key={candidate.id} className="mb-4 bg-black text-white">
+                              <Card key={candidate.id} className="mb-8 bg-black text-white"  style={{
+                                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                              }}>
                                   <CardBody>
                                       <div className="flex items-start gap-4">
                                           {/* Image on the Left */}
@@ -323,7 +325,6 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
                                           {/* Details in the Middle */}
                                           <div className="flex-grow flex flex-col gap-4 w-1/3">
                                               <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
-                                              <Typography variant="h6">{candidate.clubId || 'No Name'}</Typography>
 
                                               <Typography variant="h6">{candidate.userEmail || 'No Name'}</Typography>
                                               <Typography variant="h6">Position they Applied for : {candidate.position }</Typography>
@@ -333,8 +334,9 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
                                           </div>
                                           {associatedEvents.length > 0 && (
                                         <>
-                                            <p className="mb-4"><strong>Associated Events:</strong></p>
-                                            <ul className="list-disc list-inside text-[#AEC90A] font-bold">
+                                             <ul className="list-disc list-inside text-[#AEC90A] font-bold">
+                                             <li className="font-bold text-white list-none">Associated Events</li> 
+
                                                 {associatedEvents.map((eventName, index) => (
                                                     <li key={index}>{eventName}</li>
                                                 ))}
@@ -342,29 +344,30 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
                                         </>
                                     )}
 
-<div className="w-1/3">
-                            <Typography variant="body2" className="font-bold">Meeting Details:</Typography>
-                            {participantDetails.length > 0 ? (
-                                participantDetails.map((participant, idx) => (
-                                    <div key={idx} className="text-sm">
-                                        <p>Attendance: {participant.attendance ? 'Present' : 'Absent'}</p>
-                                        <p>QR Code: {participant.qrCodeUser || 'No QR Code'}</p>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>No meeting details available.</p>
-                            )}
-                        </div>
 
-                                          {/* Pie Chart on the Right */}
-                                          <div className="flex-shrink-0 w-1/6 flex flex-col items-center">
-                                              {renderPieChart(candidate.performance)}
-                                              <Typography variant="body2" className="mt-2">
-                                                  {candidate.performance}%
-                                              </Typography>                                              
 
-                                          </div>
-                                      </div>
+    <div className="flex-shrink-0 w-1/3 flex flex-col items-center">
+  {
+    // Directly calculate the attendance percentage and pass it to renderPieChart
+    renderPieChart(
+      Number(
+        ((participantDetails.filter((participant) => participant.attendance === 1).length /
+        participantDetails.length) * 100).toFixed(2)  // Ensuring it's a valid number
+      )
+    )
+  }
+  <Typography variant="body2" className="mt-2">
+    {(
+      (participantDetails.filter((participant) => participant.attendance === 1).length /
+      participantDetails.length) * 100
+    ).toFixed(2)}%
+  </Typography>
+</div>
+
+</div>
+
+{/* Pie Chart on the Right */}
+
                                       {/* Buttons at the Bottom Right Corner */}
                                       {/* Buttons at the Bottom Right Corner */}
 <div className="mt-4 flex justify-end gap-2">
