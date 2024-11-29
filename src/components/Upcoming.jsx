@@ -23,6 +23,7 @@ import ClubsService from "../service/ClubsService"; // Ensure correct import
 import EventRegistrationModal from "./EventRegistrationModal";
 import EventRegistrationService from "../service/EventRegistrationService";
 
+<<<<<<< HEAD
 const convertDateToReadableFormat = (dateString) => {
   const date = new Date(dateString);
   const day = date.getDate();
@@ -43,6 +44,19 @@ const convertDateToReadableFormat = (dateString) => {
   return `${day}${suffix(day)} ${month} ${year}`;
 };
 
+=======
+const formatTime = (date) => {
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+
+  return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+};
+
+// Usage example:
+const date = new Date(); // Current time
+>>>>>>> 5984d0d828eb8bce5252f8fb15c0d5f9064e31ce
 
 
 const Upcoming = () => {
@@ -155,7 +169,10 @@ useEffect(() => {
         });
   
       setUpcomingEvents(futureEvents);
+<<<<<<< HEAD
       console.log(futureEvents); // Log the processed future events
+=======
+>>>>>>> 5984d0d828eb8bce5252f8fb15c0d5f9064e31ce
     } catch (error) {
       console.error("Error fetching events:", error);
     }
@@ -184,10 +201,17 @@ useEffect(() => {
 
       <div className="flex flex-wrap overflow-y-auto -mx-2">
         {upcomingEvents.map((event) => {
+<<<<<<< HEAD
            const activeClub = clubDetails.find((club) => club.club_id === event.club_id) || {};
            const clubImage = activeClub.club_image || "https://via.placeholder.com/100"; // Fallback image
            const clubName = activeClub.club_name || "Unknown Club"; // Fallback name
            const canRegister = event.iud_status === 1 && event.budget_status === 1;
+=======
+          const activeClub = clubDetails.find((club) => club.club_id === event.club_id) || {};
+          const canRegister = event.iud_status === 1 && event.budget_status === 1;
+          const formattedTime = formatTime(new Date(event.time));
+
+>>>>>>> 5984d0d828eb8bce5252f8fb15c0d5f9064e31ce
           return (          
             <div 
               key={event.event_id} 
@@ -209,9 +233,15 @@ useEffect(() => {
                 <div className="event-back">
                   <h3 className="text-white text-xl font-bold mb-2">{event.name}</h3>
                   <p>{event.details}</p>
+<<<<<<< HEAD
                   <p className="text-gray-400">On  {event.date}</p>
                   <p className="text-gray-400">In {event.venue}</p>
                   <p className="text-gray-400">At {event.time}</p>
+=======
+                  <p className="text-gray-400">Date: {event.date}</p>
+                  <p className="text-gray-400">Venue: {event.venue}</p>
+                  <p className="text-gray-400">Time: {formattedTime}</p> {/* Display formatted time here */}
+>>>>>>> 5984d0d828eb8bce5252f8fb15c0d5f9064e31ce
                   <p className="text-gray-400">Organized By:</p>
                   <img src={clubImage} alt="Club" className="w-12 h-12 rounded-full mb-2" />
                   <div className="flex justify-center items-center mt-2">
