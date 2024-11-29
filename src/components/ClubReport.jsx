@@ -214,17 +214,19 @@ useEffect(() => {
 
   const CustomTooltip = ({ payload, label }) => {
     if (payload && payload.length) {
-      const { event_id, amount, budget_name } = payload[0].payload; // Make sure color exists
+      const { event_id, amount, budget_name } = payload[0].payload; // Ensure color exists
       return (
         <div style={{ backgroundColor: "black", padding: "10px", color: "white" }}>
-  <p>Event: {eventNames[event_id]}</p> {/* Display event name */}        <p>Amount: {amount}</p>
-        <p>Date: {label}</p>
-        <p>Budget Name: {budget_name}</p>
-      </div>
+          <p>Event: {eventNames[event_id]}</p> {/* Display event name */}
+          <p>Amount: {amount}</p>
+          <p>Date: {label}</p>
+          <p>Budget Name: {budget_name}</p>
+        </div>
       );
     }
     return null;
   };
+  
 
 
 
@@ -235,40 +237,22 @@ useEffect(() => {
     <div>
       <Card className="w-full bg-black mb-6">
         <CardBody>
-          <Typography color="white" variant="h4" className="mb-4 text-center">
-            Event Reports
-          </Typography>
-          <table className="min-w-full bg-white">
-      
-        <tbody>
-          {events.map((event) => (
-            <tr key={event.event_id} className="text-center">
-              <td className="px-4 py-2 border">{event.event_id}</td>
-              <td className="px-4 py-2 border">{event.name}</td>
-              <td className="px-4 py-2 border">{`${event.date[0]}/${event.date[1]}/${event.date[2]}`}</td>
-              <td className="px-4 py-2 border">{event.venue}</td>
-              <td className="px-4 py-2 border">{event.club_id}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <table className="min-w-full bg-white border-collapse">
+        
+         
        
-        <tbody>
+       
           {uniqueEvents.length > 0 ? (
             uniqueEvents.map((event) => (
-              <tr key={event.event_id}>
-                <td className="px-4 py-2 border">{event.event_id}</td>
-                <td className="px-4 py-2 border">{event.event_name}</td>
-              </tr>
+              <p key={event.event_id}>
+               
+              </p>
             ))
           ) : (
             <tr>
               <td colSpan="2" className="px-4 py-2 text-center">No events found</td>
             </tr>
           )}
-        </tbody>
-      </table>
+       
           {/* Grouped Bar Chart for Costs and Incomes */}
           <Typography color="white" variant="h5" className="mb-4 text-center">
             Costs and Incomes Grouped by Events
