@@ -217,7 +217,6 @@ useEffect(() => {
       const { event_id, amount, budget_name } = payload[0].payload; // Ensure color exists
       return (
         <div style={{ backgroundColor: "black", padding: "10px", color: "white" }}>
-          <p>Event: {eventNames[event_id]}</p> {/* Display event name */}
           <p>Amount: {amount}</p>
           <p>Date: {label}</p>
           <p>Budget Name: {budget_name}</p>
