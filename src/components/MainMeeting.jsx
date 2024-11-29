@@ -287,8 +287,14 @@ const MeetingsList = () => {
       meetingDate.setHours(hour, minute);
       console.log('Meeting Date:', meetingDate); // Debugging line
   
-      return meetingDate >= currentDate;
-    });
+      if (
+        meetingDate.toDateString() === currentDate.toDateString() || // Same date
+        meetingDate > currentDate // Future dates
+      ) {
+        return true;
+      }
+  
+      return false;    });
   
     console.log('Filtered Meetings:', filteredMeetings); // Debugging line
     return filteredMeetings;
