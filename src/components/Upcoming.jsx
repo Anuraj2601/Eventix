@@ -9,13 +9,8 @@ import msImg from '../assets/clubs/ms.png';
 import wicysImg from '../assets/clubs/wicys.png';
 import pahasaraImg from '../assets/clubs/pahasara1.png';
 import ieee1 from "../assets/events/madhack.png";
-import ieee2 from "../assets/events/reid.jpg";
-import ieee3 from "../assets/events/intro.jpg";
-import ieee4 from "../assets/events/ieeeday.jpg";
-import ieee5 from "../assets/events/revol.jpg";
-import rac1 from "../assets/events/trail.jpg";
-import acm1 from "../assets/farewell.jpg";
-import rac2 from "../assets/events/snap.jpg";
+import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
+
 import LikeButton from './LikeButton'; // Make sure this path is correct
 import RegistrationModal from './RegistrationModal'; // Make sure this path is correct
 import EventService from "../service/EventService"; // Ensure correct import
@@ -50,7 +45,8 @@ const Upcoming = () => {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [clubDetails, setClubDetails] = useState([]);
   const [isEventRegistered, setIsEventRegistered] = useState(false);
-  const session_id = localStorage.getItem('session_id');
+  const token = localStorage.getItem("token") || "";
+  const userId = getUserIdFromToken();
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true); // Define the loading state
   const [registrationStatus, setRegistrationStatus] = useState({});
@@ -76,7 +72,6 @@ const Upcoming = () => {
 
   // Fetch events on component mount
   useEffect(() => {
-    fetchEventRegistrations();
     fetchEvents(); // Assuming you have a fetchEvents function to load upcoming events
   }, []);
 
@@ -97,10 +92,14 @@ const Upcoming = () => {
   }, [upcomingEvents, registrations]);
   
   const isRegistered = (event_id) => {
-    return registrations.some(
-      (registration) => registration.event_id === event_id && registration.user_id === session_id
+    const match = registrations.some(
+      (registration) =>
+        registration.event_id === event_id && registration.user_id === userId
     );
+    console.log(`Event ID: ${event_id}, Match: ${match}`);
+    return match;
   };
+  
   
   const openModal = (event) => {
     setSelectedEvent(event);
@@ -177,7 +176,8 @@ const Upcoming = () => {
   return (
     <div className="p-2 rounded-md relative">
       <h2 className="text-white text-sm font-bold -mt-2">Upcoming</h2>
-      
+      <h2 className="text-white text-sm font-bold -mt-2"> {userId}</h2>
+
       <div className="flex flex-wrap overflow-y-auto -mx-2">
         {upcomingEvents.map((event) => {
           const activeClub = clubDetails.find((club) => club.club_id === event.club_id) || {};
@@ -215,15 +215,16 @@ const Upcoming = () => {
                   <img src={clubImage} alt="Club" className="h-12 w-12 rounded-full mb-2"/>
                   <p className="text-white text-lg font-semibold">{clubName}</p>
                   <div className="flex justify-between items-center">
-                    <LikeButton event={event} />
+                    <LikeButton className="p-5" event={event} />
                     {canRegister && (
-  <button 
-    className={`btn ${isEventRegistered ? 'btn-disabled' : 'btn-primary'}`} 
-    disabled={isEventRegistered} 
-    onClick={() => openModal(event)}
-  >
-    {isEventRegistered ? 'Registered' : 'Register'}
-  </button>
+ <button 
+ className={`btn rounded-full ${isEventRegistered ? 'bg-[#AEC90A] text-gray-800 cursor-not-allowed p-3' : 'bg-[#AEC90A] text-white hover:bg-grey-500 p-3'}`} 
+ disabled={isEventRegistered} 
+ onClick={() => openModal(event)}
+>
+ {isEventRegistered ? 'Registered' : 'Register'}
+</button>
+
 )}
 
                   </div>
