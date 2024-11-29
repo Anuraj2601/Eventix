@@ -26,52 +26,54 @@ const BudgetTable = () => {
   const [eventNames, setEventNames] = useState({}); // To store event names
   const [uniqueEvents, setUniqueEvents] = useState([]); // State for storing unique events
   const [events, setEvents] = useState([]);  // Initialize state with an empty array
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [error, setError] = useState(null);
 
   
   useEffect(() => {
-    const fetchEventNames = async () => {
-        try {
-            // Fetch all events
-            const allEvents = await EventService.getAllEvents();  // Assuming this endpoint fetches all events
-            setEvents(allEvents);
-            // Create a set of event IDs from the budgets
-            const eventIds = Array.from(new Set(allBudgets.map((item) => item.event_id)));
-
-            // Filter the fetched events by event_id
-            const filteredEvents = allEvents.filter(event => eventIds.includes(event.event_id));
-
-            // Create a mapping of event_id to event name
-            const names = filteredEvents.reduce((acc, event) => {
-                acc[event.event_id] = event.name;
-                return acc;
-            }, {});
-
-            // Set the event names to state
-            setEventNames(names);
-        } catch (error) {
-            console.error("Error fetching event names:", error);
-        }
+    const fetchEvents = async () => {
+      try {
+        const eventsData = await EventService.getAllEventslanding();
+        setEvents(eventsData.content); // Store the fetched events in state
+  
+        // Map through events and create an object with event_id as key and event_name as value
+        const eventNamesObject = eventsData.content.reduce((acc, event) => {
+          acc[event.event_id] = event.name; // Assuming event has `event_id` and `name`
+          return acc;
+        }, {});
+        setEventNames(eventNamesObject); // Set the event names to state
+  
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        setError(error.message);
+      }
     };
+  
+    fetchEvents();
+  }, []);
+  
 
-    // Only fetch if there are any budgets to avoid unnecessary fetch calls
-    if (allBudgets.length) {
-        fetchEventNames();
-    }
-  }, [allBudgets]); // Dependency on allBudgets, so it will refetch when the budgets array changes
+  if (error) {
+    return <div>Error: {error}</div>;
+  }// Dependency array: fetch again whenever allBudgets changes
 
   useEffect(() => {
-    // Create unique events only after eventNames are updated
     if (Object.keys(eventNames).length > 0 && allBudgets.length > 0) {
-        const uniqueEventsList = Array.from(new Set(allBudgets.map((item) => item.event_id)))
-            .map((eventId) => ({
-                event_id: eventId,
-                event_name: eventNames[eventId] || `Event ${eventId}`,
-            }));
-        setUniqueEvents(uniqueEventsList);
+      const uniqueEventsList = allBudgets
+        .map((budget) => ({
+          event_id: budget.event_id,
+          event_name: eventNames[budget.event_id] || `Event ${budget.event_id}`,
+        }))
+        .filter((value, index, self) =>
+          index === self.findIndex((t) => t.event_id === value.event_id)
+        );
+      setUniqueEvents(uniqueEventsList);
     }
-  }, [eventNames, allBudgets]); // Re-run when either eventNames or allBudgets changes
- // Dependency on allBudgets, so it will refetch when the budgets array changes
 
+    console.log("Event Names:", eventNames);
+    console.log("All Budgets:", allBudgets);
+  }, [eventNames, allBudgets]);
+  
 
 useEffect(() => {
   const fetchData = async () => {
@@ -163,6 +165,9 @@ useEffect(() => {
     }
   });
 
+  const getEventName = (event_id) => {
+    return eventNames[event_id] || `Event ${event_id}`; // Fallback if event name not found
+  };
 
 
   // Generate a unique color for each event ID
@@ -209,18 +214,18 @@ useEffect(() => {
 
   const CustomTooltip = ({ payload, label }) => {
     if (payload && payload.length) {
-      const { event_id, amount, budget_name } = payload[0].payload; // Make sure color exists
+      const { event_id, amount, budget_name } = payload[0].payload; // Ensure color exists
       return (
         <div style={{ backgroundColor: "black", padding: "10px", color: "white" }}>
-        <p>Event: {eventNames[event_id]}</p> {/* Display event name */}
-        <p>Amount: {amount}</p>
-        <p>Date: {label}</p>
-        <p>Budget Name: {budget_name}</p>
-      </div>
+          <p>Amount: {amount}</p>
+          <p>Date: {label}</p>
+          <p>Budget Name: {budget_name}</p>
+        </div>
       );
     }
     return null;
   };
+  
 
 
 
@@ -231,70 +236,53 @@ useEffect(() => {
     <div>
       <Card className="w-full bg-black mb-6">
         <CardBody>
-          <Typography color="white" variant="h4" className="mb-4 text-center">
-            Event Reports
-          </Typography>
-          <tbody>
-            {events.map((event) => (
-              <tr key={event.event_id} className="border-t">
-                <td className="px-4 py-2">{event.event_id}</td>
-                <td className="px-4 py-2">{event.event_name}</td>
-                <td className="px-4 py-2">
-                  {registrationsData
-                    .filter((reg) => reg.event_id === event.event_id)
-                    .reduce((acc, reg) => acc + reg.registrations, 0)}
-                </td>
-                <td className="px-4 py-2">
-                  {registrationsData
-                    .filter((reg) => reg.event_id === event.event_id)
-                    .reduce((acc, reg) => acc + reg.checkins, 0)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
+        
+         
+       
+       
+          {uniqueEvents.length > 0 ? (
+            uniqueEvents.map((event) => (
+              <p key={event.event_id}>
+               
+              </p>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="2" className="px-4 py-2 text-center">No events found</td>
+            </tr>
+          )}
+       
           {/* Grouped Bar Chart for Costs and Incomes */}
           <Typography color="white" variant="h5" className="mb-4 text-center">
-            Costs and Incomes Grouped by Event ID
+            Costs and Incomes Grouped by Events
           </Typography>
           <div className="mb-8" style={{ height: 400 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={groupedBarData}
-                margin={{ top: 20, bottom: 20 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="event_id"
-                  tick={{ fill: "white" }}
-                  stroke="white"
-                  label={{ value: "Event ID", position: "insideBottom", fill: "white" }}
-                />
-                <YAxis tick={{ fill: "white" }} stroke="white" />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  dataKey="costs"
-                  fill={barColors.costs}
-                  name="Costs"
-                  barSize={30}
-                >
-                  <LabelList dataKey="costs" position="top" fill="white" formatter={(value) => `Cost: ${value}`} />
-                </Bar>
-                <Bar
-                  dataKey="incomes"
-                  fill={barColors.incomes}
-                  name="Incomes"
-                  barSize={30}
-                >
-                  <LabelList dataKey="incomes" position="top" fill="white" formatter={(value) => `Income: ${value}`} />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%">
+  <BarChart data={groupedBarData} margin={{ top: 20, bottom: 20 }}>
+    <CartesianGrid strokeDasharray="3 3" />
+    <XAxis
+      dataKey="event_id"
+      tick={{ fill: "white" }}
+      stroke="white"
+      label={{ value: "Event", position: "insideBottom", fill: "white" }}
+      tickFormatter={getEventName} // Format tick labels as event names
+    />
+    <YAxis tick={{ fill: "white" }} stroke="white" />
+    <Tooltip />
+    <Legend />
+    <Bar dataKey="costs" fill={barColors.costs} name="Costs" barSize={30}>
+      <LabelList dataKey="costs" position="top" fill="white" formatter={(value) => `Cost: ${value}`} />
+    </Bar>
+    <Bar dataKey="incomes" fill={barColors.incomes} name="Incomes" barSize={30}>
+      <LabelList dataKey="incomes" position="top" fill="white" formatter={(value) => `Income: ${value}`} />
+    </Bar>
+  </BarChart>
+</ResponsiveContainer>
           </div>
 
             
           <Typography color="white" variant="h5" className="mb-4 text-center">
-  Costs Over Time
+  Costs Over Time for All Events
 </Typography>
 <div style={{ height: 400 }}>
   <ResponsiveContainer width="100%" height="100%">
@@ -354,9 +342,8 @@ useEffect(() => {
   </ResponsiveContainer>
 </div>
 
-// Line Chart for Incomes
 <Typography color="white" variant="h5" className="mb-4 text-center">
-  Incomes Over Time
+  Incomes Over Time for All Events
 </Typography>
 <div style={{ height: 400 }}>
   <ResponsiveContainer width="100%" height="100%">
@@ -418,39 +405,40 @@ useEffect(() => {
 
 
 <Typography color="white" variant="h5" className="mb-4 text-center">
-        Registrations and Check-ins Grouped by Event ID
+        Registrations and Check-ins Grouped by Events
       </Typography>
       <div style={{ height: 400 }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={registrationsData} margin={{ top: 20, bottom: 20 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="event_id"
-              tick={{ fill: 'white' }}
-              stroke="white"
-              label={{ value: "Event ID", position: "insideBottom", fill: 'white' }}
-            />
-            <YAxis tick={{ fill: 'white' }} stroke="white" />
-            <Tooltip />
-            <Legend />
-            <Bar
-              dataKey="registrations"
-              fill="#808080"  // Gray color for registrations
-              name="Registrations"
-              barSize={30}
-            >
-              <LabelList dataKey="registrations" position="top" fill="white" />
-            </Bar>
-            <Bar
-              dataKey="checkins"
-              fill="#AEC90A"  // Green color for check-ins
-              name="Check-ins"
-              barSize={30}
-            >
-              <LabelList dataKey="checkins" position="top" fill="white" />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+      <ResponsiveContainer width="100%" height="100%">
+  <BarChart data={registrationsData} margin={{ top: 20, bottom: 20 }}>
+    <CartesianGrid strokeDasharray="3 3" />
+    <XAxis
+      dataKey="event_id"
+      tick={{ fill: 'white' }}
+      stroke="white"
+      label={{ value: "Event", position: "insideBottom", fill: 'white' }}
+      tickFormatter={getEventName} // Format tick labels as event names
+    />
+    <YAxis tick={{ fill: 'white' }} stroke="white" />
+    <Tooltip />
+    <Legend />
+    <Bar
+      dataKey="registrations"
+      fill="#808080"  // Gray color for registrations
+      name="Registrations"
+      barSize={30}
+    >
+      <LabelList dataKey="registrations" position="top" fill="white" />
+    </Bar>
+    <Bar
+      dataKey="checkins"
+      fill="#AEC90A"  // Green color for check-ins
+      name="Check-ins"
+      barSize={30}
+    >
+      <LabelList dataKey="checkins" position="top" fill="white" />
+    </Bar>
+  </BarChart>
+</ResponsiveContainer>
       </div>
 
         </CardBody>
