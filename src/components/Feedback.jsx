@@ -11,6 +11,7 @@ const Feedback = () => {
   const [pastEvents, setPastEvents] = useState([]); // Renamed to focus on past events
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedEventId, setSelectedEventId] = useState(null);
+  const [showAddSuccessPopup, setShowAddSuccessPopup] = useState(false);
 
   const convertDateToReadableFormat = (dateString) => {
     const date = new Date(dateString[0], dateString[1] - 1, dateString[2]); // Subtract 1 from the month value
@@ -36,6 +37,11 @@ const Feedback = () => {
   
     return `${day}${suffix(day)} ${month} ${year}`;
   };
+
+  const handleClosePopup = () => {
+    setShowAddSuccessPopup(false);
+  };
+
   
 
   const formatTime = (timeArray) => {
@@ -110,7 +116,8 @@ const Feedback = () => {
           token
       );
       
-      alert('Feedback successful!');
+      //alert('Feedback successful!');
+      setShowAddSuccessPopup(true);
       setFeedback(""); // Clear feedback
       setIsFormVisible(false); // Hide form after submission
       // setShowAddSuccessPopup(true);
@@ -245,6 +252,23 @@ const Feedback = () => {
           </div>
         ))}
       </div>
+      
+      {showAddSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                Feedback recorded successfully
+            </h2>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
