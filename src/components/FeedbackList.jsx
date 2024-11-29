@@ -4,28 +4,26 @@ import axios from 'axios';
 
 // Helper function to format the date
 const convertDateToReadableFormat = (dateArray) => {
-    const [year, month, day] = dateArray; // Extract year, month, and day
-    const date = new Date(year, month - 1, day); // Month is zero-indexed in JavaScript
-    const dayOfMonth = date.getDate();
-    const monthName = date.toLocaleString('default', { month: 'long' });
-    const yearFull = date.getFullYear();
-  
-    // Add suffix to day (e.g., 1 -> 1st, 2 -> 2nd, etc.)
-    const getDaySuffix = (day) => {
-      if (day > 3 && day < 21) return 'th';
-      switch (day % 10) {
-        case 1: return 'st';
-        case 2: return 'nd';
-        case 3: return 'rd';
-        default: return 'th';
-      }
-    };
-  
-    return `${dayOfMonth}${getDaySuffix(dayOfMonth)} ${monthName} ${yearFull}`;
-  };
-  
+  const [year, month, day] = dateArray;
+  const date = new Date(year, month - 1, day);
+  const dayOfMonth = date.getDate();
+  const monthName = date.toLocaleString('default', { month: 'long' });
+  const yearFull = date.getFullYear();
 
-const FeedbackList = () => {
+  const getDaySuffix = (day) => {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  };
+
+  return `${dayOfMonth}${getDaySuffix(dayOfMonth)} ${monthName} ${yearFull}`;
+};
+
+const FeedbackList = ({ clubId, event }) => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [userProfiles, setUserProfiles] = useState([]);
   const [message, setMessage] = useState('');
@@ -67,9 +65,12 @@ const FeedbackList = () => {
         const token = localStorage.getItem('token');
         const response = await EventFeedbackService.getAllEventFeedbacks(token);
 
-        // Ensure feedbacks are fetched correctly from response.content
         if (response && response.content) {
-          setFeedbacks(response.content);
+          // Filter feedbacks by event_id and club_id
+          const filteredFeedbacks = response.content.filter(
+            (feedback) => feedback.event_id === event.event_id && feedback.club_id === clubId
+          );
+          setFeedbacks(filteredFeedbacks);
         } else {
           setMessage('No feedbacks found.');
         }
@@ -80,7 +81,7 @@ const FeedbackList = () => {
     };
 
     fetchFeedbacks();
-  }, []);
+  }, [clubId, event]);
 
   // Get user profile image by user ID
   const getUserProfile = (user_id) => {
