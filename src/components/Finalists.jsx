@@ -176,18 +176,24 @@ const Candidates = ({ activeTab }) => {
       <Sidebar className="flex-shrink-0" />
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="bg-black bg-opacity-90 text-white flex-col  overflow-y-auto">            <div className="w-1/4 bg-gray-800 p-4">
-                <Typography variant="h5" className="mb-4 text-[#AEC90A]">Positions</Typography>
+        <div className="bg-black bg-opacity-90 text-white flex-col  overflow-y-auto">       <div className="flex w-full">    <div className="w-1/4  p-4">
+                <Typography variant="h5" className="mb-4 text-[#AEC90A] text-center"> Select Positions</Typography>
                 {categories.map((category) => (
-                    <Button
-                        key={category}
-                        variant="outlined"
-                        color={selectedCategory === category ? "amber" : "gray"}
-                        onClick={() => handleCategoryChange(category)}
-                        className="w-full mb-2"
-                    >
-                        {category} 
-                    </Button>
+                   <Button
+                   key={category}
+                   variant="outlined"
+                   // Conditionally set background color and text color based on selection
+                   style={{
+                       backgroundColor: selectedCategory === category ? "#AEC90A" : "transparent",  // Highlight selected tab
+                       color: selectedCategory === category ? "black" : "#AEC90A",  // Black text for selected, yellow for unselected
+                       border: selectedCategory === category ? "2px solid #AEC90A" : "2px solid #AEC90A", // Optional border for selected state
+                   }}
+                   onClick={() => handleCategoryChange(category)}
+                   className="w-full mb-2 rounded-md"
+               >
+                   {category}
+               </Button>
+               
                 ))}
             </div>
 
@@ -211,7 +217,6 @@ const Candidates = ({ activeTab }) => {
                     if (selectedCategory === category) {
                         return (
                           <div key={category} className="mb-8">
-                          <Typography variant="h5" className="mb-2">{category}</Typography>
                           {sortedCandidates.length > 0 ? (
                               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"> {/* Responsive grid with 3 columns on large screens */}
                                   {sortedCandidates.map(candidate => {
@@ -240,7 +245,7 @@ const Candidates = ({ activeTab }) => {
                                                       : 0
                                                   )}
                       
-                                                  <Typography variant="body2" className="mt-2 text-white">
+                                                  <Typography variant="body2" className="mt-2 text-[#AEC90A]">
                                                       {(
                                                         (participantDetails.filter((participant) => participant.attendance === 1).length /
                                                         participantDetails.length) * 100
@@ -248,17 +253,17 @@ const Candidates = ({ activeTab }) => {
                                                   </Typography>
                       
                                                   <div className="my-4 mt-8">
-                                                      {associatedEvents.length > 0 ? (
-                                                          <ul className="list-disc text-gray-300">
-                                                              <Typography className="text-white">Has been successful in being part of:</Typography>
-                                                              {associatedEvents.map((event, idx) => (
-                                                                  <li key={idx}>{event}</li>
-                                                              ))}
-                                                          </ul>
-                                                      ) : (
-                                                          <Typography className="text-gray-400"></Typography>
-                                                      )}
-                                                  </div>
+                                <Typography className="text-white font-bold">Has been successful in being part of:</Typography>
+                                {associatedEvents.length > 0 ? (
+                                    <ul className="list-disc text-gray-300">
+                                        {associatedEvents.map((event, idx) => (
+                                            <li key={idx}>{event}</li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <Typography className="text-gray-400">No events associated.</Typography>
+                                )}
+                            </div>
                                               </CardBody>
                                           </Card>
                                       );
@@ -275,7 +280,7 @@ const Candidates = ({ activeTab }) => {
                     return null;
                 })}
             </div>
-        </div> </div> </div>
+        </div> </div> </div> </div>
     );
 };
 
