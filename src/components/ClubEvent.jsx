@@ -166,7 +166,7 @@ const ClubEvent = ({ club }) => {
 
   const handleEditEvent = (event) => {
     console.log(`Editing ${event.name}`);
-    // Add your edit logic here
+    navigate(`/club/${club.club_id}/edit-event/${event.event_id}`);
   };
 
   const handleDeleteEvent = async (event) => {
@@ -275,7 +275,7 @@ const ClubEvent = ({ club }) => {
   return (
     <>
       {loading ? (
-        <h1 className="text-white">New Loading ....</h1>
+        <h1 className="text-white">Loading Events....</h1>
       ) : (
         <div className="flex justify-center items-center flex-col p-4 rounded-2xl bg-black opacity-70">
           {(location.pathname.includes("/president") ||
