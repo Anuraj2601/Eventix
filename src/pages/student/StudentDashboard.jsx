@@ -1,26 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Make sure axios is installed
-import Sidebar from '../../components/Sidebar';
-import Navbar from '../../components/Navbar';
-import Event from '../../components/Event';
-import Upcoming from '../../components/Upcoming';
-import Feedback from '../../components/Feedback';
-import RegistrationModal from '../../components/RegistrationModal'; // Assuming you have this component
+// export default Dashboard;
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Sidebar from "../../components/Sidebar";
+import Navbar from "../../components/Navbar";
+import Upcoming from "../../components/Upcoming";
+import Feedback from "../../components/Feedback";
+import RegistrationModal from "../../components/RegistrationModal"; // Import RegistrationModal
 import {
   AiOutlineCalendar,
-  AiOutlineClockCircle,
-  AiOutlineEnvironment,
   AiOutlineInfoCircle,
-} from 'react-icons/ai'; // Install react-icons if needed
+  AiOutlineEnvironment,
+  AiOutlineClockCircle,
+} from "react-icons/ai";
 
 const Dashboard = () => {
-  const [events, setEvents] = useState([]); // State for event data
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
-  const [selectedEvent, setSelectedEvent] = useState(null); // Selected event state
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null); // State for selected event
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
-  // Fetch events from the API
   useEffect(() => {
     const fetchEvents = async () => {
       const token = localStorage.getItem("token");
@@ -40,7 +39,7 @@ const Dashboard = () => {
             },
           }
         );
-        setEvents(response.data.content || []); // Assuming `content` contains the events
+        setEvents(response.data.content); // Assuming `content` contains the events array
         setLoading(false);
       } catch (err) {
         console.error("Error fetching events:", err);
@@ -52,18 +51,31 @@ const Dashboard = () => {
     fetchEvents();
   }, []);
 
+  const Event = ({ eventName, description, date, venue, image }) => {
+    if (!eventName) return null;
+
+    return (
+      <div className="event-card p-4 bg-neutral-800 rounded-lg shadow-lg mb-4">
+        <img
+          src={image || "default-image-url.jpg"}
+          alt={eventName}
+          className="w-full h-48 object-cover rounded-lg mb-2"
+        />
+        <h2 className="text-lg font-bold mb-2">{eventName}</h2>
+        <p className="text-sm mb-2">{description}</p>
+        <p className="text-sm mb-2">Date: {date}</p>
+        <p className="text-sm">Venue: {venue}</p>
+      </div>
+    );
+  };
+
   return (
     <div className="fixed inset-0 flex flex-col md:flex-row">
-      {/* Sidebar */}
-      <Sidebar className="flex-shrink-0 md:w-1/4 w-full" />
+      <Sidebar className="flex-shrink-0 md:w-1/4" />
       <div className="flex flex-col flex-1">
-        {/* Navbar */}
         <Navbar className="sticky top-0 z-10 p-4" />
-
-        {/* Main Content */}
-        <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto flex-col md:flex-row">
-          {/* Events Section */}
-          <div className="w-full md:w-1/2 px-2 ml-2 overflow-y-auto">
+        <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto">
+          <div className="w-2/4 px-2 ml-2 overflow-y-auto">
             {loading && <div className="text-[#AEC90A]">Loading events...</div>}
             {error && <div className="text-red-500">{error}</div>}
             {!loading && !error && events.length === 0 && (
@@ -73,7 +85,10 @@ const Dashboard = () => {
               !error &&
               events.length > 0 &&
               events.map((event) => (
-                <div key={event.event_id} className="border p-4 mb-4 rounded-lg">
+                <div
+                  key={event.event_id}
+                  className="border p-4 mb-4 rounded-lg"
+                >
                   <img
                     src={
                       event.event_image && event.event_image.startsWith("http")
@@ -94,7 +109,8 @@ const Dashboard = () => {
                       <AiOutlineCalendar
                         className="text-[#AEC90A] mr-2"
                         size={20}
-                      />
+                      />{" "}
+                      {/* Event Name icon */}
                       <p className="text-sm">{event.name}</p>
                     </div>
 
@@ -102,22 +118,25 @@ const Dashboard = () => {
                       <AiOutlineClockCircle
                         className="text-[#AEC90A] mr-2"
                         size={20}
-                      />
+                      />{" "}
+                      {/* Date icon */}
                       <p className="text-sm">
-                        {event.date && !isNaN(new Date(event.date).getTime())
-                          ? new Intl.DateTimeFormat("en-GB", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                            }).format(new Date(event.date))
-                          : "Invalid date"}
-                      </p>
+  {event.date && !isNaN(new Date(event.date).getTime())
+    ? new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(new Date(event.date))
+    : "Invalid date"}
+</p>
+
                     </div>
                     <div className="flex items-center mb-2">
                       <AiOutlineEnvironment
                         className="text-[#AEC90A] mr-2"
                         size={20}
-                      />
+                      />{" "}
+                      {/* Venue icon */}
                       <p className="text-sm">{event.venue}</p>
                     </div>
                   </div>
@@ -125,7 +144,8 @@ const Dashboard = () => {
                     <AiOutlineInfoCircle
                       className="text-[#AEC90A] mr-2"
                       size={20}
-                    />
+                    />{" "}
+                    {/* Purpose icon */}
                     <p className="text-sm font-bold">{event.purpose}</p>
                   </div>
 
@@ -135,6 +155,7 @@ const Dashboard = () => {
                         setSelectedEvent(event);
                         setIsModalOpen(true);
                       }}
+                      // className="mt-2 px-4 py-2 bg-[#AEC90A] text-black rounded hover:bg-[#93b208]"
                       className="mt-2 ml-auto px-4 py-2 bg-[#AEC90A] text-black rounded hover:bg-[#93b208]"
                     >
                       Register
@@ -143,9 +164,7 @@ const Dashboard = () => {
                 </div>
               ))}
           </div>
-
-          {/* Right Section */}
-          <div className="w-full md:w-1/2 flex flex-col py-1 h-full">
+          <div className="w-2/4 flex flex-col py-1 h-full">
             <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl">
               <Upcoming />
             </div>
@@ -155,8 +174,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
-      {/* Registration Modal */}
       {isModalOpen && (
         <RegistrationModal
           isOpen={isModalOpen}
