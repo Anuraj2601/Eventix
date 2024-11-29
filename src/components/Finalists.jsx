@@ -6,7 +6,8 @@ import { Chart as ChartJS, Tooltip, Legend, ArcElement } from 'chart.js';
 import EventOcService from '../service/EventOcService';
 import UsersService from '../service/UsersService'; // Adjust path if needed
 import axios from 'axios';
-
+import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Candidates = ({ activeTab }) => {
@@ -171,8 +172,11 @@ const Candidates = ({ activeTab }) => {
     };
 
     return (
-        <div className="flex text-white">
-            <div className="w-1/4 bg-gray-800 p-4">
+      <div className="fixed inset-0 flex">
+      <Sidebar className="flex-shrink-0" />
+      <div className="flex flex-col flex-1">
+        <Navbar className="sticky top-0 z-10 p-4" />
+        <div className="bg-black bg-opacity-90 text-white flex-col  overflow-y-auto">            <div className="w-1/4 bg-gray-800 p-4">
                 <Typography variant="h5" className="mb-4 text-[#AEC90A]">Positions</Typography>
                 {categories.map((category) => (
                     <Button
@@ -206,73 +210,72 @@ const Candidates = ({ activeTab }) => {
 
                     if (selectedCategory === category) {
                         return (
-                         <div key={category} className="mb-8">
-    <Typography variant="h5" className="mb-2">{category}</Typography>
-    {sortedCandidates.length > 0 ? (
-        <div className="flex flex-col gap-8"> {/* Flex column for vertical stacking with extra gap */}
-            {sortedCandidates.map(candidate => {
-                const userProfile = userProfiles.find(profile => profile.user_id === candidate.user_id);
-                const associatedEvents = getEventNamesForCandidate(candidate);
-                const participantDetails = meetingParticipants[candidate.id] || [];
-
-                return (
-                    <Card 
-                      key={candidate.id} 
-                      className="bg-black flex flex-col items-center space-y-4 p-10 rounded-lg custom-card w-1/3 m-2" // m-2 adds margin for spacing
-                    >
-                        <Avatar
-                            src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`}
-                            alt={`Candidate ${candidate.id}`}
-                            className="w-36 h-36 rounded-full object-cover border-black border-4"
-                            style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-                        />
-                        <CardBody className="flex flex-col items-center text-center">
-                            <Typography variant="h5" className="text-white font-bold">{candidate.name || 'No Name'}</Typography>
-                            <Typography className="text-gray-300 p-2">{candidate.contribution || 'No contribution available'}</Typography>
-
-                            {/* Render the Pie Chart */}
-                            {renderPieChart(participantDetails.length > 0
-                                ? (participantDetails.filter(p => p.attendance === 1).length / participantDetails.length) * 100
-                                : 0
-                            )}
- <Typography variant="body2" className="mt-2 text-white">
-    {(
-      (participantDetails.filter((participant) => participant.attendance === 1).length /
-      participantDetails.length) * 100
-    ).toFixed(2)}% club performance
-  </Typography>
-                            <div className="my-4 mt-8">
-                              
-                                {associatedEvents.length > 0 ? (
-                                  
-                                    <ul className="list-disc text-gray-300">
-                                        <Typography className="text-white">Has been successful in being part of:</Typography>
-                                        {associatedEvents.map((event, idx) => (
-                                            <li key={idx}>{event}</li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <Typography className="text-gray-400"></Typography>
-                                )}
-                            </div>
-                        </CardBody>
-                    </Card>
-                );
-            })}
-        </div>
-    ) : (
-        <Typography>No candidates found for this category.</Typography>
-    )}
-</div>
-
-
+                          <div key={category} className="mb-8">
+                          <Typography variant="h5" className="mb-2">{category}</Typography>
+                          {sortedCandidates.length > 0 ? (
+                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"> {/* Responsive grid with 3 columns on large screens */}
+                                  {sortedCandidates.map(candidate => {
+                                      const userProfile = userProfiles.find(profile => profile.user_id === candidate.user_id);
+                                      const associatedEvents = getEventNamesForCandidate(candidate);
+                                      const participantDetails = meetingParticipants[candidate.id] || [];
+                      
+                                      return (
+                                          <Card 
+                                            key={candidate.id} 
+                                            className="bg-black flex flex-col items-center space-y-4 p-10 rounded-lg custom-card" // Removed width, as it's handled by the grid
+                                          >
+                                              <Avatar
+                                                  src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`}
+                                                  alt={`Candidate ${candidate.id}`}
+                                                  className="w-36 h-36 rounded-full object-cover border-black border-4"
+                                                  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
+                                              />
+                                              <CardBody className="flex flex-col items-center text-center">
+                                                  <Typography variant="h5" className="text-white font-bold">{candidate.name || 'No Name'}</Typography>
+                                                  <Typography className="text-gray-300 p-2">{candidate.contribution || 'No contribution available'}</Typography>
+                      
+                                                  {/* Render the Pie Chart */}
+                                                  {renderPieChart(participantDetails.length > 0
+                                                      ? (participantDetails.filter(p => p.attendance === 1).length / participantDetails.length) * 100
+                                                      : 0
+                                                  )}
+                      
+                                                  <Typography variant="body2" className="mt-2 text-white">
+                                                      {(
+                                                        (participantDetails.filter((participant) => participant.attendance === 1).length /
+                                                        participantDetails.length) * 100
+                                                      ).toFixed(2)}% club performance
+                                                  </Typography>
+                      
+                                                  <div className="my-4 mt-8">
+                                                      {associatedEvents.length > 0 ? (
+                                                          <ul className="list-disc text-gray-300">
+                                                              <Typography className="text-white">Has been successful in being part of:</Typography>
+                                                              {associatedEvents.map((event, idx) => (
+                                                                  <li key={idx}>{event}</li>
+                                                              ))}
+                                                          </ul>
+                                                      ) : (
+                                                          <Typography className="text-gray-400"></Typography>
+                                                      )}
+                                                  </div>
+                                              </CardBody>
+                                          </Card>
+                                      );
+                                  })}
+                              </div>
+                          ) : (
+                              <Typography>No candidates selected for this category.</Typography>
+                          )}
+                      </div>
+                      
                            
                         );
                     }
                     return null;
                 })}
             </div>
-        </div>
+        </div> </div> </div>
     );
 };
 
