@@ -235,10 +235,13 @@ const Upcoming = () => {
         })}
       </div>
 
-      {isModalOpen && selectedEvent && (
+      {selectedEvent && (
         <EventRegistrationModal
+          clubId={selectedEvent.club_id}
+          eventDetails={selectedEvent}
           event={selectedEvent}
-          closeModal={closeModal}
+          isOpen={isModalOpen}
+          onClose={closeModal}
         />
       )}
     </div>
