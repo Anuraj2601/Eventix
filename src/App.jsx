@@ -150,6 +150,7 @@ import EventNav from './components/EventNav';
 /* import Toggle from './components/election/Toggle'; */
 
 import AddEvent from './components/AddEvent';
+import EditEvent from './components/EditEvent';
 
 import { ClubMemberNav } from './components/ClubMemberNav';
 import AddNewAnnouncementForm from './pages/president/AddNewAnnouncementForm';
@@ -288,6 +289,7 @@ const App = () => {
         <Route path='/oc/club/:id' element={<ClubDetails />} />
         <Route path='/oc/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
+        <Route path="/club/:club_id/edit-event/:event_id" element={<EditEvent />}></Route>
         <Route path='/oc/calendar' element={<Calendar />}></Route>
         <Route path='/oc/club/election' element={<Election/>}></Route>
         <Route path='/oc' element={<Dashboardoc  />} ></Route>
