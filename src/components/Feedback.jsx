@@ -66,6 +66,8 @@ const Feedback = () => {
         });
 
       setPastEvents(pastEventsData);
+      const initialRatings = initializeEmojiRatings(pastEventsData);
+      setEmojiRatings(initialRatings);
     } catch (error) {
       console.error("Error fetching events:", error);
     }
@@ -95,6 +97,18 @@ const Feedback = () => {
     }));
   };
 
+  const initializeEmojiRatings = (events) => {
+    const ratings = {};
+    events.forEach((event) => {
+      ratings[event.event_id] = {
+        "😊": Math.floor(Math.random() * 100) + 1, // Random number between 1 and 100
+        "😡": Math.floor(Math.random() * 100) + 1,
+        "👍": Math.floor(Math.random() * 100) + 1,
+      };
+    });
+    return ratings;
+  };
+  
   return (
     <div className="relative h-[380px] overflow-hidden">
       <h2 className="text-white text-sm font-bold -mt-1 ml-0 z-1">Feedback</h2>
@@ -142,23 +156,23 @@ const Feedback = () => {
                     <h3 className="text-white text-xl font-bold mb-2 py-2">
                       {event.name} &nbsp;&nbsp;&nbsp;&nbsp;
                       <span
-                        className="text-yellow-400 cursor-pointer mr-4"
-                        onClick={() => handleEmojiClick(event.event_id, "😊")}
-                      >
-                        😊 {emojiRatings[event.event_id]?.["😊"] || 0}
-                      </span>
-                      <span
-                        className="text-red-400 cursor-pointer mr-4"
-                        onClick={() => handleEmojiClick(event.event_id, "😡")}
-                      >
-                        😡 {emojiRatings[event.event_id]?.["😡"] || 0}
-                      </span>
-                      <span
-                        className="text-green-400 cursor-pointer mr-4"
-                        onClick={() => handleEmojiClick(event.event_id, "👍")}
-                      >
-                        👍 {emojiRatings[event.event_id]?.["👍"] || 0}
-                      </span>
+              className="text-yellow-400 cursor-pointer mr-4"
+              onClick={() => handleEmojiClick(event.event_id, "😊")}
+            >
+              😊 {emojiRatings[event.event_id]?.["😊"] || 0}
+            </span>
+            <span
+              className="text-red-400 cursor-pointer mr-4"
+              onClick={() => handleEmojiClick(event.event_id, "😡")}
+            >
+              😡 {emojiRatings[event.event_id]?.["😡"] || 0}
+            </span>
+            <span
+              className="text-green-400 cursor-pointer mr-4"
+              onClick={() => handleEmojiClick(event.event_id, "👍")}
+            >
+              👍 {emojiRatings[event.event_id]?.["👍"] || 0}
+            </span>
                     </h3>
                     <p className="text-gray-400 mb-2">
                       {event.details}
