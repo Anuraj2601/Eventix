@@ -1,208 +1,267 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { getAllCandidates } from "../service/candidateService";
-import Sidebar from '../components/Sidebar';
-import Navbar from '../components/Navbar';
-import { Card, CardBody, Typography, Avatar } from "@material-tailwind/react";
+import { getAllCandidates, updateCandidateSelection } from "../service/candidateService";
+import { Card, CardBody, Typography, Avatar, Button } from "@material-tailwind/react";
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, Tooltip, Legend, ArcElement } from 'chart.js';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import EventOcService from '../service/EventOcService';
+import UsersService from '../service/UsersService'; // Adjust path if needed
+import axios from 'axios';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const Finalists = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const currentPath = location.pathname;
-  const electionIdFromUrl = currentPath.split('/').pop();
+const Candidates = ({ activeTab }) => {
+    const [candidates, setCandidates] = useState([]);
+    const [message, setMessage] = useState(""); 
+    const [eventOCs, setEventOCs] = useState([]);
+    const [userProfiles, setUserProfiles] = useState([]); // Initialize as an array
+    const [meetingParticipants, setMeetingParticipants] = useState([]); 
+    const [selectedCategory, setSelectedCategory] = useState("President");  // Track the selected category
 
-  const [candidates, setCandidates] = useState({
-    president: [],
-    secretary: [],
-    treasurer: []
-  });
+    const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name));
 
-  const [activeTab, setActiveTab] = useState("president");
-  const [openModal, setOpenModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+    useEffect(() => {
+        const fetchUserProfiles = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/users/getAllUsersIncludingCurrent', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
 
-  useEffect(() => {
-    const fetchCandidates = async () => {
-      try {
-        const data = await getAllCandidates();
-        console.log("Fetched candidates:", data);
+                if (Array.isArray(response.data)) {
+                    const profiles = response.data.map((user) => ({
+                        user_id: user.id,
+                        name: `${user.firstname} ${user.lastname}`,
+                        email: user.email,
+                        profileImage: user.photoUrl || '',  
+                    }));
+                    setUserProfiles(profiles);
+                } else {
+                    setMessage('Error: Response data is not an array');
+                }
+            } catch (err) {
+                setMessage('Error fetching user profiles. Please try again.');
+                console.error('Error fetching user profiles:', err);
+            }
+        };
+        fetchUserProfiles();
+    }, []);
 
-        if (Array.isArray(data)) {
-          const categorizedCandidates = {
-            president: data.filter(candidate => candidate.position === "President" && candidate.selected === "selected" && String(candidate.electionId) === String(electionIdFromUrl)),
-            secretary: data.filter(candidate => candidate.position === "Secretary" && candidate.selected === "selected" && String(candidate.electionId) === String(electionIdFromUrl)),
-            treasurer: data.filter(candidate => candidate.position === "Treasurer" && candidate.selected === "selected" && String(candidate.electionId) === String(electionIdFromUrl))
-          };
+    useEffect(() => {
+        const fetchEventOCs = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await EventOcService.getAllEventOcs(token);
+                
+                if (response && Array.isArray(response.content)) {
+                    setEventOCs(response.content || []);
+                } else {
+                    console.error("Unexpected response format:", response);
+                }
+            } catch (error) {
+                console.error("Error fetching Event OCs:", error);
+            }
+        };
+        fetchEventOCs();
+    }, []);
 
-          setCandidates(categorizedCandidates);
+    const getUserIdForCandidate = (candidate) => {
+        if (!candidate.userEmail) return null; 
+        
+        const matchingProfile = userProfiles.find((profile) => profile.email === candidate.userEmail);
+        return matchingProfile ? matchingProfile.user_id : null;
+    };
 
-          // Modal logic: Check if there are no accepted candidates
-          const acceptedCandidates = [
-            ...categorizedCandidates.president,
-            ...categorizedCandidates.secretary,
-            ...categorizedCandidates.treasurer
-          ];
+    const getEventNamesForCandidate = (candidate) => {
+        if (!candidate.userEmail) return [];
+    
+        const matchingProfile = userProfiles.find((profile) => profile.email === candidate.userEmail);
+        if (!matchingProfile) return [];
+    
+        const user_id = matchingProfile.user_id; 
+        return eventOCs.filter((oc) => oc.user_id === user_id).map((oc) => oc.event_name);
+    };
 
-          if (acceptedCandidates.length === 0) {
-            setModalMessage("Sorry, the selection process isn't completed yet.");
-            setOpenModal(true);
-          } else if (acceptedCandidates.length === 1) {
-            setModalMessage("One candidate has been selected. Proceeding...");
-            setOpenModal(true);
-          }
-        } else {
-          console.error("Fetched data is not an array:", data);
+    useEffect(() => {
+        const fetchCandidates = async () => {
+            try {
+                const data = await getAllCandidates();
+                setCandidates(data);
+            } catch (error) {
+                console.error("Error fetching candidates:", error);
+            }
+        };
+        fetchCandidates();
+    }, []);
+
+    useEffect(() => {
+        const fetchMeetingParticipants = async () => {
+            const promises = sortedCandidates.map(async (candidate) => {
+                const userId = getUserIdForCandidate(candidate);
+                const clubId = candidate.clubId; 
+
+                if (!userId || !clubId) {
+                    return { candidateId: candidate.id, meetingParticipants: [] };
+                }
+
+                try {
+                    const response = await axios.get(
+                        `http://localhost:8080/api/meeting-participants/user/${userId}/club/${clubId}`
+                    );
+                    return {
+                        candidateId: candidate.id,
+                        meetingParticipants: response.data,
+                    };
+                } catch (error) {
+                    return { candidateId: candidate.id, meetingParticipants: [] };
+                }
+            });
+
+            const results = await Promise.all(promises);
+            const participantsMap = results.reduce((acc, result) => {
+                acc[result.candidateId] = result.meetingParticipants;
+                return acc;
+            }, {});
+            setMeetingParticipants(participantsMap);
+        };
+
+        if (sortedCandidates.length > 0) fetchMeetingParticipants();
+    }, [sortedCandidates]);
+
+    const filterCandidates = (candidates) => {
+        const electionIdFromUrl = window.location.pathname.split('/').pop(); 
+        return candidates.filter(candidate => {
+            const isSameElection = String(candidate.electionId) === String(electionIdFromUrl);
+            return candidate.selected === "selected" && isSameElection;
+        });
+    };
+
+    const renderPieChart = (performance) => {
+        if (typeof performance !== 'number') {
+            return <Typography>Invalid performance data</Typography>;
         }
-      } catch (error) {
-        console.error("Error fetching candidates:", error);
-      }
+        
+        const data = {
+            labels: ['Performance'],
+            datasets: [{
+                data: [performance, 100 - performance],
+                backgroundColor: ['#AEC90A', 'black'],
+                borderWidth: 1,
+            }],
+        };
+
+        return (
+            <div className="w-36 h-36">
+                <Pie data={data} />
+            </div>
+        );
     };
 
-    fetchCandidates();
-  }, [electionIdFromUrl]);
+    const categories = ["President", "Secretary", "Treasurer"];
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    navigate(-1); // Navigate back to the previous page
-  };
+    const getSelectedCount = (category) => {
+        return candidates.filter(candidate =>
+            candidate.position.toLowerCase() === category.toLowerCase() &&
+            candidate.selected === "selected"
+        ).length;
+    };
 
-  const renderOCList = (ocList) => {
-    let parsedOCList = [];
-    try {
-        parsedOCList = typeof ocList === 'string' ? JSON.parse(ocList) : ocList;
-    } catch (error) {
-        console.error("Error parsing OC data:", error);
-        return <Typography>Invalid OC data format</Typography>;
-    }
-
-    if (!Array.isArray(parsedOCList) || parsedOCList.length === 0) {
-        return <Typography>No OC data available</Typography>;
-    }
-    return (
-        <div className="ml-auto text-right">
-            <ul className="list-disc list-inside text-left">
-                {parsedOCList.map((event, index) => (
-                    <li key={index} className="text-white">
-                        {event}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-  };
-
-  const renderPieChart = (performance) => {
-    const data = {
-        labels: ['Club Performance'],
-        datasets: [{
-            data: [performance, 100 - performance],
-            backgroundColor: ['#AEC90A', 'black'],
-            borderWidth: 1,
-        }],
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category);
     };
 
     return (
-      <div className="w-36 h-36 flex flex-col items-center">
-        <Pie data={data} />
-        <Typography variant="body2" className="mt-2 text-white ">
-            {performance}%
-        </Typography>
-      </div>
-    );
-  };
-
-  const renderCandidates = (candidatesList) => (
-    <div className="flex flex-wrap justify-between">
-      {candidatesList.map(candidate => (
-        <Card 
-          key={candidate.id} 
-          className=" bg-black flex flex-col items-center space-x-4 p-10 rounded-lg custom-card w-1/3 space-2" // m-2 adds margin for spacing
-          >
-          <Avatar
-            src={candidate.imageUrl}
-            alt={`Candidate ${candidate.id}`}
-            className="w-36 h-36 rounded-full object-cover border-black border-4"
-            style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}
-          />
-          <CardBody className="flex flex-col items-center text-center">
-            <Typography variant="h5" className="text-white font-bold">{candidate.name}</Typography>
-            <Typography className="text-gray-300 p-2">{candidate.contribution}</Typography>
-  
-            {/* Render the Pie Chart */}
-            {renderPieChart(candidate.performance)} 
-  
-            <div className="my-4 mt-8"> {/* Add margin for spacing */}
-              <Typography className="text-white">Has been successful in being part of:</Typography>
-              {renderOCList(candidate.oc)}
-            </div>
-          </CardBody>
-        </Card>
-      ))}
-    </div>
-  );
-
-  return (
-    <div className="flex h-screen">
-      <Sidebar className="flex-shrink-0" />
-      <div className="flex-1 flex flex-col">
-        <Navbar className="sticky top-0 z-10 bg-neutral-900 text-white" />
-        <div className="flex h-screen bg-neutral-900 p-1 text-white overflow-y-auto">
-          <div className="flex w-full">
-            {/* Vertical Tabs */}
-            <div className="w-1/6 p-4 text-white">
-              <Typography variant="h5" className="mb-4 text-center">
-                Positions
-              </Typography>
-              <ul>
-                {["president", "secretary", "treasurer"].map(position => (
-                  <li
-                    key={position}
-                    className={`cursor-pointer mb-2 p-2 rounded-lg ${activeTab === position ? 'bg-[#AEC90A] text-black' : 'hover:bg-gray-700'}`}
-                    onClick={() => setActiveTab(position)}
-                  >
-                    {position.charAt(0).toUpperCase() + position.slice(1)}
-                  </li>
+        <div className="flex text-white">
+            <div className="w-1/4 bg-gray-800 p-4">
+                <Typography variant="h5" className="mb-4 text-[#AEC90A]">Positions</Typography>
+                {categories.map((category) => (
+                    <Button
+                        key={category}
+                        variant="outlined"
+                        color={selectedCategory === category ? "amber" : "gray"}
+                        onClick={() => handleCategoryChange(category)}
+                        className="w-full mb-2"
+                    >
+                        {category} 
+                    </Button>
                 ))}
-              </ul>
             </div>
 
-            {/* Candidates Display */}
-            <div className="w-3/4 bg-neutral-900">
-              <div className="relative mb-12 w-full ">
-                <div className="absolute z-10 w-full flex justify-center mb-16">
-                  <div className="py-2 px-4 rounded-lg -mt-20">
-                    <h2 className="text-3xl text-center">{`${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Position`}</h2>
-                  </div>
-                </div>
-                <div className="relative w-full rounded-xl mt-40 ">
-                  {renderCandidates(candidates[activeTab])}
-                </div>
-              </div>
-            </div>
-          </div>
+            <div className="w-3/4 p-4">
+                {categories.map(category => {
+                    const categoryCandidates = candidates.filter(candidate => candidate.position.toLowerCase() === category.toLowerCase());
+                    const filteredCandidates = filterCandidates(categoryCandidates);
+                    const sortedCandidates = [...filteredCandidates].sort((a, b) => {
+                        const aParticipants = meetingParticipants[a.id] || [];
+                        const bParticipants = meetingParticipants[b.id] || [];
+                        const aAttendance = aParticipants.length > 0
+                            ? (aParticipants.filter(participant => participant.attendance === 1).length / aParticipants.length) * 100
+                            : 0;
+                        const bAttendance = bParticipants.length > 0
+                            ? (bParticipants.filter(participant => participant.attendance === 1).length / bParticipants.length) * 100
+                            : 0;
+                        return bAttendance - aAttendance;
+                    });
+                    const selectedCount = getSelectedCount(category);
+
+                    if (selectedCategory === category) {
+                        return (
+                          <div key={category} className="mb-8">
+    <Typography variant="h5" className="mb-2">{category}</Typography>
+    {sortedCandidates.length > 0 ? (
+        <div className="flex flex-col gap-4"> {/* Flex container with column layout */}
+            {sortedCandidates.map(candidate => {
+                const userProfile = userProfiles.find(profile => profile.user_id === candidate.user_id);
+                const associatedEvents = getEventNamesForCandidate(candidate);
+                const participantDetails = meetingParticipants[candidate.id] || [];
+
+                return (
+                    <Card key={candidate.id} className="bg-black text-white w-full mb-8" style={{
+                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                    }}>
+                        <CardBody>
+                            <div className="flex items-start gap-4">
+                                <div className="flex-shrink-0 w-1/6">
+                                    <Avatar className="w-40 h-40 rounded-full" src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
+                                </div>
+                                <div className="flex-grow flex flex-col gap-4 w-1/3">
+                                    <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
+                                    <Typography variant="h6">{candidate.userEmail || 'No Email'}</Typography>
+                                    <Typography variant="h6">Position: {candidate.position}</Typography>
+                                    <Typography variant="body2">How can they make a change? : {candidate.contribution}</Typography>
+                                </div>
+
+                                {associatedEvents.length > 0 && (
+                                    <ul className="w-1/3">
+                                        {associatedEvents.map((event, idx) => (
+                                            <li key={idx}>{event}</li>
+                                        ))}
+                                    </ul>
+                                )}
+
+                                {renderPieChart(participantDetails.length > 0
+                                    ? (participantDetails.filter(p => p.attendance === 1).length / participantDetails.length) * 100
+                                    : 0
+                                )}
+                            </div>
+                        </CardBody>
+                    </Card>
+                );
+            })}
         </div>
-      </div>
+    ) : (
+        <Typography>No candidates found for this category.</Typography>
+    )}
+</div>
 
-      {/* Modal */}
-      <Dialog open={openModal} onClose={handleCloseModal}>
-        <DialogTitle>Notice</DialogTitle>
-        <DialogContent>
-          <Typography>{modalMessage}</Typography>
-        </DialogContent>
-        <DialogActions>
-          <button onClick={handleCloseModal} className="bg-[#AEC90A] text-white px-4 py-2 rounded-md">OK</button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
+                           
+                        );
+                    }
+                    return null;
+                })}
+            </div>
+        </div>
+    );
 };
 
-export default Finalists;
+export default Candidates;

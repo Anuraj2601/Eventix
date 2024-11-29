@@ -293,8 +293,21 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
               const filteredCandidates = filterCandidates(categoryCandidates);
 
               // Sort candidates by performance in descending order
-              const sortedCandidates = [...filteredCandidates].sort((a, b) => b.performance - a.performance);
-              
+              const sortedCandidates = [...filteredCandidates].sort((a, b) => {
+                const aParticipants = meetingParticipants[a.id] || [];
+                const bParticipants = meetingParticipants[b.id] || [];
+        
+                const aAttendance =
+                    aParticipants.length > 0
+                        ? (aParticipants.filter(participant => participant.attendance === 1).length / aParticipants.length) * 100
+                        : 0;
+                const bAttendance =
+                    bParticipants.length > 0
+                        ? (bParticipants.filter(participant => participant.attendance === 1).length / bParticipants.length) * 100
+                        : 0;
+        
+                return bAttendance - aAttendance; // Sort descending
+            });              
               // Get the number of selected candidates for the current category
               const selectedCount = getSelectedCount(category);
 
@@ -327,10 +340,10 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
                                               <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
 
                                               <Typography variant="h6">{candidate.userEmail || 'No Name'}</Typography>
-                                              <Typography variant="h6">Position they Applied for : {candidate.position }</Typography>
+                                              <Typography variant="h6">Position  : {candidate.position }</Typography>
 
 
-                                              <Typography variant="body2">How can they make a change? {candidate.contribution}</Typography>
+                                              <Typography variant="body2">How can they make a change? : {candidate.contribution}</Typography>
                                           </div>
                                           {associatedEvents.length > 0 && (
                                         <>
