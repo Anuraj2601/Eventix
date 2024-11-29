@@ -103,23 +103,6 @@ class UsersService{
         }
     }
 
-    static async forgotPassword(email,token) {
-        try{
-
-            const response = await axios.put(`${UsersService.BASE_URL}/regenerate-otp`, {
-                params: { email },
-              },
-                {
-                    headers: {Authorization: `Bearer${token}`}
-                }
-            )
-            return response.data;
-            
-        }catch(err){
-            throw err;
-        }
-    }
-
     static logout() {
         localStorage.removeItem('token')
         localStorage.removeItem('role')
