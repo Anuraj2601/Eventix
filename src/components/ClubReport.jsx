@@ -248,7 +248,7 @@ useEffect(() => {
             ))
           ) : (
             <tr>
-              <td colSpan="2" className="px-4 py-2 text-center">No events found</td>
+              <td colSpan="2" className="px-4 py-2 text-center"></td>
             </tr>
           )}
        
