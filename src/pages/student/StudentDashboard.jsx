@@ -1,37 +1,20 @@
-
-// export default Dashboard;
-//import { useState, useEffect } from "react";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import Upcoming from "../../components/Upcoming";
 import Feedback from "../../components/Feedback";
-
-/* import RegistrationModal from "../../components/RegistrationModal"; 
-import {
-  AiOutlineCalendar,
-  AiOutlineInfoCircle,
-  AiOutlineEnvironment,
-  AiOutlineClockCircle,
-} from "react-icons/ai"; */
-
-import RegistrationModal from "../../components/RegistrationModal"; // Import RegistrationModal
+import RegistrationModal from "../../components/RegistrationModal";
 import PostService from "../../service/PostService";
-import UsersService from "../../service/UsersService"; // Ensure you import the correct UsersService
+import UsersService from "../../service/UsersService";
 import LikeButton from "../../components/LikeButton";
 
 const Dashboard = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  /* const [selectedEvent, setSelectedEvent] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); 
-  useEffect(() => {
-    const fetchEvents = async () => { */
-
-  const [selectedEvent, setSelectedEvent] = useState(null); // State for selected event
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchUserForPosts = async (posts) => {
     try {
@@ -43,21 +26,15 @@ const Dashboard = () => {
             return {
               ...post,
               userImage: response.users.photoUrl,
-              likes: Math.floor(Math.random() * 500) + 1, // Add random likes
+              likes: Math.floor(Math.random() * 500) + 1,
             };
           } catch {
             return {
               ...post,
               userImage: "default-image.jpg",
-              likes: Math.floor(Math.random() * 500) + 1, // Add random likes as fallback
+              likes: Math.floor(Math.random() * 500) + 1,
             };
           }
-       /*  );
-        setEvents(response.data.content); 
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching events:", err);
-        setError("Failed to load events"); */
         })
       );
       setPosts(postsWithUsers);
@@ -65,7 +42,6 @@ const Dashboard = () => {
       console.error("Error fetching user details for posts", error);
     }
   };
-  
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -73,7 +49,7 @@ const Dashboard = () => {
         const token = localStorage.getItem("token");
         const response = await PostService.getAllPosts(token);
         const approvedPosts = response.content.filter((post) => post.post_status === "APPROVED") || [];
-        fetchUserForPosts(approvedPosts); // Fetch user images for the approved posts
+        fetchUserForPosts(approvedPosts);
       } catch (error) {
         console.error("Error fetching posts", error);
         setError(error.message);
@@ -86,7 +62,6 @@ const Dashboard = () => {
   }, []);
 
   const renderPosts = (filteredPosts) => {
-    const randomLikes = Math.floor(Math.random() * 500) + 1; // Generate a unique number of likes for each post
     return filteredPosts.map((post, index) => (
       <div
         key={index}
@@ -132,22 +107,45 @@ const Dashboard = () => {
   if (error) return <p className="text-red-500">Failed to fetch posts. Please try again later.</p>;
 
   return (
-    <div className="fixed inset-0 flex flex-col md:flex-row">
+    <div className="flex flex-col md:flex-row h-screen overflow-y-auto">
+      {/* Sidebar */}
       <Sidebar className="flex-shrink-0 md:w-1/4" />
+      {/* Main Content */}
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="bg-neutral-900 text-white flex flex-1 overflow-y-auto">
-          <div className="w-2/4 px-10 ml-2 overflow-y-auto">{renderPosts(posts)}</div>
-          <div className="w-2/4 flex flex-col py-1 h-full">
-            <div className="mb-4 h-[380px] overflow-y-auto rounded-2xl">
+        <div className="bg-neutral-900 text-white flex-1 overflow-y-auto">
+          {/* Mobile-first layout */}
+          <div className="block md:hidden">
+            <div className="px-4 mb-6">
+              <h2 className="text-lg font-bold mb-4">Upcoming Events</h2>
               <Upcoming />
             </div>
-            <div className="flex-1 overflow-y-auto mb-4">
+            <div className="px-4 mb-6">
+              <h2 className="text-lg font-bold mb-4">Feedback</h2>
               <Feedback />
+            </div>
+            <div className="px-4">
+              <h2 className="text-lg font-bold mb-4">Posts</h2>
+              {renderPosts(posts)}
+            </div>
+          </div>
+          {/* Desktop layout */}
+          <div className="hidden md:flex md:flex-row md:gap-4">
+            {/* Posts */}
+            <div className="w-2/4 px-4 md:px-10">{renderPosts(posts)}</div>
+            {/* Sidebar - Upcoming & Feedback */}
+            <div className="w-2/4 flex flex-col gap-4 px-4">
+              <div className="h-[380px] overflow-y-auto rounded-2xl">
+                <Upcoming />
+              </div>
+              <div className="flex-1 overflow-y-auto">
+                <Feedback />
+              </div>
             </div>
           </div>
         </div>
       </div>
+      {/* Modal */}
       {isModalOpen && (
         <RegistrationModal
           isOpen={isModalOpen}
