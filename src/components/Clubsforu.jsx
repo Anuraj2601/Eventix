@@ -1,10 +1,7 @@
 import { HiMiniUserGroup } from "react-icons/hi2";
-import { BsCalendar2EventFill } from 'react-icons/bs';
-import { GrTechnology } from 'react-icons/gr';
-import { RiDiscountPercentFill } from 'react-icons/ri';
-import ClubsService from '../service/ClubsService';
-import React, { useEffect, useState ,useRef  } from 'react';
 import { FaHeart } from "react-icons/fa"; // For the heart icon
+import ClubsService from '../service/ClubsService';
+import React, { useEffect, useState, useRef } from 'react';
 
 const Clubsforu = () => {
     const [clubDetails, setClubDetails] = useState([]);
@@ -36,7 +33,7 @@ const Clubsforu = () => {
     };
 
     return (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center w-full">
             {/* Title Section */}
             <div className="flex items-center bg-dark-background p-4 rounded-lg">
                 <HiMiniUserGroup className="text-primary bg-dark-background rounded-full w-10 h-10 shadow-lg" />
@@ -45,7 +42,7 @@ const Clubsforu = () => {
 
             {/* Horizontal Carousel */}
             <div
-                className="relative bg-dark-500 w-full"
+                className="relative bg-dark-500 w-full mt-8"
                 style={{
                     boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
                 }}
@@ -57,7 +54,7 @@ const Clubsforu = () => {
                     {clubDetails.slice(0, 6).map((club) => (
                         <div
                             key={club.club_id}
-                            className="bg- p-6 rounded-lg shadow-lg flex-none w-96 custom-card"
+                            className="bg-dark-700 p-6 rounded-lg shadow-lg flex-none w-96 custom-card transform transition duration-300 hover:scale-105 hover:border-2 hover:border-white"
                             style={{ minWidth: "280px" }}
                         >
                             <img
