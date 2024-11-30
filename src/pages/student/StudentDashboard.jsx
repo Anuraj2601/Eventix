@@ -1,45 +1,40 @@
-<<<<<<< HEAD
+
 // export default Dashboard;
-import { useState, useEffect } from "react";
+//import { useState, useEffect } from "react";
 import axios from "axios";
-=======
 import React, { useState, useEffect } from "react";
->>>>>>> 9555f373b3e6a4f7f8c4293ce5093be8f9c460e6
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import Upcoming from "../../components/Upcoming";
 import Feedback from "../../components/Feedback";
-<<<<<<< HEAD
-import RegistrationModal from "../../components/RegistrationModal"; 
+
+/* import RegistrationModal from "../../components/RegistrationModal"; 
 import {
   AiOutlineCalendar,
   AiOutlineInfoCircle,
   AiOutlineEnvironment,
   AiOutlineClockCircle,
-} from "react-icons/ai";
-=======
+} from "react-icons/ai"; */
+
 import RegistrationModal from "../../components/RegistrationModal"; // Import RegistrationModal
 import PostService from "../../service/PostService";
 import UsersService from "../../service/UsersService"; // Ensure you import the correct UsersService
 import LikeButton from "../../components/LikeButton";
->>>>>>> 9555f373b3e6a4f7f8c4293ce5093be8f9c460e6
 
 const Dashboard = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-<<<<<<< HEAD
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  /* const [selectedEvent, setSelectedEvent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   useEffect(() => {
-    const fetchEvents = async () => {
-=======
+    const fetchEvents = async () => { */
+
   const [selectedEvent, setSelectedEvent] = useState(null); // State for selected event
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
   const fetchUserForPosts = async (posts) => {
     try {
->>>>>>> 9555f373b3e6a4f7f8c4293ce5093be8f9c460e6
       const token = localStorage.getItem("token");
       const postsWithUsers = await Promise.all(
         posts.map(async (post) => {
@@ -57,14 +52,12 @@ const Dashboard = () => {
               likes: Math.floor(Math.random() * 500) + 1, // Add random likes as fallback
             };
           }
-<<<<<<< HEAD
-        );
+       /*  );
         setEvents(response.data.content); 
         setLoading(false);
       } catch (err) {
         console.error("Error fetching events:", err);
-        setError("Failed to load events");
-=======
+        setError("Failed to load events"); */
         })
       );
       setPosts(postsWithUsers);
@@ -85,7 +78,6 @@ const Dashboard = () => {
         console.error("Error fetching posts", error);
         setError(error.message);
       } finally {
->>>>>>> 9555f373b3e6a4f7f8c4293ce5093be8f9c460e6
         setLoading(false);
       }
     };

@@ -445,7 +445,7 @@ const FullCalendar = () => {
                           </ul>
                         </div>
 
-<<<<<<< HEAD
+
                         {/* Buttons Section */}
                         <div className="flex flex-col items-end gap-2">
                           {new Date(event.date) > new Date() ? (
@@ -461,8 +461,7 @@ const FullCalendar = () => {
                             Explore
                           </button>
                         </div>
-                      </div>
-=======
+                      
  {/* Buttons Section */}
 {/* 
 <div className="flex flex-col items-end gap-2">
@@ -482,7 +481,7 @@ const FullCalendar = () => {
 */}
 
 </div>
->>>>>>> 9555f373b3e6a4f7f8c4293ce5093be8f9c460e6
+
 
                     </div>
                   );
