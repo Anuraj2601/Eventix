@@ -168,7 +168,7 @@ const AnnouncementNav = ({clubId, event}) => {
               <MdOutlinePeopleAlt className="text-[#AEC90A] text-2xl"/>
             )}
 
-            <span > {anc.type}</span>
+          
 
           </div>
           {/* {isMeetingToday(meeting.date) && isTimeClose(meeting.time) ? (

@@ -31,6 +31,12 @@ const FullCalendar = () => {
   const userId = getUserIdFromToken();
   const [registrations, setRegistrations] = useState([]);
 
+  const handleExploreEvent = (event) => {
+    const studentPagePath = `/student/club/event/${event.id}`;
+    console.log("Navigating to:", studentPagePath);
+    window.location.href = studentPagePath;
+  };
+  
 
   useEffect(() => {
     fetchEvents();
@@ -439,6 +445,7 @@ const FullCalendar = () => {
                           </ul>
                         </div>
 
+<<<<<<< HEAD
                         {/* Buttons Section */}
                         <div className="flex flex-col items-end gap-2">
                           {new Date(event.date) > new Date() ? (
@@ -455,6 +462,27 @@ const FullCalendar = () => {
                           </button>
                         </div>
                       </div>
+=======
+ {/* Buttons Section */}
+{/* 
+<div className="flex flex-col items-end gap-2">
+  {new Date(event.date) > new Date() ? (
+    <button className="text-[#AEC90A] py-2 px-2 rounded-full border-2 border-[#AEC90A]" onClick={() => handleRegister(event)}>
+      Register
+    </button>
+  ) : (
+    <button className="text-[#AEC90A] py-2 px-2 rounded-full border-2 border-[#AEC90A]" onClick={() => handleFeedback(event)}>
+      Feedback
+    </button>
+  )}
+  <button className="text-white py-2 px-2 rounded-full text-black border-2 border-white" onClick={() => handleExploreEvent(event)}>
+    Explore
+  </button>
+</div>
+*/}
+
+</div>
+>>>>>>> 9555f373b3e6a4f7f8c4293ce5093be8f9c460e6
 
                     </div>
                   );

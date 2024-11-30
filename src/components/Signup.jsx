@@ -1,234 +1,58 @@
-import { useState, useEffect } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import React, { useState } from "react";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import signupMan from "../assets/signupMan.png";
-import { useNavigate } from "react-router-dom";
-import UsersService from "../service/UsersService";
 
 const Signup = () => {
-
-  const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [regNo, setRegNo] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmpassword, setConfirmpassword] = useState("");
-  const [role, setRole] = useState("student");
-  const [errors, setErrors] = useState({
-    firstname: '',
-    lastname: '',
-    regNo: '',
-    email: '',
-    password: '',
-    confirmpassword: ''
-  });
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [dialogMessage, setDialogMessage] = useState("");
-  const [showDialog, setShowDialog] = useState(false);
-  const token = localStorage.getItem("token");
-  
-  const emailRegex = /^[\d{4}(cs|is)\d{3}]+@stu\.ucsc\.cmb\.ac\.lk$/;
-  const regNoRegex = /^(\d{4}(cs|is)\d{3})$/;
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const [errors, setErrors] = useState({});
   const [emailExists, setEmailExists] = useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = useState("");
 
-  useEffect(() => {
-    if (isSubmitted) {
-      validateField("firstname", firstname);
-    }
-  }, [firstname]);
-
-  useEffect(() => {
-    if (isSubmitted) {
-      validateField("lastname", lastname);
-    }
-  }, [lastname]);
-
-  useEffect(() => {
-    if (isSubmitted) {
-      validateField("regNo", regNo);
-    }
-  }, [regNo]);
-
-  useEffect(() => {
-    if (isSubmitted) {
-      validateField("email", email);
-    }
-  }, [email]);
-
-  useEffect(() => {
-    if (isSubmitted) {
-      validateField("password", password);
-    }
-  }, [password]);
-
-  useEffect(() => {
-    if (isSubmitted) {
-      validateField("confirmpassword", confirmpassword);
-    }
-  }, [confirmpassword]);
+  const handleBackClick = () => {
+    console.log("Back button clicked");
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleBackClick = () => {
-    setShowPopup(true);
+  const validateForm = () => {
+    const errors = {};
+    if (!firstname) errors.firstname = "First name is required.";
+    if (!lastname) errors.lastname = "Last name is required.";
+    if (!regNo) errors.regNo = "Registration number is required.";
+    if (!email) errors.email = "Email is required.";
+    if (!password) errors.password = "Password is required.";
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
-
-  const handleOkClick = () => {
-    handleClosePopup();
-    navigate("/");
-  };
-
- 
-  const validateField = (field, value) => {
-    let error = "";
-    switch (field) {
-      case "firstname":
-        if (!value) error = "First Name is required";
-        break;
-      case "lastname":
-        if (!value) error = "Last Name is required";
-        break;
-      case "regNo":
-        if (!value) error = "Registration Number is required";
-        else if (!regNoRegex.test(value)) error = "Invalid Registration Number format";
-        break;
-      case "email":
-        if (!value) error = "Student Email is required";
-        else if (!emailRegex.test(value)) error = "Invalid Email format";
-        else if (!value.startsWith(regNo)) error = "Email must start with the Registration Number";
-        break;
-      case "password":
-        if (!value) error = "Password is required";
-        else if (!passwordRegex.test(value)) error = "Password must be at least 8 characters long and contain both letters and numbers";
-        break;
-      case "confirmpassword":
-        if (!value) error = "Confirm Password is required";
-        else if (value !== password) error = "Passwords do not match";
-        break;
-      default:
-        break;
-    }
-    return error;
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitted(true);
-  
-    // Validate all fields
-    const newErrors = {
-      firstname: validateField("firstname", firstname),
-      lastname: validateField("lastname", lastname),
-      regNo: validateField("regNo", regNo),
-      email: validateField("email", email),
-      password: validateField("password", password),
-      confirmpassword: validateField("confirmpassword", confirmpassword),
-    };
-  
-    setErrors(newErrors);
-  
-    // Log the errors to debug validation
-    console.log("Validation Errors: ", newErrors);
-  
-    // Check if any field has an error or if any required field is empty
-    const hasValidationErrors = Object.values(newErrors).some((error) => error !== "");
-    const allFieldsFilled = Object.values({
-      firstname,
-      lastname,
-      regNo,
-      email,
-      password,
-      confirmpassword,
-    }).every((field) => field !== "");
-  
-    console.log("Has Validation Errors: ", hasValidationErrors);
-    console.log("All Fields Filled: ", allFieldsFilled);
-  
-    if (hasValidationErrors || !allFieldsFilled) {
-      setDialogMessage("Please fix the errors before submitting.");
-      setShowDialog(true);
-      return;
+
+    if (validateForm()) {
+      console.log("Form submitted:", {
+        firstname,
+        lastname,
+        regNo,
+        email,
+        password,
+      });
     }
-  
-    // Check if the email already exists in the system
-    try {
-      const emailCheckResponse = await UsersService.getUserByEmailforsignup(email);
-      console.log("Email Check Response: ", emailCheckResponse);  // Log the email check response
-      if (emailCheckResponse) {
-        setEmailExists(true);
-        setEmailErrorMessage("Email already exists.");
-        setDialogMessage("This email is already registered. Please use a different one.");
-        setShowDialog(true);
-        return;
-      }
-  
-      // If email does not exist, proceed to registration
-      try {
-        const response = await UsersService.register(firstname, lastname, email, password, regNo, role);
-        console.log("Registration Response: ", response);  // Log the registration response
-      
-        // Check if response contains statusCode 200 indicating successful registration
-        if (response.statusCode === 200) {
-          console.log("User Registered Successfully");
-          // Set dialog message first
-          setDialogMessage(`You have successfully registered. An OTP has been sent to your email to verify within 5 minutes`);
-          setShowDialog(true);
-      
-          // Use a timeout to navigate after the dialog state is updated
-          setTimeout(() => {
-            navigate("/"); // Navigate to home page or success page
-          }, 1500); // Adjust the timeout duration if necessary
-        } else {
-          setDialogMessage(`Registration failed: ${response.message || "Unknown error"}`);
-          setShowDialog(true);
-        }
-      } catch (error) {
-        console.error("Registration error", error);
-        setDialogMessage(`An error occurred during registration: ${error.message || "Unknown error"}`);
-        setShowDialog(true);
-      }
-      
-      
-    } catch (error) {
-      console.error("Error checking email:", error);
-      setDialogMessage("An error occurred during registration.");
-      setShowDialog(true);
-    }
-  };
-  
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-
-    if (name === "firstname") setFirstname(value);
-    if (name === "lastname") setLastname(value);
-    if (name === "regNo") setRegNo(value);
-    if (name === "email") setEmail(value);
-    if (name === "password") setPassword(value);
-    if (name === "confirmpassword") setConfirmpassword(value);
-  };
-
-  const handleCloseDialog = () => {
-    setShowDialog(false);
   };
 
   return (
-    <div className="flex h-screen justify-center bg-dark-400">
+    <div className="flex flex-col lg:flex-row h-screen justify-center bg-dark-400">
       {/* Left Side */}
       <div
-        className="w-1/3 flex flex-col items-center justify-center relative ml-20"
+        className="lg:w-1/3 w-full flex flex-col items-center justify-center relative lg:ml-20 p-5"
         style={{
           backgroundColor: "#AEC90A",
           borderTopRightRadius: "1rem",
@@ -241,15 +65,22 @@ const Signup = () => {
         >
           <IoArrowBackCircleOutline />
         </span>
-        <img src={signupMan} alt="signup" className="w-[700px] mt-[156px] h-auto" />
+        <img
+          src={signupMan}
+          alt="signup"
+          className="w-full max-w-md lg:mt-[156px] h-auto"
+        />
       </div>
 
       {/* Right Side */}
-      <div className="w-1/2 bg-dark-background flex flex-col justify-center px-10 border-l border-white border-opacity-30">
-        <div className="space-y-2 mx-auto w-[50%] py-10">
+      <div className="lg:w-1/2 w-full bg-dark-background flex flex-col justify-center px-5 lg:px-10 border-l border-white border-opacity-30">
+        <form
+          className="space-y-4 mx-auto w-full lg:w-[50%] py-10"
+          onSubmit={handleSubmit}
+        >
           {/* Form Fields */}
-          <div className="flex space-x-4">
-            <div className="w-1/2">
+          <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+            <div className="lg:w-1/2 w-full">
               <label
                 htmlFor="firstname"
                 className="block text-white text-sm mb-2"
@@ -269,7 +100,7 @@ const Signup = () => {
                 <p className="text-red-500 text-sm mt-1">{errors.firstname}</p>
               )}
             </div>
-            <div className="w-1/2">
+            <div className="lg:w-1/2 w-full">
               <label
                 htmlFor="lastname"
                 className="block text-white text-sm mb-2"
@@ -320,7 +151,6 @@ const Signup = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            {/* Email Existence Error Above */}
             {emailExists && (
               <div className="text-red-600 text-center">
                 <p>Email already exists. Please use a different email.</p>
@@ -346,7 +176,7 @@ const Signup = () => {
               />
               <span
                 onClick={togglePasswordVisibility}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-white"
+                className="absolute right-2 top-2 cursor-pointer"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
@@ -355,83 +185,14 @@ const Signup = () => {
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}
           </div>
-          <div>
-            <label htmlFor="confirmpassword" className="block text-white text-sm mb-2">
-              Confirm Password
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="confirmpassword"
-                name="confirmpassword"
-                className="w-full px-4 py-2 h-[40px] bg-dark-400 text-white border border-white opacity-50 rounded mb-2"
-                placeholder="********"
-                value={confirmpassword}
-                onChange={(e) => setConfirmpassword(e.target.value)}
-              />
-              <span
-                onClick={togglePasswordVisibility}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-white"
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
-            </div>
-            {isSubmitted && errors.confirmpassword && (
-              <p className="text-red-500 text-sm mt-1">{errors.confirmpassword}</p>
-            )}
-          </div>
-          <div>
-            <button
-              onClick={handleSubmit}
-              className="w-full bg-[#AEC90A] rounded-full text-white py-2 px-4 rounded mt-5"
-            >
-              Sign Up
-            </button>
-          </div>
-        </div>
-      </div>
-      {showDialog && (
-        <div
-          className="fixed top-0 left-0 w-full h-full bg-opacity-60 bg-black flex justify-center items-center z-50"
-        >
-          <div
-            className="bg-white p-6 rounded-lg w-[80%] max-w-lg"
+          <button
+            type="submit"
+            className="w-full bg-primary text-white py-2 rounded mt-4"
           >
-            <div>
-              <p className="text-black text-xl mb-4">{dialogMessage}</p>
-              <button
-                className="w-full bg-[#AEC90A] text-white py-2 px-4 rounded mt-3"
-                onClick={handleCloseDialog}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-{showPopup && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
-          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
-          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
-            <span
-              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
-              onClick={handleClosePopup}
-            >
-              &times;
-            </span>
-            <h2 className="text-[15px] font-semibold text-dark-400 mb-4">
-              Leave without Signup?
-            </h2>
-            <button
-              className="bg-primary text-white px-4 py-2 w-32 text-[14px] rounded font-medium mr-2 hover:bg-dark-400"
-              onClick={handleOkClick}
-            >
-              OK
-            </button>
-          </div>
-        </div>
-      )}
+            Signup
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

@@ -52,12 +52,11 @@ const Sidebar = () => {
 
   const linkClass = (path) => {
     const fullPath = `/${baseUrl}${path}`;
-    const isSelected = currentPath.startsWith(fullPath) || currentPath.includes(fullPath);
+    const isSelected = currentPath.includes(path);  // Check if the path is active
     return isSelected
-      ? 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2 bg-[#AEC90A] text-black'
-      : 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2';
+      ? 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2 bg-[#AEC90A] text-black'  // Active state style
+      : 'w-15 h-15 mb-6 text-[#AEC90A] border-[#AEC90A] rounded-lg hover:shadow hover:bg-[#AEC90A] hover:text-black py-2';  // Inactive state style
   };
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/';
@@ -105,8 +104,11 @@ const Sidebar = () => {
               </Link>
             </li>
 
-            <li className={linkClass('/announcement')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
-              <Link to={`/${baseUrl}/announcement`} className="px-3">
+            <li className={linkClass('/announcements')} style={{ boxShadow: '0 0 7px 0 #a3e635' }}>
+            <Link
+    to={`/${userRole.toLowerCase() === 'admin' ? 'admin' : 'student'}/announcements`}
+    className="px-3"
+  >
                 <BsMegaphone className="inline-block w-9 h-9 mt-1 -ml-0.5" />
               </Link>
             </li>

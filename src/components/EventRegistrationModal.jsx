@@ -11,12 +11,6 @@ import { Typography } from "@material-tailwind/react";
 import { AiOutlineClose } from "react-icons/ai";  // Cross icon from react-icons
 import EventRegistrationService from '../service/EventRegistrationService';
 
-const menuItems = [
-  { title: "Design Team" },
-  { title: "Program Team" },
-  { title: "Finance Team" },
-  { title: "Marketing Team" },
-];
 
 const EventRegistrationModal = ({clubId, eventDetails, event, isOpen, onClose }) => {
   const { club_id } = useParams();

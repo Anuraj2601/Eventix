@@ -150,10 +150,13 @@ import EventNav from './components/EventNav';
 /* import Toggle from './components/election/Toggle'; */
 
 import AddEvent from './components/AddEvent';
+import EditEvent from './components/EditEvent';
 
 import { ClubMemberNav } from './components/ClubMemberNav';
 import AddNewAnnouncementForm from './pages/president/AddNewAnnouncementForm';
 import AddNewMeetingForm from './pages/president/AddNewMeetingForm';
+
+import AddNewunionAnnouncementForm from './pages/president/AddNewunionAnnouncementForm';
 import AddNewClubForm from './pages/admin/AddNewClubForm';
 
 
@@ -217,7 +220,7 @@ const App = () => {
         <Route path='/student/calendar' element={<StudentEventCalendar />}></Route>
         <Route path='/student' element={<StudentDashboard/>}></Route>
         <Route path='/student/inquiry' element={<Inquiriesstudent/>}></Route>
-        <Route path='/student/announcement' element={<Announcementstudent />}></Route> 
+        <Route path='/student/announcements' element={<Announcementstudent />}></Route> 
         <Route path='/student/messages' element={<Messagesstudent/>}></Route>
         <Route path='/student/profile' element={<Profilestudent/>}></Route>
         <Route path='/student/meeting' element={<MainMeetingstudent />}></Route> 
@@ -254,11 +257,11 @@ const App = () => {
         <Route path='/president/AddSponsor' element={<AddSponsor />}></Route> 
         <Route path='/president/EditSponsor/:id' element={<AddSponsor />}></Route>
 
-        <Route path="/president/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
+        <Route path="/president/club/announce/add" element={<AddNewAnnouncementForm/>}></Route>
 
-        <Route path="/president/club/announcement/edit/:id" element={<AddNewAnnouncementForm/>}></Route>
-        <Route path="/president/club/meeting/add" element={<AddNewMeetingForm/>}></Route>
-        <Route path="/president/club/meeting/edit/:id" element={<AddNewMeetingForm/>}></Route>
+        <Route path="/president/club/announce/edit/:id" element={<AddNewAnnouncementForm/>}></Route>
+        <Route path="/president/club/meet/add" element={<AddNewMeetingForm/>}></Route>
+        <Route path="/president/club/meet/edit/:id" element={<AddNewMeetingForm/>}></Route>
 
 
 
@@ -288,6 +291,7 @@ const App = () => {
         <Route path='/oc/club/:id' element={<ClubDetails />} />
         <Route path='/oc/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
+        <Route path="/club/:club_id/edit-event/:event_id" element={<EditEvent />}></Route>
         <Route path='/oc/calendar' element={<Calendar />}></Route>
         <Route path='/oc/club/election' element={<Election/>}></Route>
         <Route path='/oc' element={<Dashboardoc  />} ></Route>
@@ -317,13 +321,15 @@ const App = () => {
         <Route path='/student/requests' element={<EventRequests/>}></Route>
         <Route path='/student/users' element={<NewUsers/>}></Route>
         <Route path='/admin/notifications' element={<AdminNotifications  />} ></Route>
-        <Route path='/admin/announcement' element={<Announcementadmin />}></Route> 
+        <Route path='/admin/announcements' element={<Announcementstudent />}></Route> 
         <Route path='/admin/inquiry' element={<Inquiriesadmin/>}></Route>
         <Route path='/admin/messages' element={<Messagesadmin/>}></Route>
         <Route path='/admin/profile' element={<Profileadmin/>}></Route>
         <Route path='/admin/meeting' element={<MainMeetingadmin />}></Route> 
         <Route path='/admin/addclub' element={<AddNewClubForm />}></Route>
+        <Route path="/admin/club/announcement/add" element={<AddNewunionAnnouncementForm/>}></Route>
 
+<Route path="/admin/club/announcement/edit/:id" element={<AddNewunionAnnouncementForm/>}></Route>
 
         <Route path='/treasurer/club' element={<StudentAllClubstreasurer/>}></Route>
         <Route path='/treasurer/club/:name' element={<StudentClubDetailstreasurer/>}></Route>
