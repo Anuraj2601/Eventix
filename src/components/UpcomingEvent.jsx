@@ -86,7 +86,6 @@ const UpcomingEvent = () => {
           const eventDate = new Date(event.date[0], event.date[1] - 1, event.date[2]);
           return eventDate >= today; // Only include future events
         })
-<<<<<<< HEAD
         .map((event) => ({
           event_id: event.event_id,
           name: event.name,
@@ -96,73 +95,11 @@ const UpcomingEvent = () => {
           club_id: event.club_id,
           public_status: event.public_status,
         }));
-=======
-        .map((event) => {
-          // Log the event time to see the format
-          console.log('Event time:', event.time);
-  
-          // Check if event.time is an array and contains two elements
-          let formattedTime = "Time not available";
-          if (Array.isArray(event.time) && event.time.length === 2) {
-            formattedTime = formatTime(event.time);
-          } else {
-            console.warn(`Invalid time format for event ${event.name}. Expected an array, got: ${typeof event.time}`);
-          }
-  
-          return {
-            event_id: event.event_id,
-            name: event.name,
-            image: event.event_image || madhack2, // Fallback to default image
-            date: convertDateToReadableFormat(event.date), // Format date
-            time: formattedTime,  
-            venue: event.venue,
-            club_id: event.club_id,
-            public_status: event.public_status,
-          };
-        });
-      
->>>>>>> 5984d0d828eb8bce5252f8fb15c0d5f9064e31ce
       setUpcomingEvents(futureEvents);
     } catch (error) {
       console.error("Error fetching events:", error);
     }
   };
-<<<<<<< HEAD
-
-=======
-  
-  const formatTime = (timeArray) => {
-    if (!timeArray || timeArray.length !== 2) {
-      return "Invalid time"; // Fallback if timeArray is not in the expected format
-    }
-    
-    const [hour, minute] = timeArray;
-    const period = hour >= 12 ? "PM" : "AM";
-    const formattedHour = hour % 12 || 12;  // Convert 24-hour to 12-hour format
-    const formattedMinute = minute < 10 ? `0${minute}` : minute;  // Ensure minute is two digits
-    return `${formattedHour}:${formattedMinute} ${period}`;
-  };
-  
-  const convertDateToReadableFormat = (dateString) => {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'long' }); // Gets the full month name
-    const year = date.getFullYear();
-    
-    // Add suffix to day (e.g. 1 -> 1st, 2 -> 2nd, etc.)
-    const suffix = (day) => {
-      if (day > 3 && day < 21) return 'th'; // Special case for 11th, 12th, and 13th
-      switch (day % 10) {
-        case 1: return 'st';
-        case 2: return 'nd';
-        case 3: return 'rd';
-        default: return 'th';
-      }
-    };
-    
-    return `${day}${suffix(day)} ${month} ${year}`;
-  };
->>>>>>> 5984d0d828eb8bce5252f8fb15c0d5f9064e31ce
   const openModal = (event) => {
     setSelectedEvent(event);
     setFormData({
@@ -314,13 +251,7 @@ const UpcomingEvent = () => {
               .filter((event) => event.name.toLowerCase().includes(searchQuery.toLowerCase()))
               .map((event) => {
                 const activeClub = clubDetails.find((club) => club.club_id === event.club_id) || {};
-<<<<<<< HEAD
                 return (
-=======
-                const clubImage = activeClub.club_image || "https://via.placeholder.com/100"; // Fallback image
-                const clubName = activeClub.club_name || "Unknown Club"; // Fallback name
-                const canRegister = event.iud_status === 1 && event.budget_status === 1;                return (
->>>>>>> 5984d0d828eb8bce5252f8fb15c0d5f9064e31ce
                   <div
                     key={event.event_id}
                     className="bg-dark-500 rounded-lg p-5 transform transition-transform hover:scale-105"
@@ -333,7 +264,6 @@ const UpcomingEvent = () => {
                       alt={event.name}
                       className="rounded-md w-full h-56 object-cover mb-4"
                     />
-<<<<<<< HEAD
                     <div className="flex items-center mb-2">
                       <RiTeamFill className="mr-2 w-6 h-6 text-primary" />
                       <h3 className="text-lg text-white font-semibold">{event.name}</h3>
@@ -341,23 +271,6 @@ const UpcomingEvent = () => {
                     <div className="flex items-center text-sm text-gray-400 mb-2">
                       <FaClock className="mr-2 w-5 h-5 text-primary" />
                       <span>{event.date}</span>
-=======
-                    <div className="flex items-center justify-between mb-2">
-  
-  <div className="flex items-center">
-    <RiTeamFill className="mr-2 w-6 h-6 text-primary" />
-    <h3 className="text-lg text-white font-semibold">{event.name}</h3>
-  </div><img
-    src={clubImage}
-    alt={clubName}
-    className="rounded-full w-10 h-10 object-cover mr-2" // Align image on the left
-  />
-</div>
-
-                    <div className="flex items-center text-sm text-gray-400 mb-2">
-                      <FaClock className="mr-2 w-5 h-5 text-primary" />
-                      <span>On {event.date} at {event.time} </span>
->>>>>>> 5984d0d828eb8bce5252f8fb15c0d5f9064e31ce
                     </div>
                     <div className="flex items-center text-sm text-gray-400 mb-4">
                       <MdLocationOn className="mr-2 w-5 h-5 text-primary" />

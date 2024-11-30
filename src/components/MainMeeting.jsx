@@ -83,7 +83,6 @@ const MeetingsList = () => {
   
 
   // Handle meeting selection
-<<<<<<< HEAD
   const handleMeetingClick = async (meetingId) => {
     setSelectedMeetingId(meetingId);
     const meeting = meetings.find((m) => m.meeting_id === meetingId);
@@ -131,13 +130,6 @@ const MeetingsList = () => {
 
     fetchParticipants(meetingId);
   };
-=======
-  const handleMeetingClick = (meetingId) => {
-    setSelectedMeetingId(meetingId);
-    fetchParticipants(meetingId);
-  };
-
->>>>>>> 5984d0d828eb8bce5252f8fb15c0d5f9064e31ce
   // Function to send the QR code via email
   const sendQRCodeEmail = async (meetingId, qrCodeUrl) => {
     try {

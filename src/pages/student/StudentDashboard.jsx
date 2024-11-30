@@ -5,7 +5,7 @@ import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import Upcoming from "../../components/Upcoming";
 import Feedback from "../../components/Feedback";
-import RegistrationModal from "../../components/RegistrationModal"; // Import RegistrationModal
+import RegistrationModal from "../../components/RegistrationModal"; 
 import {
   AiOutlineCalendar,
   AiOutlineInfoCircle,
@@ -17,9 +17,8 @@ const Dashboard = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedEvent, setSelectedEvent] = useState(null); // State for selected event
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   useEffect(() => {
     const fetchEvents = async () => {
       const token = localStorage.getItem("token");
@@ -39,7 +38,7 @@ const Dashboard = () => {
             },
           }
         );
-        setEvents(response.data.content); // Assuming `content` contains the events array
+        setEvents(response.data.content); 
         setLoading(false);
       } catch (err) {
         console.error("Error fetching events:", err);
