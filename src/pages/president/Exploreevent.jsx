@@ -1094,49 +1094,6 @@ const Exploreevent = () => {
               ))}
             </div>
 
-            {/* Modal to display sponsor details */}
-            {/* {modalIsOpen && selectedSponsor && (
-              <ReactModal
-                isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}
-                contentLabel="Sponsor Details"
-              >
-                <div className="modal-content">
-                  
-                  <button
-                    onClick={() => setModalIsOpen(false)}
-                    className="close-btn"
-                  >
-                    <AiOutlineClose size={24} />
-                  </button>
-
-                  <h2 className="text-xl font-bold">
-                    {selectedSponsor.sponsor_name}
-                  </h2>
-                  <img
-                    src={selectedSponsor.company_logo}
-                    alt={selectedSponsor.sponsor_name}
-                    className="w-32 h-32 object-contain mb-4"
-                  />
-                  <p>
-                    <strong>Type:</strong> {selectedSponsor.sponsorType}
-                  </p>
-                  <p>
-                    <strong>Amount: Rs. </strong> {selectedSponsor.amount}
-                  </p>
-                  <p>
-                    <strong>Description:</strong>{" "}
-                    {selectedSponsor.sponsor_description}
-                  </p>
-                  <p>
-                    <strong>Email: </strong> {selectedSponsor.contact_email}
-                  </p>
-                  <p>
-                    <strong>Contact Number: </strong> {selectedSponsor.contact_person}
-                  </p>
-                </div>
-              </ReactModal>
-            )} */}
             {modalIsOpen && selectedSponsor && (
               <ReactModal
                 isOpen={modalIsOpen}
