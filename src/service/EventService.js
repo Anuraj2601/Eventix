@@ -216,6 +216,22 @@ class EventService {
     }
   }
 
+  static async downloadEventProposal(eventId, token) {
+    try {
+      const response = await axios.get(
+        `${EventService.BASE_URL}/event/${eventId}/download-proposal`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: "blob", // Ensures the response is treated as a binary file
+        }
+      );
+      return response; // Return the full Axios response
+    } catch (error) {
+      console.error("Error downloading event proposal:", error);
+      throw error; // Throw the error for further handling
+    }
+  }
+
   static logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
