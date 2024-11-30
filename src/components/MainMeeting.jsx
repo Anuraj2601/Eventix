@@ -261,6 +261,24 @@ const MeetingsList = () => {
   const navigate = useNavigate();
 
   const handleJoinMeetingClick = async (meetingId) => {
+    const apiUrl = `http://localhost:8080/api/meeting-participants/attendance`;
+        try {
+          const response = await fetch(
+            `${apiUrl}?userId=${userId}&meetingId=${meetingId}&attendanceStatus=1`,
+            { method: "PATCH" }
+          );
+
+          if (response.ok) {
+            const data = await response.text();
+            console.log("Response from server:", data);
+            setSuccessMessage("Attendance marked successfully!"); // Update the success message
+          } else {
+            setSuccessMessage("Failed to mark attendance. Please try again."); // Error handling
+          }
+        } catch (error) {
+          console.error("Error updating attendance:", error);
+          setSuccessMessage("An error occurred while updating attendance.");
+        }
 
     try {
       const response = await axios.post(
