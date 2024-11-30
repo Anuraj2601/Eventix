@@ -117,22 +117,39 @@ const MeetingsList = () => {
     }
   };
   
-  // Handle meeting selection
-  const handleMeetingClick = (meetingId) => {
+  const handleMeetingClick = (meetingId, meetingName) => {
     setSelectedMeetingId(meetingId);
     fetchParticipants(meetingId);
-    sendQRCodeEmail(meetingId,qrCodeDataUrls)
+  
+    // Filter participants based on selected meetingId and userId
+    const filteredParticipants = participants.filter(
+      (participant) => participant.meetingId === meetingId && participant.userId === userId
+    );
+  
+    // Collect QR code data for each filtered participant
+    const qrCodeData = filteredParticipants.map((participant) => ({
+      participantId: participant.participantId,
+      qrCodeUser: participant.qrCodeUser,
+    }));
+  
+    // Send QR code email with the collected data
+    sendQRCodeEmail(meetingId, meetingName, userId, qrCodeData);
   };
 
-  // Function to send the QR code via email
-  const sendQRCodeEmail = async (meetingId, qrCodeDataUrls) => {
+  
+  const sendQRCodeEmail = async (meetingId, meetingName, userId, qrCodeData) => {
     try {
       const response = await axios.post(
         `http://localhost:8080/president/sendQrCode/${meetingId}`,
-        { email: userEmail, qrCodeDataUrls }, // Send the QR code URL in the email
+        {
+          email: userEmail,
+          meetingName,
+          userId,
+          qrCodeData, // Send the QR code data (participantId and qrCodeUser)
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
+  
       if (response.status === 200) {
         console.log('QR code sent successfully!');
       }
@@ -141,6 +158,7 @@ const MeetingsList = () => {
       setEmailError('Error while sending QR code via email.');
     }
   };
+  
 
   const fetchClubs = async () => {
     try {
@@ -559,8 +577,7 @@ const MeetingsList = () => {
                 <div className="flex space-x-2 mb-10 w-full">
                   {announcement.meeting_type === 'PHYSICAL' ? (
                       <button
-                      onClick={() => handleMeetingClick(announcement.meeting_id)}
-                      className={`px-4 py-2 w-full ${sendingQRCode[announcement.meeting_id] === 'fetching' ? 'bg-gray-500' : 'bg-primary'} text-black rounded font-medium`}
+                      onClick={() => handleMeetingClick(announcement.meeting_id, announcement.meeting_name)}                      className={`px-4 py-2 w-full ${sendingQRCode[announcement.meeting_id] === 'fetching' ? 'bg-gray-500' : 'bg-primary'} text-black rounded font-medium`}
                       disabled={sendingQRCode[announcement.meeting_id] === 'fetching'}
                     >
                       {sendingQRCode[announcement.meeting_id] === 'fetching'
