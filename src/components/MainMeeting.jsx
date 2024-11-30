@@ -5,14 +5,14 @@ import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import physicalMeeting from '../assets/physicalMeeting02.png';
 import onlineMeeting from '../assets/onlineMeeting.png';
-import RegistrationService from '../service/registrationService'; // Adjust the path as needed
+import RegistrationService from '../service/registrationService'; 
 import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
 import { useNavigate } from "react-router-dom";
 import EventMeetingService from "../service/EventMeetingService";
-import QRScanner from './QrScanner'; // Adjust the path as needed
+import QRScanner from './QrScanner';
 import emailjs from '@emailjs/browser';
 
-import QRCode from "qrcode"; // Importing the QRCode library
+import QRCode from "qrcode";
 
 const MeetingsList = () => {
   const [meetings, setMeetings] = useState([]);
@@ -40,23 +40,21 @@ const MeetingsList = () => {
 
   useEffect(() => {
     if (!loadingParticipants && selectedMeetingId) {
-      // Filter participants based on the selected meeting and user ID
+     
       const filteredParticipants = participants.filter(
         (participant) => participant.meetingId === selectedMeetingId && participant.userId === userId
       );
 
-      // Generate QR codes for each filtered participant
       filteredParticipants.forEach((participant) => {
-        const qrCodeData = participant.qrCodeUser; // Data to generate QR code
+        const qrCodeData = participant.qrCodeUser; 
         handleGenerateQrCode(qrCodeData, participant.participantId);
       });
     }
   }, [loadingParticipants, selectedMeetingId, participants, userId]);
 
 
-  const [qrCodeDataUrls, setQrCodeDataUrls] = useState({}); // State to store QR codes
+  const [qrCodeDataUrls, setQrCodeDataUrls] = useState({}); 
 
-  // Function to generate and store QR code data URL
   const handleGenerateQrCode = (qrCodeData, participantId) => {
     QRCode.toDataURL(qrCodeData, { type: 'png' }, (err, url) => {
       if (err) {
@@ -64,7 +62,7 @@ const MeetingsList = () => {
       } else {
         setQrCodeDataUrls((prevState) => ({
           ...prevState,
-          [participantId]: url, // Save the QR code for the specific participant
+          [participantId]: url,
         }));
       }
     });
@@ -73,25 +71,25 @@ const MeetingsList = () => {
 
   const handlefetchClick = async (meetingId, meetingName) => {
     try {
-      // Step 1: Generate QR Code
+      
       const qrCodeData = `Meeting: ${meetingName}, ID: ${meetingId}`;
       const qrCodeUrl = await QRCode.toDataURL(qrCodeData);
   
-      // Step 2: Get current user's email
-      const userEmail = getUserEmailFromToken(); // Assuming this gives you the session email
+     
+      const userEmail = getUserEmailFromToken();
   
-      // Step 3: Send email with EmailJS
+     
       const templateParams = {
-        user_email: userEmail, // Recipient's email
+        user_email: userEmail,
         meeting_name: meetingName,
-        qr_code: qrCodeUrl, // Attach QR code as a base64 string
+        qr_code: qrCodeUrl,
       };
   
       await emailjs.send(
-        'your_service_id',   // Replace with your EmailJS service ID
-        'your_template_id',  // Replace with your EmailJS template ID
+        'your_service_id',   
+        'your_template_id', 
         templateParams,
-        'your_public_key'    // Replace with your EmailJS public key
+        'your_public_key'   
       );
   
       alert('Email sent successfully!');
@@ -105,7 +103,7 @@ const MeetingsList = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await EventMeetingService.getAllEventMeetings(token);
-      //console.log("Event meetings", response);
+      
       const eventMeetingsArray = response.content || [];
       console.log("event Meetings array", eventMeetingsArray);
 
@@ -119,18 +117,16 @@ const MeetingsList = () => {
   };
   const isMeetingToday = (date) => {
     const today = new Date();
-    const meetingDate = new Date(date[2], date[1] - 1, date[0]); // assuming date is [day, month, year]
+    const meetingDate = new Date(date[2], date[1] - 1, date[0]);
     return today.toDateString() === meetingDate.toDateString();
   };
 
   const isTimeClose = (time) => {
     const now = new Date();
     const meetingTime = new Date();
-    meetingTime.setHours(time[0], time[1], 0, 0); // assuming time is [hour, minute]
-    
-    // Check if the meeting is within 30 minutes from now
+    meetingTime.setHours(time[0], time[1], 0, 0); 
     const diffMinutes = (meetingTime - now) / (1000 * 60);
-    return diffMinutes <= 30 && diffMinutes >= 0; // Meeting is within 30 minutes
+    return diffMinutes <= 30 && diffMinutes >= 0;
   };
 
   const fetchParticipants = async (meetingId) => {
@@ -139,7 +135,7 @@ const MeetingsList = () => {
       const response = await axios.get(
         `http://localhost:8080/api/meeting-participants/meeting/${meetingId}`
       );
-      console.log("API Response for Participants:", response.data); // Log full response
+      console.log("API Response for Participants:", response.data);
       setParticipants(response.data || []);
     } catch (err) {
       console.error("Error fetching participants:", err);
@@ -149,18 +145,18 @@ const MeetingsList = () => {
     }
   };
   
-  // Handle meeting selection
+  
   const handleMeetingClick = (meetingId) => {
     setSelectedMeetingId(meetingId);
     fetchParticipants(meetingId);
   };
 
-  // Function to send the QR code via email
+ 
   const sendQRCodeEmail = async (meetingId, qrCodeUrl) => {
     try {
       const response = await axios.post(
         `http://localhost:8080/president/sendQrCode/${meetingId}`,
-        { email: userEmail, qrCodeUrl }, // Send the QR code URL in the email
+        { email: userEmail, qrCodeUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -188,8 +184,8 @@ const MeetingsList = () => {
       const fetchedRegistrations = response.data || response.content || [];
       setRegistrations(fetchedRegistrations);
   
-      // Logs here may not show updated state yet
-      console.log('Registrations:', registrations); // Might log the previous state
+      
+      console.log('Registrations:', registrations);
     } catch (error) {
       console.error("Error fetching registrations:", error);
     }
@@ -206,7 +202,7 @@ const MeetingsList = () => {
         validBoardPositions.includes(reg.position.toLowerCase()) &&
         reg.accepted === 1;
   
-      // Log the condition checks for each registration
+      
       console.log(
         `Checking registration for user ${reg.userId}:`,
         `Position: ${reg.position}, Accepted: ${reg.accepted}`,
@@ -216,7 +212,7 @@ const MeetingsList = () => {
       return isEligible;
     });
   
-    // Log the result of the eligibility check
+    
     console.log("Is user eligible for CLUB_BOARD:", eligible);
     return eligible;
   };

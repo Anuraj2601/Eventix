@@ -122,7 +122,7 @@ const Dashboard = () => {
             </div>
             <div className="px-4 mb-6">
               <h2 className="text-lg font-bold mb-4">Feedback</h2>
-              <Feedback />
+              <Feedback className="p-4 bg-[#1c1c1c] rounded-xl" />
             </div>
             <div className="px-4">
               <h2 className="text-lg font-bold mb-4">Posts</h2>
@@ -135,10 +135,10 @@ const Dashboard = () => {
             <div className="w-2/4 px-4 md:px-10">{renderPosts(posts)}</div>
             {/* Sidebar - Upcoming & Feedback */}
             <div className="w-2/4 flex flex-col gap-4 px-4">
-              <div className="h-[380px] overflow-y-auto rounded-2xl">
+              <div className="h-[380px] overflow-y-auto rounded-2xl p-4 bg-[#1c1c1c]">
                 <Upcoming />
               </div>
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto bg-[#1c1c1c] rounded-xl p-6">
                 <Feedback />
               </div>
             </div>
