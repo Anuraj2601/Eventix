@@ -10,6 +10,7 @@ import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
 import { useNavigate } from "react-router-dom";
 import EventMeetingService from "../service/EventMeetingService";
 import QRScanner from './QrScanner'; // Adjust the path as needed
+import emailjs from '@emailjs/browser';
 
 import QRCode from "qrcode"; // Importing the QRCode library
 
@@ -69,6 +70,37 @@ const MeetingsList = () => {
     });
   };
   
+
+  const handlefetchClick = async (meetingId, meetingName) => {
+    try {
+      // Step 1: Generate QR Code
+      const qrCodeData = `Meeting: ${meetingName}, ID: ${meetingId}`;
+      const qrCodeUrl = await QRCode.toDataURL(qrCodeData);
+  
+      // Step 2: Get current user's email
+      const userEmail = getUserEmailFromToken(); // Assuming this gives you the session email
+  
+      // Step 3: Send email with EmailJS
+      const templateParams = {
+        user_email: userEmail, // Recipient's email
+        meeting_name: meetingName,
+        qr_code: qrCodeUrl, // Attach QR code as a base64 string
+      };
+  
+      await emailjs.send(
+        'your_service_id',   // Replace with your EmailJS service ID
+        'your_template_id',  // Replace with your EmailJS template ID
+        templateParams,
+        'your_public_key'    // Replace with your EmailJS public key
+      );
+  
+      alert('Email sent successfully!');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      alert('Failed to send the email.');
+    }
+  };
+
   const fetchEventMeetings = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -545,17 +577,20 @@ const MeetingsList = () => {
                 </div>
                 <div className="flex space-x-2 mb-10 w-full">
                   {announcement.meeting_type === 'PHYSICAL' ? (
-                      <button
-                      onClick={() => handleMeetingClick(announcement.meeting_id)}
-                      className={`px-4 py-2 w-full ${sendingQRCode[announcement.meeting_id] === 'fetching' ? 'bg-gray-500' : 'bg-primary'} text-black rounded font-medium`}
-                      disabled={sendingQRCode[announcement.meeting_id] === 'fetching'}
-                    >
-                      {sendingQRCode[announcement.meeting_id] === 'fetching'
-                        ? 'Fetching...'
-                        : sendingQRCode[announcement.meeting_id] // Display the fetched QR code value if available
-                        ? sendingQRCode[announcement.meeting_id]
-                        : 'Fetch My QR Code'}
-                    </button>
+                    <button
+                    onClick={() => handlefetchClick(announcement.meeting_id, announcement.meeting_name)}
+                    className={`px-4 py-2 w-full ${
+                      sendingQRCode[announcement.meeting_id] === 'fetching' ? 'bg-gray-500' : 'bg-primary'
+                    } text-black rounded font-medium`}
+                    disabled={sendingQRCode[announcement.meeting_id] === 'fetching'}
+                  >
+                    {sendingQRCode[announcement.meeting_id] === 'fetching'
+                      ? 'Fetching...'
+                      : sendingQRCode[announcement.meeting_id]
+                      ? 'Email Sent'
+                      : 'Fetch My QR Code'}
+                  </button>
+                  
                     
                   ) : (
                     <button
