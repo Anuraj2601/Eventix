@@ -11,7 +11,7 @@ import Board from "./Board";
 import Registrations from "./Registrations";
 import Budget from "./BudgetTable";
 import Reports from "./Reports";
-import Proposal from "./Proposal";
+import FeedbackList from "./FeedbackList";
 import PublicRegistrations from "./PublicRegistrations";
 
 
@@ -56,7 +56,7 @@ const EventNav = ({clubId, eventDetails}) => {
     {
       label: "Feedback",
       value: "Feedback",
-      desc: <Reports
+      desc: <FeedbackList
       clubId={clubId}
       event={eventDetails} // Ensure eventData is the correct event object
       
