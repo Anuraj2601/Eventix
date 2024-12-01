@@ -57,7 +57,7 @@
     "react-responsive": "^10.0.0",
     "react-router-dom": "^6.24.1",
     "react-swipeable-views-utils": "^0.14.0",
-    "react-toastify": "^10.0.5",
+    "react-toastify": "^10.0.6",
     "react-transition-group": "^4.4.5",
     "recharts": "^2.13.3",
     "slick-carousel": "^1.8.1",
