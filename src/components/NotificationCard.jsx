@@ -155,9 +155,7 @@ const NotificationPage = () => {
               // Reconstruct Date objects from date_posted array for both notifications
               const dateA = fromUTC(a.date_posted);
               const dateB = fromUTC(b.date_posted);
-              
-              console.log("date A", dateA);
-              console.log("date B", dateB);
+          
               // Sort in descending order (latest date first)
               return dateB - dateA;
             });

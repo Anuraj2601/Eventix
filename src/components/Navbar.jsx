@@ -23,12 +23,17 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchUnreadNotificationCount = async () => {
-      const userId = localStorage.getItem('session_id');
+
+      const session_id = localStorage.getItem('session_id');
       const token = localStorage.getItem('token');
-      if (userId && token) {
+
+      if (session_id && token) {
+
         try {
-          const count = await NotificationService.getUnreadNotificationCount(userId, token);
-          setNotificationCount(count);
+          const response = await NotificationService.getUnreadNotificationCount(session_id, token);
+          const notificationsCount = response.content;
+          console.log("notifications count", notificationCount);
+          setNotificationCount(notificationsCount);
 
         } catch (err) {
           console.error('Error fetching unread notifications count', err);
@@ -72,7 +77,7 @@ const Navbar = () => {
           />
             {/* Badge for unread notifications */}
             {notificationCount > 0 && (
-            <span className="absolute top-0 right-0 inline-block bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+            <span className="absolute top-3 left-3 inline-block bg-red-600 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
               {notificationCount}
             </span>
           )}
