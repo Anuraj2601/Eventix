@@ -71,6 +71,77 @@ const MeetingsList = () => {
     });
   };
   
+
+
+  const fetchParticipants = async (meetingId) => {
+    setLoadingParticipants(true);
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/meeting-participants/meeting/${meetingId}`
+      );
+      console.log("API Response for Participants:", response.data); // Log full response
+      setParticipants(response.data || []);
+    } catch (err) {
+      console.error("Error fetching participants:", err);
+      setError("Failed to fetch participants. Please try again later.");
+    } finally {
+      setLoadingParticipants(false);
+    }
+  };
+  
+  const handleMeetingClick = (meetingId, meetingName) => {
+    setSelectedMeetingId(meetingId);
+    setMeetingName(meetingName);
+    fetchParticipants(meetingId);
+  
+    // Filter participants based on selected meetingId and userId
+    const filteredParticipants = participants.filter(
+      (participant) => participant.meetingId === meetingId && participant.userId === userId
+    );
+  
+    // Check if filteredParticipants has any data
+    if (filteredParticipants.length > 0) {
+      const qrCodeData = filteredParticipants[0].qrCodeUser; // Use qrCodeUser value of first participant
+  
+      // Call sendQRCodeEmail with relevant data
+      sendQRCodeEmail(meetingId, meetingName, userId, qrCodeData);
+  
+      // Set the QR code data to state
+      setQrCodeData(qrCodeData);
+    }
+  };
+  
+  const tableColumns = [
+    { label: 'Meeting ID', value: meetingId },
+    { label: 'Meeting Name', value: meetingName },
+    { label: 'User Email', value: userEmail },
+    { label: 'User ID', value: userId },
+    { label: 'QR Code Data', value: qrCodeData }, // Join QR Code data if it's an array
+  ];
+
+
+  
+  const sendQRCodeEmail = async (meetingId, meetingName, userId, qrCodeData) => {
+    try {
+      // Make an API call to send the QR Code email
+      const response = await axios.post(
+        `http://localhost:8080/president/sendQrCode/${meetingId}`,
+        {
+          email: userEmail, // User email passed from state
+          meetingId: meetingId, // Meeting ID
+          meetingName: meetingName, // Meeting name
+          userId: String(userId), // User ID as string
+          qrCodeData: qrCodeData // QR code data for the user
+        }
+      );
+  
+      console.log('QR Code email sent successfully:', response.data);
+    } catch (error) {
+      console.error('Error sending QR Code email:', error);
+    }
+  };
+  
+  
   const fetchEventMeetings = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -102,102 +173,6 @@ const MeetingsList = () => {
     const diffMinutes = (meetingTime - now) / (1000 * 60);
     return diffMinutes <= 30 && diffMinutes >= 0; // Meeting is within 30 minutes
   };
-
-  const fetchParticipants = async (meetingId) => {
-    setLoadingParticipants(true);
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/meeting-participants/meeting/${meetingId}`
-      );
-      console.log("API Response for Participants:", response.data); // Log full response
-      setParticipants(response.data || []);
-    } catch (err) {
-      console.error("Error fetching participants:", err);
-      setError("Failed to fetch participants. Please try again later.");
-    } finally {
-      setLoadingParticipants(false);
-    }
-  };
-  
-  const handleMeetingClick = (meetingId, meetingName) => {
-    setSelectedMeetingId(meetingId);
-    setMeetingName(meetingName);
-    fetchParticipants(meetingId);
-    // Filter participants based on selected meetingId and userId
-    const filteredParticipants = participants.filter(
-      (participant) => participant.meetingId === meetingId && participant.userId === userId
-    );
-
-    // Collect QR code data from filtered participants
-    const qrCodeData = filteredParticipants.map((participant) => ({
-      qrCodeUser: participant.qrCodeUser,
-    }));
-
-    setQrCodeData(qrCodeData);
-
-    // Prepare API payload with dynamic email and filtered QR code data
-    const payload = {
-      email: userEmail, // Current user email
-      meetingName: meetingName,
-      userId: String(userId), // Ensure userId is passed as string
-      qrCodeData: qrCodeData.filter((data) => data.qrCodeUser).map((data) => data.qrCodeUser).join(',') // Filter out any null/undefined values before joining
-    };
-
-    // Log for debugging
-    console.log("Payload for API:", payload);
-
-    // Send data to API
-    setSendingQRCode((prev) => ({ ...prev, [meetingId]: 'fetching' }));
-    fetch(`http://localhost:8080/president/sendQrCode/${meetingId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('API Response:', data);
-        setSendingQRCode((prev) => ({ ...prev, [meetingId]: 'Fetched Successfully' }));
-      })
-      .catch((error) => {
-        console.error('API Error:', error);
-        setSendingQRCode((prev) => ({ ...prev, [meetingId]: 'Error Fetching QR Code' }));
-      });
-  };
-
-  const tableColumns = [
-    { label: 'Meeting ID', value: meetingId },
-    { label: 'Meeting Name', value: meetingName },
-    { label: 'User Email', value: userEmail },
-    { label: 'User ID', value: userId },
-    { label: 'QR Code Data', value: qrCodeData }, // Join QR Code data if it's an array
-  ];
-
-
-  
-  const sendQRCodeEmail = async (meetingId, meetingName, userId, qrCodeData) => {
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/president/sendQrCode/${meetingId}`,
-        {
-          email: userEmail,
-          meetingName,
-          userId,
-          qrCodeData, // Send the QR code data (participantId and qrCodeUser)
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-  
-      if (response.status === 200) {
-        console.log('QR code sent successfully!');
-      }
-    } catch (error) {
-      console.error('Error sending QR code email:', error);
-      setEmailError('Error while sending QR code via email.');
-    }
-  };
-  
 
   const fetchClubs = async () => {
     try {
@@ -555,7 +530,7 @@ const MeetingsList = () => {
                   <td className="px-4 py-2 border">{participant.clubId}</td>
                   <td className="px-4 py-2 border">{participant.meetingId}</td>
                   <td className="px-4 py-2 border">{participant.qrCodeUser}</td>
-                  <td className="px-4 py-2 border">{participant.userId}</td>
+                  <td className="px-4 py-2 border">{userEmail}</td>
                   <td className="px-4 py-2 border">
                 {/* Display QR Code dynamically */}
                 {qrCodeDataUrls[participant.participantId] ? (
