@@ -1,11 +1,15 @@
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { BsArrowLeftCircle, BsBell } from "react-icons/bs";
 import { FiMessageSquare } from "react-icons/fi";
 import { IoPersonCircleOutline } from "react-icons/io5";
+import NotificationService from "../service/NotificationService";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [notificationCount, setNotificationCount] = useState(0);
 
   // Function to generate paths under the base path '/student'
   const getLinkPath = (linkType) => {
@@ -16,6 +20,24 @@ const Navbar = () => {
   const isSelected = (linkType) => {
     return location.pathname.includes(linkType);
   };
+
+  useEffect(() => {
+    const fetchUnreadNotificationCount = async () => {
+      const userId = localStorage.getItem('session_id');
+      const token = localStorage.getItem('token');
+      if (userId && token) {
+        try {
+          const count = await NotificationService.getUnreadNotificationCount(userId, token);
+          setNotificationCount(count);
+
+        } catch (err) {
+          console.error('Error fetching unread notifications count', err);
+        }
+      }
+    };
+
+    fetchUnreadNotificationCount();
+  }, []);
 
   return (
     <nav className="bg-neutral-900 shadow-2xl flex items-center justify-between py-2 px-4 text-white">
@@ -48,6 +70,12 @@ const Navbar = () => {
                 : "text-[#AEC90A] hover:text-white"
               }`}
           />
+            {/* Badge for unread notifications */}
+            {notificationCount > 0 && (
+            <span className="absolute top-0 right-0 inline-block bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {notificationCount}
+            </span>
+          )}
         </Link>
         <Link to={getLinkPath("profile")} className="relative">
           <IoPersonCircleOutline

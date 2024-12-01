@@ -103,6 +103,24 @@ class NotificationService{
             throw err;
         }
     }
+    
+
+    static async getUnreadNotificationCount(user_id, token) {
+        try{
+    
+            const response1 = await axios.get(`${NotificationService.BASE_URL}/student/getUnreadNotificationCount/${user_id}`,
+                {
+                    headers: {Authorization: `Bearer ${token}`}
+                }
+            )
+            return response1.data;
+            
+        }catch(err){
+            throw err;
+        }
+    }
+
+
 
 
    

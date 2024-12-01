@@ -110,6 +110,17 @@ const NotificationPage = () => {
     });
   };
   
+  const toUTC = (date) => {
+    const offset = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() + offset);
+  };
+
+  const fromUTC = (dateArray) => {
+    const date = new Date(Date.UTC(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]));
+    //const date = new Date(Date.UTC(...dateArray));
+    const offset = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() - offset);
+  };
 
   useEffect(() => {
 
@@ -140,8 +151,22 @@ const NotificationPage = () => {
               })
             );
 
+            const sortedNotifications = notificationsWithClubs.sort((a, b) => {
+              // Reconstruct Date objects from date_posted array for both notifications
+              const dateA = fromUTC(a.date_posted);
+              const dateB = fromUTC(b.date_posted);
+              
+              console.log("date A", dateA);
+              console.log("date B", dateB);
+              // Sort in descending order (latest date first)
+              return dateB - dateA;
+            });
+            
+            console.log("sorted notification array with clubs", sortedNotifications);
             console.log("notification array with clubs", notificationsWithClubs);
-            setNotification(notificationsWithClubs);
+            setNotification(sortedNotifications);
+
+            
             
 
         }catch(error){
@@ -189,7 +214,7 @@ const NotificationPage = () => {
           title={notification.clubName}
           time={formatDate(notification.date_posted)}
           message={notification.notification}
-          is_read={notification.is_read}
+          is_read={notification._read}
         />
       ))}
     </div>
