@@ -8,52 +8,55 @@ import isacaImage from "../assets/clubs/isaca1.png";
 import wieImage from "../assets/clubs/wie.png";
 import NotificationService from '../service/NotificationService';
 import ClubsService from '../service/ClubsService';
-const notifications = [
-  {
-    id: 1,
-    image: ieeeImage,
-    title: "(IEEE) Institute of Electrical and Electronics Engineers",
-    time: "4:45 pm",
-    message: "Applied for IEEE Student Chapter Club. Dear student, we received your application. Stay tuned for further updates regarding your interview schedule."
-  },
-  {
-    id: 2,
-    image: rotaractImage,
-    title: "(Rotaract) Rotaract Club",
-    time: "2:30 pm",
-    message: "Your membership application for Rotaract Club has been received. We will notify you about the upcoming orientation session."
-  },
-  {
-    id: 3,
-    image: acmImage,
-    title: "(ACM) Association for Computing Machinery",
-    time: "10:00 am",
-    message: "Thank you for applying to join ACM. We will review your application and get back to you soon with more information."
-  },
-  {
-    id: 4,
-    image: pahasaraImage,
-    title: "(Pahasara) Pahasara Club",
-    time: "1:15 pm",
-    message: "We have received your interest in joining Pahasara Club. Please keep an eye on your email for further details."
-  },
-  {
-    id: 5,
-    image: isacaImage,
-    title: "(ISACA) Information Systems Audit and Control Association",
-    time: "11:30 am",
-    message: "Your application for ISACA has been successfully submitted. We will notify you about the next steps soon."
-  },
-  {
-    id: 6,
-    image: wieImage,
-    title: "(WIE) Women in Engineering",
-    time: "3:00 pm",
-    message: "Thanks for your application to WIE. We will review your details and send you further instructions."
-  },
-];
 
-const NotificationCard = ({ image, title, time, message }) => {
+import { FaCircle } from "react-icons/fa";
+
+// const notifications = [
+//   {
+//     id: 1,
+//     image: ieeeImage,
+//     title: "(IEEE) Institute of Electrical and Electronics Engineers",
+//     time: "4:45 pm",
+//     message: "Applied for IEEE Student Chapter Club. Dear student, we received your application. Stay tuned for further updates regarding your interview schedule."
+//   },
+//   {
+//     id: 2,
+//     image: rotaractImage,
+//     title: "(Rotaract) Rotaract Club",
+//     time: "2:30 pm",
+//     message: "Your membership application for Rotaract Club has been received. We will notify you about the upcoming orientation session."
+//   },
+//   {
+//     id: 3,
+//     image: acmImage,
+//     title: "(ACM) Association for Computing Machinery",
+//     time: "10:00 am",
+//     message: "Thank you for applying to join ACM. We will review your application and get back to you soon with more information."
+//   },
+//   {
+//     id: 4,
+//     image: pahasaraImage,
+//     title: "(Pahasara) Pahasara Club",
+//     time: "1:15 pm",
+//     message: "We have received your interest in joining Pahasara Club. Please keep an eye on your email for further details."
+//   },
+//   {
+//     id: 5,
+//     image: isacaImage,
+//     title: "(ISACA) Information Systems Audit and Control Association",
+//     time: "11:30 am",
+//     message: "Your application for ISACA has been successfully submitted. We will notify you about the next steps soon."
+//   },
+//   {
+//     id: 6,
+//     image: wieImage,
+//     title: "(WIE) Women in Engineering",
+//     time: "3:00 pm",
+//     message: "Thanks for your application to WIE. We will review your details and send you further instructions."
+//   },
+// ];
+
+const NotificationCard = ({ image, title, time, message, is_read}) => {
   return (
     <div className='bg-[#1E1E1E] p-6 mx-4 my-2 rounded-2xl'  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
       <div className="flex items-center justify-between">
@@ -82,6 +85,30 @@ const NotificationCard = ({ image, title, time, message }) => {
 const NotificationPage = () => {
 
   const [notification, setNotification] = useState([]);
+
+  const formatDate = (dateArray) => {
+    if (!dateArray || dateArray.length < 6) {
+      return "Invalid date format";
+    }
+  
+    // Extract the date components
+    const [year, month, day, hour, minute, second] = dateArray;
+  
+    // Create a JavaScript Date object (months are 0-indexed in JS)
+    const date = new Date(year, month - 1, day, hour, minute, second);
+  
+    // Format the date into a readable string
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true, // For AM/PM format
+    });
+  };
+  
 
   useEffect(() => {
 
@@ -134,8 +161,9 @@ const NotificationPage = () => {
           key={notification.notification_id}
           image={notification.clubImage}
           title={notification.clubName}
-          time={notification.date_posted}
+          time={formatDate(notification.date_posted)}
           message={notification.notification}
+          is_read={notification.is_read}
         />
       ))}
     </div>
