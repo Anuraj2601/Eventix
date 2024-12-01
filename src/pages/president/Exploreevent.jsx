@@ -1049,11 +1049,11 @@ const Exploreevent = () => {
             <Typography
               color="white"
               variant="h3"
-              className="mb-2 text-center p-5 mt-20"
+              className="mb-2 text-center p-5 mt-40"
             >
               Sponsors
             </Typography>
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between mb-4 py-2">
               {(eventSponsor || []).map((eventS) => (
                 <div
                   className="flex flex-col items-center"
