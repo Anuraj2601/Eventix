@@ -5,6 +5,7 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, Tooltip, Legend, ArcElement } from 'chart.js';
 import EventOcService from '../service/EventOcService';
 import UsersService from '../service/UsersService'; // Adjust path if needed
+import axios from 'axios';
 
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -13,43 +14,46 @@ const Candidates = ({ activeTab }) => {
     const [candidates, setCandidates] = useState([]);
     const [message, setMessage] = useState(""); 
     const [eventOCs, setEventOCs] = useState([]);
-    const [userProfiles, setUserProfiles] = useState({});
+    const [userProfiles, setUserProfiles] = useState([]); // Initialize as an array
+    const [meetingParticipants, setMeetingParticipants] = useState([]);
+// Example: sortedCandidates is derived from an existing candidates array
+const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name)); // Example sorting logic based on name
 
+    
 
     useEffect(() => {
         const fetchUserProfiles = async () => {
             try {
-                const profilePromises = candidates.map(async (reg) => {
-                    if (reg.email && !userProfiles[reg.email]) {
-                        try {
-                            const response = await UsersService.getUserProfileByEmail(reg.email);
-                            return { email: reg.email, name: response.name, profileImage: response.profileImage };
-                        } catch (err) {
-                            console.error('Error fetching profile:', err);
-                            return { email: reg.email, name: 'Unknown', profileImage: '' }; 
-                        }
-                    }
+                const response = await axios.get('http://localhost:8080/api/users/getAllUsersIncludingCurrent', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
                 });
-    
-                const profilesArray = await Promise.all(profilePromises);
-                const profiles = profilesArray.reduce((acc, profile) => {
-                    if (profile) {
-                        acc[profile.email] = profile;
-                    }
-                    return acc;
-                }, {});
-    
-                setUserProfiles((prevProfiles) => ({ ...prevProfiles, ...profiles }));
+
+                // Check if the response data is an array
+                if (Array.isArray(response.data)) {
+                    // Map the response data to create user profiles
+                    const profiles = response.data.map((user) => ({
+                        user_id: user.id,
+                        name: `${user.firstname} ${user.lastname}`,
+                        email: user.email,
+                        profileImage: user.photoUrl || '',  // Use a default if no image
+                    }));
+
+                    // Set the fetched user profiles to the state
+                    setUserProfiles(profiles);
+                } else {
+                    setMessage('Error: Response data is not an array');
+                }
             } catch (err) {
-                setError('Error fetching user profiles. Please try again.');
+                setMessage('Error fetching user profiles. Please try again.');
+                console.error('Error fetching user profiles:', err);
             }
         };
-    
-        if (candidates.length) {
-            fetchUserProfiles();
-        }
-    }, [candidates]);
-    
+
+        // Fetch the profiles when the component mounts
+        fetchUserProfiles();
+    }, []);
 
 
     useEffect(() => {
@@ -75,23 +79,41 @@ const Candidates = ({ activeTab }) => {
     }, []);
     
 
-    
-
-    const getMatchingEventNames = (candidate) => {
-        console.log("Candidate OC:", candidate.oc); // Log the candidate's OC field to see its contents
-        if (!Array.isArray(eventOCs)) return []; // Safeguard check
-        if (!candidate.oc) return [];
-    
-        // Filtering eventOCs based on matching oc_id and returning the event names
-        return eventOCs
-            .filter(event => candidate.oc.includes(event.oc_id)) // Filter by oc_id
-            .map(event => event.event_name); // Map to return event names
+    const getUserIdForCandidate = (candidate) => {
+        if (!candidate.userEmail) return null; // Return null if no email
+        
+        // Find matching profile based on email
+        const matchingProfile = userProfiles.find(
+            (profile) => profile.email === candidate.userEmail
+        );
+        
+        if (!matchingProfile) return null; // If no matching profile, return null
+        
+        const user_id = matchingProfile.user_id; // User ID from matching profile
+        return user_id; // Return only the user_id
     };
     
     
+
+    const getEventNamesForCandidate = (candidate) => {
+        if (!candidate.userEmail) return []; // Return empty array if no email
+    
+        // Find matching profile based on email
+        const matchingProfile = userProfiles.find(
+            (profile) => profile.email === candidate.userEmail
+        );
+    
+        if (!matchingProfile) return []; // If no matching profile, return empty array
+    
+        const user_id = matchingProfile.user_id; // User ID from matching profile
+        const club_id = candidate.clubId; // Club ID from candidate
+        // Filter event OCs by the found user_id
+        return eventOCs
+            .filter((oc) => oc.user_id === matchingProfile.user_id) // Filter event OCs by user_id
+            .map((oc) => oc.event_name); // Return only the event names
+    };
     
     
-  
     
     useEffect(() => {
         const fetchCandidates = async () => {
@@ -115,6 +137,67 @@ const Candidates = ({ activeTab }) => {
         fetchCandidates();
     }, []);
 
+    useEffect(() => {
+        const fetchMeetingParticipants = async () => {
+            const promises = sortedCandidates.map(async (candidate) => {
+                console.log("Candidate data:", candidate);
+    
+                // Get event names using getEventNamesForCandidate function
+                const userId = getUserIdForCandidate(candidate);
+    
+                // Get user_id using the getUserIdForCandidate function
+                const clubId = candidate.clubId; // Assume that clubId is part of the candidate object
+    
+                console.log("User ID:", userId, "Club ID:", clubId);
+    
+                if (!userId || !clubId) {
+                    console.error(`No valid user or club information for candidate: ${candidate.name}`);
+                    return { candidateId: candidate.id, meetingParticipants: [] };
+                }
+    
+                // Log the candidate data being passed for the API request
+                console.log(`Fetching meeting participants for candidate ID: ${candidate.id}`, { userId, clubId });
+    
+                try {
+                    const response = await axios.get(
+                        `http://localhost:8080/api/meeting-participants/user/${userId}/club/${clubId}`
+                    );
+    
+                    // Log the response data
+                    console.log(`Response for candidate ID: ${candidate.id}`, response.data);
+    
+                    return {
+                        candidateId: candidate.id,
+                        meetingParticipants: response.data,
+                         // Include the event names for the candidate
+                    };
+                } catch (error) {
+                    console.error(`Error fetching data for candidate ${candidate.id}:`, error);
+                    return { candidateId: candidate.id, meetingParticipants: [], eventNames };
+                }
+            });
+    
+            const results = await Promise.all(promises);
+    
+            // Log the results of all the promises
+            console.log('All fetched meeting participants:', results);
+    
+            const participantsMap = results.reduce((acc, result) => {
+                acc[result.candidateId] = result.meetingParticipants;
+                return acc;
+            }, {});
+    
+            // Log the final participants map
+            console.log('Participants Map:', participantsMap);
+    
+            setMeetingParticipants(participantsMap);
+        };
+    
+        if (sortedCandidates.length > 0) fetchMeetingParticipants();
+    }, [sortedCandidates]);
+    
+    
+    
     const filterCandidates = (candidates) => {
         const electionIdFromUrl = window.location.pathname.split('/').pop(); // Extract the last part of the URL (electionId)
     
@@ -199,17 +282,32 @@ const Candidates = ({ activeTab }) => {
     return (
       <div className="text-white">
           {message && (
-              <div className="bg-black text-yellow-500 p-4 mb-4">
+              <div className="bg-black text-[#AEC90A] p-4 mb-4">
                   <Typography>{message}</Typography>
               </div>
           )}
+
+
           {categories.map(category => {
               const categoryCandidates = candidates.filter(candidate => candidate.position.toLowerCase() === category.toLowerCase());
               const filteredCandidates = filterCandidates(categoryCandidates);
 
               // Sort candidates by performance in descending order
-              const sortedCandidates = [...filteredCandidates].sort((a, b) => b.performance - a.performance);
-              
+              const sortedCandidates = [...filteredCandidates].sort((a, b) => {
+                const aParticipants = meetingParticipants[a.id] || [];
+                const bParticipants = meetingParticipants[b.id] || [];
+        
+                const aAttendance =
+                    aParticipants.length > 0
+                        ? (aParticipants.filter(participant => participant.attendance === 1).length / aParticipants.length) * 100
+                        : 0;
+                const bAttendance =
+                    bParticipants.length > 0
+                        ? (bParticipants.filter(participant => participant.attendance === 1).length / bParticipants.length) * 100
+                        : 0;
+        
+                return bAttendance - aAttendance; // Sort descending
+            });              
               // Get the number of selected candidates for the current category
               const selectedCount = getSelectedCount(category);
 
@@ -218,42 +316,71 @@ const Candidates = ({ activeTab }) => {
                       <Typography variant="h5" className="mb-2">
                           {category}
                       </Typography>
+                       
                       {sortedCandidates.length > 0 ? (
-                          sortedCandidates.map(candidate => (
-                              <Card key={candidate.id} className="mb-4 bg-black text-white">
+                            sortedCandidates.map(candidate => {
+                                // Find the matching user profile for this candidate
+                                const userProfile = userProfiles.find(profile => profile.user_id === candidate.user_id);
+                                const associatedEvents = getEventNamesForCandidate(candidate); // Store the event names result
+                                const participantDetails = meetingParticipants[candidate.id] || [];
+                                
+                                return (
+                            
+                              <Card key={candidate.id} className="mb-8 bg-black text-white"  style={{
+                                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                              }}>
                                   <CardBody>
                                       <div className="flex items-start gap-4">
                                           {/* Image on the Left */}
                                           <div className="flex-shrink-0 w-1/6">
-                                              <Avatar className="w-40 h-40" src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
+                                              <Avatar className="w-40 h-40 rounded-full" src={candidate.imageUrl || `https://source.unsplash.com/random?sig=${candidate.id}`} />
                                           </div>
                                           {/* Details in the Middle */}
                                           <div className="flex-grow flex flex-col gap-4 w-1/3">
                                               <Typography variant="h6">{candidate.name || 'No Name'}</Typography>
-                                              <p>User ID: {candidate.user_id}</p> 
-                                              <Typography variant="body2">Position applied for: {candidate.position}</Typography>
-                                              <Typography variant="body2">How can they make a change? {candidate.contribution}</Typography>
-                                          </div>
-                                          {getMatchingEventNames(candidate).length > 0 && (
-                        <>
-                            <p className="mb-4"><strong>Associated Events:</strong></p>
-                            <ul className="list-disc list-inside">
-                                {getMatchingEventNames(candidate).map((eventName, eventIndex) => (
-                                    <li key={eventIndex}>{eventName}</li>
-                                ))}
-                            </ul>
-                        </>
-                    )}
 
-                                          {/* Pie Chart on the Right */}
-                                          <div className="flex-shrink-0 w-1/6 flex flex-col items-center">
-                                              {renderPieChart(candidate.performance)}
-                                              <Typography variant="body2" className="mt-2">
-                                                  {candidate.performance}%
-                                              </Typography>                                              
+                                              <Typography variant="h6">{candidate.userEmail || 'No Name'}</Typography>
+                                              <Typography variant="h6">Position  : {candidate.position }</Typography>
 
+
+                                              <Typography variant="body2">How can they make a change? : {candidate.contribution}</Typography>
                                           </div>
-                                      </div>
+                                          {associatedEvents.length > 0 && (
+                                        <>
+                                             <ul className="list-disc list-inside text-[#AEC90A] font-bold">
+                                             <li className="font-bold text-white list-none">Associated Events</li> 
+
+                                                {associatedEvents.map((eventName, index) => (
+                                                    <li key={index}>{eventName}</li>
+                                                ))}
+                                            </ul>
+                                        </>
+                                    )}
+
+
+
+    <div className="flex-shrink-0 w-1/3 flex flex-col items-center">
+  {
+    // Directly calculate the attendance percentage and pass it to renderPieChart
+    renderPieChart(
+      Number(
+        ((participantDetails.filter((participant) => participant.attendance === 1).length /
+        participantDetails.length) * 100).toFixed(2)  // Ensuring it's a valid number
+      )
+    )
+  }
+  <Typography variant="body2" className="mt-2">
+    {(
+      (participantDetails.filter((participant) => participant.attendance === 1).length /
+      participantDetails.length) * 100
+    ).toFixed(2)}%
+  </Typography>
+</div>
+
+</div>
+
+{/* Pie Chart on the Right */}
+
                                       {/* Buttons at the Bottom Right Corner */}
                                       {/* Buttons at the Bottom Right Corner */}
 <div className="mt-4 flex justify-end gap-2">
@@ -282,7 +409,7 @@ const Candidates = ({ activeTab }) => {
                 Select
             </Button>
             <Button
-                className="bg-red hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+                className="bg-white hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
                 onClick={() => handleReject(candidate.id)}
             >
                 Reject
@@ -293,15 +420,16 @@ const Candidates = ({ activeTab }) => {
 
                                   </CardBody>
                               </Card>
-                          ))
-                      ) : (
+                          );
+                        })
+                    ) : (
                           <Typography>No candidates for {category}.</Typography>
-                      )}
-                  </div>
-              );
-          })}
-      </div>
-  );
-};
+                          )}
+                          </div>
+                      );
+                  })}
+              </div>
+          );
+      };
 
 export default Candidates;
