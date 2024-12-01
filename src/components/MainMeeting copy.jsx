@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
+import ClubsService from '../service/ClubsService';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import physicalMeeting from '../assets/physicalMeeting02.png';
@@ -7,7 +9,10 @@ import RegistrationService from '../service/registrationService'; // Adjust the 
 import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
 import { useNavigate } from "react-router-dom";
 import EventMeetingService from "../service/EventMeetingService";
+import QRScanner from './QrScanner'; // Adjust the path as needed
+import emailjs from '@emailjs/browser';
 
+import QRCode from "qrcode"; // Importing the QRCode library
 
 const MeetingsList = () => {
   const [meetings, setMeetings] = useState([]);
@@ -15,7 +20,7 @@ const MeetingsList = () => {
   const [error, setError] = useState(null);
   const [clubs, setClubs] = useState([]);
   const [disabledButtons, setDisabledButtons] = useState(new Set());
-  const [eventMeetings, setEventMeetings] = useState([]);
+  const [popupVisible, setPopupVisible] = useState(null);
   const [qrCodeDialogVisible, setQrCodeDialogVisible] = useState(false);
   const [sendingQRCode, setSendingQRCode] = useState({});
   const [emailSent, setEmailSent] = useState(false);
@@ -29,7 +34,73 @@ const MeetingsList = () => {
   const [participants, setParticipants] = useState([]);
   const [loadingParticipants, setLoadingParticipants] = useState(false);
   const [selectedMeetingId, setSelectedMeetingId] = useState(null);
+  const [eventMeetings, setEventMeetings] = useState([]);
+  const [filteredParticipants, setFilteredParticipants] = useState([]);
+
+
+  useEffect(() => {
+    if (!loadingParticipants && selectedMeetingId) {
+      // Filter participants based on the selected meeting and user ID
+      const filteredParticipants = participants.filter(
+        (participant) => participant.meetingId === selectedMeetingId && participant.userId === userId
+      );
+
+      // Generate QR codes for each filtered participant
+      filteredParticipants.forEach((participant) => {
+        const qrCodeData = participant.qrCodeUser; // Data to generate QR code
+        handleGenerateQrCode(qrCodeData, participant.participantId);
+      });
+    }
+  }, [loadingParticipants, selectedMeetingId, participants, userId]);
+
+
+  const [qrCodeDataUrls, setQrCodeDataUrls] = useState({}); // State to store QR codes
+
+  // Function to generate and store QR code data URL
+  const handleGenerateQrCode = (qrCodeData, participantId) => {
+    QRCode.toDataURL(qrCodeData, { type: 'png' }, (err, url) => {
+      if (err) {
+        console.error("Error generating QR code:", err);
+      } else {
+        setQrCodeDataUrls((prevState) => ({
+          ...prevState,
+          [participantId]: url, // Save the QR code for the specific participant
+        }));
+      }
+    });
+  };
   
+
+  const handlefetchClick = async (meetingId, meetingName) => {
+    try {
+      // Step 1: Generate QR Code
+      const qrCodeData = `Meeting: ${meetingName}, ID: ${meetingId}`;
+      const qrCodeUrl = await QRCode.toDataURL(qrCodeData);
+  
+      // Step 2: Get current user's email
+      const userEmail = getUserEmailFromToken(); // Assuming this gives you the session email
+  
+      // Step 3: Send email with EmailJS
+      const templateParams = {
+        user_email: userEmail, // Recipient's email
+        meeting_name: meetingName,
+        qr_code: qrCodeUrl, // Attach QR code as a base64 string
+      };
+  
+      await emailjs.send(
+        'your_service_id',   // Replace with your EmailJS service ID
+        'your_template_id',  // Replace with your EmailJS template ID
+        templateParams,
+        'your_public_key'    // Replace with your EmailJS public key
+      );
+  
+      alert('Email sent successfully!');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      alert('Failed to send the email.');
+    }
+  };
+
   const fetchEventMeetings = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -61,6 +132,7 @@ const MeetingsList = () => {
     const diffMinutes = (meetingTime - now) / (1000 * 60);
     return diffMinutes <= 30 && diffMinutes >= 0; // Meeting is within 30 minutes
   };
+
   const fetchParticipants = async (meetingId) => {
     setLoadingParticipants(true);
     try {
@@ -77,7 +149,6 @@ const MeetingsList = () => {
     }
   };
   
-
   // Handle meeting selection
   const handleMeetingClick = (meetingId) => {
     setSelectedMeetingId(meetingId);
@@ -102,45 +173,82 @@ const MeetingsList = () => {
     }
   };
 
+  const fetchClubs = async () => {
+    try {
+      const clubs = await ClubsService.getAllClubs(token);
+      const clubsArray = clubs.content || [];
+      setClubs(clubsArray);
+    } catch (error) {
+      console.error("Failed to fetch clubs", error);
+    }
+  };
+  const fetchRegistrations = async () => {
+    try {
+      const response = await RegistrationService.getAllRegistrations(token);
+      const fetchedRegistrations = response.data || response.content || [];
+      setRegistrations(fetchedRegistrations);
+  
+      // Logs here may not show updated state yet
+      console.log('Registrations:', registrations); // Might log the previous state
+    } catch (error) {
+      console.error("Error fetching registrations:", error);
+    }
+  };
 
-    const meetingAnnouncements = [
-        {
-            id: 1,
-            title: 'Monthly Strategy Meeting',
-            description: 'Discussing next month’s strategic goals.',
-            date: '2024-08-05',
-            time: '10:00 AM',
-            location: 'S104',
-            postedDate: '2024-07-25',
-            postedTime: '10:00 AM',
-            clubName: 'IEEE Student Chapter',
-            clubImage: ieee
+  const validBoardPositions = ['president', 'treasurer', 'secretary'];
+
+  const isUserEligibleForClubBoard = () => {
+    console.log("Checking user eligibility for CLUB_BOARD...");
+  
+    const eligible = registrations.some((reg) => {
+      const isEligible = 
+        reg.userId === userId && 
+        validBoardPositions.includes(reg.position.toLowerCase()) &&
+        reg.accepted === 1;
+  
+      // Log the condition checks for each registration
+      console.log(
+        `Checking registration for user ${reg.userId}:`,
+        `Position: ${reg.position}, Accepted: ${reg.accepted}`,
+        `Eligible: ${isEligible}`
+      );
+  
+      return isEligible;
+    });
+  
+    // Log the result of the eligibility check
+    console.log("Is user eligible for CLUB_BOARD:", eligible);
+    return eligible;
+  };
+  
+
+  const validPositions = ["president", "member", "secretary", "treasurer", "oc"];
+  const filteredRegistrations = registrations.filter(
+    (reg) =>
+      reg.email === userId &&
+      reg.accepted === 1 &&
+      validPositions.includes(reg.position.toLowerCase())
+  );
+
+  const fetchMeetings = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/president/getAllMeetings', {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-            id: 2,
-            title: 'Team Building Workshop',
-            description: 'A workshop to enhance team collaboration.',
-            date: '2024-08-12',
-            time: '02:00 PM',
-            location: 'W002',
-            postedDate: '2024-07-26',
-            postedTime: '11:00 AM',
-            clubName: 'ISACA',
-            clubImage: isaca,
-        },
-        {
-            id: 3,
-            title: 'Quarterly Review Meeting',
-            description: 'Reviewing the company’s quarterly performance.',
-            date: '2024-08-20',
-            time: '09:00 AM',
-            location: 'E104',
-            postedDate: '2024-07-27',
-            postedTime: '09:00 AM',
-            clubName: 'ROTRACT',
-            clubImage: rotract
-        },
-    ];
+      });
+      if (response.data && response.data.content) {
+        setMeetings(response.data.content);
+      } else {
+        setError('No meetings data available.');
+      }
+    } catch (err) {
+      console.error('Error fetching meetings:', err);
+      setError('Failed to fetch meetings. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (token) {
@@ -148,234 +256,181 @@ const MeetingsList = () => {
       fetchClubs();
       fetchRegistrations();
       fetchEventMeetings();
+
     }
   }, [token]);
 
-    const handleDeclineMeeting = (id) => {
-        setCurrentMeetingId(id);
-        setShowPopup(true);
-    };
+  const formatDate = (dateArray) => {
+    const [year, month, day] = dateArray;
+    return `${day}th of ${month}-${year}`;
+  };
 
-    const handlePopupClose = () => {
-        setShowPopup(false);
-        setReason('');
-    };
+  const formatTime = (timeArray) => {
+    const [hour, minute] = timeArray;
+    return `${hour}:${minute < 10 ? `0${minute}` : minute}`;
+  };
 
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setTimeout(() => {
-            console.log('Reason for declining meeting ID', currentMeetingId, ':', reason);
-            setDeclinedMeetings(prev => new Set(prev).add(currentMeetingId));
-            handlePopupClose();
-            setIsLoading(false);
-        }, 1500);
-    };
-
-    const handleReRequest = (id) => {
-        console.log('Re-request meeting ID:', id);
-    };
-    const renderContent = () => {
-        return (
-            <div className="relative flex flex-col items-center">
-    <img
-        src={selectedFilter === 'physical' ? physicalMeeting : onlineMeeting}
-        alt={selectedFilter === 'physical' ? "Physical Meeting" : "Online Meeting"}
-        className="w-full h-auto mb-6 shadow-lg"
-    />
-    {selectedFilter === 'physical' && (
-        <button
-            onClick={() => setShowDeclinedModal(true)}
-            className="absolute top-4 right-4 bg-[#DDFF00] font-medium text-dark-500 px-4 py-2 rounded-md shadow-md"
-        >
-            Declined ({declinedMeetings.size})
-        </button>
-    )}
-    {(selectedFilter === 'physical' || selectedFilter === 'online') && shouldShowForm && (
-        <div
-            className={`absolute left-10 top-7 bg-black bg-opacity-75 p-6 rounded-lg text-white w-[600px] mt-3 ${selectedFilter === 'online' ? 'h-[400px]' : 'h-[500px]'}`}
-        >
-            {selectedFilter === 'physical' && (
-                <h2 className="text-lg font-semibold mb-4">Create New Physical Meeting</h2>
-            )}
-            {selectedFilter === 'online' && (
-                <h2 className="text-lg font-semibold mb-4">Create New Online Meeting</h2>
-            )}
-            <form className="space-y-4">
-                <div>
-                    <label className="block text-sm mb-2">Topic</label>
-                    <input
-                        type="text"
-                        className="w-full p-4 rounded-md h-12 bg-dark-500 border border-gray-600 text-white text-sm"
-                        placeholder="Enter meeting topic"
-                    />
-                </div>
-                <div className="flex space-x-4">
-                    <div className="flex-1">
-                        <label className="block text-sm mb-2">Date</label>
-                        <input
-                            type="date"
-                            className="w-full p-2 text-sm h-10 rounded-md bg-dark-500 border border-gray-600 text-white"
-                            style={{ color: 'white', caretColor: 'white' }}
-                        />
-                    </div>
-                    <div className="flex-1">
-                        <label className="block text-sm mb-2">Time</label>
-                        <input
-                            type="time"
-                            className="w-full text-sm h-10 p-2 rounded-md bg-dark-500 border border-gray-600 text-white"
-                            style={{ color: 'white', caretColor: 'white' }}
-                        />
-                    </div>
-                </div>
-                {selectedFilter === 'physical' && (
-                    <div>
-                        <label className="block text-sm mb-2">Venue</label>
-                        <input
-                            type="text"
-                            className="w-full p-4 rounded-md bg-dark-500 border h-12 border-gray-600 text-white text-sm"
-                            placeholder="Enter Meeting Venue"
-                        />
-                    </div>
-                )}
-                <div>
-                    <label className="block text-sm mb-2">For who</label>
-                    <select className="w-full p-2 rounded-md bg-dark-500 border border-gray-600 text-white">
-                        <option>Board</option>
-                        <option>OC</option>
-                        <option>Club Members</option>
-                    </select>
-                </div>
-                <button type="submit" className="w-full bg-[#DDFF00] text-dark-500 font-medium py-2 rounded-md">
-                    Create Meeting
-                </button>
-            </form>
-        </div>
-    )}
-</div>
-
-          
-        );
-    };
-
-
-
-    const renderMeetingAnnouncements = () => {
-        const handleGetQRCode = (id) => {
-            setPopupVisible(id);
-            setTimeout(() => {
-                setPopupVisible(null);
-                setDisabledButtons((prev) => new Set(prev).add(id));
-            }, 5000);
-        };
-
-        const handleCancelPopup = (id) => {
-            setPopupVisible(null);
-            setDisabledButtons((prev) => new Set(prev).add(id));
-        };
-
-        const announcementsToShow = selectedFilter === 'online' ? meetingAnnouncements.slice(0, 2) : meetingAnnouncements;
-
-        return (
-            <div className="p-4 rounded-lg mb-20 mx-4">
-                <h2 className="text-[16px] font-medium mb-4">Upcoming CLUB Meetings</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {announcementsToShow.map((announcement) => (
-                        <div key={announcement.id} className="relative bg-dark-500 rounded-lg flex flex-col items-center p-4 h-80">
-                            <div className="flex flex-col items-center mb-6 flex-grow">
-                                <img src={announcement.clubImage} alt={announcement.clubName} className="w-12 h-12 rounded-full mb-2" />
-                                <p className="text-sm text-primary font-semibold">{announcement.clubName}</p>
-                                <p className="text-sm text-center mt-2">
-                                    <span className="block font-medium leading-loose">{announcement.title}</span>
-                                    {announcement.description}
-                                    <span className='block text-[20px] text-primary opacity-100 mt-6'>
-                                        {announcement.date} | {announcement.time} | {announcement.location}
-                                    </span>
-                                </p>
-                            </div>
-
-                            {selectedFilter === 'physical' ? (
-                                <div className="flex space-x-2 mb-10 w-full">
-                                    <button
-                                        onClick={() => handleDeclineMeeting(announcement.id)}
-                                        className={`px-4 py-2 w-1/2 ${declinedMeetings.has(announcement.id) ? 'bg-dark-500 cursor-not-allowed border border-red-600 text-red-500' : 'bg-dark-400 text-primary'} rounded font-medium hover:scale-105 transition-transform duration-200`}
-                                        disabled={declinedMeetings.has(announcement.id)}
-                                    >
-                                        {declinedMeetings.has(announcement.id) ? 'Declined' : 'Decline'}
-                                    </button>
-                                    <button
-                                        onClick={() => handleGetQRCode(announcement.id)}
-                                        className={`px-4 py-2 w-1/2 ${disabledButtons.has(announcement.id) ? 'bg-dark-500 cursor-not-allowed opacity-50 text-primary border border-secondary' : 'bg-primary text-sec'} rounded font-semibold hover:bg-primary-dark hover:scale-105 transition-transform duration-200 text-dark-400`}
-                                        disabled={disabledButtons.has(announcement.id)}
-                                    >
-                                        {disabledButtons.has(announcement.id) ? 'QR Code Sent' : 'Get QR Code'}
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="flex space-x-2 mb-10 w-full">
-                                    <button
-                                        onClick={() => handleJoinMeeting(announcement.id)}
-                                        className="px-4 py-2 w-full cursor-not-allowed text-white opacity-50 rounded font-medium bg-dark-400 hover:bg-primary-dark hover:scale-105 transition-transform duration-200"
-                                    >
-                                        Join Meeting
-                                    </button>
-                                </div>
-                            )}
-
-                            <div className="text-xs text-gray-400 absolute bottom-2 w-full text-right">
-                                <span className="mx-0">{announcement.postedDate}</span>
-                                <span className="mx-2">{announcement.postedTime}</span>
-                            </div>
-
-                            {popupVisible === announcement.id && (
-                                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                                    <div className="bg-white p-6 rounded-lg w-[450px] h-[200px] flex flex-col items-center justify-center">
-                                        <p className="text-dark-400 mb-4 font-medium">Wait a minute, your QR code will be sent to you as a notification.</p>
-                                        <button onClick={() => handleCancelPopup(announcement.id)} className="bg-dark-400 text-white px-4 py-2 w-[400px] rounded">
-                                            No need
-                                        </button>
-                                        <div className="mb-4 text-primary font-medium animate-blink mt-6">Loading...</div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            </div>
-        );
-    };
-
-    <style>{`
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
-        }
+  const getClubDetailsById = (clubId) => {
+    const club = clubs.find(c => c.club_id === clubId);
     
-        .animate-blink {
-            animation: blink 1.5s infinite;
-            text-align: center;
-        }
-    `}</style>
-
-
-  const getClubImageByEventMeeting = (eventMeeting) => {
-    const club = clubs.find(c => c.club_id === eventMeeting.club_id);
-  
     if (!club) {
-      console.error(`Club with ID ${eventMeeting.club_id} not found.`);
-      return null; // Return null if the club is not found
+      console.error(`Club with ID ${clubId} not found.`);
     }
-  
-    return club.image; // Assuming the club has an 'image' property
+    
+    return club;
   };
   
+  const isJoinButtonEnabled = (meetingDate, meetingTime) => {
+    const currentTime = new Date();
+    const meetingDateTime = new Date(meetingDate);
+    meetingDateTime.setHours(meetingTime[0], meetingTime[1]);
 
-    const handleCancelPopup = () => {
-        setPopupVisible(null);
-    };
+    // Enable Join button only if meeting is within the next hour
+    return meetingDateTime - currentTime <= 60 * 60 * 1000 && meetingDateTime > currentTime;
+  };
 
-    const announcementsToShow = selectedFilter === 'online' ? unionAnnouncements.slice(0, 3) : unionAnnouncements;
+  const navigate = useNavigate();
+
+  const handleJoinMeetingClick = async (meetingId) => {
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/president/sendMeetingCode/${meetingId}`,
+        { email: userEmail },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        console.log("Meeting code sent successfully");
+      }
+    } catch (error) {
+      console.error("Error sending Meeting code:", error);
+    }
+    navigate(`/president/meeting/${meetingId}`);
+  };
+
+  const filterFutureMeetings = (meetings) => {
+    const currentDate = new Date();
+    console.log('Current Date:', currentDate); // Debugging line
+  
+    const filteredMeetings = meetings.filter(meeting => {
+      const meetingDate = new Date(meeting.date);
+      const [hour, minute] = meeting.time;
+      meetingDate.setHours(hour, minute);
+      console.log('Meeting Date:', meetingDate); // Debugging line
+  
+      if (
+        meetingDate.toDateString() === currentDate.toDateString() || // Same date
+        meetingDate > currentDate // Future dates
+      ) {
+        return true;
+      }
+  
+      return false;    });
+  
+    console.log('Filtered Meetings:', filteredMeetings); // Debugging line
+    return filteredMeetings;
+  };
+  
+  const filterMeetingsByParticipantType = (meetings) => {
+    console.log('User ID:', userId);
+    console.log('Registrations:', registrations); // Debugging line
+
+    return meetings.filter((meeting) => {
+      const { participant_type, club_id } = meeting;
+
+      console.log('Checking meeting:', meeting.meeting_name, 'Participant Type:', participant_type);
+
+      if (participant_type === 'EVERYONE') {
+        console.log('Meeting allowed for everyone:', meeting.meeting_name);
+        return true;
+      }
+
+      const userRegistration = registrations.find(
+        (reg) => reg.clubId === club_id && reg.userId === userId && reg.accepted === 1
+      );
+      
+      console.log('User Registration for Club:', club_id, userRegistration); // Debugging line
+
+      if (!userRegistration) {
+        console.log('No valid registration found for user in club:', club_id);
+        return false;
+      }
+
+      const { position } = userRegistration;
+
+      if (participant_type === 'CLUB_MEMBERS') {
+        const validPositions = ['president', 'member', 'secretary', 'treasurer'];
+        if (validPositions.includes(position.toLowerCase())) {
+          console.log('User is allowed as club member with position:', position);
+          return true;
+        }
+        console.log('User not allowed for CLUB_MEMBERS meeting with position:', position);
+        return false;
+      }
+
+      if (participant_type === 'CLUB_BOARD') {
+        const validBoardPositions = ['president', 'treasurer', 'secretary'];
+        if (validBoardPositions.includes(position.toLowerCase())) {
+          console.log('User is allowed as club board member with position:', position);
+          return true;
+        }
+        console.log('User not allowed for CLUB_BOARD meeting with position:', position);
+        return false;
+      }
+
+      // Default deny if none of the conditions match
+      console.log('Default deny for meeting:', meeting.meeting_name);
+      return false;
+    });
+};
+  // QR Code API call
+  const sendQRCodeEmaill = async (meetingId) => {
+    setSendingQRCode((prevState) => ({
+      ...prevState,
+      [meetingId]: true, // Mark as sending QR code for this meeting
+    }));
+  
+    // Simulate the sending process (replace this with actual email sending logic)
+    setTimeout(() => {
+      setSendingQRCode((prevState) => ({
+        ...prevState,
+        [meetingId]: false, // Reset after sending
+      }));
+    }, 2000);
+    setEmailSent(false);
+    setEmailError('');
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/president/sendQrCode/${meetingId}`,
+        { email: userEmail },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        setEmailSent(true);
+        setQrCodeDialogVisible(true);
+      }
+    } catch (error) {
+      console.error("Error sending QR code:", error);
+      setEmailError('Failed to send QR code. Please try again later.');
+    } finally {
+      setSendingQRCode(false);
+    }
+  };
+
+  const renderMeetingSections = () => {
+   
+  const futureMeetings = filterFutureMeetings(meetings);
+
+  // Step 2: Filter meetings based on participant type from the future meetings
+  const allowedMeetings = filterMeetingsByParticipantType(futureMeetings);
+
+  // Step 3: Further filter by meeting type (physical or online)
+  const meetingsByType = allowedMeetings.filter(
+    (meeting) => meeting.meeting_type === selectedFilter.toUpperCase()
+  );
 
     return (
       <div className="p-4 rounded-lg mb-20 mx-4">
@@ -393,28 +448,43 @@ const MeetingsList = () => {
           >
             Online Meetings
           </button>
+          {isUserEligibleForClubBoard() && (
+
           <button
-      className={`px-4 py-2 rounded ${selectedFilter === 'QR' ? 'text-primary border-b-2 border-primary' : 'text-white'}`}
-      onClick={() => setSelectedFilter('QR')}
-    >
-      Scan QR code
-    </button>
+            className={`px-4 py-2 rounded ${selectedFilter === 'QR' ?  'text-primary border-b-2 border-primary' : 'text-white'}`}
+            onClick={() => setSelectedFilter('QR')}
+          >
+           QR code Scanner
+          </button>  )}
         </div>
 
         {/* Display corresponding image */}
-        <img
-          src={selectedFilter === 'physical' ? physicalMeeting : onlineMeeting}
-          alt={selectedFilter === 'physical' ? "Physical Meeting" : "Online Meeting"}
-          className="w-full h-auto mb-6 shadow-lg"
-        />
-{selectedFilter === 'QR' }
+        {selectedFilter === 'physical' ? (
+    <img
+      src={physicalMeeting}
+      alt="Physical Meeting"
+      className="w-full h-auto mb-6 shadow-lg"
+    />
+  ) : selectedFilter === 'online' ? (
+    <img
+      src={onlineMeeting}
+      alt="Online Meeting"
+      className="w-full h-auto mb-6 shadow-lg"
+    />
+  ) : (
+    <div>
+      <h2 className="text-lg font-semibold mb-2"></h2>
+      <QRScanner />
+    </div>
+  )}    
+   {(selectedFilter === 'online' || selectedFilter === 'physical') && (
+    <div>
+
         {/* Upcoming Club Meetings Section */}
         <h2 className="text-xl font-semibold flex items-center p-5">
           <span>Upcoming Club Meetings</span>
         </h2>
        
-        {/* Participants Section */}
-{/* Participants Section */}
 {selectedMeetingId && (
   <div className="mt-8">
     <h3 className="text-lg font-semibold mb-4">
@@ -448,7 +518,27 @@ const MeetingsList = () => {
                   <td className="px-4 py-2 border">{participant.meetingId}</td>
                   <td className="px-4 py-2 border">{participant.qrCodeUser}</td>
                   <td className="px-4 py-2 border">{participant.userId}</td>
-
+                  <td className="px-4 py-2 border">
+                {/* Display QR Code dynamically */}
+                {qrCodeDataUrls[participant.participantId] ? (
+                  <div>
+                    <img
+                      src={qrCodeDataUrls[participant.participantId]}
+                      alt={`QR Code for ${participant.participantId}`}
+                      className="w-16 h-16"
+                    />
+                    <a
+                      href={qrCodeDataUrls[participant.participantId]}
+                      download={`qr_code_${participant.participantId}.png`}
+                      className="text-blue-500 underline"
+                    >
+                      Download QR
+                    </a>
+                  </div>
+                ) : (
+                  <div>Loading QR...</div>
+                )}
+              </td>
                 </tr>
               ))}
             </tbody>
@@ -461,8 +551,8 @@ const MeetingsList = () => {
       })()
     )}
   </div>
+)}</div>
 )}
-
  
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -485,13 +575,43 @@ const MeetingsList = () => {
                     <span className="block text-xs text-gray-400">{new Date(announcement.date).toLocaleString('en-us', { weekday: 'long' })}</span>
                   </p>
                 </div>
-            ))}
+                <div className="flex space-x-2 mb-10 w-full">
+                  {announcement.meeting_type === 'PHYSICAL' ? (
+                    <button
+                    onClick={() => handlefetchClick(announcement.meeting_id, announcement.meeting_name)}
+                    className={`px-4 py-2 w-full ${
+                      sendingQRCode[announcement.meeting_id] === 'fetching' ? 'bg-gray-500' : 'bg-primary'
+                    } text-black rounded font-medium`}
+                    disabled={sendingQRCode[announcement.meeting_id] === 'fetching'}
+                  >
+                    {sendingQRCode[announcement.meeting_id] === 'fetching'
+                      ? 'Fetching...'
+                      : sendingQRCode[announcement.meeting_id]
+                      ? 'Email Sent'
+                      : 'Fetch My QR Code'}
+                  </button>
+                  
+                    
+                  ) : (
+                    <button
+                    onClick={() => handleJoinMeetingClick(announcement.meeting_id)}
+                      className={`px-4 py-2 w-full ${isJoinButtonEnabled(announcement.date, announcement.time) ? 'bg-primary text-sec' : 'bg-gray-500 cursor-not-allowed'} rounded font-medium`}
+                      disabled={!isJoinButtonEnabled(announcement.date, announcement.time)}
+                    >
+                      Join Meeting
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
+        {(selectedFilter === 'online' || selectedFilter === 'physical') && (
+
         <div className="mb-2 mt-10">
-          <h1>Upcoming Event OC meetings</h1>
+  <h1>Upcoming Event OC meetings</h1>
   {eventMeetings
     .filter((meeting) => {
-    
       const meetingDate = new Date(meeting.date);
       const currentDate = new Date();
 
@@ -501,7 +621,9 @@ const MeetingsList = () => {
     .map((meeting) => (
       <div key={meeting.e_meeting_id} className="mb-4 border-b border-gray-300 pb-2">
         <p className="flex items-center space-x-2 overflow-x-auto whitespace-nowrap">
-          <span><strong>{meeting.meeting_name}</strong></span>
+          <span>
+            <strong>{meeting.meeting_name}</strong>
+          </span>
           <span className="text-[#AEC90A] font-bold">{formatDate(meeting.date)}</span>
           <span className="text-[#AEC90A] font-bold">{formatTime(meeting.time)}</span>
 
@@ -514,151 +636,76 @@ const MeetingsList = () => {
 
           <span>at {meeting.venue}</span>
 
-         {/* Conditional "Join" button or "Get QR Code" */}
-{isMeetingToday(meeting.date) && isTimeClose(meeting.time) ? (
-  meeting.meeting_type === 'ONLINE' ? (
-    <button
-      className="ml-2 p-2 bg-yellow-500 text-white rounded"
-      disabled={false} // Enabled for online meetings when time is close
-    >
-      Join
-    </button>
-  ) : (
-    <button
-      className="ml-2 p-2 bg-yellow-500 text-white rounded"
-    >
-      Get QR Code
-    </button>
-  )
-) : (
-  meeting.meeting_type === 'ONLINE' ? (
-    <button
-      className="ml-2 p-2 bg-gray-500 text-white rounded cursor-not-allowed"
-      disabled={true} // Disabled for online meetings outside the time range
-    >
-      Join
-    </button>
-  ) : (
-    <button
-      className="ml-2 p-2 bg-[#AEC90A] text-white rounded cursor-not-allowed"
-      disabled={true} // Disabled for physical meetings outside the time range
-    >
-      Get QR Code
-    </button>
-  )
-)}
-
-
+          {/* Conditional "Join" button or "Get QR Code" */}
+          {isMeetingToday(meeting.date) && isTimeClose(meeting.time) ? (
+            meeting.meeting_type === 'ONLINE' ? (
+              <button
+                className="ml-2 p-2 bg-yellow-500 text-white rounded"
+                disabled={false} // Enabled for online meetings when time is close
+              >
+                Join
+              </button>
+            ) : (
+              <button
+                className="ml-2 p-2 bg-yellow-500 text-white rounded"
+              >
+                Get QR Code
+              </button>
+            )
+          ) : (
+            meeting.meeting_type === 'ONLINE' ? (
+              <button
+                className="ml-2 p-2 bg-gray-500 text-white rounded cursor-not-allowed"
+                disabled={true} // Disabled for online meetings outside the time range
+              >
+                Join
+              </button>
+            ) : (
+              <button
+                className="ml-2 p-2 bg-[#AEC90A] text-white rounded cursor-not-allowed"
+                disabled={true} // Disabled for physical meetings outside the time range
+              >
+                Get QR Code
+              </button>
+            )
+          )}
         </p>
       </div>
     ))}
-</div>
+</div>)}
       </div>
     );
-};
+  };
 
+  
+  return (
+    <div className="fixed inset-0 flex">
+      <Sidebar className="flex-shrink-0" />
+      <div className="flex flex-col flex-1 bg-white overflow-auto">
+        <Navbar />
+        <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-auto">
+          {loading ? <div>Loading...</div> : renderMeetingSections()}
 
-
-    return (
-        <div className="fixed inset-0 flex">
-            <Sidebar className="flex-shrink-0" />
-            <div className="flex flex-col flex-1">
-                <Navbar className="sticky top-0 z-10 p-4" />
-                <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-hidden">
-                    <div className="p-0 overflow-y-auto" style={{ scrollbarWidth: "none" }}>
-                        <div className="flex justify-left ml-4 mb-6">
-                            <button
-                                className={`px-0 py-2 ${selectedFilter === 'physical' ? 'text-primary border-b-2 border-primary' : 'text-white'}`}
-                                onClick={() => setSelectedFilter('physical')}
-                            >
-                                Physical Meeting
-                            </button>
-                            <button
-                                className={`px-4 py-2 ml-4 ${selectedFilter === 'online' ? 'text-primary border-b-2 border-primary' : 'text-white'}`}
-                                onClick={() => setSelectedFilter('online')}
-                            >
-                                Online Meeting
-                            </button>
-                        </div>
-                        {renderContent()}
-                        {renderMeetingAnnouncements()}
-                        {renderUnionAnnouncements()}
-                    </div>
-                </div>
+          {/* QR Code Dialog for Physical Meetings */}
+          {qrCodeDialogVisible && (
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg">
+            {emailSent ? (
+              <p className="text-lg text-black">The QR code has been sent to your email.</p>
+            ) : (
+              <p className="text-lg text-red-500">{emailError}</p>
+            )}
+              <button
+                onClick={() => setQrCodeDialogVisible(false)}
+                className="mt-4 px-4 py-2 bg-primary text-white rounded"
+              >
+                OK
+              </button>
             </div>
-
-            {showPopup && (
-                <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded-lg w-1/2 max-w-lg relative">
-                        <h2 className="text-lg font-semibold mb-4 text-black">Can{"'"}t Attend the Meeting ?!</h2>
-                        <p className="mb-4 text-black">Please provide a valid reason for not attending the meeting</p>
-                        <form onSubmit={handleFormSubmit}>
-                            <textarea
-                                value={reason}
-                                onChange={(e) => setReason(e.target.value)}
-                                rows="4"
-                                className="w-full p-2 border border-gray-300 rounded mb-4"
-                                placeholder="Enter your reason here..."
-                            />
-                            <div className="flex justify-end space-x-2">
-                                <button
-                                    type="button"
-                                    onClick={handlePopupClose}
-                                    className="px-4 py-2 bg-dark-400 w-1/3 text-white rounded hover:bg-dark-500 hover:scale-105 transition-transform duration-200"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-4 py-2 font-medium bg-primary text-dark-400 w-1/3 rounded hover:scale-105 transition-transform duration-200"
-                                >
-                                    Send
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    {isLoading && (
-                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                            <div className="text-[#DDFF00] text-sm font-semibold animate-pulse">Loading...</div>
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {showDeclinedModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded-lg w-1/2 max-w-lg relative">
-                        <div className="absolute top-2 right-2 cursor-pointer" onClick={() => setShowDeclinedModal(false)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-gray-600 hover:text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </div>
-                        <h2 className="text-lg font-semibold mb-4 text-black">Declined Meetings</h2>
-                        <ul>
-                            {[...declinedMeetings].map((id) => {
-                                const meeting = [...meetingAnnouncements, ...unionAnnouncements].find((announcement) => announcement.id === id);
-                                return meeting ? (
-                                    <li key={id} className="mb-5 w-[460px] border border-primary rounded-md text-dark-500 font-medium h-[60px] px-2 py-6 flex items-center justify-between">
-                                        <div>
-                                            <p className="font-medium">{meeting.title}</p>
-                                            <p>{meeting.date} | {meeting.time} | {meeting.location}</p>
-                                        </div>
-                                        <button
-                                            onClick={() => handleReRequest(id)}
-                                            className="px-4 py-2 bg-primary text-dark-500 rounded hover:bg-primary-dark transition-transform duration-200"
-                                        >
-                                            Re-request
-                                        </button>
-                                    </li>
-                                ) : null;
-                            })}
-                        </ul>
-                    </div>
-                </div>
-            )}
-
+          )}
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
-export default MainMeeting;
+export default MeetingsList;
