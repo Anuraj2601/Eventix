@@ -88,6 +88,22 @@ class NotificationService{
     }
 
 
+    static async markAllAsRead(user_id, token) {
+        try{
+    
+            const response1 = await axios.put(`${NotificationService.BASE_URL}/student/markAllAsRead/${user_id}`,
+                {
+                    headers: {Authorization: `Bearer ${token}`}
+                }
+            )
+            return response1.data;
+            
+        }catch(err){
+            throw err;
+        }
+    }
+
+
    
 
     static logout() {

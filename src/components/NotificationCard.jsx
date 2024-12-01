@@ -58,25 +58,27 @@ import { FaCircle } from "react-icons/fa";
 
 const NotificationCard = ({ image, title, time, message, is_read}) => {
   return (
-    <div className='bg-[#1E1E1E] p-6 mx-4 my-2 rounded-2xl'  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
+    <div className='bg-[#1E1E1E] p-6 mx-4 my-2 rounded-2xl '  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
+      
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-center gap-4">
+          {!is_read && <FaCircle className='text-primary' size={10}/>}
           <img src={image} alt="" className='w-12 h-12 rounded-full'/>
-          <span className='text-[#FFFFFFCC]'>{title} :</span>
+          <span className='text-[#FFFFFFCC]'>{title} </span>
         </div>
         <span className='text-[#FFFFFFCC]'>{time}</span>
       </div>
-      <div className="flex items-center justify-between p-4 ml-12">
+      <div className="flex items-center justify-between p-3 ml-12">
         <p className='text-white w-4/5'>
           {message}
         </p>
-        <button
+        {/* <button
           className="relative align-middle select-none font-sans font-medium text-center uppercase bg-[#171717] transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-14 max-w-[40px] h-14 max-h-[40px] text-xs text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none rounded-full"
           type="button">
           <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
             <MdDelete className='text-[#AEC90A99]' size={27}/>
           </span>
-        </button>
+        </button> */}
       </div>
     </div>
   );
@@ -104,7 +106,6 @@ const NotificationPage = () => {
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-      second: "2-digit",
       hour12: true, // For AM/PM format
     });
   };
@@ -154,8 +155,24 @@ const NotificationPage = () => {
   
   }, [])
 
+  const handleMarkAllAsRead = async () => {
+    try{
+      const token = localStorage.getItem('token');
+      const session_id = localStorage.getItem('session_id');
+      const response = await NotificationService.getNotificationByUserId(session_id, token) ;
+
+
+    }catch(err){
+
+    }
+  }
+
   return (
     <div className="flex flex-col">
+      <div className='flex justify-end mx-5 mb-2'>
+        <button type='submit' className='text-primary hover:underline' onClick={handleMarkAllAsRead}>Mark all as read</button>
+      </div>
+      
       {notification.map(notification => (
         <NotificationCard
           key={notification.notification_id}
