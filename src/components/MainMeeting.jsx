@@ -35,7 +35,9 @@ const MeetingsList = () => {
   const [selectedMeetingId, setSelectedMeetingId] = useState(null);
   const [eventMeetings, setEventMeetings] = useState([]);
   const [filteredParticipants, setFilteredParticipants] = useState([]);
-
+  const [qrCodeData, setQrCodeData] = useState(null);  // State to store the QR code data
+  const [meetingName, setMeetingName] = useState('');
+  const [meetingId, setMeetingId] = useState(null);
 
   useEffect(() => {
     if (!loadingParticipants && selectedMeetingId) {
@@ -119,22 +121,59 @@ const MeetingsList = () => {
   
   const handleMeetingClick = (meetingId, meetingName) => {
     setSelectedMeetingId(meetingId);
-    fetchParticipants(meetingId);
-  
+    setMeetingName(meetingName);
+
     // Filter participants based on selected meetingId and userId
     const filteredParticipants = participants.filter(
       (participant) => participant.meetingId === meetingId && participant.userId === userId
     );
-  
-    // Collect QR code data for each filtered participant
+
+    // Collect QR code data from filtered participants
     const qrCodeData = filteredParticipants.map((participant) => ({
-      participantId: participant.participantId,
       qrCodeUser: participant.qrCodeUser,
     }));
-  
-    // Send QR code email with the collected data
-    sendQRCodeEmail(meetingId, meetingName, userId, qrCodeData);
+
+    setQrCodeData(qrCodeData);
+
+    // Prepare API payload with dynamic email and filtered QR code data
+    const payload = {
+      email: userEmail, // Current user email
+      meetingName: meetingName,
+      userId: String(userId), // Ensure userId is passed as string
+      qrCodeData: qrCodeData.filter((data) => data.qrCodeUser).map((data) => data.qrCodeUser).join(',') // Filter out any null/undefined values before joining
+    };
+
+    // Log for debugging
+    console.log("Payload for API:", payload);
+
+    // Send data to API
+    setSendingQRCode((prev) => ({ ...prev, [meetingId]: 'fetching' }));
+    fetch(`http://localhost:8080/president/sendQrCode/${meetingId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('API Response:', data);
+        setSendingQRCode((prev) => ({ ...prev, [meetingId]: 'Fetched Successfully' }));
+      })
+      .catch((error) => {
+        console.error('API Error:', error);
+        setSendingQRCode((prev) => ({ ...prev, [meetingId]: 'Error Fetching QR Code' }));
+      });
   };
+
+  const tableColumns = [
+    { label: 'Meeting ID', value: meetingId },
+    { label: 'Meeting Name', value: meetingName },
+    { label: 'User Email', value: userEmail },
+    { label: 'User ID', value: userId },
+    { label: 'QR Code Data', value: qrCodeData }, // Join QR Code data if it's an array
+  ];
+
 
   
   const sendQRCodeEmail = async (meetingId, meetingName, userId, qrCodeData) => {
@@ -552,7 +591,53 @@ const MeetingsList = () => {
   </div>
 )}</div>
 )}
- 
+
+<tbody>
+          {tableColumns.map((column, index) => (
+            <tr key={index} className="border-b">
+              <td className="px-4 py-2 font-medium">{column.label}</td>
+              <td className="px-4 py-2">{column.value}</td>
+            </tr>
+          ))}
+        </tbody>
+  {meetingId && meetingName && qrCodeData && (
+        <table border="1" style={{ width: "100%", marginTop: "20px" }}>
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Meeting ID</td>
+              <td>{meetingId}</td>
+            </tr>
+            <tr>
+              <td>Meeting Name</td>
+              <td>{meetingName}</td>
+            </tr>
+            <tr>
+              <td>Selected Meeting ID</td>
+              <td>{selectedMeetingId}</td>
+            </tr>
+            <tr>
+              <td>Filtered Participants</td>
+              <td>
+                <pre>{JSON.stringify(participants.filter(
+                  (participant) => participant.meetingId === meetingId && participant.userId === userId
+                ), null, 2)}</pre>
+              </td>
+            </tr>
+            <tr>
+              <td>QR Code Data</td>
+              <td>
+                <pre>{JSON.stringify(qrCodeData, null, 2)}</pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {meetingsByType.map((announcement) => {
