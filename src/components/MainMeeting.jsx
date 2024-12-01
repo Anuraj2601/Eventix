@@ -479,7 +479,7 @@ const MeetingsList = () => {
                   <img src={clubImage} alt={clubName} className="w-24 h-24 rounded-full mb-2" />
                   <p className="text-sm text-primary font-semibold">{clubName}</p>
                   <p className="text-sm text-center mt-2">
-                    <span className="block font-medium">{announcement.meeting_name}</span>
+                    <span className="block font-2xl">{announcement.meeting_name}</span>
                     <span className='block text-[20px] text-primary opacity-100 mt-6'>
                       {formatDate(announcement.date)} at {formatTime(announcement.time)}
                     </span>
