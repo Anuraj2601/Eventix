@@ -92,12 +92,15 @@ const AddNewMeetingForm = () => {
           meetingType === "PHYSICAL" ? meetingData.venue : undefined
         );
 
-        if (response.status === 200) {
-          alert("Meeting saved successfully!");
-          navigate(-1);
-        } else {
+        alert("Meeting saved successfully!");
+        navigate(-1);
+
+        // if (response.status === 200) {
+        //   alert("Meeting saved successfully!");
+        //   navigate(-1);
+        // } else {
           
-        }
+        // }
       } catch (error) {
         console.error("Error saving meeting:", error.response || error.message);
         alert("An error occurred while saving the meeting.");
