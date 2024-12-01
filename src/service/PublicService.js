@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Define the base URL for your backend API
-const BASE_URL = 'http://localhost:8080/api/public-registrations'; // Update this URL based on your backend
+const BASE_URL = 'https://eventix-spring-production.up.railway.app/api/public-registrations'; // Update this URL based on your backend
 
 // Get all public registrations
 export const getAllPublicRegistrations = async () => {

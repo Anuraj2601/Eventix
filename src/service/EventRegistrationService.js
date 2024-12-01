@@ -2,7 +2,7 @@ import axios from "axios";
 
 class EventRegistrationService{
 
-    static BASE_URL = "http://localhost:8080"
+    static BASE_URL = "https://eventix-spring-production.up.railway.app"
 
     static async saveEventRegistration(email, 
                                 mobile_no, 

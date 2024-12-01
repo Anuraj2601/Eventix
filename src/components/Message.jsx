@@ -78,7 +78,7 @@ const usersToDisplay = searchQuery
   // Fetch all messages
   useEffect(() => {
     axios
-      .get('http://localhost:8080/api/messages', {
+      .get('https://eventix-spring-production.up.railway.app/api/messages', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -94,7 +94,7 @@ const usersToDisplay = searchQuery
   // Fetch users
   useEffect(() => {
     axios
-      .get('http://localhost:8080/api/users', {
+      .get('https://eventix-spring-production.up.railway.app/api/users', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -124,7 +124,7 @@ const usersToDisplay = searchQuery
   const handleSelectUser = (user) => {
     setSelectedUser(user);
     axios
-      .get('http://localhost:8080/api/messages', {
+      .get('https://eventix-spring-production.up.railway.app/api/messages', {
         params: {
           senderId: currentUserId,
           receiverId: user.id,
@@ -146,7 +146,7 @@ const usersToDisplay = searchQuery
     if (newMessage.trim() && selectedUser) {
       axios
         .post(
-          'http://localhost:8080/api/messages/send',
+          'https://eventix-spring-production.up.railway.app/api/messages/send',
           {
             sender: currentUserId,
             receiver: selectedUser.id,
@@ -187,7 +187,7 @@ const handleOpenDeleteDialog = (messageId) => {
 
 const handleDeleteMessage = () => {
   axios
-    .delete(`http://localhost:8080/api/messages/delete/${messageToDeleteId}`, {
+    .delete(`https://eventix-spring-production.up.railway.app/api/messages/delete/${messageToDeleteId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
@@ -207,7 +207,7 @@ const handleSaveEdit = () => {
   if (messageToEdit.trim()) {
     axios
       .put(
-        `http://localhost:8080/api/messages/edit/${messageToEditId}`,
+        `https://eventix-spring-production.up.railway.app/api/messages/edit/${messageToEditId}`,
         messageToEdit,
         {
           headers: {

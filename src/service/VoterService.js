@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // Base URL for the backend API
-const API_URL = "http://localhost:8080/api/voters";
+const API_URL = "https://eventix-spring-production.up.railway.app/api/voters";
 
 // Service to add a new voter
 export const addVoter = async (voterData) => {

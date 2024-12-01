@@ -1,7 +1,7 @@
 import axios from "axios";
 
 class ClubsService {
-  static BASE_URL = "http://localhost:8080";
+  static BASE_URL = "https://eventix-spring-production.up.railway.app";
 
   static async addClub(club_name, club_in_charge, club_description, club_image, token) {
     try {

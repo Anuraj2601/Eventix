@@ -29,7 +29,7 @@ const QrScanner = () => {
     if (userId && meetingId) {
       // Function to send a PATCH request
       const markAttendance = async () => {
-        const apiUrl = `http://localhost:8080/api/meeting-participants/attendance`;
+        const apiUrl = `https://eventix-spring-production.up.railway.app/api/meeting-participants/attendance`;
         try {
           const response = await fetch(
             `${apiUrl}?userId=${userId}&meetingId=${meetingId}&attendanceStatus=1`,

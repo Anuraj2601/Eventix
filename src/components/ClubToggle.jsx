@@ -5,7 +5,7 @@ const ClubToggle = ({ clubId }) => {
     const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/clubs/getClub/${clubId}`)
+        axios.get(`https://eventix-spring-production.up.railway.app/clubs/getClub/${clubId}`)
             .then(response => {
                 const club = response.data.content;
                 console.log('Fetched club state:', club.state); // Log fetched state
@@ -18,7 +18,7 @@ const ClubToggle = ({ clubId }) => {
 
     const handleToggle = () => {
         console.log('Toggle clicked. Current state:', isActive); // Log current state
-        axios.patch(`http://localhost:8080/clubs/${clubId}/state`, 
+        axios.patch(`https://eventix-spring-production.up.railway.app/clubs/${clubId}/state`, 
             { state: !isActive }, // Send state in the request body
             {
                 headers: {

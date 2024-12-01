@@ -10,7 +10,7 @@ const MessagePage = () => {
   // Fetch messages for the current user
   useEffect(() => {
     axios
-      .get('http://localhost:8080/api/messages', {
+      .get('https://eventix-spring-production.up.railway.app/api/messages', {
         params: {
           userId: currentUserId, // Assuming this is how you fetch messages
         },

@@ -7,7 +7,7 @@ const MessageComponent = () => {
 
     // Fetch all messages
     useEffect(() => {
-        axios.get('http://localhost:8080/api/messages')
+        axios.get('https://eventix-spring-production.up.railway.app/api/messages')
             .then(response => {
                 setMessages(response.data);
             })
@@ -18,7 +18,7 @@ const MessageComponent = () => {
 
     // Add a new message
     const addMessage = () => {
-        axios.post('http://localhost:8080/api/messages', {
+        axios.post('https://eventix-spring-production.up.railway.app/api/messages', {
             content: newMessage,
             sender: 'Alice',
             receiver: 'Bob'
@@ -34,7 +34,7 @@ const MessageComponent = () => {
 
     // Delete a message
     const deleteMessage = (id) => {
-        axios.delete(`http://localhost:8080/api/messages/${id}`)
+        axios.delete(`https://eventix-spring-production.up.railway.app/api/messages/${id}`)
             .then(() => {
                 setMessages(messages.filter(message => message.id !== id));
             })
