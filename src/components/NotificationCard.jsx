@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import { MdDelete } from "react-icons/md";
 import ieeeImage from "../assets/clubs/ieee.png";
 import rotaractImage from "../assets/clubs/rotaract.png";
@@ -6,6 +6,7 @@ import acmImage from "../assets/clubs/acm.png";
 import pahasaraImage from "../assets/clubs/pahasara1.png";
 import isacaImage from "../assets/clubs/isaca1.png";
 import wieImage from "../assets/clubs/wie.png";
+import NotificationService from '../service/NotificationService';
 const notifications = [
   {
     id: 1,
@@ -78,6 +79,36 @@ const NotificationCard = ({ image, title, time, message }) => {
 }
 
 const NotificationPage = () => {
+
+  const [notification, setNotification] = useState([]);
+
+  useEffect(() => {
+
+    const fetchNotifications = async () => {
+        try{
+            const token = localStorage.getItem('token');
+            const session_id = localStorage.getItem('session_id');
+            const response = await NotificationService.getNotificationByUserId(session_id, token) ;
+            //console.log("notification response array", response);
+            const notificationArray = response.content;
+            //const notificationArray = response.content.filter(notification => notification.user_id === session_id ) || [];
+            console.log("notification array", notificationArray);
+
+          
+            setNotification(notificationArray);
+            
+
+        }catch(error){
+            console.error("Error fetching notifcations", error);
+        }
+
+    }
+
+    fetchNotifications();
+
+  
+  }, [])
+
   return (
     <div className="flex flex-col">
       {notifications.map(notification => (
