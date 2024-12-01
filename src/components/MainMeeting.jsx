@@ -122,7 +122,7 @@ const MeetingsList = () => {
   const handleMeetingClick = (meetingId, meetingName) => {
     setSelectedMeetingId(meetingId);
     setMeetingName(meetingName);
-
+    fetchParticipants(meetingId);
     // Filter participants based on selected meetingId and userId
     const filteredParticipants = participants.filter(
       (participant) => participant.meetingId === meetingId && participant.userId === userId
