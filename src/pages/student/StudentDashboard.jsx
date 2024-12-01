@@ -76,11 +76,15 @@ const Dashboard = () => {
             <img
               src={post.userImage || "default-image.jpg"}
               alt=""
-              className="w-11 h-11 rounded-full border-2 border-[#AEC90A]"
+              className="w-11 h-11 rounded-full object-cover border-2 border-[#AEC90A]"
             />
             <div className="flex flex-col">
               <p>{post.name}</p>
+              <div className="flex text-sm text-[#AEC90A] flex-col">
+              <p>member</p>
             </div>
+            </div>
+           
           </div>
         </div>
         <div className="flex flex-col w-full">
