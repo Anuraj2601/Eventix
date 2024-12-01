@@ -7,6 +7,7 @@ import pahasaraImage from "../assets/clubs/pahasara1.png";
 import isacaImage from "../assets/clubs/isaca1.png";
 import wieImage from "../assets/clubs/wie.png";
 import NotificationService from '../service/NotificationService';
+import ClubsService from '../service/ClubsService';
 const notifications = [
   {
     id: 1,
@@ -95,7 +96,24 @@ const NotificationPage = () => {
             console.log("notification array", notificationArray);
 
           
-            setNotification(notificationArray);
+            // Fetch club details for each notification
+            const notificationsWithClubs = await Promise.all(
+              notificationArray.map(async (notification) => {
+                try {
+                  const clubDetails = await ClubsService.getClubById(notification.club_id, token);
+                  console.log("club details with notifcation", clubDetails);
+                  return { ...notification,
+                            clubName: clubDetails.content.club_name, 
+                            clubImage: clubDetails.content.club_image }; // Combine notification and club details
+                } catch (clubError) {
+                  console.error(`Error fetching club details for notification ID: ${notification.id}`, clubError);
+                  return { ...notification, clubName: 'Club Name', clubImage: 'Club Image' }; 
+                }
+              })
+            );
+
+            console.log("notification array with clubs", notificationsWithClubs);
+            setNotification(notificationsWithClubs);
             
 
         }catch(error){
@@ -111,13 +129,13 @@ const NotificationPage = () => {
 
   return (
     <div className="flex flex-col">
-      {notifications.map(notification => (
+      {notification.map(notification => (
         <NotificationCard
-          key={notification.id}
-          image={notification.image}
-          title={notification.title}
-          time={notification.time}
-          message={notification.message}
+          key={notification.notification_id}
+          image={notification.clubImage}
+          title={notification.clubName}
+          time={notification.date_posted}
+          message={notification.notification}
         />
       ))}
     </div>
