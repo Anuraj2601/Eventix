@@ -2,7 +2,7 @@ import axios from "axios";
 
 class UsersService{
     //static BASE_URL = "http://localhost:8080"
-    static BASE_URL = "eventix-spring-production.up.railway.app"
+    static BASE_URL = "https://eventix-spring-production.up.railway.app"
 
     static async login(email,password) {
         try{
