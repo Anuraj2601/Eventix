@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080'; // Replace with your actual API base URL
+const API_BASE_URL = 'https://eventix-spring-production.up.railway.app'; // Replace with your actual API base URL
 
 // Function to create a candidate
 export const createCandidate = async (candidateData) => {

@@ -24,7 +24,7 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
     useEffect(() => {
         const fetchUserProfiles = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/users/getAllUsersIncludingCurrent', {
+                const response = await axios.get('https://eventix-spring-production.up.railway.app/api/users/getAllUsersIncludingCurrent', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
@@ -160,7 +160,7 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
     
                 try {
                     const response = await axios.get(
-                        `http://localhost:8080/api/meeting-participants/user/${userId}/club/${clubId}`
+                        `https://eventix-spring-production.up.railway.app/api/meeting-participants/user/${userId}/club/${clubId}`
                     );
     
                     // Log the response data

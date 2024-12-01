@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 class RegistrationService {
-    static BASE_URL = "http://localhost:8080/student"; // Adjust base URL as needed
+    static BASE_URL = "https://eventix-spring-production.up.railway.app/student"; // Adjust base URL as needed
 
     /**
      * Save the registration details to the server.

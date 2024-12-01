@@ -16,7 +16,7 @@ const MeetingsAndParticipants = () => {
   const fetchMeetings = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/president/getAllMeetings",
+        "https://eventix-spring-production.up.railway.app/president/getAllMeetings",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -46,7 +46,7 @@ const MeetingsAndParticipants = () => {
     setLoadingParticipants(true);
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/meeting-participants/meeting/${meetingId}`
+        `https://eventix-spring-production.up.railway.app/api/meeting-participants/meeting/${meetingId}`
       );
       console.log("API Response for Participants:", response.data); // Log full response
       setParticipants(response.data || []);

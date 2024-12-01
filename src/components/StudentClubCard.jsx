@@ -32,7 +32,7 @@ const StudentClubCard = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8080/api/users/getAllUsersIncludingCurrent', {
+      .get('https://eventix-spring-production.up.railway.app/api/users/getAllUsersIncludingCurrent', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

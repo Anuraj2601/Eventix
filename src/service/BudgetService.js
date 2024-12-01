@@ -2,7 +2,7 @@ import axios from "axios";
 
 class BudgetService{
 
-    static BASE_URL = "http://localhost:8080"
+    static BASE_URL = "https://eventix-spring-production.up.railway.app"
 
     static async saveBudget(budget_name, 
                                 budget_amount, 

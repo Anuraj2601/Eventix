@@ -119,7 +119,7 @@ const ProfileUpdatePage = () => {
 
       // Send the image to the backend
       axios
-        .post("http://localhost:8080/api/user/profile/photo", formData, {
+        .post("https://eventix-spring-production.up.railway.app/api/user/profile/photo", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -148,7 +148,7 @@ const ProfileUpdatePage = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/user/profile",
+        "https://eventix-spring-production.up.railway.app/api/user/profile",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -184,7 +184,7 @@ const ProfileUpdatePage = () => {
 
   const handleSaveBioClick = () => {
     axios
-      .put("http://localhost:8080/api/user/profile/bio", bio, {
+      .put("https://eventix-spring-production.up.railway.app/api/user/profile/bio", bio, {
         headers: {
           "Content-Type": "text/plain", // Change Content-Type to text/plain
           Authorization: `Bearer ${localStorage.getItem("token")}`,

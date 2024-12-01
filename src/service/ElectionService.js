@@ -2,7 +2,7 @@ import axios from "axios";
 
 class ElectionService{
 
-    static BASE_URL = "http://localhost:8080"
+    static BASE_URL = "https://eventix-spring-production.up.railway.app"
 
 
     static async saveElection(election_name, appOpens, appCloses, votingOpens, votingCloses, club_id, token ){

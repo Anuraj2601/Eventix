@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/profiles'; // Adjust to your backend URL
+const API_URL = 'https://eventix-spring-production.up.railway.app/api/profiles'; // Adjust to your backend URL
 
 export const getProfiles = () => {
   return axios.get(API_URL);

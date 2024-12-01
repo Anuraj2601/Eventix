@@ -65,7 +65,7 @@ const MeetingsList = () => {
     setLoadingParticipants(true);
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/meeting-participants/meeting/${meetingId}`
+        `https://eventix-spring-production.up.railway.app/api/meeting-participants/meeting/${meetingId}`
       );
       console.log("API Response for Participants:", response.data); // Log full response
       setParticipants(response.data || []);
@@ -88,7 +88,7 @@ const MeetingsList = () => {
   const sendQRCodeEmail = async (meetingId, qrCodeUrl) => {
     try {
       const response = await axios.post(
-        `http://localhost:8080/president/sendQrCode/${meetingId}`,
+        `https://eventix-spring-production.up.railway.app/president/sendQrCode/${meetingId}`,
         { email: userEmail, qrCodeUrl }, // Send the QR code URL in the email
         { headers: { Authorization: `Bearer ${token}` } }
       );
