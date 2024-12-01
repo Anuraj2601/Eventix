@@ -38,7 +38,7 @@ const Announcement = ({club}) => {
   };
 
   const openAnnouncementForm = () => {
-    navigate(`/president/club/announce/add`, { state: { club } });
+    navigate(`/president/club/announcement/add`, { state: { club } });
   }
 
   const [announcements,setAnnouncements] = useState([]);
@@ -96,7 +96,7 @@ const Announcement = ({club}) => {
   };
 
   function updateAnnouncement(announcementId){
-    navigate(`/president/club/announce/edit/${announcementId}`, { state: { club } });
+    navigate(`/president/club/announcement/edit/${announcementId}`, { state: { club } });
   }
 
   const handleDeleteAnnouncement = async (announcementId) => {

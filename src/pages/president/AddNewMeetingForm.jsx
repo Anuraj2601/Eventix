@@ -96,7 +96,7 @@ const AddNewMeetingForm = () => {
           alert("Meeting saved successfully!");
           navigate(-1);
         } else {
-          
+          alert("Error saving meeting.");
         }
       } catch (error) {
         console.error("Error saving meeting:", error.response || error.message);

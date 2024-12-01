@@ -150,7 +150,6 @@ import EventNav from './components/EventNav';
 /* import Toggle from './components/election/Toggle'; */
 
 import AddEvent from './components/AddEvent';
-import EditEvent from './components/EditEvent';
 
 import { ClubMemberNav } from './components/ClubMemberNav';
 import AddNewAnnouncementForm from './pages/president/AddNewAnnouncementForm';
@@ -257,11 +256,11 @@ const App = () => {
         <Route path='/president/AddSponsor' element={<AddSponsor />}></Route> 
         <Route path='/president/EditSponsor/:id' element={<AddSponsor />}></Route>
 
-        <Route path="/president/club/announce/add" element={<AddNewAnnouncementForm/>}></Route>
+        <Route path="/president/club/announcement/add" element={<AddNewAnnouncementForm/>}></Route>
 
-        <Route path="/president/club/announce/edit/:id" element={<AddNewAnnouncementForm/>}></Route>
-        <Route path="/president/club/meet/add" element={<AddNewMeetingForm/>}></Route>
-        <Route path="/president/club/meet/edit/:id" element={<AddNewMeetingForm/>}></Route>
+        <Route path="/president/club/announcement/edit/:id" element={<AddNewAnnouncementForm/>}></Route>
+        <Route path="/president/club/meeting/add" element={<AddNewMeetingForm/>}></Route>
+        <Route path="/president/club/meeting/edit/:id" element={<AddNewMeetingForm/>}></Route>
 
 
 
@@ -291,7 +290,6 @@ const App = () => {
         <Route path='/oc/club/:id' element={<ClubDetails />} />
         <Route path='/oc/dashboard' element={<Dashboard  />} ></Route>
         <Route path='/club/:name/add-event' element={<AddEvent />} ></Route>
-        <Route path="/club/:club_id/edit-event/:event_id" element={<EditEvent />}></Route>
         <Route path='/oc/calendar' element={<Calendar />}></Route>
         <Route path='/oc/club/election' element={<Election/>}></Route>
         <Route path='/oc' element={<Dashboardoc  />} ></Route>

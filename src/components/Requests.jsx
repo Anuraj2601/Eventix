@@ -53,7 +53,7 @@ const Dialog = ({
     </div>
   ) : null;
 
-const RequestTable = ({ type, events, onAccept, onReject, onDownloadProposal, userRole }) => {
+const RequestTable = ({ type, events, onAccept, onReject, userRole }) => {
   return (
     <div className="overflow-auto rounded-lg">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -118,14 +118,6 @@ const RequestTable = ({ type, events, onAccept, onReject, onDownloadProposal, us
                 </button>
               </div>
             )}
-            <div className="flex items-center mb-4">
-              <button
-                onClick={() => onDownloadProposal(row.id)} // Trigger the download function
-                className="px-4 py-2 rounded-lg border-[#AEC90A] border text-white hover:bg-[#AEC90A] transition-all"
-              >
-                Download Event Proposal
-              </button>
-            </div>
 
             <div className="flex flex-col space-y-2">
               {type === "all" && (
@@ -176,14 +168,12 @@ const Requests = () => {
   const [events, setEvents] = useState({ all: [], accepted: [], rejected: [] });
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
-  
 
   const subTabs = [
     { label: "All", value: "all" },
     { label: "Accepted", value: "accepted" },
     { label: "Rejected", value: "rejected" },
   ];
-  
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -290,27 +280,6 @@ const Requests = () => {
     fetchEvents();
   }, []);
 
-  const handleDownloadProposal = async (eventId) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("You must be logged in to view the proposal.");
-        return;
-      }
-  
-      const response = await EventService.downloadEventProposal(eventId, token);
-  
-      // Create a URL for the binary file and open it in a new browser tab
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
-      window.open(url, "_blank"); // Open the file in a new tab
-    } catch (error) {
-      alert("Failed to fetch the event proposal.");
-      console.error("Error fetching the proposal:", error);
-    }
-  };
-  
-  
-
   const handleAccept = (row) => {
     setCurrentAction("accept");
     setCurrentRow(row);
@@ -326,7 +295,6 @@ const Requests = () => {
   const handleDialogClose = () => {
     setIsDialogOpen(false);
   };
-  
 
   // const handleDialogConfirm = () => {
   //   if (currentAction === "accept") {
@@ -458,7 +426,6 @@ const Requests = () => {
                   events={events[value]}
                   onAccept={handleAccept}
                   onReject={handleReject}
-                  onDownloadProposal={handleDownloadProposal}
                   userRole={userRole} 
                 />
               </TabPanel>

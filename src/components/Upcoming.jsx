@@ -9,8 +9,13 @@ import msImg from '../assets/clubs/ms.png';
 import wicysImg from '../assets/clubs/wicys.png';
 import pahasaraImg from '../assets/clubs/pahasara1.png';
 import ieee1 from "../assets/events/madhack.png";
-import { getUserEmailFromToken, getUserIdFromToken } from '../utils/utils';
-
+import ieee2 from "../assets/events/reid.jpg";
+import ieee3 from "../assets/events/intro.jpg";
+import ieee4 from "../assets/events/ieeeday.jpg";
+import ieee5 from "../assets/events/revol.jpg";
+import rac1 from "../assets/events/trail.jpg";
+import acm1 from "../assets/farewell.jpg";
+import rac2 from "../assets/events/snap.jpg";
 import LikeButton from './LikeButton'; // Make sure this path is correct
 import RegistrationModal from './RegistrationModal'; // Make sure this path is correct
 import EventService from "../service/EventService"; // Ensure correct import
@@ -38,6 +43,8 @@ const convertDateToReadableFormat = (dateString) => {
   return `${day}${suffix(day)} ${month} ${year}`;
 };
 
+
+
 const Upcoming = () => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -45,61 +52,49 @@ const Upcoming = () => {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [clubDetails, setClubDetails] = useState([]);
   const [isEventRegistered, setIsEventRegistered] = useState(false);
-  const token = localStorage.getItem("token") || "";
-  const userId = getUserIdFromToken();
-  const [registrations, setRegistrations] = useState([]);
-  const [loading, setLoading] = useState(true); // Define the loading state
+  const session_id = localStorage.getItem('session_id');
+  
+  const isRegistered = async (event_id) => {
+    const token = localStorage.getItem("token");
+    const session_id = localStorage.getItem('session_id');
+    
+    try {
+      const response2 = await EventRegistrationService.getAllEventRegistrations(token);
+      const eventRegArray = response2.content
+        ? response2.content.filter(eReg => eReg.event_id === event_id && eReg.user_id === session_id)
+        : [];
+  
+      return eventRegArray.length > 0; // Return true if registered, false otherwise
+    } catch (err) {
+      console.log("Error while fetching event registration details", err);
+      return false; // Default to not registered in case of error
+    }
+  };
+  
+  
+  
+
+  useEffect(() => {
+    isRegistered(); // This should only be called once when the component mounts
+  }, [isEventRegistered]);  // Empty dependency array ensures this effect runs once after mount
+  
   const [registrationStatus, setRegistrationStatus] = useState({});
 
-  const fetchEventRegistrations = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await EventRegistrationService.getAllEventRegistrations(token);
-      setRegistrations(response.content || []); // Assuming the response has a 'content' field with the registration data
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching event registrations:", error);
-      setLoading(false);
+useEffect(() => {
+  const fetchRegistrationStatuses = async () => {
+    const statusMap = {};
+    for (const event of upcomingEvents) {
+      const isRegisteredStatus = await isRegistered(event.event_id);
+      statusMap[event.event_id] = isRegisteredStatus;
     }
+    setRegistrationStatus(statusMap);
   };
 
-  // Fetch data on mount
-  useEffect(() => {
-    fetchEventRegistrations();
-  }, []);
+  if (upcomingEvents.length > 0) {
+    fetchRegistrationStatuses();
+  }
+}, [upcomingEvents]);
 
-  
-
-  // Fetch events on component mount
-  useEffect(() => {
-    fetchEvents(); // Assuming you have a fetchEvents function to load upcoming events
-  }, []);
-
-  useEffect(() => {
-    const fetchRegistrationStatuses = () => {
-      const statusMap = {};
-      upcomingEvents.forEach((event) => {
-        const isRegisteredForEvent = isRegistered(event.event_id);
-        console.log(`Event ID: ${event.event_id}, Registered: ${isRegisteredForEvent}`); // Debug log
-        statusMap[event.event_id] = isRegisteredForEvent;
-      });
-      setRegistrationStatus(statusMap);
-    };
-  
-    if (upcomingEvents.length) {
-      fetchRegistrationStatuses();
-    }
-  }, [upcomingEvents, registrations]);
-  
-  const isRegistered = (event_id) => {
-    const match = registrations.some(
-      (registration) =>
-        registration.event_id === event_id && registration.user_id === userId
-    );
-    console.log(`Event ID: ${event_id}, Match: ${match}`);
-    return match;
-  };
-  
   
   const openModal = (event) => {
     setSelectedEvent(event);
@@ -131,18 +126,23 @@ const Upcoming = () => {
         })
         .map((event) => {
           let formattedTime = "Time not available"; // Default value
+  
           if (event.time) {
             if (Array.isArray(event.time) && event.time.length === 2) {
+              // Ensure event.time is an array with 2 elements (hour and minute)
               formattedTime = formatTime(event.time);
             } else {
               console.warn(`Invalid time format for event: ${event.name}. Expected an array of [hour, minute], but got: ${typeof event.time}`);
             }
           }
+  
+          console.log(`Event: ${event.name} | Time: ${event.time} | Formatted Time: ${formattedTime}`);
           
           return {
             event_id: event.event_id,
             name: event.name,
             venue: event.venue,
+
             image: event.event_image || ieee1, // Fallback to default image
             date: convertDateToReadableFormat(event.date), // Format date
             time: formattedTime,  // Use formatted time
@@ -153,13 +153,14 @@ const Upcoming = () => {
             iud_status: event.iud_status,
           };
         });
-
+  
       setUpcomingEvents(futureEvents);
+      console.log(futureEvents); // Log the processed future events
     } catch (error) {
       console.error("Error fetching events:", error);
     }
   };
-
+  
   const formatTime = (timeArray) => {
     const [hour, minute] = timeArray;
     const period = hour >= 12 ? "PM" : "AM";
@@ -167,29 +168,30 @@ const Upcoming = () => {
     const formattedMinute = minute < 10 ? `0${minute}` : minute;  // Ensure minute is two digits
     return `${formattedHour}:${formattedMinute} ${period}`;
   };
+  
 
   useEffect(() => {
     fetchClubs();
     fetchEvents();
   }, []);
 
+  
+
   return (
     <div className="p-2 rounded-md relative">
       <h2 className="text-white text-sm font-bold -mt-2">Upcoming</h2>
+      
 
       <div className="flex flex-wrap overflow-y-auto -mx-2">
         {upcomingEvents.map((event) => {
-          const activeClub = clubDetails.find((club) => club.club_id === event.club_id) || {};
-          const clubImage = activeClub.club_image || "https://via.placeholder.com/100"; // Fallback image
-          const clubName = activeClub.club_name || "Unknown Club"; // Fallback name
-          const isEventRegistered = registrationStatus[event.event_id];
-          const canRegister = event.iud_status === 1 && event.budget_status === 1;
-          
-
+           const activeClub = clubDetails.find((club) => club.club_id === event.club_id) || {};
+           const clubImage = activeClub.club_image || "https://via.placeholder.com/100"; // Fallback image
+           const clubName = activeClub.club_name || "Unknown Club"; // Fallback name
+           const canRegister = event.iud_status === 1 && event.budget_status === 1;
           return (          
             <div 
               key={event.event_id} 
-              className="w-1/2 p-4 inline-block" 
+              className="w-1/2 p-4 inline-block" // Adjust width as needed
               onMouseEnter={() => setHoveredItem(event)}
               onMouseLeave={() => setHoveredItem(null)}
             >
@@ -211,20 +213,33 @@ const Upcoming = () => {
                   <p className="text-gray-400">In {event.venue}</p>
                   <p className="text-gray-400">At {event.time}</p>
                   <p className="text-gray-400">Organized By:</p>
-                  <img src={clubImage} alt="Club" className="h-12 w-12 rounded-full mb-2"/>
-                  <p className="text-white text-lg font-semibold">{clubName}</p>
-                  <div className="flex justify-between items-center">
-                    <LikeButton className="p-5" event={event} />
-                    {canRegister && (
- <button 
- className={`btn rounded-full ${isEventRegistered ? 'bg-[#AEC90A] text-gray-800 cursor-not-allowed p-3' : 'bg-[#AEC90A] text-white hover:bg-grey-500 p-3'}`} 
- disabled={isEventRegistered} 
- onClick={() => openModal(event)}
->
- {isEventRegistered ? 'Registered' : 'Register'}
-</button>
+                  <img src={clubImage} alt="Club" className="w-12 h-12 rounded-full mb-2" />
+                  <div className="flex justify-center items-center mt-2">
+                    <LikeButton likes={event.likes} />
+                    {isEventRegistered === undefined ? (
+              <button className="loading-button">Checking...</button>
+            ) : isEventRegistered ? (
+              <button
+                disabled
+                className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full cursor-not-allowed"
+                style={{
+                  boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
+                }}
+              >
+                Registered
+              </button>
+            ) : (
+              canRegister && (
+                <button
+                  className="button-register ml-4"
+                  onClick={() => openModal(event)}
+                >
+                  Register
+                </button>
+              )
+            )}
 
-)}
+
 
                   </div>
                 </div>
@@ -235,14 +250,14 @@ const Upcoming = () => {
       </div>
 
       {selectedEvent && (
-        <EventRegistrationModal
-          clubId={selectedEvent.club_id}
-          eventDetails={selectedEvent}
-          event={selectedEvent}
-          isOpen={isModalOpen}
-          onClose={closeModal}
-        />
-      )}
+            <EventRegistrationModal
+              clubId={selectedEvent.club_id}
+              eventDetails={selectedEvent}
+              event={selectedEvent}
+              isOpen={isModalOpen}
+              onClose={closeModal}
+            />
+          )}
     </div>
   );
 };

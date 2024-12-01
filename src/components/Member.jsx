@@ -188,7 +188,7 @@ const Member = () => {
 
     return (
         <div>
-          <div className="flex flex-wrap gap-8">
+          <div className="flex flex-wrap gap-4">
             {filteredRegistrations.length > 0 ? (
               filteredRegistrations.map((reg) => (
                 <div key={reg.registrationId} className="flex justify-center gap-3 p-3 text-white">
@@ -222,7 +222,7 @@ const Member = () => {
 )}
 
                      {isPresidentView && (
-                        <div className="flex justify-end p-4">
+                        <div className="flex justify-end">
                           <button
                             onClick={() => handleReject(reg.registrationId)}
                             className="w-1/2 border border-red-500 text-red-500 rounded-full hover:bg-red-600 hover:text-white text-sm border-opacity-50"
