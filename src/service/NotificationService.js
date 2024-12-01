@@ -92,6 +92,7 @@ class NotificationService{
         try{
     
             const response1 = await axios.put(`${NotificationService.BASE_URL}/student/markAllAsRead/${user_id}`,
+                null,
                 {
                     headers: {Authorization: `Bearer ${token}`}
                 }

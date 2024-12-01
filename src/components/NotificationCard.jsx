@@ -129,7 +129,7 @@ const NotificationPage = () => {
               notificationArray.map(async (notification) => {
                 try {
                   const clubDetails = await ClubsService.getClubById(notification.club_id, token);
-                  console.log("club details with notifcation", clubDetails);
+                  //console.log("club details with notifcation", clubDetails);
                   return { ...notification,
                             clubName: clubDetails.content.club_name, 
                             clubImage: clubDetails.content.club_image }; // Combine notification and club details
@@ -159,11 +159,20 @@ const NotificationPage = () => {
     try{
       const token = localStorage.getItem('token');
       const session_id = localStorage.getItem('session_id');
-      const response = await NotificationService.getNotificationByUserId(session_id, token) ;
+      const response = await NotificationService.markAllAsRead(session_id, token) ;
+      console.log(response);
+
+      const updatedNotifications = notification.map(notification => ({
+        ...notification,
+        is_read: true,  // Mark all notifications as read
+      }));
+      
+      // Update the state with the new notifications array
+      setNotification(updatedNotifications);
 
 
     }catch(err){
-
+      console.error("Error marking all notifications as read", err);
     }
   }
 
