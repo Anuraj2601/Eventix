@@ -79,10 +79,8 @@ const MeetingsList = () => {
       const response = await axios.get(
         `http://localhost:8080/api/meeting-participants/meeting/${meetingId}`
       );
-      console.log("API Response for Participants:", response.data); // Log full response
       setParticipants(response.data || []);
     } catch (err) {
-      console.error("Error fetching participants:", err);
       setError("Failed to fetch participants. Please try again later.");
     } finally {
       setLoadingParticipants(false);
@@ -94,14 +92,16 @@ const MeetingsList = () => {
     setMeetingName(meetingName);
     fetchParticipants(meetingId);
   
-    // Filter participants based on selected meetingId and userId
-    const filteredParticipants = participants.filter(
-      (participant) => participant.meetingId === meetingId && participant.userId === userId
+    // Get the current user ID (assumed to be stored globally or retrieved dynamically)
+    const currentUserId = userId; // Replace with appropriate method if different
+    
+    // Find the participant with the matching meetingId and userId
+    const filteredParticipant = participants.find(
+      (participant) => participant.userId === currentUserId && participant.meetingId === meetingId
     );
-  
-    // Check if filteredParticipants has any data
-    if (filteredParticipants.length > 0) {
-      const qrCodeData = filteredParticipants[0].qrCodeUser; // Use qrCodeUser value of first participant
+    
+    if (filteredParticipant) {
+      const qrCodeData = filteredParticipant.qrCodeUser; // Use qrCodeUser from the found participant
   
       // Call sendQRCodeEmail with relevant data
       sendQRCodeEmail(meetingId, meetingName, userId, qrCodeData);
@@ -110,6 +110,7 @@ const MeetingsList = () => {
       setQrCodeData(qrCodeData);
     }
   };
+  
   
   const tableColumns = [
     { label: 'Meeting ID', value: meetingId },
@@ -123,23 +124,42 @@ const MeetingsList = () => {
   
   const sendQRCodeEmail = async (meetingId, meetingName, userId, qrCodeData) => {
     try {
-      // Make an API call to send the QR Code email
+      // Log the parameters to the console
+      console.log('Meeting ID:', meetingId);
+      console.log('Meeting Name:', meetingName);
+      console.log('User ID:', userId);
+      console.log('QR Code Data:', qrCodeData);
+      console.log('User Email:', userEmail); // Assuming userEmail is available in the scope
+  
+      // Prepare the payload with the required parameters
+      const requestData = {
+        email: userEmail, // Ensure this is correctly set
+        meetingName: meetingName, // Meeting Name
+        userId: String(userId), // Ensure userId is a string
+        qrCodeData: qrCodeData // QR Code data
+      };
+  
+      // Set headers, including authorization if necessary
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Replace with actual token if needed
+      };
+  
+      // Log the request data before sending
+      console.log('Request Data:', requestData);
+  
       const response = await axios.post(
         `http://localhost:8080/president/sendQrCode/${meetingId}`,
-        {
-          email: userEmail, // User email passed from state
-          meetingId: meetingId, // Meeting ID
-          meetingName: meetingName, // Meeting name
-          userId: String(userId), // User ID as string
-          qrCodeData: qrCodeData // QR code data for the user
-        }
+        requestData,
+        { headers }
       );
   
       console.log('QR Code email sent successfully:', response.data);
     } catch (error) {
-      console.error('Error sending QR Code email:', error);
+      console.error('Error sending QR Code email:', error.response ? error.response.data : error.message);
     }
   };
+  
   
   
   const fetchEventMeetings = async () => {
@@ -148,8 +168,7 @@ const MeetingsList = () => {
       const response = await EventMeetingService.getAllEventMeetings(token);
       //console.log("Event meetings", response);
       const eventMeetingsArray = response.content || [];
-      console.log("event Meetings array", eventMeetingsArray);
-
+    
     
       setEventMeetings(eventMeetingsArray); 
 
@@ -190,7 +209,6 @@ const MeetingsList = () => {
       setRegistrations(fetchedRegistrations);
   
       // Logs here may not show updated state yet
-      console.log('Registrations:', registrations); // Might log the previous state
     } catch (error) {
       console.error("Error fetching registrations:", error);
     }
@@ -199,7 +217,6 @@ const MeetingsList = () => {
   const validBoardPositions = ['president', 'treasurer', 'secretary'];
 
   const isUserEligibleForClubBoard = () => {
-    console.log("Checking user eligibility for CLUB_BOARD...");
   
     const eligible = registrations.some((reg) => {
       const isEligible = 
@@ -208,17 +225,13 @@ const MeetingsList = () => {
         reg.accepted === 1;
   
       // Log the condition checks for each registration
-      console.log(
-        `Checking registration for user ${reg.userId}:`,
-        `Position: ${reg.position}, Accepted: ${reg.accepted}`,
-        `Eligible: ${isEligible}`
-      );
+     
   
       return isEligible;
     });
   
     // Log the result of the eligibility check
-    console.log("Is user eligible for CLUB_BOARD:", eligible);
+   
     return eligible;
   };
   
@@ -302,7 +315,7 @@ const MeetingsList = () => {
 
           if (response.ok) {
             const data = await response.text();
-            console.log("Response from server:", data);
+          
             setSuccessMessage("Attendance marked successfully!"); // Update the success message
           } else {
             setSuccessMessage("Failed to mark attendance. Please try again."); // Error handling
@@ -320,7 +333,7 @@ const MeetingsList = () => {
       );
 
       if (response.status === 200) {
-        console.log("Meeting code sent successfully");
+       
       }
     } catch (error) {
       console.error("Error sending Meeting code:", error);
@@ -330,32 +343,29 @@ const MeetingsList = () => {
 
   const filterFutureMeetings = (meetings) => {
     const currentDate = new Date();
-    console.log('Current Date:', currentDate); // Debugging line
+   
   
     const filteredMeetings = meetings.filter(meeting => {
       const meetingDate = new Date(meeting.date);
       const [hour, minute] = meeting.time;
       meetingDate.setHours(hour, minute);
-      console.log('Meeting Date:', meetingDate); // Debugging line
+     
   
       return meetingDate >= currentDate;
     });
   
-    console.log('Filtered Meetings:', filteredMeetings); // Debugging line
+   
     return filteredMeetings;
   };
   
   const filterMeetingsByParticipantType = (meetings) => {
-    console.log('User ID:', userId);
-    console.log('Registrations:', registrations); // Debugging line
+   
 
     return meetings.filter((meeting) => {
       const { participant_type, club_id } = meeting;
 
-      console.log('Checking meeting:', meeting.meeting_name, 'Participant Type:', participant_type);
 
       if (participant_type === 'EVERYONE') {
-        console.log('Meeting allowed for everyone:', meeting.meeting_name);
         return true;
       }
 
@@ -363,10 +373,8 @@ const MeetingsList = () => {
         (reg) => reg.clubId === club_id && reg.userId === userId && reg.accepted === 1
       );
       
-      console.log('User Registration for Club:', club_id, userRegistration); // Debugging line
 
       if (!userRegistration) {
-        console.log('No valid registration found for user in club:', club_id);
         return false;
       }
 
@@ -375,25 +383,20 @@ const MeetingsList = () => {
       if (participant_type === 'CLUB_MEMBERS') {
         const validPositions = ['president', 'member', 'secretary', 'treasurer'];
         if (validPositions.includes(position.toLowerCase())) {
-          console.log('User is allowed as club member with position:', position);
           return true;
         }
-        console.log('User not allowed for CLUB_MEMBERS meeting with position:', position);
         return false;
       }
 
       if (participant_type === 'CLUB_BOARD') {
         const validBoardPositions = ['president', 'treasurer', 'secretary'];
         if (validBoardPositions.includes(position.toLowerCase())) {
-          console.log('User is allowed as club board member with position:', position);
           return true;
         }
-        console.log('User not allowed for CLUB_BOARD meeting with position:', position);
         return false;
       }
 
       // Default deny if none of the conditions match
-      console.log('Default deny for meeting:', meeting.meeting_name);
       return false;
     });
 };
@@ -498,121 +501,11 @@ const MeetingsList = () => {
           <span>Upcoming Club Meetings</span>
         </h2>
        
-{selectedMeetingId && (
-  <div className="mt-8">
-    <h3 className="text-lg font-semibold mb-4">
-      Participants for Meeting ID: {selectedMeetingId}
-    </h3>
-    {loadingParticipants ? (
-      <div>Loading participants...</div>
-    ) : (
-      (() => {
-        // Get current user ID (assume it's stored in localStorage or obtained dynamically)
-        const currentUserId = userId; // Replace with appropriate method if different
-        const filteredParticipants = participants.filter(
-          (participant) => participant.userId === currentUserId
-        );
-
-        return filteredParticipants.length > 0 ? (
-          <table className="table-auto w-full border-collapse border border-gray-300">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 border">Participant ID</th>
-                <th className="px-4 py-2 border">Club ID</th>
-                <th className="px-4 py-2 border">Meeting ID</th>
-                <th className="px-4 py-2 border">QR Code</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredParticipants.map((participant) => (
-                <tr key={participant.participantId}>
-                  <td className="px-4 py-2 border">{participant.participantId}</td>
-                  <td className="px-4 py-2 border">{participant.clubId}</td>
-                  <td className="px-4 py-2 border">{participant.meetingId}</td>
-                  <td className="px-4 py-2 border">{participant.qrCodeUser}</td>
-                  <td className="px-4 py-2 border">{userEmail}</td>
-                  <td className="px-4 py-2 border">
-                {/* Display QR Code dynamically */}
-                {qrCodeDataUrls[participant.participantId] ? (
-                  <div>
-                    <img
-                      src={qrCodeDataUrls[participant.participantId]}
-                      alt={`QR Code for ${participant.participantId}`}
-                      className="w-16 h-16"
-                    />
-                    <a
-                      href={qrCodeDataUrls[participant.participantId]}
-                      download={`qr_code_${participant.participantId}.png`}
-                      className="text-blue-500 underline"
-                    >
-                      Download QR
-                    </a>
-                  </div>
-                ) : (
-                  <div>Loading QR...</div>
-                )}
-              </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <div className="text-gray-500">
-            No participants found for your user ID in this meeting.
-          </div>
-        );
-      })()
-    )}
-  </div>
-)}</div>
+</div>
 )}
 
-<tbody>
-          {tableColumns.map((column, index) => (
-            <tr key={index} className="border-b">
-              <td className="px-4 py-2 font-medium">{column.label}</td>
-              <td className="px-4 py-2">{column.value}</td>
-            </tr>
-          ))}
-        </tbody>
-  {meetingId && meetingName && qrCodeData && (
-        <table border="1" style={{ width: "100%", marginTop: "20px" }}>
-          <thead>
-            <tr>
-              <th>Variable</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Meeting ID</td>
-              <td>{meetingId}</td>
-            </tr>
-            <tr>
-              <td>Meeting Name</td>
-              <td>{meetingName}</td>
-            </tr>
-            <tr>
-              <td>Selected Meeting ID</td>
-              <td>{selectedMeetingId}</td>
-            </tr>
-            <tr>
-              <td>Filtered Participants</td>
-              <td>
-                <pre>{JSON.stringify(participants.filter(
-                  (participant) => participant.meetingId === meetingId && participant.userId === userId
-                ), null, 2)}</pre>
-              </td>
-            </tr>
-            <tr>
-              <td>QR Code Data</td>
-              <td>
-                <pre>{JSON.stringify(qrCodeData, null, 2)}</pre>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      )}
+
+ 
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {meetingsByType.map((announcement) => {
