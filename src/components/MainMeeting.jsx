@@ -457,7 +457,7 @@ const MeetingsList = () => {
 
         {/* Upcoming Club Meetings Section */}
         <h2 className="text-xl font-semibold flex items-center p-5">
-          <span>Upcoming Club Meetings</span>
+          <span>Your Upcoming  Meetings</span>
         </h2>
        
 </div>
@@ -493,14 +493,14 @@ const MeetingsList = () => {
                         handleMeetingClick(announcement.meeting_id, announcement.meeting_name);
                         setQrCodeDialogVisible(true);
                       }}
-                                          className={`px-4 py-2 w-full ${sendingQRCode[announcement.meeting_id] === 'fetching' ? 'bg-gray-500' : 'bg-primary'} text-black rounded font-medium`}
-                      disabled={sendingQRCode[announcement.meeting_id] === 'fetching'}
+                                          className={`px-4 py-2 w-full ${sendingQRCode[announcement.meeting_id] === 'Sending' ? 'bg-gray-500' : 'bg-primary'} text-black rounded font-medium`}
+                      disabled={sendingQRCode[announcement.meeting_id] === 'Sending'}
                     >
-                      {sendingQRCode[announcement.meeting_id] === 'fetching'
-                        ? 'Fetching...'
+                      {sendingQRCode[announcement.meeting_id] === 'Sending'
+                        ? 'Sending...'
                         : sendingQRCode[announcement.meeting_id] // Display the fetched QR code value if available
                         ? sendingQRCode[announcement.meeting_id]
-                        : 'Fetch My QR Code'}
+                        : 'Get My QR Code'}
                     </button>
                     
                   ) : (
@@ -517,73 +517,8 @@ const MeetingsList = () => {
             );
           })}
         </div>
-        {(selectedFilter === 'online' || selectedFilter === 'physical') && (
-
-        <div className="mb-2 mt-10">
-  <h1>Upcoming Event OC meetings</h1>
-  {eventMeetings
-    .filter((meeting) => {
-      const meetingDate = new Date(meeting.date);
-      const currentDate = new Date();
-
-      // Ensure the meeting is in the future
-      return meetingDate > currentDate;
-    })
-    .map((meeting) => (
-      <div key={meeting.e_meeting_id} className="mb-4 border-b border-gray-300 pb-2">
-        <p className="flex items-center space-x-2 overflow-x-auto whitespace-nowrap">
-          <span>
-            <strong>{meeting.meeting_name}</strong>
-          </span>
-          <span className="text-[#AEC90A] font-bold">{formatDate(meeting.date)}</span>
-          <span className="text-[#AEC90A] font-bold">{formatTime(meeting.time)}</span>
-
-          {/* Conditionally display the dot for meeting type */}
-          {meeting.meeting_type === 'ONLINE' ? (
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span> // Green dot for online
-          ) : (
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> // Red dot for physical
-          )}
-
-          <span>at {meeting.venue}</span>
-
-          {/* Conditional "Join" button or "Get QR Code" */}
-          {isMeetingToday(meeting.date) && isTimeClose(meeting.time) ? (
-            meeting.meeting_type === 'ONLINE' ? (
-              <button
-                className="ml-2 p-2 bg-yellow-500 text-white rounded"
-                disabled={false} // Enabled for online meetings when time is close
-              >
-                Join
-              </button>
-            ) : (
-              <button
-                className="ml-2 p-2 bg-yellow-500 text-white rounded"
-              >
-                Get QR Code
-              </button>
-            )
-          ) : (
-            meeting.meeting_type === 'ONLINE' ? (
-              <button
-                className="ml-2 p-2 bg-gray-500 text-white rounded cursor-not-allowed"
-                disabled={true} // Disabled for online meetings outside the time range
-              >
-                Join
-              </button>
-            ) : (
-              <button
-                className="ml-2 p-2 bg-[#AEC90A] text-white rounded cursor-not-allowed"
-                disabled={true} // Disabled for physical meetings outside the time range
-              >
-                Get QR Code
-              </button>
-            )
-          )}
-        </p>
-      </div>
-    ))}
-</div>)}
+        
+       
       </div>
     );
   };
