@@ -302,7 +302,7 @@ return (
             <img
               src={user.image}
               alt="User"
-              className="w-10 h-10 rounded-full mr-3"
+              className="w-10 h-10 rounded-full object-cover mr-3"
             />
             <span className="text-md">{user.name}</span>
           </div>
@@ -318,7 +318,7 @@ return (
         <img
           src={selectedUser.image}
           alt=""
-          className="w-12 h-12 rounded-full"
+          className="w-12 h-12 rounded-full object-cover"
         />
         <span className="text-sm ml-4">{selectedUser.name.toUpperCase()}</span>
       </div>
