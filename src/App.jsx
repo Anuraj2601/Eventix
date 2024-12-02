@@ -184,7 +184,6 @@ const App = () => {
 
          {/* member routes */}
 
-        if(Auth.isAuthenticated())
 
          {/*  member routes */}
          <Route exact path="/member/club" element={<ProtectedRoute element={<Exploreclub />}  />}/>

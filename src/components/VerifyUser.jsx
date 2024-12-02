@@ -49,8 +49,8 @@ const VerifyAccount = () => {
     }
 
     try {
-      const response = await axios.patch(
-        `http://localhost:8080/verify-email-otp?email=${email}&otp=${otp}`
+      const response = await axios.put(
+        `https://eventix-spring-production.up.railway.app/verify-account?email=${email}&otp=${otp}`
       );
 
       if (response.data && response.status === 200) {
@@ -65,7 +65,7 @@ const VerifyAccount = () => {
   const handleResendOtp = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/regenerate-otp?email=${email}`
+        `https://eventix-spring-production.up.railway.app/regenerate-otp?email=${email}`
       );
 
       if (response.data && response.status === 200) {
