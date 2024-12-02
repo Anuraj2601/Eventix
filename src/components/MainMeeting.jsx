@@ -38,9 +38,10 @@ const MeetingsList = () => {
   const [qrCodeData, setQrCodeData] = useState(null);  // State to store the QR code data
   const [meetingName, setMeetingName] = useState('');
   const [meetingId, setMeetingId] = useState(null);
-  const [successMessage,setSuccessMessage] = useState('null');
-
+  const [successMessage, setSuccessMessage] = useState("");
+  
   useEffect(() => {
+
     if (!loadingParticipants && selectedMeetingId) {
       // Filter participants based on the selected meeting and user ID
       const filteredParticipants = participants.filter(

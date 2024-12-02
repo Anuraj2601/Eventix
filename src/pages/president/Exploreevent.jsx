@@ -1014,7 +1014,7 @@ const Exploreevent = () => {
             <Typography
               color="white"
               variant="h3"
-              className="mb-2 text-center p-5 mt-20"
+              className="mb-2 text-center p-5 mt-8"
             >
               Sponsors
             </Typography>
