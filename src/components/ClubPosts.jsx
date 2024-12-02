@@ -97,7 +97,7 @@ const Posts = ({ post, showEditDeleteButton, showApprovalButtons, setPosts }) =>
           }}>
             <div className="flex flex-row items-center justify-between mb-6">
                 <div className="flex items-center gap-2 custom-card">
-                    <img src={userImage} alt="" className='w-11 h-11 rounded-full border-2 border-[#AEC90A]' />
+                    <img src={userImage} alt="" className='w-11 h-11 rounded-full border-2 object-cover border-[#AEC90A]' />
                     <div className="flex flex-col">
                         <p>{post.name}</p>
                         <p className="text-[#AEC90A]">

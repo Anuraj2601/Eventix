@@ -218,7 +218,7 @@ const AddNewMeetingForm = () => {
                 <option value="" disabled>
                   Select Participant Type
                 </option>
-                <option value="EVERYONE">Everyone</option>
+               
                 <option value="CLUB_MEMBERS">Club Members</option>
                 <option value="CLUB_BOARD">Club Board</option>
               </select>

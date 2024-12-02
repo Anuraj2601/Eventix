@@ -94,7 +94,7 @@ const ClubDetails = () => {
 <div className="flex items-center mr-6 bg-[#1E1E1E] rounded-full">
   <FaCheckCircle className="text-[#AEC90A] text-lg" />
   <Typography variant="body1" className="text-white ml-2 custom-card">
-    {getRandomEvents()} Successful Events
+   8 Successful Events
   </Typography>
 </div>
 
@@ -102,7 +102,7 @@ const ClubDetails = () => {
 <div className="flex items-center mr-6 bg-[#1E1E1E] rounded-full">
   <FaUsers className="text-[#AEC90A] text-lg" />
   <Typography variant="body1" className="text-white ml-2 custom-card">
-    {getRandomMembers()} Members Community
+    23 Members Community
   </Typography>
 </div>
 

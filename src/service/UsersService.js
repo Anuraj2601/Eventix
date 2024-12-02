@@ -200,6 +200,40 @@ class UsersService{
         }
       }
       
+      static async checkEmailActiveStatus(email) {
+        try {
+            // Define the backend API endpoint
+            const url = `${UsersService.BASE_URL}/api/users/getUserForLogin?email=${email}`;
+
+            // Make the GET request to the backend
+            const response = await axios.get(url);
+
+            // Check if the response was successful
+            if (response.data.statusCode === 200) {
+                // User is active, return user data
+                return {
+                    success: true,
+                    message: response.data.message,
+                    user: response.data.content, // User data
+                };
+            } else {
+                // User is not active or email not found
+                return {
+                    success: false,
+                    message: response.data.message,
+                    user: null,
+                };
+            }
+        } catch (error) {
+            // Handle errors (network, server, etc.)
+            console.error('Error fetching user status:', error);
+            return {
+                success: false,
+                message: error.message || 'Something went wrong.',
+                user: null,
+            };
+        }
+    }
     
 }
 

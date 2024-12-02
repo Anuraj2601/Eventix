@@ -77,18 +77,26 @@ const Login = () => {
   };
 
   const handleAutoFillEmail = (input) => {
+    const domain = "@stu.ucsc.cmb.ac.lk"; // Define your domain
     if (!input.endsWith(domain)) {
       return input.split("@")[0] + domain;
     }
     return input;
   };
-
+  
   const handleEmailChange = (e) => {
     const inputValue = e.target.value;
-    const autoFilledEmail = handleAutoFillEmail(inputValue);
+    let autoFilledEmail = inputValue;
+  
+    // Only auto-fill the email if the length is at least 8 characters
+    if (inputValue.length >= 9 && !inputValue.endsWith(domain)) {
+      autoFilledEmail = handleAutoFillEmail(inputValue);
+    }
+  
     setEmail(autoFilledEmail);
     setErrors({ ...errors, email: validateEmail(autoFilledEmail) });
   };
+  
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -97,16 +105,35 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // First, validate the form
     if (validate()) {
       try {
+        // Check if the email is active
+        const emailStatus = await UsersService.checkEmailActiveStatus(email);
+        console.log("Email Status:", emailStatus);  // Add a log to check the status
+  
+        if (!emailStatus.success) {
+          console.log("Email is inactive, triggering error popup");
+          setShowErrorPopup(true);  // Trigger popup when email is inactive
+          setErrors({ ...errors, global: "Please verify your email first to proceed with login." });
+          setTimeout(() => {
+            setErrors({ ...errors, global: "" });
+          }, 5000);
+          return; // Stop the login process
+        }
+  
+        // Proceed with login if the email is active
         const userData = await UsersService.login(email, password);
+  
         if (userData.token) {
           setShowSuccessPopup(true);
           localStorage.setItem("token", userData.token);
           localStorage.setItem("role", userData.role);
           localStorage.setItem("session_id", userData.id);
           localStorage.setItem("User_Id", userData.id);
-
+  
+          // Navigate based on the role
           switch (userData.role) {
             case "student":
               navigate("/student");
@@ -142,16 +169,17 @@ const Login = () => {
             error.response.data.errors ||
             error.message
           : error.message;
-
+  
         setShowErrorPopup(true);
-
         setErrors({ ...errors, global: errorMessage });
+  
         setTimeout(() => {
           setErrors({ ...errors, global: "" });
         }, 5000);
       }
     }
   };
+  
 
   return (
     <div className="flex flex-col lg:flex-row h-screen justify-center bg-dark-400">
@@ -223,6 +251,28 @@ const Login = () => {
   </div>
 )}
 
+{showErrorPopup && (
+  <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-[9999]">
+    <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+    <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105 z-[10000]">
+      <span
+        className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+        onClick={handleLoginPopup}
+      >
+        &times;
+      </span>
+      <h2 className="text-[15px] font-semibold text-dark-400 mb-4">
+        <span className="text-red-600">Please verify your email first to proceed with login.</span>
+      </h2>
+      <button
+        className="bg-primary text-white px-4 py-2 w-32 text-[14px] rounded font-medium mr-2 hover:bg-dark-400"
+        onClick={handleLoginPopup}
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
 
           <div>
             <label htmlFor="username" className="block text-white text-sm mb-4">
