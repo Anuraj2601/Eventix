@@ -9,6 +9,7 @@ import reid3Image from '../assets/reid3.jpg';
 import speakerImage from '../assets/speaker.jpg';
 import EventPostService from '../service/EventPostService';
 import UsersService from '../service/UsersService';
+import EventOcService from '../service/EventOcService';
 
 
 const Posts = ({ post, isPresidentOrSecretaryPage }) => {
@@ -109,6 +110,34 @@ const NewsFeed = ({ posts, setEventPosts, event }) => {
         navigate(`/event/new-post`, { state: { event } })
     }
 
+    const [isOc, setIsOcMember] = useState(false);
+
+    const isOcMember = async () => {
+      const token = localStorage.getItem("token");
+      const session_id = localStorage.getItem("session_id");
+  
+      try {
+        const response2 = await EventOcService.getAllEventOcs(token);
+        const isOcArray = response2.content
+          ? response2.content.filter(
+              (oc) =>
+                oc.event_id == event.event_id && oc.user_id == session_id
+            )
+          : [];
+        //console.log("is oc array ",isOcArray);
+  
+        if (isOcArray.length > 0) {
+          setIsOcMember(true);
+        }
+      } catch (err) {
+        console.log("Error while fetching event OCs details", err);
+      }
+    };
+  
+    useEffect(() => {
+      isOcMember();
+    }, []);
+
     return (
         <div className="bg-neutral-900 text-white min-h-screen relative">
             <div className='relative'>
@@ -121,7 +150,7 @@ const NewsFeed = ({ posts, setEventPosts, event }) => {
                         </button>
                     </div>
                 )} */}
-                {isMemberPage && (
+                {isOc && (
                     <div className='flex justify-end mb-2'>
                         <button
                             className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-4 right-8 z-10 custom-card"
@@ -130,7 +159,7 @@ const NewsFeed = ({ posts, setEventPosts, event }) => {
                         </button>
                     </div>
                 )}
-                {(isPresidentOrSecretaryPage || isOcPage) && (
+                {(isPresidentOrSecretaryPage || isOc) && (
                     <>
                         <h2 className="text-2xl font-bold mb-4">Pending Posts</h2>
                         {pendingPosts.map((post, index) => (
@@ -138,7 +167,7 @@ const NewsFeed = ({ posts, setEventPosts, event }) => {
                         ))}
                     </>
                 )}
-                {(isPresidentOrSecretaryPage || isOcPage) && (
+                {(isPresidentOrSecretaryPage || isOc) && (
                     <>
                         <h2 className="text-2xl font-bold mb-4">Approved Posts</h2>
                         {approvedPosts.map((post, index) => (
