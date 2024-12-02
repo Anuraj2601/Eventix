@@ -187,7 +187,7 @@ const Signup = () => {
       
           // Use a timeout to navigate after the dialog state is updated
           setTimeout(() => {
-            navigate("/"); // Navigate to home page or success page
+            navigate("/Accountverify"); // Navigate to home page or success page
           }, 1500); // Adjust the timeout duration if necessary
         } else {
           setDialogMessage(`Registration failed: ${response.message || "Unknown error"}`);

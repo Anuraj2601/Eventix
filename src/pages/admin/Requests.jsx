@@ -47,6 +47,14 @@ const ExploreClub = () => {
         >
             Import Users
         </Tab>
+        <Tab
+            key=" Access granting"
+            value=" Access granting"
+            onClick={() => setActiveTab(" Access granting")}
+            className={activeTab === " Access granting" ? "text-[#AEC90A]" : ""}
+        >
+           Access granting
+        </Tab>
                         </TabsHeader>
                         <div className=" overflow-y-auto px-10">
                             {activeTab === "event-requests" && <Requests />}

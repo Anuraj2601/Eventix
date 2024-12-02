@@ -65,7 +65,7 @@ const ExcelUpload = () => {
           setDialogMessage("User successfully registered.");
           setShowDialog(true);
         } else {
-          setDialogMessage(`Failed to register user: ${response.message}`);
+          setDialogMessage(` ${response.message}`);
           setShowDialog(true);
         }
       } catch (error) {

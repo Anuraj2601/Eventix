@@ -181,7 +181,7 @@ const PublicRegistration = ({ event }) => {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           placeholder="Search by name, email, or mobile"
-          className="p-2 border border-gray-300 bg-black rounded-full w-1/2"
+          className="p-2 border border-gray-300 bg-black  text-white rounded-full w-1/2"
         />
       </div>
 
