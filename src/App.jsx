@@ -163,6 +163,9 @@ import AddNewClubForm from './pages/admin/AddNewClubForm';
 import CheckEmail from './components/CheckEmail';
 import ForgotPassword from './components/ForgotPassword';
 import Auth from './service/UsersService';
+
+import Accountverify from './components/VerifyUser';
+
 // Import other pages if necessary
 
 const App = () => {
@@ -176,7 +179,8 @@ const App = () => {
         <Route path="/Signup" element={<Signup />}></Route>
         <Route path="/CheckEmail" element={<CheckEmail />}></Route>
         <Route path="/forgot-password" element={<ForgotPassword />} />
-      
+        <Route path="/Accountverify" element={<Accountverify />} />
+
 
          {/* member routes */}
 
