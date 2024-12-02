@@ -427,17 +427,22 @@ const ClubEvent = ({ club }) => {
                       <div className="absolute top-0 left-0 m-2 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
                         {getStatusIcon(event.status)}
                       </div>
-                      <div
-                        className="w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center custom-card"
-                        style={{ backgroundColor: "#black", color: "black" }}
-                      >
-                        <IconButton
-                          className="font-extrabold text-lg t p-5 rounded-full    text-black bg-[#AEC90A]" // Ensure no extra background color
-                          onClick={() => handleExploreEvent(event)}
+                      {event.status === "Approved" && (
+                        <div
+                          className={`w-10 h-10 absolute bottom-0 right-0 m-2 p-1 rounded-full flex justify-center items-center ${getButtonStyles(
+                            event.status
+                          )}`}
                         >
-                          <FaArrowRight />
-                        </IconButton>
-                      </div>
+                          <IconButton
+                            onClick={() => handleExploreEvent(event)}
+                            className="font-extrabold text-lg t p-5 rounded-full   bg-[#AEC90A]" // Ensure no extra background color
+                            disabled={getButtonDisabled(event.status)}
+                          >
+                            <FaArrowRight className="text-black font-extrabold" />
+                          </IconButton>
+                        </div>
+                      )}
+
                     </div>
                     <div className="flex flex-col mt-4">
                       <h3 className="text-xl font-semibold text-white">
