@@ -79,7 +79,7 @@ const VerifyAccount = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black">
-      <div className="bg-gray-900 p-8 rounded shadow-md w-full max-w-md">
+      <div className=" p-8 rounded shadow-md w-full h-full max-w-md">
         <button
           onClick={() => navigate("/login")}
           className="text-gray-400 flex items-center mb-4"
@@ -87,7 +87,7 @@ const VerifyAccount = () => {
           <span className="mr-2">←</span> Back to Login
         </button>
         <h2 className="text-[#AEC90A] text-2xl font-bold text-center mb-6">
-          Verify Your Account
+          Welcome to EVENTIX!!! Please Verify Your Account
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -123,18 +123,18 @@ const VerifyAccount = () => {
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
           {/* Buttons */}
-          <div className="flex space-x-4">
+          <div className="flex space-x-8">
             <button
               type="button"
               onClick={handleResendOtp}
-              className="bg-[#AEC90A] text-white py-2 px-4 rounded hover:bg-[#A8B800] transition"
+              className="bg-[#AEC90A] text-white p-3 rounded-lg hover:bg-[#A8B800] transition"
             >
               Resend OTP
             </button>
             <button
               type="submit"
               disabled={!isSubmitEnabled}
-              className={`w-full py-2 rounded ${
+              className={`w-full  rounded-lg ${
                 isSubmitEnabled
                   ? "bg-[#AEC90A] text-white hover:bg-[#A8B800] transition"
                   : "bg-gray-500 text-gray-300 cursor-not-allowed"
