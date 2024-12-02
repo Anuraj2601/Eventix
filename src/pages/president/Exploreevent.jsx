@@ -937,92 +937,57 @@ const Exploreevent = () => {
                       </div>
                     </div>
                     <div className="flex items-center justify-between mb-2">
-                      <Typography
-                        color="white"
-                        variant="subtitle1"
-                        className="text-[#AEC90A] custom-card"
-                      >
-                        On {date}
-                      </Typography>
-                      <Typography
-                        color="white"
-                        variant="subtitle1"
-                        className="text-[#AEC90A] relative custom-card"
-                      >
-                        Venue - {venue}
-                      </Typography>
+  <Typography
+    color="white"
+    variant="subtitle1"
+    className="text-[#AEC90A] custom-card"
+  >
+    On {date}
+  </Typography>
+  <Typography
+    color="white"
+    variant="subtitle1"
+    className="text-[#AEC90A] relative custom-card"
+  >
+    Venue - {venue}
+  </Typography>
 
-                      {/* {isMatchingPage() ? (
-                        <button
-                        onClick={openModal}
-                        className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
-                        style={{
-                          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
-                        }}
-                      >
-                        View Details
-                      </button>
-                       
-                      ) : (
-                        
-                        <button
-                          onClick={handleRegister}
-                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
-                          style={{
-                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
-                          }}
-                        >
-                          Register Now
-                        </button>
-                      )}
-                      {
-                        isEventRegistered && 
-                        <button
-                          disabled
-                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
-                          style={{
-                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
-                          }}
-                        >
-                          Registered
-                        </button>
-                      } */}
+  {isMatchingPage() ? (
+    <button
+      onClick={openModal}
+      className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
+      style={{
+        boxShadow:
+          "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+      }}
+    >
+      View Details
+    </button>
+  ) : isEventRegistered ? (
+    <button
+      disabled
+      className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full cursor-not-allowed"
+      style={{
+        boxShadow:
+          "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+      }}
+    >
+      Registered
+    </button>
+  ) : new Date(date) < new Date() ? null : ( // Check if the event date is in the past
+    <button
+      onClick={handleRegister}
+      className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
+      style={{
+        boxShadow:
+          "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+      }}
+    >
+      Register Now
+    </button>
+  )}
+</div>
 
-                      {isMatchingPage() ? (
-                        <button
-                          onClick={openModal}
-                          className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
-                          style={{
-                            boxShadow:
-                              "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-                          }}
-                        >
-                          View Details
-                        </button>
-                      ) : isEventRegistered ? (
-                        <button
-                          disabled
-                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full cursor-not-allowed"
-                          style={{
-                            boxShadow:
-                              "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-                          }}
-                        >
-                          Registered
-                        </button>
-                      ) : (
-                        <button
-                          onClick={handleRegister}
-                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
-                          style={{
-                            boxShadow:
-                              "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-                          }}
-                        >
-                          Register Now
-                        </button>
-                      )}
-                    </div>
                     <Typography color="white" variant="body1" className="mb-4">
                       An event designed to inspire and empower students. Join us
                       for insightful talks, hands-on workshops, and networking
