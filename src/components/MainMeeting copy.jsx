@@ -112,13 +112,7 @@ const MeetingsList = () => {
   };
   
   
-  const tableColumns = [
-    { label: 'Meeting ID', value: meetingId },
-    { label: 'Meeting Name', value: meetingName },
-    { label: 'User Email', value: userEmail },
-    { label: 'User ID', value: userId },
-    { label: 'QR Code Data', value: qrCodeData }, // Join QR Code data if it's an array
-  ];
+  
 
 
   
@@ -400,42 +394,7 @@ const MeetingsList = () => {
       return false;
     });
 };
-  // QR Code API call
-  const sendQRCodeEmaill = async (meetingId) => {
-    setSendingQRCode((prevState) => ({
-      ...prevState,
-      [meetingId]: true, // Mark as sending QR code for this meeting
-    }));
   
-    // Simulate the sending process (replace this with actual email sending logic)
-    setTimeout(() => {
-      setSendingQRCode((prevState) => ({
-        ...prevState,
-        [meetingId]: false, // Reset after sending
-      }));
-    }, 2000);
-    setEmailSent(false);
-    setEmailError('');
-
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/president/sendQrCode/${meetingId}`,
-        { email: userEmail },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (response.status === 200) {
-        setEmailSent(true);
-        setQrCodeDialogVisible(true);
-      }
-    } catch (error) {
-      console.error("Error sending QR code:", error);
-      setEmailError('Failed to send QR code. Please try again later.');
-    } finally {
-      setSendingQRCode(false);
-    }
-  };
-
   const renderMeetingSections = () => {
    
   const futureMeetings = filterFutureMeetings(meetings);
@@ -498,7 +457,7 @@ const MeetingsList = () => {
 
         {/* Upcoming Club Meetings Section */}
         <h2 className="text-xl font-semibold flex items-center p-5">
-          <span>Upcoming Club Meetings</span>
+          <span>Your Upcoming  Meetings</span>
         </h2>
        
 </div>
@@ -520,7 +479,7 @@ const MeetingsList = () => {
                   <img src={clubImage} alt={clubName} className="w-24 h-24 rounded-full mb-2" />
                   <p className="text-sm text-primary font-semibold">{clubName}</p>
                   <p className="text-sm text-center mt-2">
-                    <span className="block font-medium">{announcement.meeting_name}</span>
+                    <span className="block font-2xl">{announcement.meeting_name}</span>
                     <span className='block text-[20px] text-primary opacity-100 mt-6'>
                       {formatDate(announcement.date)} at {formatTime(announcement.time)}
                     </span>
@@ -530,14 +489,18 @@ const MeetingsList = () => {
                 <div className="flex space-x-2 mb-10 w-full">
                   {announcement.meeting_type === 'PHYSICAL' ? (
                       <button
-                      onClick={() => handleMeetingClick(announcement.meeting_id, announcement.meeting_name)}                      className={`px-4 py-2 w-full ${sendingQRCode[announcement.meeting_id] === 'fetching' ? 'bg-gray-500' : 'bg-primary'} text-black rounded font-medium`}
-                      disabled={sendingQRCode[announcement.meeting_id] === 'fetching'}
+                      onClick={() => {
+                        handleMeetingClick(announcement.meeting_id, announcement.meeting_name);
+                        setQrCodeDialogVisible(true);
+                      }}
+                                          className={`px-4 py-2 w-full ${sendingQRCode[announcement.meeting_id] === 'Sending' ? 'bg-gray-500' : 'bg-primary'} text-black rounded font-medium`}
+                      disabled={sendingQRCode[announcement.meeting_id] === 'Sending'}
                     >
-                      {sendingQRCode[announcement.meeting_id] === 'fetching'
-                        ? 'Fetching...'
+                      {sendingQRCode[announcement.meeting_id] === 'Sending'
+                        ? 'Sending...'
                         : sendingQRCode[announcement.meeting_id] // Display the fetched QR code value if available
                         ? sendingQRCode[announcement.meeting_id]
-                        : 'Fetch My QR Code'}
+                        : 'Get My QR Code'}
                     </button>
                     
                   ) : (
@@ -554,73 +517,8 @@ const MeetingsList = () => {
             );
           })}
         </div>
-        {(selectedFilter === 'online' || selectedFilter === 'physical') && (
-
-        <div className="mb-2 mt-10">
-  <h1>Upcoming Event OC meetings</h1>
-  {eventMeetings
-    .filter((meeting) => {
-      const meetingDate = new Date(meeting.date);
-      const currentDate = new Date();
-
-      // Ensure the meeting is in the future
-      return meetingDate > currentDate;
-    })
-    .map((meeting) => (
-      <div key={meeting.e_meeting_id} className="mb-4 border-b border-gray-300 pb-2">
-        <p className="flex items-center space-x-2 overflow-x-auto whitespace-nowrap">
-          <span>
-            <strong>{meeting.meeting_name}</strong>
-          </span>
-          <span className="text-[#AEC90A] font-bold">{formatDate(meeting.date)}</span>
-          <span className="text-[#AEC90A] font-bold">{formatTime(meeting.time)}</span>
-
-          {/* Conditionally display the dot for meeting type */}
-          {meeting.meeting_type === 'ONLINE' ? (
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span> // Green dot for online
-          ) : (
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> // Red dot for physical
-          )}
-
-          <span>at {meeting.venue}</span>
-
-          {/* Conditional "Join" button or "Get QR Code" */}
-          {isMeetingToday(meeting.date) && isTimeClose(meeting.time) ? (
-            meeting.meeting_type === 'ONLINE' ? (
-              <button
-                className="ml-2 p-2 bg-yellow-500 text-white rounded"
-                disabled={false} // Enabled for online meetings when time is close
-              >
-                Join
-              </button>
-            ) : (
-              <button
-                className="ml-2 p-2 bg-yellow-500 text-white rounded"
-              >
-                Get QR Code
-              </button>
-            )
-          ) : (
-            meeting.meeting_type === 'ONLINE' ? (
-              <button
-                className="ml-2 p-2 bg-gray-500 text-white rounded cursor-not-allowed"
-                disabled={true} // Disabled for online meetings outside the time range
-              >
-                Join
-              </button>
-            ) : (
-              <button
-                className="ml-2 p-2 bg-[#AEC90A] text-white rounded cursor-not-allowed"
-                disabled={true} // Disabled for physical meetings outside the time range
-              >
-                Get QR Code
-              </button>
-            )
-          )}
-        </p>
-      </div>
-    ))}
-</div>)}
+        
+       
       </div>
     );
   };
@@ -637,11 +535,9 @@ const MeetingsList = () => {
           {/* QR Code Dialog for Physical Meetings */}
           {qrCodeDialogVisible && (
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg">
-            {emailSent ? (
+           
               <p className="text-lg text-black">The QR code has been sent to your email.</p>
-            ) : (
-              <p className="text-lg text-red-500">{emailError}</p>
-            )}
+            
               <button
                 onClick={() => setQrCodeDialogVisible(false)}
                 className="mt-4 px-4 py-2 bg-primary text-white rounded"

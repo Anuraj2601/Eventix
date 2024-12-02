@@ -16,6 +16,7 @@ const StudentNotifications = () => {
               <BsFillBellFill className='text-[#AEC90A]' size={25}/>
               <span className='text-[#AEC90A]'>notifications</span>
             </div>
+            {/* <div>Mark all as read</div> */}
             
             <NotificationCard/>
           </div>
