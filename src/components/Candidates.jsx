@@ -272,12 +272,17 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
     const categories = ["President", "Secretary", "Treasurer"];
 
     // Function to get the count of selected candidates per category
-    const getSelectedCount = (category) => {
-        return candidates.filter(candidate =>
-            candidate.position.toLowerCase() === category.toLowerCase() &&
-            candidate.selected === "selected"
-        ).length;
-    };
+  // Function to get the count of selected candidates per category and election ID
+const getSelectedCountForElection = (category) => {
+    const electionIdFromUrl = window.location.pathname.split('/').pop(); // Extract election ID from URL
+
+    return candidates.filter(candidate =>
+        candidate.position.toLowerCase() === category.toLowerCase() &&
+        candidate.selected === "selected" &&
+        String(candidate.electionId) === String(electionIdFromUrl) // Match election ID
+    ).length;
+};
+
 
     return (
       <div className="text-white">
@@ -309,12 +314,15 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
                 return bAttendance - aAttendance; // Sort descending
             });              
               // Get the number of selected candidates for the current category
-              const selectedCount = getSelectedCount(category);
+              const selectedCount = getSelectedCountForElection(category);
 
               return (
                   <div key={category} className="mb-8">
                       <Typography variant="h5" className="mb-2">
                           {category}
+                      </Typography>
+                      <Typography variant="h5" className="mb-2">
+                         Selected Candidates : {selectedCount}
                       </Typography>
                        
                       {sortedCandidates.length > 0 ? (
@@ -409,7 +417,7 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
                 Select
             </Button>
             <Button
-                className="bg-red hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+                className="bg-white hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
                 onClick={() => handleReject(candidate.id)}
             >
                 Reject

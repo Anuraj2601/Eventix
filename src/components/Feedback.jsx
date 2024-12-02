@@ -14,30 +14,24 @@ const Feedback = () => {
   const [showAddSuccessPopup, setShowAddSuccessPopup] = useState(false);
 
   const convertDateToReadableFormat = (dateString) => {
-    const date = new Date(dateString[0], dateString[1] - 1, dateString[2]); // Subtract 1 from the month value
-  
+    const date = new Date(dateString);
     const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'long' }); // Full month name
+    const month = date.toLocaleString('default', { month: 'long' }); // Gets the full month name
     const year = date.getFullYear();
-  
-    // Add suffix to the day (e.g., 1 -> 1st, 2 -> 2nd, etc.)
+    
+    // Add suffix to day (e.g. 1 -> 1st, 2 -> 2nd, etc.)
     const suffix = (day) => {
       if (day > 3 && day < 21) return 'th'; // Special case for 11th, 12th, and 13th
       switch (day % 10) {
-        case 1:
-          return 'st';
-        case 2:
-          return 'nd';
-        case 3:
-          return 'rd';
-        default:
-          return 'th';
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
       }
     };
-  
+    
     return `${day}${suffix(day)} ${month} ${year}`;
   };
-
   const handleClosePopup = () => {
     setShowAddSuccessPopup(false);
   };
@@ -58,8 +52,11 @@ const Feedback = () => {
       const today = new Date();
       const pastEventsData = eventsData.content
         .filter((event) => {
+          // Parse event date and check if it's in the past
           const eventDate = new Date(event.date[0], event.date[1] - 1, event.date[2]);
-          return eventDate < today; // Only include past events
+          
+          // Filter for past events and valid iud_status and budget_status
+          return eventDate < today && event.iud_status === 1 && event.budget_status === 1;
         })
         .map((event) => {
           return {
@@ -68,12 +65,12 @@ const Feedback = () => {
             name: event.name,
             venue: event.venue,
             image: event.event_image || ieeePast2, // Fallback to example image
-            date: convertDateToReadableFormat(event.date), // Format date
-            time: event.time ? formatTime(event.time) : "Time not available",
+            date: convertDateToReadableFormat(event.date), 
+                        time: event.time ? formatTime(event.time) : "Time not available",
             details: `Share your experience about our event ${event.name}, held on ${event.date}. We welcome your feedback!`,
           };
         });
-
+  
       setPastEvents(pastEventsData);
       const initialRatings = initializeEmojiRatings(pastEventsData);
       setEmojiRatings(initialRatings);
@@ -81,6 +78,7 @@ const Feedback = () => {
       console.error("Error fetching events:", error);
     }
   };
+  
 
   useEffect(() => {
     fetchEvents();
@@ -168,7 +166,7 @@ const Feedback = () => {
   
   return (
     <div className="relative h-[380px] overflow-hidden">
-      <h2 className="text-white text-sm font-bold -mt-1 ml-0 z-1">Feedback</h2>
+      <h2 className="text-[#AEC90A] text-medium font-bold -mt-1 ml-0 z-1">Feedback</h2>
       <div className="flex flex-wrap h-full p-2">
         {pastEvents.map((event) => (
           <div

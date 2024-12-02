@@ -378,7 +378,7 @@ const FullCalendar = () => {
             color: "white",
             border: "0.5px solid rgba(130, 201, 10, 0.5)",
             overflowY: "auto",
-            maxHeight: "80vh",
+            maxHeight: "100vh",
           }}
         >
           <button
@@ -434,7 +434,7 @@ const FullCalendar = () => {
                     >
                       <img
                         src={event.event_image}
-                        className="w-full h-72 object-cover rounded-lg"
+                        className="w-full h-96 object-cover rounded-lg"
                         style={{ marginBottom: "20px" }}
                       />
                       {club && club.club_image && (

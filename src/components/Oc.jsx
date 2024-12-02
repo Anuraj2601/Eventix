@@ -21,7 +21,7 @@ const TeamSection = ({ title, teamMembers, onRemove, onAddNewClick, showAddButto
             <div className="grid grid-cols-4 gap-4 overflow-auto">
                 {teamMembers.map((member, index) => (
                     <div key={index} className="flex flex-col items-center custom-card">
-                        <img src={member.memberImage} alt={member.memberName} className='w-30 h-30 rounded-full p-2' />
+                        <img src={member.memberImage} alt={member.memberName} className='w-28 h-28 rounded-full p-2 object-cover' />
                         <p className="text-white">{member.memberName}</p>
                         {showAddButton && (
                             <Button
@@ -418,7 +418,7 @@ const App = ({clubId, event}) => {
                     <img
                         src={member.memberImage}
                         alt={member.memberName}
-                        className="w-30 h-30 rounded-full p-2" // Adjusted image size
+                        className="w-30 h-30 rounded-full p-2 object-cover" // Adjusted image size
                     />
                     <p className="text-white text-center">{member.memberName}</p> {/* Centered text */}
                 </div>
@@ -434,7 +434,7 @@ const App = ({clubId, event}) => {
                     <img
                         src={member.memberImage}
                         alt={member.memberName}
-                        className="w-30 h-30 rounded-full p-2" // Adjusted image size
+                        className="w-30 h-30 rounded-full p-2 object-cover" // Adjusted image size
                     />
                     <p className="text-white text-center">{member.memberName}</p> {/* Centered text */}
                     <Button type='submit'

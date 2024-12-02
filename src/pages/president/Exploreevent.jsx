@@ -937,92 +937,57 @@ const Exploreevent = () => {
                       </div>
                     </div>
                     <div className="flex items-center justify-between mb-2">
-                      <Typography
-                        color="white"
-                        variant="subtitle1"
-                        className="text-[#AEC90A] custom-card"
-                      >
-                        On {date}
-                      </Typography>
-                      <Typography
-                        color="white"
-                        variant="subtitle1"
-                        className="text-[#AEC90A] relative custom-card"
-                      >
-                        Venue - {venue}
-                      </Typography>
+  <Typography
+    color="white"
+    variant="subtitle1"
+    className="text-[#AEC90A] custom-card"
+  >
+    On {date}
+  </Typography>
+  <Typography
+    color="white"
+    variant="subtitle1"
+    className="text-[#AEC90A] relative custom-card"
+  >
+    Venue - {venue}
+  </Typography>
 
-                      {/* {isMatchingPage() ? (
-                        <button
-                        onClick={openModal}
-                        className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
-                        style={{
-                          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
-                        }}
-                      >
-                        View Details
-                      </button>
-                       
-                      ) : (
-                        
-                        <button
-                          onClick={handleRegister}
-                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
-                          style={{
-                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
-                          }}
-                        >
-                          Register Now
-                        </button>
-                      )}
-                      {
-                        isEventRegistered && 
-                        <button
-                          disabled
-                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
-                          style={{
-                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)"
-                          }}
-                        >
-                          Registered
-                        </button>
-                      } */}
+  {isMatchingPage() ? (
+    <button
+      onClick={openModal}
+      className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
+      style={{
+        boxShadow:
+          "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+      }}
+    >
+      View Details
+    </button>
+  ) : isEventRegistered ? (
+    <button
+      disabled
+      className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full cursor-not-allowed"
+      style={{
+        boxShadow:
+          "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+      }}
+    >
+      Registered
+    </button>
+  ) : new Date(date) < new Date() ? null : ( // Check if the event date is in the past
+    <button
+      onClick={handleRegister}
+      className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
+      style={{
+        boxShadow:
+          "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+      }}
+    >
+      Register Now
+    </button>
+  )}
+</div>
 
-                      {isMatchingPage() ? (
-                        <button
-                          onClick={openModal}
-                          className="border-[#AEC90A] border-2 text-[#AEC90A] opacity-60 px-4 py-2 rounded-full transition-transform transform hover:scale-105"
-                          style={{
-                            boxShadow:
-                              "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-                          }}
-                        >
-                          View Details
-                        </button>
-                      ) : isEventRegistered ? (
-                        <button
-                          disabled
-                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full cursor-not-allowed"
-                          style={{
-                            boxShadow:
-                              "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-                          }}
-                        >
-                          Registered
-                        </button>
-                      ) : (
-                        <button
-                          onClick={handleRegister}
-                          className="custom-card border-[#AEC90A] border-2 text-[#AEC90A] opacity-90 px-2 py-2 rounded-full"
-                          style={{
-                            boxShadow:
-                              "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-                          }}
-                        >
-                          Register Now
-                        </button>
-                      )}
-                    </div>
                     <Typography color="white" variant="body1" className="mb-4">
                       An event designed to inspire and empower students. Join us
                       for insightful talks, hands-on workshops, and networking
@@ -1045,7 +1010,7 @@ const Exploreevent = () => {
             </div>
           </div>
 
-          <div className="relative h-full flex flex-col justify-center">
+          <div className="relative h-full flex flex-col justify-center mt-12 p-5 r\ ">
             <Typography
               color="white"
               variant="h3"
@@ -1053,7 +1018,10 @@ const Exploreevent = () => {
             >
               Sponsors
             </Typography>
-            <div className="flex justify-between mb-4">
+            <div  className="flex justify-between mb-4  rounded-md shadow-md overflow-x-auto max-w-[1200px] p-5"   style={{
+                      boxShadow:
+                        "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                    }}>
               {(eventSponsor || []).map((eventS) => (
                 <div
                   className="flex flex-col items-center"
@@ -1062,7 +1030,7 @@ const Exploreevent = () => {
                   {isMatchingPage() && (
                     <div className="flex flex-row gap-1 top-1">
                       <Button onClick={() => updateSponsor(eventS.sponsor_id)}>
-                        <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                        <Link className="p-1  rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
                           <AiOutlineEdit size={24} />
                         </Link>
                       </Button>
@@ -1080,10 +1048,7 @@ const Exploreevent = () => {
                     src={eventS.company_logo}
                     alt="Sponsor Logo"
                     className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow"
-                    style={{
-                      boxShadow:
-                        "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-                    }}
+                  
                     onClick={() => handleSponsorClick(eventS)} // Trigger modal
                   />
 
@@ -1094,49 +1059,6 @@ const Exploreevent = () => {
               ))}
             </div>
 
-            {/* Modal to display sponsor details */}
-            {/* {modalIsOpen && selectedSponsor && (
-              <ReactModal
-                isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}
-                contentLabel="Sponsor Details"
-              >
-                <div className="modal-content">
-                  
-                  <button
-                    onClick={() => setModalIsOpen(false)}
-                    className="close-btn"
-                  >
-                    <AiOutlineClose size={24} />
-                  </button>
-
-                  <h2 className="text-xl font-bold">
-                    {selectedSponsor.sponsor_name}
-                  </h2>
-                  <img
-                    src={selectedSponsor.company_logo}
-                    alt={selectedSponsor.sponsor_name}
-                    className="w-32 h-32 object-contain mb-4"
-                  />
-                  <p>
-                    <strong>Type:</strong> {selectedSponsor.sponsorType}
-                  </p>
-                  <p>
-                    <strong>Amount: Rs. </strong> {selectedSponsor.amount}
-                  </p>
-                  <p>
-                    <strong>Description:</strong>{" "}
-                    {selectedSponsor.sponsor_description}
-                  </p>
-                  <p>
-                    <strong>Email: </strong> {selectedSponsor.contact_email}
-                  </p>
-                  <p>
-                    <strong>Contact Number: </strong> {selectedSponsor.contact_person}
-                  </p>
-                </div>
-              </ReactModal>
-            )} */}
             {modalIsOpen && selectedSponsor && (
               <ReactModal
                 isOpen={modalIsOpen}

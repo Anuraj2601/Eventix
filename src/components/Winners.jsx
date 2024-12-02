@@ -154,7 +154,7 @@ const Votestab = () => {
       <Sidebar className="flex-shrink-0" />
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="bg-black bg-opacity-90 text-white flex-col md:p-20 overflow-y-auto">
+        <div className="bg-black bg-opacity-90 text-white flex-col md:p-20 overflow-y-auto min-h-screen">
           <p className="text-3xl text-[#AEC90A] text-center ">The Winners</p>
           {showDialog && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">

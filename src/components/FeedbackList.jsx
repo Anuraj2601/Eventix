@@ -105,7 +105,7 @@ const FeedbackList = ({ clubId, event }) => {
                 <img
                   src={userProfile?.profileImage}
                   alt={userProfile?.name || 'User'}
-                  className="w-24 h-24 rounded-full"
+                  className="w-24 h-24 rounded-full object-cover"
                 />
                 <div className="ml-3">
                   <h3 className="text-lg font-bold text-black">

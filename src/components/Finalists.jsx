@@ -176,7 +176,7 @@ const Candidates = ({ activeTab }) => {
       <Sidebar className="flex-shrink-0" />
       <div className="flex flex-col flex-1">
         <Navbar className="sticky top-0 z-10 p-4" />
-        <div className="bg-black bg-opacity-90 text-white flex-col  overflow-y-auto">       <div className="flex w-full">    <div className="w-1/4  p-4">
+        <div className="bg-black bg-opacity-90 text-white flex-col  overflow-y-auto min-h-screen">       <div className="flex w-full">    <div className="w-1/4  p-4">
                 <Typography variant="h5" className="mb-4 text-[#AEC90A] text-center"> Select Positions</Typography>
                 {categories.map((category) => (
                    <Button
