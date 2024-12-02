@@ -164,6 +164,8 @@ import CheckEmail from './components/CheckEmail';
 import ForgotPassword from './components/ForgotPassword';
 import Accountverify from './components/VerifyUser';
 import NewEventPost from './pages/oc/NewEventPost';
+import NewEventAnnouncement from './pages/oc/NewEventAnnouncement';
+import NewEventMeeting from './pages/oc/NewEventMeeting';
 
 // Import other pages if necessary
 
@@ -310,6 +312,8 @@ const App = () => {
         <Route path='/oc/election/Apply' element={<Apply/>}></Route>
         <Route path='/oc/meeting' element={<MainMeetingoc />}></Route> 
         <Route path="/event/new-post" element={<NewEventPost />} />
+        <Route path="/event/new-announcement" element={<NewEventAnnouncement />} />
+        <Route path="/event/new-meeting" element={<NewEventMeeting />} />
         
 
         <Route path='/admin/club' element={<StudentAllClubsadmin/>}></Route>

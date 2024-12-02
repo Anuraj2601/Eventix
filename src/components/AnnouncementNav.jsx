@@ -12,7 +12,7 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import { FaEye, FaEdit, FaTrash, FaPlus } from "react-icons/fa"; // Import icons
-import { useLocation } from "react-router-dom"; // Import useLocation hook
+import { useLocation, useNavigate } from "react-router-dom"; // Import useLocation hook
 import EventMeetingService from "../service/EventMeetingService";
 import EventAnnouncementService from "../service/EventAnnouncementService";
 import { FaPeopleGroup } from "react-icons/fa6";
@@ -26,6 +26,8 @@ const AnnouncementNav = ({clubId, event}) => {
   const [hoveredRow, setHoveredRow] = useState(null);
 
   const isEditablePage = [ '/secretary', '/president'].some(path => location.pathname.startsWith(path));
+
+  const navigate = useNavigate();
 
 
   const isMeetingToday = (date) => {
@@ -141,7 +143,13 @@ const AnnouncementNav = ({clubId, event}) => {
     });
   };
   
- 
+  const handleAddNew = () => {
+    if (activeTab === "Announcements") {
+      navigate(`/event/new-announcement`, { state: { event } });
+    } else if (activeTab === "Meeting") {
+      navigate(`/event/new-meeting`, { state: { event } });
+    }
+  };
 
   const data = [
     {
@@ -293,6 +301,7 @@ const AnnouncementNav = ({clubId, event}) => {
                 <button
                   className="absolute -top-6 -left-6 text-[#AEC90A] hover:text-white p-2 rounded-full bg-black transition-colors"
                   style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)' }}
+                  onClick={handleAddNew}
                 >
                   <FaPlus size={10} />
                 </button>
