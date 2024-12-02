@@ -166,7 +166,7 @@ const Feedback = () => {
   
   return (
     <div className="relative h-[380px] overflow-hidden">
-      <h2 className="text-white text-sm font-bold -mt-1 ml-0 z-1">Feedback</h2>
+      <h2 className="text-[#AEC90A] text-medium font-bold -mt-1 ml-0 z-1">Feedback</h2>
       <div className="flex flex-wrap h-full p-2">
         {pastEvents.map((event) => (
           <div
