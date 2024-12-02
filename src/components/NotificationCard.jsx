@@ -58,8 +58,10 @@ import { FaCircle } from "react-icons/fa";
 
 const NotificationCard = ({ image, title, time, message, is_read}) => {
   return (
-    <div className='bg-[#1E1E1E] p-6 mx-4 my-2 rounded-2xl '  style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
-      
+    <div  className={`p-6 mx-4 my-2 rounded-2xl ${
+      is_read ? 'bg-[#1E1E1E]' : 'bg-[#AEC90A33]'
+    }`} style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}>
+      <div>
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-center gap-4">
           {!is_read && <FaCircle className='text-primary' size={10}/>}
@@ -79,7 +81,7 @@ const NotificationCard = ({ image, title, time, message, is_read}) => {
             <MdDelete className='text-[#AEC90A99]' size={27}/>
           </span>
         </button> */}
-      </div>
+     </div> </div>
     </div>
   );
 }
