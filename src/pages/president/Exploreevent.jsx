@@ -1045,7 +1045,7 @@ const Exploreevent = () => {
             </div>
           </div>
 
-          <div className="relative h-full flex flex-col justify-center">
+          <div className="relative h-full flex flex-col justify-center mt-12 p-5 r\ ">
             <Typography
               color="white"
               variant="h3"
@@ -1053,7 +1053,10 @@ const Exploreevent = () => {
             >
               Sponsors
             </Typography>
-            <div className="flex justify-between mb-4">
+            <div  className="flex justify-between mb-4  rounded-md shadow-md overflow-x-auto max-w-[1200px] p-5"   style={{
+                      boxShadow:
+                        "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
+                    }}>
               {(eventSponsor || []).map((eventS) => (
                 <div
                   className="flex flex-col items-center"
@@ -1062,7 +1065,7 @@ const Exploreevent = () => {
                   {isMatchingPage() && (
                     <div className="flex flex-row gap-1 top-1">
                       <Button onClick={() => updateSponsor(eventS.sponsor_id)}>
-                        <Link className="p-1 bg-[#AEC90A] rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
+                        <Link className="p-1  rounded-full flex items-center justify-center hover:bg-[#9ab32f]">
                           <AiOutlineEdit size={24} />
                         </Link>
                       </Button>
@@ -1080,10 +1083,7 @@ const Exploreevent = () => {
                     src={eventS.company_logo}
                     alt="Sponsor Logo"
                     className="w-40 h-40 rounded-full border-4 border-black mb-2 relative custom-card custom-3d-shadow"
-                    style={{
-                      boxShadow:
-                        "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
-                    }}
+                  
                     onClick={() => handleSponsorClick(eventS)} // Trigger modal
                   />
 
