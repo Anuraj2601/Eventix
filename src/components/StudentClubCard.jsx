@@ -141,7 +141,7 @@ const StudentClubCard = () => {
         const currentDate = new Date();
         const monthsSinceRegistration = differenceInMonths(currentDate, registrationDate);
   
-        if (monthsSinceRegistration < 6) {
+        if (monthsSinceRegistration < 6 || new Date(userRegistration.date).toDateString() === new Date().toDateString()) {
             // Show rejection message based on position
             if (userRegistration.position.toLowerCase() === 'student') {
                 setDialogMessage("Unfortunately, you have already applied. Please wait for the next recruitment opportunity.");

@@ -9,7 +9,7 @@ import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function 
 import RegistrationService from '../service/registrationService';
 import { Typography } from "@material-tailwind/react";
 import { AiOutlineClose } from "react-icons/ai";  // Cross icon from react-icons
-
+import DialogBox from "./DialogBox";
 const menuItems = [
   { title: "Design Team" },
   { title: "Program Team" },
@@ -31,6 +31,15 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [dialog, setDialog] = useState({ isOpen: false, title: "", message: "", onConfirm: null });
+
+  const showDialog = (title, message, onConfirm = null) => {
+    setDialog({ isOpen: true, title, message, onConfirm });
+  };
+
+  const closeDialog = () => {
+    setDialog({ isOpen: false, title: "", message: "", onConfirm: null });
+  };
 
   useEffect(() => {
     if (event && event.club_id) {
@@ -93,13 +102,16 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
     }
 
     if (missingFields.length > 0) {
-        alert(`Please fill in the following fields: ${missingFields.join(', ')}`);
-        return;
+      showDialog(
+        "Incomplete Form",
+        `Please fill in the following fields: ${missingFields.join(", ")}`
+      );
+              return;
     }
 
     const token = localStorage.getItem('token');
     if (!token) {
-        alert('User not authenticated.');
+      showDialog("Authentication Error", "User not authenticated.");
         return;
     }
 
@@ -114,13 +126,13 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
             formData.position, // Include position in the request
             token
         );
-        alert('Registration successful!');
+        showDialog("Success", "Registration successful!", onClose);
         onClose(); // Close the modal after submission
     } catch (error) {
         const errorMessage = error.message || 'Failed to submit the form.';
         console.error(errorMessage);
-        alert(errorMessage);
-    } finally {
+        showDialog("Error", error.message || "Failed to submit the form.");
+          } finally {
         setLoading(false);
     }
 };
@@ -251,12 +263,20 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
                 boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)'
               }}
             >
-              {loading ? "Submitting..." : "Submit"}
+              {loading ? "Submitted" : "Submit"}
             </button>
           </div>
         </form>
       </div>
+      <DialogBox
+        isOpen={dialog.isOpen}
+        title={dialog.title}
+        message={dialog.message}
+        onClose={closeDialog}
+        onConfirm={dialog.onConfirm}
+      />
     </div>
+    
   );
 };
 
