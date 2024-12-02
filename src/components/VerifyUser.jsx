@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -8,13 +8,26 @@ const VerifyAccount = () => {
   const [error, setError] = useState("");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+  const [showOtpResentPopup, setShowOtpResentPopup] = useState(false); // New state for OTP resent message
 
   const navigate = useNavigate();
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const emailRegex = /^[\d{4}(cs|is)\d{3}]+@stu\.ucsc\.cmb\.ac\.lk$/;
+  const otpRegex = /^\d{6}$/;  // OTP should be a 6-digit number
+
+  // Validate Email and OTP
+  const validateEmail = (email) => emailRegex.test(email);
+  const validateOtp = (otp) => otpRegex.test(otp);
+
+  // Handle input change and validation for enabling/disabling the submit button
+  useEffect(() => {
+    if (validateEmail(email) && validateOtp(otp)) {
+      setIsSubmitEnabled(true);
+    } else {
+      setIsSubmitEnabled(false);
+    }
+  }, [email, otp]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,13 +43,33 @@ const VerifyAccount = () => {
       return;
     }
 
+    if (!validateOtp(otp)) {
+      setError("OTP should be a 6-digit number.");
+      return;
+    }
+
     try {
-      const response = await axios.put(
-        `http://localhost:8080/verify-account?email=${email}&otp=${otp}`
+      const response = await axios.patch(
+        `http://localhost:8080/verify-email-otp?email=${email}&otp=${otp}`
       );
 
       if (response.data && response.status === 200) {
         setShowSuccessPopup(true);
+      }
+    } catch (err) {
+      console.error(err);
+      setShowErrorPopup(true);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/regenerate-otp?email=${email}`
+      );
+
+      if (response.data && response.status === 200) {
+        setShowOtpResentPopup(true);
       }
     } catch (err) {
       console.error(err);
@@ -53,7 +86,7 @@ const VerifyAccount = () => {
         >
           <span className="mr-2">←</span> Back to Login
         </button>
-        <h2 className="text-white text-2xl font-bold text-center mb-6">
+        <h2 className="text-[#AEC90A] text-2xl font-bold text-center mb-6">
           Verify Your Account
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -66,7 +99,7 @@ const VerifyAccount = () => {
               id="email"
               className={`w-full px-4 py-2 border ${
                 error ? "border-red-500" : "border-gray-600"
-              } rounded focus:outline-none focus:ring focus:ring-blue-500`}
+              } rounded focus:outline-none focus:ring focus:ring-[#AEC90A]`}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
@@ -81,19 +114,35 @@ const VerifyAccount = () => {
               id="otp"
               className={`w-full px-4 py-2 border ${
                 error ? "border-red-500" : "border-gray-600"
-              } rounded focus:outline-none focus:ring focus:ring-blue-500`}
+              } rounded focus:outline-none focus:ring focus:ring-[#AEC90A]`}
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
               placeholder="Enter the OTP"
             />
           </div>
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
-          >
-            Submit
-          </button>
+
+          {/* Buttons */}
+          <div className="flex space-x-4">
+            <button
+              type="button"
+              onClick={handleResendOtp}
+              className="bg-[#AEC90A] text-white py-2 px-4 rounded hover:bg-[#A8B800] transition"
+            >
+              Resend OTP
+            </button>
+            <button
+              type="submit"
+              disabled={!isSubmitEnabled}
+              className={`w-full py-2 rounded ${
+                isSubmitEnabled
+                  ? "bg-[#AEC90A] text-white hover:bg-[#A8B800] transition"
+                  : "bg-gray-500 text-gray-300 cursor-not-allowed"
+              }`}
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </div>
 
@@ -101,14 +150,14 @@ const VerifyAccount = () => {
       {showSuccessPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded shadow-md">
-            <h3 className="text-xl font-bold mb-4 text-green-600">Success!</h3>
-            <p>Your account has been successfully activated.</p>
+            <h3 className="text-xl font-bold mb-4 text-[#AEC90A]">Success!</h3>
+            <p>Your account has been successfully activated.Now, you can login to your Account</p>
             <button
               onClick={() => {
                 setShowSuccessPopup(false);
                 navigate("/login");
               }}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+              className="mt-4 bg-[#AEC90A] text-white px-4 py-2 rounded hover:bg-[#A8B800] transition"
             >
               OK
             </button>
@@ -116,6 +165,22 @@ const VerifyAccount = () => {
         </div>
       )}
 
+      {/* OTP Resent Popup */}
+      {showOtpResentPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-md">
+            <h3 className="text-xl font-bold mb-4 text-green-600">Success!</h3>
+            <p>OTP has been resent to your email.</p>
+            <button
+              onClick={() => setShowOtpResentPopup(false)}
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+      
       {/* Error Popup */}
       {showErrorPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
