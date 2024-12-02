@@ -163,6 +163,7 @@ import AddNewClubForm from './pages/admin/AddNewClubForm';
 import CheckEmail from './components/CheckEmail';
 import ForgotPassword from './components/ForgotPassword';
 import Accountverify from './components/VerifyUser';
+import NewEventPost from './pages/oc/NewEventPost';
 
 // Import other pages if necessary
 
@@ -308,7 +309,7 @@ const App = () => {
         <Route path='/oc/club/voting' element={<Votingoc/>}></Route>
         <Route path='/oc/election/Apply' element={<Apply/>}></Route>
         <Route path='/oc/meeting' element={<MainMeetingoc />}></Route> 
-
+        <Route path="/event/new-post" element={<NewEventPost />} />
         
 
         <Route path='/admin/club' element={<StudentAllClubsadmin/>}></Route>

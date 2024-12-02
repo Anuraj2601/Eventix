@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MdAdd } from "react-icons/md";
 import { FaCheck, FaTimes } from "react-icons/fa"; // Import icons for tick and wrong mark
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // Import images
 import launchImage from '../assets/launch.jpg';
@@ -95,6 +95,7 @@ const Posts = ({ post, isPresidentOrSecretaryPage }) => {
 
 const NewsFeed = ({ posts, setEventPosts, event }) => {
     const location = useLocation();
+    const navigate = useNavigate();
     const isPresidentOrSecretaryPage = location.pathname.startsWith('/president') || location.pathname.startsWith('/secretary');
     const isOcPage = location.pathname.startsWith('/oc');
     const isMemberPage = location.pathname.startsWith('/member') || !(isPresidentOrSecretaryPage || isOcPage);
@@ -103,15 +104,29 @@ const NewsFeed = ({ posts, setEventPosts, event }) => {
     const approvedPosts = posts.filter(post => post.post_status === 'APPROVED');
     const rejectedPosts = posts.filter(post => post.post_status === 'REJECTED');
 
+
+    const handleAdd = () => {
+        navigate(`/event/new-post`, { state: { event } })
+    }
+
     return (
         <div className="bg-neutral-900 text-white min-h-screen relative">
             <div className='relative'>
-                {isOcPage && (
+                {/* {isOcPage && (
                     <div className='flex justify-end mb-2'>
                         <button
                             className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-3 right-8 z-10 custom-card"
                         >
                             <MdAdd size={24} />
+                        </button>
+                    </div>
+                )} */}
+                {isMemberPage && (
+                    <div className='flex justify-end mb-2'>
+                        <button
+                            className="bg-[#AEC90A] text-black flex items-center justify-center rounded-full hover:bg-[#AEC90A] hover:text-black p-2 absolute -top-4 right-8 z-10 custom-card"
+                        >
+                            <MdAdd size={24} onClick={handleAdd}/>
                         </button>
                     </div>
                 )}
