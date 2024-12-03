@@ -7,6 +7,7 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
+import Swal from "sweetalert2";
 
 import EventService from "../service/EventService";
 
@@ -53,7 +54,14 @@ const Dialog = ({
     </div>
   ) : null;
 
-const RequestTable = ({ type, events, onAccept, onReject, onDownloadProposal, userRole }) => {
+const RequestTable = ({
+  type,
+  events,
+  onAccept,
+  onReject,
+  onDownloadProposal,
+  userRole,
+}) => {
   return (
     <div className="overflow-auto rounded-lg">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -76,7 +84,9 @@ const RequestTable = ({ type, events, onAccept, onReject, onDownloadProposal, us
                     "0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)",
                 }}
               />
-              <span className="text-white font-bold text-2xl mb-2">{row.event}</span>
+              <span className="text-white font-bold text-2xl mb-2">
+                {row.event}
+              </span>
             </div>
 
             <div className="flex flex-col items-center mb-4">
@@ -103,9 +113,13 @@ const RequestTable = ({ type, events, onAccept, onReject, onDownloadProposal, us
               // Show purpose and benefit for admin
               <div className="flex flex-col items-center mb-4">
                 <span className="text-white text-lg font-bold">Purpose:</span>
-                <p className="text-white text-center mb-2">{row.purpose || "Not provided"}</p>
+                <p className="text-white text-center mb-2">
+                  {row.purpose || "Not provided"}
+                </p>
                 <span className="text-white text-lg font-bold">Benefit:</span>
-                <p className="text-white text-center">{row.benefit || "Not provided"}</p>
+                <p className="text-white text-center">
+                  {row.benefit || "Not provided"}
+                </p>
               </div>
             ) : (
               // Show budget button for other roles (e.g., Treasurer)
@@ -176,14 +190,12 @@ const Requests = () => {
   const [events, setEvents] = useState({ all: [], accepted: [], rejected: [] });
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
-  
 
   const subTabs = [
     { label: "All", value: "all" },
     { label: "Accepted", value: "accepted" },
     { label: "Rejected", value: "rejected" },
   ];
-  
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -297,19 +309,19 @@ const Requests = () => {
         alert("You must be logged in to view the proposal.");
         return;
       }
-  
+
       const response = await EventService.downloadEventProposal(eventId, token);
-  
+
       // Create a URL for the binary file and open it in a new browser tab
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/pdf" })
+      );
       window.open(url, "_blank"); // Open the file in a new tab
     } catch (error) {
       alert("Failed to fetch the event proposal.");
       console.error("Error fetching the proposal:", error);
     }
   };
-  
-  
 
   const handleAccept = (row) => {
     setCurrentAction("accept");
@@ -324,9 +336,12 @@ const Requests = () => {
   };
 
   const handleDialogClose = () => {
+    Swal.fire({
+      text: "Action canceled.",
+      icon: "info",
+    });
     setIsDialogOpen(false);
   };
-  
 
   // const handleDialogConfirm = () => {
   //   if (currentAction === "accept") {
@@ -368,13 +383,23 @@ const Requests = () => {
           token
         );
       }
+      console.log(response.statusCode);
 
-      if (response.statusCode === "RSP_SUCCESS") {
-        alert(
-          `Event ${
-            currentAction === "accept" ? "accepted" : "rejected"
-          } successfully!`
-        );
+
+      if (response.statusCode === 200) {
+        // alert(
+        //   `Event ${
+        //     currentAction === "accept" ? "accepted" : "rejected"
+        //   } successfully!`
+        // );
+console.log("yoooooooooooooooooooooooooooooooooooo");
+        Swal.fire({
+          text: `Event ${
+            currentAction === "accept" ? "approved" : "rejected"
+          } successfully!`,
+          icon: "success",
+          confirmButtonColor: "#AEC90A",
+        });
         setEvents((prev) => {
           const updatedAll = prev.all.filter(
             (event) => event.id !== currentRow.id
@@ -414,7 +439,9 @@ const Requests = () => {
       alert("An error occurred. Please try again.");
     }
 
-    handleDialogClose();
+    //handleDialogClose();
+    // Close the dialog after confirmation
+    setIsDialogOpen(false);
   };
 
   return (
@@ -459,7 +486,7 @@ const Requests = () => {
                   onAccept={handleAccept}
                   onReject={handleReject}
                   onDownloadProposal={handleDownloadProposal}
-                  userRole={userRole} 
+                  userRole={userRole}
                 />
               </TabPanel>
             ))
