@@ -18,20 +18,7 @@ const Candidates = ({ activeTab }) => {
     const [meetingParticipants, setMeetingParticipants] = useState([]);
 // Example: sortedCandidates is derived from an existing candidates array
 const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name)); // Example sorting logic based on name
-const [isVisible, setIsVisible] = useState(!!message);
 
-useEffect(() => {
-  if (message) {
-    setIsVisible(true);
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 60000); // Hides after 60 seconds
-
-    return () => clearTimeout(timer);
-  }
-}, [message]);
-
-if (!isVisible) return null;
     
 
     useEffect(() => {
@@ -285,26 +272,19 @@ if (!isVisible) return null;
     const categories = ["President", "Secretary", "Treasurer"];
 
     // Function to get the count of selected candidates per category
-  // Function to get the count of selected candidates per category and election ID
-const getSelectedCountForElection = (category) => {
-    const electionIdFromUrl = window.location.pathname.split('/').pop(); // Extract election ID from URL
-
-    return candidates.filter(candidate =>
-        candidate.position.toLowerCase() === category.toLowerCase() &&
-        candidate.selected === "selected" &&
-        String(candidate.electionId) === String(electionIdFromUrl) // Match election ID
-    ).length;
-};
-
+    const getSelectedCount = (category) => {
+        return candidates.filter(candidate =>
+            candidate.position.toLowerCase() === category.toLowerCase() &&
+            candidate.selected === "selected"
+        ).length;
+    };
 
     return (
       <div className="text-white">
           {message && (
-              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
-              <Typography variant="h5" className="text-[#AEC90A]">
-                {message}
-              </Typography>
-            </div>
+              <div className="bg-black text-[#AEC90A] p-4 mb-4">
+                  <Typography>{message}</Typography>
+              </div>
           )}
 
 
@@ -329,15 +309,12 @@ const getSelectedCountForElection = (category) => {
                 return bAttendance - aAttendance; // Sort descending
             });              
               // Get the number of selected candidates for the current category
-              const selectedCount = getSelectedCountForElection(category);
+              const selectedCount = getSelectedCount(category);
 
               return (
                   <div key={category} className="mb-8">
                       <Typography variant="h5" className="mb-2">
                           {category}
-                      </Typography>
-                      <Typography variant="h5" className="mb-2">
-                         Selected Candidates : {selectedCount}
                       </Typography>
                        
                       {sortedCandidates.length > 0 ? (
@@ -432,7 +409,7 @@ const getSelectedCountForElection = (category) => {
                 Select
             </Button>
             <Button
-                className="bg-white hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+                className="bg-red-500 hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
                 onClick={() => handleReject(candidate.id)}
             >
                 Reject

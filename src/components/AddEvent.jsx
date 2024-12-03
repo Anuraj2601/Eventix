@@ -20,7 +20,9 @@ import { useNavigate } from "react-router-dom";
 
 const AddEvent = () => {
   const navigate = useNavigate(); // Initialize navigate hook
-
+  const [showDialog, setShowDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [dialogType, setDialogType] = useState("");
   // <Route path='/club/454/add-event' element={<AddEvent />} ></Route>
   const id = useParams(); // Get club_id from the URL
   const club_id = id.name;
@@ -516,6 +518,45 @@ const AddEvent = () => {
             </button>
           </div>
         </div>
+        {showDialog && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 bg-white text-black rounded-lg shadow-lg">
+          <p>{dialogMessage}</p>
+          <div className="flex justify-center space-x-4 mt-4">
+            {dialogType === "confirmation" && (
+              <>
+                <button
+                  onClick={updateRoles}
+                  className="bg-red-500 p-3 rounded-full"
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={() => setShowDialog(false)}
+                  className="bg-gray-500 p-3 rounded-full"
+                >
+                  Cancel
+                </button>
+              </>
+            )}
+            {dialogType === "success" && (
+              <button
+                onClick={() => setShowDialog(false)}
+                className="bg-[#AEC90A] p-3 rounded-full"
+              >
+                Close
+              </button>
+            )}
+            {dialogType === "error" && (
+              <button
+                onClick={() => setShowDialog(false)}
+                className="bg-gray-500 p-3 rounded-full"
+              >
+                Close
+              </button>
+            )}
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );

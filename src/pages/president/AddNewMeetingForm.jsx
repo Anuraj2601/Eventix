@@ -13,7 +13,9 @@ const AddNewMeetingForm = () => {
   const { id } = useParams();
   const { club } = location.state || {};
   const clubId = club?.club_id;
-
+  const [showDialog, setShowDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [dialogType, setDialogType] = useState("");
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(null);
   const [time, setTime] = useState("");
@@ -22,6 +24,11 @@ const AddNewMeetingForm = () => {
   const [venue, setVenue] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showAddSuccessPopup, setShowAddSuccessPopup] = useState(false);
+
+  const handleClosePopup = () => {
+    setShowAddSuccessPopup(false);
+  };
 
   const validateField = (field, value) => {
     let error = "";
@@ -67,7 +74,7 @@ const AddNewMeetingForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitted(true);
-
+  
     if (validateAllFields()) {
       try {
         const token = localStorage.getItem("token");
@@ -80,7 +87,7 @@ const AddNewMeetingForm = () => {
           club_id: clubId,
           ...(meetingType === "PHYSICAL" && { venue }),
         };
-
+  
         const response = await MeetingService.saveMeeting(
           meetingData.meeting_name,
           meetingData.date,
@@ -92,18 +99,46 @@ const AddNewMeetingForm = () => {
           meetingType === "PHYSICAL" ? meetingData.venue : undefined
         );
 
-        if (response.status === 200) {
-          alert("Meeting saved successfully!");
+        // alert("Meeting saved successfully!");
+        // navigate(-1);
+        setShowAddSuccessPopup(true);
+       
+        setTimeout(() => {
           navigate(-1);
-        } else {
-          
-        }
+        }, 2000);
+  
+        // if (response.status === 200) {
+        //   setDialogMessage("Meeting successfully saved");
+        //   setDialogType("success");
+        //   setShowDialog(true);
+  
+        //   // Wait for the user to close the dialog before navigating
+        //   const handleCloseDialog = () => {
+        //     setShowDialog(false);
+        //     navigate(-1);  // Navigate back after closing the dialog
+        //   };
+  
+        //   // Automatically close the dialog after a brief delay
+        //   setTimeout(() => {
+        //     handleCloseDialog(); // You can also attach this to a "Close" button click event
+        //   }, 3000); // Wait 3 seconds before navigating (you can adjust the delay)
+        // } else {
+        //   setDialogMessage("Meeting successfully saved");
+        //   setDialogType("success");
+        //   setShowDialog(true);
+        //   setTimeout(() => {
+        //     navigate(-1);
+        //   }, 10000);
+        // }
       } catch (error) {
         console.error("Error saving meeting:", error.response || error.message);
-        alert("An error occurred while saving the meeting.");
+        setDialogMessage("An error occurred while saving the meeting.");
+        setDialogType("error");
+        setShowDialog(true);
       }
     }
   };
+  
 
   const handleChange = (field, value) => {
     switch (field) {
@@ -234,7 +269,64 @@ const AddNewMeetingForm = () => {
             </div>
           </form>
         </div>
+
+        {showDialog && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 bg-white text-black rounded-lg shadow-lg">
+          <p>{dialogMessage}</p>
+          <div className="flex justify-center space-x-4 mt-4">
+            {dialogType === "confirmation" && (
+              <>
+                <button
+                  onClick={updateRoles}
+                  className="bg-red-500 p-3 rounded-full"
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={() => setShowDialog(false)}
+                  className="bg-gray-500 p-3 rounded-full"
+                >
+                  Cancel
+                </button>
+              </>
+            )}
+            {dialogType === "success" && (
+              <button
+                onClick={() => setShowDialog(false)}
+                className="bg-[#AEC90A] p-3 rounded-full"
+              >
+                Close
+              </button>
+            )}
+            {dialogType === "error" && (
+              <button
+                onClick={() => setShowDialog(false)}
+                className="bg-gray-500 p-3 rounded-full"
+              >
+                Close
+              </button>
+            )}
+          </div>
+        </div>
+      )}
       </div>
+
+      {showAddSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                Meeting created successfully
+            </h2>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

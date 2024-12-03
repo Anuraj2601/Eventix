@@ -1,122 +1,3 @@
-// import React, { useState } from "react";
-// import Sidebar from "../../components/Sidebar";
-// import Navbar from "../../components/Navbar";
-
-// import {
-//   Menu,
-//   MenuHandler,
-//   MenuList,
-//   MenuItem,
-//   Button,
-//   Typography,
-// } from "@material-tailwind/react";
-// // import { ChevronDownIcon } from "@heroicons/react/24/outline";
-// import { HiChevronDown } from "react-icons/hi";
-
-// const AddNewPostForm = () => {
-//   const [selectedImage, setSelectedImage] = useState(null);
-
-//   const handleImageChange = (e) => {
-//     if (e.target.files && e.target.files.length > 0) {
-//       setSelectedImage(URL.createObjectURL(e.target.files[0]));
-//     }
-//   };
-
-//   return (
-//     <>
-//       <div className="fixed inset-0 flex flex-col md:flex-row">
-//         <Sidebar className="flex-shrink-0 w-full md:w-auto" />
-//         <div className="flex flex-col flex-1 overflow-auto">
-//           <Navbar className="sticky top-0 z-10 p-4" />
-//           <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-auto p-4 md:p-10">
-//             <div className="flex flex-col items-center justify-center relative mt-10 w-full">
-//               <div className="bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4">
-//                 Add a New Post
-//               </div>
-//               <div className="bg-[#0B0B0B] flex flex-col items-center justify-center border-2 border-[#AEC90A] rounded-xl w-full md:w-3/5 py-9">
-//                 <form action="" className="w-full px-4 md:px-2">
-//                   {/* Personal Information */}
-//                   <div className="flex flex-col gap-3">
-//                     <label htmlFor="name" className="text-white">
-//                       Name*
-//                     </label>
-//                     <input
-//                       id="name"
-//                       type="text"
-//                       placeholder="Kamal Perera"
-//                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-//                     />
-//                   </div>
-                  
-//                   {/* Position Information */}
-//                   <div className="flex flex-col gap-3 mt-5">
-//                     <label htmlFor="position" className="text-white">
-//                       Position*
-//                     </label>
-//                     <input
-//                       id="position"
-//                       type="text"
-//                       placeholder="Secretary"
-//                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-//                     />
-//                   </div>
-                
-//                   {/* Description */}
-//                   <div className="flex flex-col gap-3 mt-5">
-//                     <label htmlFor="description" className="text-white">
-//                       Description*
-//                     </label>
-//                     <textarea
-//                       id="description"
-//                       placeholder="Description"
-//                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-//                     ></textarea>
-//                   </div>
-
-//                   {/* Image Upload */}
-//                   <div className="flex flex-col gap-3 mt-5">
-//                     <label htmlFor="image" className="text-white">
-//                       Upload Image
-//                     </label>
-//                     <input
-//                       id="image"
-//                       type="file"
-//                       accept="image/*"
-//                       onChange={handleImageChange}
-//                       className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-//                     />
-//                     {selectedImage && (
-//                       <img
-//                         src={selectedImage}
-//                         alt="Selected"
-//                         className="mt-3 max-h-50"
-//                       />
-//                     )}
-//                   </div>
-
-//                   <div className="flex items-center justify-center mt-6 gap-4">
-//                     <Button className="border-2 border-[#AEC90A] px-4 py-2 rounded-3xl font-medium text-[#AEC90A]">
-//                       Cancel
-//                     </Button>
-//                     <Button className="bg-[#AEC90A] border-2 border-[#AEC90A] px-4 py-2 rounded-3xl font-medium text-[#0B0B0B]">
-//                       Post
-//                     </Button>
-//                   </div>
-//                 </form>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default AddNewPostForm;
-
-
-
-
 import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
@@ -134,25 +15,27 @@ import { HiChevronDown } from "react-icons/hi";
 import UsersService from "../../service/UsersService";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import PostService from "../../service/PostService";
+import EventPostService from "../../service/EventPostService";
 
-const AddNewPostForm = () => {
+const NewEventPost = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams(); //post id
-  const { club } = location.state || {};
+  const { event } = location.state || {};
 
-  //console.log('club in posts form', club);
+  console.log('event in event posts form', event);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [name, setName] = useState("");
-  const [position, setPosition] = useState("");
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [postStatus, setPostStatus] = useState('PENDING');
   const [postImage, setPostImage] = useState(null);
   const [postImageUrl, setPostImageUrl] = useState(null);
   const [clubId, setClubId] = useState('');
   const [publishedUserId, setPublishedUserId] = useState('');
+  const [eventId, setEventId] = useState('');
 
   const [errors, setErrors] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -162,20 +45,19 @@ const AddNewPostForm = () => {
   //club id
   //published user id
 
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      //setSelectedImage(URL.createObjectURL(e.target.files[0]));
+      setPostImage(e.target.files[0]);
+    }
+  };
+
   const handleClosePopup = () => {
     setShowAddSuccessPopup(false);
   };
 
   const handleClosePopup1 = () => {
     setShowUpdateSuccessPopup(false);
-  };
-
-
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      //setSelectedImage(URL.createObjectURL(e.target.files[0]));
-      setPostImage(e.target.files[0]);
-    }
   };
 
   const currentUserDetails = async () => {
@@ -186,7 +68,7 @@ const AddNewPostForm = () => {
     const { users } = userDetails;
     if(users){
       setName(users.firstname + " " + users.lastname);
-      setPosition(users.role);
+      
 
     }else{
       console.log("User details are undefined or null");
@@ -196,33 +78,7 @@ const AddNewPostForm = () => {
   }
 
   const fetchPostDetails = async () => {
-    if (id) {
-
-      try {
-        const token = localStorage.getItem('token');
-        const response = await PostService.getPostById(id, token);
-        console.log('Response getPosts:', response); 
-        const { content } = response; 
-        if (content) {
-          setName(content.name || '');
-          setPosition(content.position || '');
-          setDescription(content.description || '');
-          setPostStatus(content.post_status || 'PENDING');
-          setPostImageUrl(content.post_image || '');
-          setClubId(content.club_id || '');
-          setPublishedUserId(content.published_user_id || '');
-         
-        } else {
-          console.warn('Content is undefined or null');
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching post details:", error);
-        setErrors("Failed to fetch post details");
-        setIsLoading(false);
-      }
-
-    } else {
+   
       const session_id = localStorage.getItem("session_id");
       const token = localStorage.getItem("token");
       const userDetails = await UsersService.getUserById(session_id, token);
@@ -230,18 +86,19 @@ const AddNewPostForm = () => {
       const { users } = userDetails;
       if(users){
         setName(users.firstname + " " + users.lastname);
-        setPosition(users.role);
         setPostStatus('PENDING');
-        setClubId(club.club_id);
+        setClubId(event.clubId);
         setPublishedUserId(session_id);
+        setEventId(event.event_id);
 
       }else{
         console.log("User details are undefined or null");
       }
       setIsLoading(false);
-    }
+    
   };
 
+  
   useEffect(() => {
 
     fetchPostDetails();
@@ -260,11 +117,11 @@ const AddNewPostForm = () => {
               error = `Name cannot exceed ${maxCharlength} characters.`;
             }
             break;
-        case "position":
+        case "title":
             if (!value){
-              error = "Position is required.";
+              error = "title is required.";
             }else if(value.length > maxCharlength){
-              error = `Position cannot exceed ${maxCharlength} characters.`;
+              error = `Title cannot exceed ${maxCharlength} characters.`;
             }
             break;
         case "description":
@@ -292,9 +149,9 @@ useEffect(() => {
 
 useEffect(() => {
     if (isSubmitted) {
-      validateField("position", position);
+      validateField("title", title);
     }
-}, [position]);
+}, [title]);
 
 useEffect(() => {
     if (isSubmitted) {
@@ -313,22 +170,12 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   setIsSubmitted(true);
 
-  // validateField("name", name);
-  // validateField("position", position);
-  // validateField("description", description);
-  // validateField("postImage", postImage);
-  
-  // Check if there are any validation errors
-  // if (!Object.values(errors).every((error) => error === "")) {
-  //   // If there are errors, prevent submission and show errors
-  //   console.log("Form has errors:", errors);
-  //   return;
-  // }
+ 
 
   // Perform synchronous validation and store errors locally
   const newErrors = {
     name: validateField("name", name),
-    position: validateField("position", position),
+    title: validateField("title", title),
     description: validateField("description", description),
     postImage: validateField("postImage", postImage),
   };
@@ -344,7 +191,7 @@ const handleSubmit = async (e) => {
   // Proceed if no validation errors
   if (Object.values({
       name,
-      position,
+      title,
       description,
       postImage
     }).every((field) => field !== "" || postImageUrl)) {
@@ -357,7 +204,7 @@ const handleSubmit = async (e) => {
 
       formData.append("data", new Blob([JSON.stringify({
         name,
-        position,
+        title,
         description,
         postStatus,
         clubId,
@@ -368,40 +215,24 @@ const handleSubmit = async (e) => {
         formData.append("file", postImage);
       }
 
-      if (id) {
-        const response = await PostService.updatePost(
-          id,
-          name,
-          position,
+        const response = await EventPostService.saveEventPost(
+          title,
           description,
           postImage,
           postStatus,
           clubId,
           publishedUserId,
+          eventId,
           token
         );
-        setShowUpdateSuccessPopup(true);
-        //alert("Post updated successfully");
-        setTimeout(() => {
-          navigate(-1);
-        }, 2000);
-      } else {
-        const response = await PostService.savePost(
-          name,
-          position,
-          description,
-          postImage,
-          postStatus,
-          clubId,
-          publishedUserId,
-          token
-        );
+
         setShowAddSuccessPopup(true);
         //alert("Post added successfully");
         setTimeout(() => {
           navigate(-1);
         }, 2000);
-      }
+        
+      
     } catch (error) {
       console.error("Error processing Post:", error);
       const errorMessages = error.response
@@ -414,84 +245,14 @@ const handleSubmit = async (e) => {
 
   
 
-  // if (Object.values(errors).every((error) => error === "") && Object.values({
-  //     name,
-  //     position,
-  //     description,
-  //     postImage
-     
-  //   }).every((field) => field !== "" || postImageUrl)) {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const session_id = localStorage.getItem("session_id")
-  //     setPublishedUserId(session_id);
-  //     const formData = new FormData();
-
-  //     formData.append("data", new Blob([JSON.stringify({
-  //         name,
-  //         position,
-  //         description,
-  //         postStatus,
-  //         clubId,
-  //         publishedUserId
-         
-  //       })], { type: "application/json" }));
-
-  //     if (postImage) {
-  //       formData.append("file", postImage);
-  //     }
-
-  //     if (id) {
-  //       const response = await PostService.updatePost(
-  //         id,
-  //         name,
-  //         position,
-  //         description,
-  //         postImage,
-  //         postStatus,
-  //         clubId,
-  //         publishedUserId,
-  //         token
-  //       );
-
-  //       alert("Post updated successfully");
-  //       console.log("Post updated:", response);
-  //       navigate(-1);
-
-  //     } else {
-  //       const response = await PostService.savePost(
-  //         name,
-  //         position,
-  //         description,
-  //         postImage,
-  //         postStatus,
-  //         clubId,
-  //         publishedUserId,
-  //         token
-  //       );
-
-  //       alert("Post added successfully");
-  //       console.log("Post added:", response);
-  //       navigate(-1);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error processing Post:", error);
-  //     const errorMessages = error.response
-  //       ? error.response.data.errors
-  //       : { global: error.message };
-  //     setErrors(errorMessages);
-  //     setTimeout(() => setErrors({}), 5000);
-
-  //   }
-  // }
 };
 
 
 function pageTitle() {
   if (id) {
-    return "Update Post";
+    return "Update Event Post";
   } else {
-    return "Create a Post";
+    return "Create Event Post";
   }
 }
 
@@ -501,6 +262,8 @@ const handleCancel = () => {
 }
 
 
+
+
   return (
     <>
       <div className="fixed inset-0 flex flex-col md:flex-row">
@@ -508,15 +271,15 @@ const handleCancel = () => {
         <div className="flex flex-col flex-1 overflow-auto">
           <Navbar className="sticky top-0 z-10 p-4" />
           <div className="bg-neutral-900 text-white flex flex-col flex-1 overflow-auto p-4 md:p-10">
-            <div className="flex flex-col items-center justify-center relative mt-10 w-full">
-              <div className="bg-[#AEC90A] text-[#0B0B0B] p-1 rounded-lg font-semibold absolute -top-4">
-                {pageTitle()}
-              </div>
-              <div className="bg-[#0B0B0B] flex flex-col items-center justify-center border-2 border-[#AEC90A] rounded-xl w-full md:w-3/5 py-9">
+          <div className=" bg-opacity-90 text-white flex-col md:p-20 overflow-y-auto">
+                                 <Typography variant="h3" className="mb-4 text-center"> {pageTitle()}</Typography>
+
+                                 <div className="grid grid-cols-1 gap-4">
                 <form onSubmit={handleSubmit} className="w-full px-4 md:px-2">
                   {/* Personal Information */}
                   <div className="flex flex-col gap-3">
-                    <label htmlFor="name" className="text-white">
+                    <label htmlFor="name"                               className="block "
+>
                       Name
                     </label>
                     <input
@@ -525,8 +288,9 @@ const handleCancel = () => {
                       onChange={(e) => setName(e.target.value)}
                       type="text"
                       placeholder="Kamal Perera"
-                      className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-                      readOnly
+                      className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                      style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                      readOnly
                     />
                     {isSubmitted && errors.name && <div className="text-red-500">{errors.name}</div>}
                   </div>
@@ -534,18 +298,20 @@ const handleCancel = () => {
                   {/* Position Information */}
                   <div className="flex flex-col gap-3 mt-5">
                     <label htmlFor="position" className="text-white">
-                      Position
+                      Title
                     </label>
                     <input
-                      id="position"
-                      value={position}
-                      onChange={(e) => setPosition(e.target.value)}
+                      id="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
                       type="text"
-                      placeholder="Secretary"
-                      className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-                      readOnly
+                      placeholder="Title"
+                      className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                      style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}            
+                                          
                     />
-                    {isSubmitted && errors.position && <div className="text-red-500">{errors.position}</div>}
+                    {isSubmitted && errors.title && <div className="text-red-500">{errors.title}</div>}
                   </div>
                 
                   {/* Description */}
@@ -558,8 +324,9 @@ const handleCancel = () => {
                       value={description}
                       placeholder="Description"
                       onChange={(e) => setDescription(e.target.value)}
-                      className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-                    ></textarea>
+ className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                      style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                    ></textarea>
                     {isSubmitted && errors.description && <div className="text-red-500">{errors.description}</div>}
                   </div>
 
@@ -573,8 +340,9 @@ const handleCancel = () => {
                       type="file"
                       accept="image/*"
                       onChange={handleImageChange}
-                      className="p-3 border-2 border-[#AEC90A] bg-[#0B0B0B] text-white w-full"
-                    />
+ className="w-full h-16 bg-black text-white p-2 rounded-2xl"
+                                
+                      style={{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)' }}                    />
                     {/* {postImage && (
                       <img
                         src={postImage}
@@ -617,7 +385,28 @@ const handleCancel = () => {
                 </form>
               </div>
             </div>
-            {showUpdateSuccessPopup && (
+          </div>
+        </div>
+      </div>
+
+      {showAddSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+               Event Post created successfully
+            </h2>
+          </div>
+        </div>
+      )}
+
+      {showUpdateSuccessPopup && (
         <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
           <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
           <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
@@ -628,18 +417,14 @@ const handleCancel = () => {
               &times;
             </span>
             <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
-                Post updated successfully
+               Event Post updated successfully
             </h2>
           </div>
         </div>
       )}
-          </div>
-        </div>
-      </div>
     </>
   );
 };
 
-export default AddNewPostForm;
-
+export default NewEventPost;
 
