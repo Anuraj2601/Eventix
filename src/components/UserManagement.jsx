@@ -96,7 +96,7 @@ const UserManagement = () => {
       );
       setShowDialog(false); // Close the confirmation dialog
       fetchUsers(); // Refetch the users after updating roles
-      setDialogMessage("Roles updated successfully.");
+      setDialogMessage("Roles updated successfully.and now you are demoted as student");
       setDialogType("success");
       setShowDialog(true);
     } catch (error) {
