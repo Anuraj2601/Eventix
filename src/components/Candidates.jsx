@@ -18,7 +18,20 @@ const Candidates = ({ activeTab }) => {
     const [meetingParticipants, setMeetingParticipants] = useState([]);
 // Example: sortedCandidates is derived from an existing candidates array
 const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name)); // Example sorting logic based on name
+const [isVisible, setIsVisible] = useState(!!message);
 
+useEffect(() => {
+  if (message) {
+    setIsVisible(true);
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+    }, 60000); // Hides after 60 seconds
+
+    return () => clearTimeout(timer);
+  }
+}, [message]);
+
+if (!isVisible) return null;
     
 
     useEffect(() => {
@@ -287,9 +300,11 @@ const getSelectedCountForElection = (category) => {
     return (
       <div className="text-white">
           {message && (
-              <div className="bg-black text-[#AEC90A] p-4 mb-4">
-                  <Typography>{message}</Typography>
-              </div>
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+              <Typography variant="h5" className="text-[#AEC90A]">
+                {message}
+              </Typography>
+            </div>
           )}
 
 

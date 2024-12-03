@@ -309,7 +309,7 @@ useEffect(() => {
         <Sidebar className="hidden md:flex flex-shrink-0" />
         <div className="flex flex-col flex-1">
           <Navbar className="sticky top-0 z-10 p-4" />
-          <div className="bg-black bg-opacity-90 text-white flex-col md:p-20 overflow-y-auto">
+          <div className="bg-black bg-opacity-90 text-white flex-col md:p-20 overflow-y-auto min-h-screen">
                     <div variant="h3" className="mb-4 text-center">  {pageTitle()}</div>
 
                     <div className="grid grid-cols-1 gap-4">
