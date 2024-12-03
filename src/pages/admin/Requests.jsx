@@ -3,6 +3,7 @@ import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 import Requests from '../../components/Requests';
 import Users from '../../components/Users';
+import UserManagement from '../../components/UserManagement';
 
 import { Tabs, TabsHeader, Tab } from "@material-tailwind/react";
 
@@ -48,10 +49,10 @@ const ExploreClub = () => {
             Import Users
         </Tab>
         <Tab
-            key=" Access granting"
-            value=" Access granting"
-            onClick={() => setActiveTab(" Access granting")}
-            className={activeTab === " Access granting" ? "text-[#AEC90A]" : ""}
+            key="Access granting"
+            value="Access granting"
+            onClick={() => setActiveTab("Access granting")}
+            className={activeTab === "Access granting" ? "text-[#AEC90A]" : ""}
         >
            Access granting
         </Tab>
@@ -60,7 +61,7 @@ const ExploreClub = () => {
                             {activeTab === "event-requests" && <Requests />}
                             {activeTab === "import-users" && <Users />}
 
-                         
+                            {activeTab === "Access granting" && <UserManagement />}
 
                         </div>
                     </Tabs>
