@@ -409,7 +409,7 @@ const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name))
                 Select
             </Button>
             <Button
-                className="bg-red hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
+                className="bg-red-500 hover:bg-[#9AB307] text-black font-bold py-2 px-4 rounded-full transition duration-300"
                 onClick={() => handleReject(candidate.id)}
             >
                 Reject
