@@ -24,6 +24,11 @@ const AddNewMeetingForm = () => {
   const [venue, setVenue] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showAddSuccessPopup, setShowAddSuccessPopup] = useState(false);
+
+  const handleClosePopup = () => {
+    setShowAddSuccessPopup(false);
+  };
 
   const validateField = (field, value) => {
     let error = "";
@@ -93,30 +98,38 @@ const AddNewMeetingForm = () => {
           token,
           meetingType === "PHYSICAL" ? meetingData.venue : undefined
         );
+
+        // alert("Meeting saved successfully!");
+        // navigate(-1);
+        setShowAddSuccessPopup(true);
+       
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
   
-        if (response.status === 200) {
-          setDialogMessage("Meeting successfully saved");
-          setDialogType("success");
-          setShowDialog(true);
+        // if (response.status === 200) {
+        //   setDialogMessage("Meeting successfully saved");
+        //   setDialogType("success");
+        //   setShowDialog(true);
   
-          // Wait for the user to close the dialog before navigating
-          const handleCloseDialog = () => {
-            setShowDialog(false);
-            navigate(-1);  // Navigate back after closing the dialog
-          };
+        //   // Wait for the user to close the dialog before navigating
+        //   const handleCloseDialog = () => {
+        //     setShowDialog(false);
+        //     navigate(-1);  // Navigate back after closing the dialog
+        //   };
   
-          // Automatically close the dialog after a brief delay
-          setTimeout(() => {
-            handleCloseDialog(); // You can also attach this to a "Close" button click event
-          }, 3000); // Wait 3 seconds before navigating (you can adjust the delay)
-        } else {
-          setDialogMessage("Meeting successfully saved");
-          setDialogType("success");
-          setShowDialog(true);
-          setTimeout(() => {
-            navigate(-1);
-          }, 10000);
-        }
+        //   // Automatically close the dialog after a brief delay
+        //   setTimeout(() => {
+        //     handleCloseDialog(); // You can also attach this to a "Close" button click event
+        //   }, 3000); // Wait 3 seconds before navigating (you can adjust the delay)
+        // } else {
+        //   setDialogMessage("Meeting successfully saved");
+        //   setDialogType("success");
+        //   setShowDialog(true);
+        //   setTimeout(() => {
+        //     navigate(-1);
+        //   }, 10000);
+        // }
       } catch (error) {
         console.error("Error saving meeting:", error.response || error.message);
         setDialogMessage("An error occurred while saving the meeting.");
@@ -297,6 +310,23 @@ const AddNewMeetingForm = () => {
         </div>
       )}
       </div>
+
+      {showAddSuccessPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-dark-500 opacity-50"></div>
+          <div className="bg-white w-[27vw] h-[20vh] p-8 rounded-lg text-center relative transition-transform duration-300 ease-in-out transform hover:scale-105">
+            <span
+              className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center cursor-pointer text-white text-[22px] font-medium hover:bg-dark-400"
+              onClick={handleClosePopup}
+            >
+              &times;
+            </span>
+            <h2 className="text-[20px] font-semibold text-primary mt-4 mb-2">
+                Meeting created successfully
+            </h2>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
