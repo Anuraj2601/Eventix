@@ -159,6 +159,9 @@ import ForgotPassword from './components/ForgotPassword';
 import Auth from './service/UsersService';
 
 import Accountverify from './components/VerifyUser';
+import NewEventPost from './pages/oc/NewEventPost';
+import NewEventAnnouncement from './pages/oc/NewEventAnnouncementForm';
+import NewEventMeeting from './pages/oc/NewEventMeetingForm';
 
 // Import other pages if necessary
 
@@ -303,6 +306,10 @@ const App = () => {
         <Route path='/oc/club/voting' element={<ProtectedRoute element={<Votingoc/>} />}></Route>
         <Route path='/oc/election/Apply' element={<ProtectedRoute element={<Apply/>} />}></Route>
         <Route path='/oc/meeting' element={<ProtectedRoute element={<MainMeetingoc />} />}></Route> 
+        <Route path='/event/new-post' element={<ProtectedRoute element={<NewEventPost />} />}></Route> 
+        <Route path='/event/new-announcement' element={<ProtectedRoute element={<NewEventAnnouncement />} />}></Route> 
+        <Route path='/event/new-meeting' element={<ProtectedRoute element={<NewEventMeeting />} />}></Route> 
+
 
         
 
