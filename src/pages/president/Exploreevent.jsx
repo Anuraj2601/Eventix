@@ -871,7 +871,12 @@ const Exploreevent = () => {
   };
 
   const openModal = () => setModalIsOpen(true);
-  const closeModal = () => setModalIsOpen(false);
+  //const closeModal = () => setModalIsOpen(false);
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedSponsor(null); // Reset selectedSponsor
+  };
 
   const [isRegModalOpen, setIsRegModalOpen] = useState(false);
 
@@ -1097,7 +1102,8 @@ const Exploreevent = () => {
             {modalIsOpen && selectedSponsor && (
               <ReactModal
                 isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}
+                //onRequestClose={() => setModalIsOpen(false)}
+                onRequestClose={closeModal}
                 contentLabel="Sponsor Details"
                 className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80"
                 overlayClassName="fixed inset-0 bg-black bg-opacity-70"
