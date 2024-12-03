@@ -7,6 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { format } from 'date-fns';
 import { getUserEmailFromToken } from '../utils/utils'; // Ensure this function is correctly implemented
 import RegistrationService from '../service/registrationService';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+
 import { Typography } from "@material-tailwind/react";
 import { AiOutlineClose } from "react-icons/ai";  // Cross icon from react-icons
 import DialogBox from "./DialogBox";
@@ -30,8 +32,11 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
     position: 'student', // Default value for position
   });
   const [loading, setLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const [error, setError] = useState(null);
   const [dialog, setDialog] = useState({ isOpen: false, title: "", message: "", onConfirm: null });
+  const [dialogMessage, setDialogMessage] = useState('');
 
   const showDialog = (title, message, onConfirm = null) => {
     setDialog({ isOpen: true, title, message, onConfirm });
@@ -126,7 +131,8 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
             formData.position, // Include position in the request
             token
         );
-        showDialog("Success", "Registration successful!", onClose);
+        setDialogMessage("Unfortunately, you have already applied. Please wait for the next recruitment opportunity.");
+        setIsDialogOpen(true);
         onClose(); // Close the modal after submission
     } catch (error) {
         const errorMessage = error.message || 'Failed to submit the form.';
@@ -263,18 +269,21 @@ const RegistrationModal = ({ event, isOpen, onClose }) => {
                 boxShadow: '0 8px 16px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 255, 255, 0.1)'
               }}
             >
-              {loading ? "Submitted" : "Submit"}
+              {loading ? "Submitted Successfully" : "Submit"}
             </button>
           </div>
         </form>
       </div>
-      <DialogBox
-        isOpen={dialog.isOpen}
-        title={dialog.title}
-        message={dialog.message}
-        onClose={closeDialog}
-        onConfirm={dialog.onConfirm}
-      />
+      <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}  className="bg-black bg-opacity-60"> 
+  <DialogContent>
+    <p>{dialogMessage}</p>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => setIsDialogOpen(false)} color="black"  className="text-black bg-[#AEC90A]" >
+      OK
+    </Button>
+  </DialogActions>
+</Dialog>
     </div>
     
   );

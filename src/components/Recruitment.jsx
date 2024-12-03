@@ -219,7 +219,7 @@ const Recruitment = () => {
                                 </div>
     
                                 <div className="flex flex-col w-full sm:w-2/4 text-left">
-                                    <p><strong>ID:</strong> {reg.registrationId}</p>
+                                    
                                     <p><strong>Email:</strong> {reg.email}</p>
                                     <p><strong>Team:</strong> {reg.team}</p>
                                     <p><strong>How can they make a change:</strong> {reg.reason}</p>
